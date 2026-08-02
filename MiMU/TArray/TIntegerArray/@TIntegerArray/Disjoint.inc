@@ -1,4 +1,6 @@
 {$IFDEF HELPERS}
+function Rooted: Boolean; overload;
+
 function Rootcount: Integer; overload;
 
 function Rootless(const sIndex: Integer): Boolean; overload;
@@ -15,6 +17,8 @@ function Rootage(const sIndex: Integer): Integer; overload;
 function Rootings: T2DIntegerArray; overload;
 function Clan(const sIndex: Integer): TIntegerArray; overload;
 function Siblings(const sIndex: Integer): TIntegerArray; overload;
+function Rootmax: TIntegerArray; overload;
+function Rootmin: TIntegerArray; overload;
 
 function Linked(const a, b: Integer): Boolean; overload;
 function Linken(const a, b: Integer): Boolean; overload;
@@ -23,9 +27,42 @@ function Union(const a, b: Integer; var size: TIntegerArray): Boolean; overload;
 function Unioned(const a, b: Integer): Boolean; overload;
 function Unionize(const a, b: Integer): Boolean; overload;
 function Unite(const a, b: Integer): Boolean; overload;
+
+function Rootify: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Rooted>
+  @action: Returns True if Self is well-formed as a disjoint-set parent
+           array — every element is a valid in-bounds index, and following
+           the chain from any index eventually reaches a fixed point
+           (Self[r] = r) without an infinite loop.
+  @note: Does not mutate Self. O(n) in the common case; a malformed array
+         with a genuine cycle (no fixed point) is detected via a visited-set
+         guard rather than looping forever.
+[==============================================================================}
+function TIntegerArrayHelper.Rooted: Boolean; overload;
+var
+  l, i, r, s: Integer;
+begin
+  l := Self.Length;
+  for i := 0 to (l - 1) do
+  begin
+    if ((Self[i] < 0) or (Self[i] >= l)) then
+      Exit(False);
+    r := i;
+    s := 0;
+    while (Self[r] <> r) do
+    begin
+      r := Self[r];
+      if (s.Increment > l) then
+        Exit(False);
+    end;
+  end;
+  Result := True;
+end;
+
 {==============================================================================]
   <Rootcount>
   @action: Counts the total number of unique disjoint set representatives (roots) in the array.
@@ -231,7 +268,7 @@ begin
 end;
 
 {==============================================================================]
-  <Groups>
+  <Rootings>
   @action: Flattens Self into buckets of indices that share the same root,
            returning one sub-array per distinct set. Order of sub-arrays and
            order of indices within each sub-array follows ascending index
@@ -305,6 +342,54 @@ begin
     if (Self.Root(i) = r) then
       Result[c.Increase] := i;
   SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <Rootmax>
+  @action: Returns the indices belonging to the largest set in Self — the
+           set with the most members. If multiple sets are tied for largest,
+           returns the one whose root has the lowest index.
+  @note: Calling this compresses every visited chain as a side effect (each
+         Rootage call along the way applies path compression). Returns an
+         empty array if Self is empty.
+[==============================================================================}
+function TIntegerArrayHelper.Rootmax: TIntegerArray; overload;
+var
+  r: T2DIntegerArray;
+  m, i: Integer;
+begin
+  r := Self.Rootings;
+  if (System.Length(r) = 0) then
+    Exit([]);
+  m := 0;
+  for i := 1 to (System.Length(r) - 1) do
+    if (System.Length(r[i]) > System.Length(r[m])) then
+      m := i;
+  Result := r[m];
+end;
+
+{==============================================================================]
+  <Rootmin>
+  @action: Returns the indices belonging to the smallest set in Self — the
+           set with the fewest members. If multiple sets are tied for
+           smallest, returns the one whose root has the lowest index.
+  @note: Calling this compresses every visited chain as a side effect (each
+         Rootage call along the way applies path compression). Returns an
+         empty array if Self is empty.
+[==============================================================================}
+function TIntegerArrayHelper.Rootmin: TIntegerArray; overload;
+var
+  r: T2DIntegerArray;
+  m, i: Integer;
+begin
+  r := Self.Rootings;
+  if (System.Length(r) = 0) then
+    Exit([]);
+  m := 0;
+  for i := 1 to (System.Length(r) - 1) do
+    if (System.Length(r[i]) < System.Length(r[m])) then
+      m := i;
+  Result := r[m];
 end;
 
 {==============================================================================]
@@ -472,5 +557,29 @@ begin
   Result := (l <> r);
   if Result then
     Self[l] := r;
+end;
+
+{==============================================================================]
+  <Rootify>
+  @action: Fully compresses every chain in Self so that every index points
+           directly at its root in a single step. After calling this,
+           Self[i] = Rootage(i) for every i, with no intermediate hops
+           remaining anywhere in the structure.
+  @note: Mutates Self in place. Useful to call once before a batch of
+         read-heavy aggregate operations (Rootings, Rootcount, Largest),
+         so each subsequent call resolves roots in O(1) instead of
+         re-walking partially-compressed chains.
+[==============================================================================}
+function TIntegerArrayHelper.Rootify: Integer; overload;
+var
+  s, i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+  begin
+    s := Self[i];
+    if (s <> Self.Rootage(i)) then
+      Inc(Result);
+  end;
 end;
 {$ENDIF}
