@@ -25,10 +25,15 @@ function Linked(const a, b: Integer): Boolean; overload;
 function Linken(const a, b: Integer): Boolean; overload;
 function Union(const a, b: Integer): Boolean; overload;
 function Union(const a, b: Integer; var size: TIntegerArray): Boolean; overload;
+function Union(const a, b: TIntegerArray): Integer; overload;
 function Unioned(const a, b: Integer): Boolean; overload;
 function Unionize(const a, b: Integer): Boolean; overload;
 function Unison(const a, b: Integer): Integer; overload;
 function Unite(const a, b: Integer): Boolean; overload;
+
+function Corooted(const rIndices: TIntegerArray): Boolean; overload;
+
+function Corootify(const rIndices: TIntegerArray): Integer; overload;
 
 function Rootify: Integer; overload;
 {$ENDIF}
@@ -482,6 +487,21 @@ end;
 
 {==============================================================================]
   <Union>
+  @action: Merges pairs of indices from two arrays (a[i] with b[i])
+  @return: Number of successful unions
+[==============================================================================}
+function TIntegerArrayHelper.Union(const a, b: TIntegerArray): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to (Min(a.Length, b.Length) - 1) do
+    if Self.Union(a[i], b[i]) then
+      Inc(Result);
+end;
+
+{==============================================================================]
+  <Union>
   @action: Merges the sets containing "a" and "b" by finding each index's
            root and attaching the smaller-sized tree's root under the
            larger-sized tree's root (union by size), updating "size" to
@@ -603,6 +623,43 @@ begin
   Result := (l <> r);
   if Result then
     Self[l] := r;
+end;
+
+{==============================================================================]
+  <Corooted>
+  @action: Returns True if every index in "indices" resolves to the same
+           root — i.e. all of them belong to the same set.
+  @note: Calling this compresses every visited chain as a side effect.
+         Returns True for an empty or single-element "indices" array.
+[==============================================================================}
+function TIntegerArrayHelper.Corooted(const rIndices: TIntegerArray): Boolean; overload;
+var
+  r, i: Integer;
+begin
+  if (rIndices.Length <= 1) then
+    Exit(True);
+  r := Self.Rootage(rIndices[0]);
+  for i := 1 to High(rIndices) do
+    if (Self.Rootage(rIndices[i]) <> r) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Corootify>
+  @action: Merges every index in "rIndices" into a single set, by unioning
+           the first index with each of the rest in turn.
+  @note: Mutates Self in place. No-op for an empty or single-element
+         "indices" array. Uses the plain Union rule (no size-weighting).
+[==============================================================================}
+function TIntegerArrayHelper.Corootify(const rIndices: TIntegerArray): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 1 to High(rIndices) do
+    if Self.Union(rIndices[0], rIndices[i]) then
+      Inc(Result);
 end;
 
 {==============================================================================]
