@@ -153,7 +153,7 @@ function TPointArrayHelper.XAxis(const rUnique: Boolean = True): TIntegerArray; 
 var
   i: Integer;
 begin
-  SetLength(Result, 0);
+  Result.Clear;
   case rUnique of
     True:
     for i := 0 to High(Self) do
@@ -191,7 +191,7 @@ function TPointArrayHelper.XVals(const aAscending: Boolean = True): TIntegerArra
 var
   i: Integer;
 begin
-  SetLength(Result, 0);
+  Result.Clear;
   for i := 0 to High(Self) do
     Result.BinaryAppend(Self[i].X, aAscending);
 end;
@@ -232,7 +232,7 @@ function TPointArrayHelper.YAxis(const rUnique: Boolean = True): TIntegerArray; 
 var
   i: Integer;
 begin
-  SetLength(Result, 0);
+  Result.Clear;
   case rUnique of
     True:
     for i := 0 to High(Self) do
@@ -260,15 +260,15 @@ end;
 
 {==============================================================================]
   <YVals>
-  @action:  Returns an array of all Y coordinates from the point array,
-            optionally sorted in ascending or descending order.
-  @note:    Uses TIntegerArray_BinaryAppend to maintain the order efficiently.
+  @action: Returns an array of all Y coordinates from the point array,
+           optionally sorted in ascending or descending order.
+  @note: Uses TIntegerArray_BinaryAppend to maintain the order efficiently.
 [==============================================================================}
 function TPointArrayHelper.YVals(const aAscending: Boolean = True): TIntegerArray;
 var
   i: Integer;
 begin
-  SetLength(Result, 0);
+  Result.Clear;
   for i := 0 to High(Self) do
     Result.BinaryAppend(Self[i].Y, aAscending);
 end;

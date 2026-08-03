@@ -27,9 +27,7 @@ begin
   r := 0;
   for i := 0 to High(Self) do
     Inc(r, Self[i].Size);
-  SetLength(Result, r);
-  if (r = 0) then
-    Exit;
+  if (Result.SetSize(r) > 0) then
   for i := High(Self) downto 0 do
   case Self[i].Asceal of
     True:
@@ -242,8 +240,7 @@ function TRangeArrayHelper.T2DIA: T2DIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-   for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i].TIA;
 end;
 

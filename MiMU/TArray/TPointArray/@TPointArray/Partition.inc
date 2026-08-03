@@ -22,7 +22,7 @@ var
   p: Integer;
 begin
   SetLength(Result, 0);
-  SetLength(x, 0);
+  x.Clear;
   for i := 0 to High(Self) do
   begin
     p := -1;
@@ -55,7 +55,7 @@ var
   p: Integer;
 begin
   SetLength(Result, 0);
-  SetLength(y, 0);
+  y.Clear;
   for i := 0 to High(Self) do
   begin
     p := -1;

@@ -54,12 +54,12 @@ begin
   k.Create(l, True);
   for i := 0 to (l - 2) do
     if k[i] then
-      for j := (i + 1) to (l - 1) do
-        if k[j] then
-          if strictly then
-            k[j] := ((Self[j].start <> Self[i].start) or (Self[j].stop <> Self[i].stop))
-          else
-            k[j] := ((Self[j].Minimum <> Self[i].Minimum) or (Self[j].Maximum <> Self[i].Maximum));
+    for j := (i + 1) to (l - 1) do
+      if k[j] then
+        if strictly then
+          k[j] := ((Self[j].start <> Self[i].start) or (Self[j].stop <> Self[i].stop))
+        else
+          k[j] := ((Self[j].Minimum <> Self[i].Minimum) or (Self[j].Maximum <> Self[i].Maximum));
   Result := 0;
   j := 0;
   for i := 0 to (l - 1) do

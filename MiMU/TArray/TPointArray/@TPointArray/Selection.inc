@@ -65,7 +65,7 @@ var
   f: TDistance;
 begin
   f := Distance(distFunc);
-  SetLength(Result, 0);
+  Result.Clear;
   for i := 0 to High(Self) do
     if Self[i].Within(target, radius, f) then
       Result.Supply(Self[i]);
@@ -88,7 +88,7 @@ function TPointArrayHelper.Nearby(const target: TPoint; const xRadius, yRadius: 
 var
   i: Integer;
 begin
-  SetLength(Result, 0);
+  Result.Clear;
   for i := 0 to High(Self) do
     if Self[i].Within(target, xRadius, yRadius) then
       Result.Supply(Self[i]);
@@ -108,10 +108,10 @@ var
   i, j: Integer;
   f: TDistance;
 begin
+  Result.Clear;
   if targets.Empty then
-    Exit([]);
+    Exit;
   f := Distance(distFunc);
-  SetLength(Result, 0);
   for i := 0 to High(Self) do
     for j := 0 to High(targets) do
       if Self[i].Within(targets[j], radius, f) then
@@ -139,9 +139,8 @@ function TPointArrayHelper.Nearby(const targets: TPointArray; const xRadius, yRa
 var
   i, j: Integer;
 begin
-  if targets.Empty then
-    Exit([]);
-  SetLength(Result, 0);
+  Result.Clear;
+  if not targets.Empty then
   for i := 0 to High(Self) do
     for j := 0 to High(targets) do
       if Self[i].Within(targets[j], xRadius, yRadius) then

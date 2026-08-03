@@ -77,8 +77,7 @@ function TRangeArrayHelper.Starting: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i].start;
 end;
 
@@ -91,8 +90,7 @@ function TRangeArrayHelper.Starts: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i].start;
 end;
 
@@ -105,8 +103,7 @@ function TRangeArrayHelper.StartValues: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   while (l.Decrement > -1) do
     Result[l] := Self[l].start;
 end;
@@ -120,8 +117,7 @@ function TRangeArrayHelper.Stopping: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i].stop;
 end;
 
@@ -134,8 +130,7 @@ function TRangeArrayHelper.Stops: TIntegerArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := Self[i].stop;
 end;
 
@@ -148,8 +143,7 @@ function TRangeArrayHelper.StopValues: TIntegerArray; overload;
 var
   l: Integer;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   while (l.Decrement > -1) do
     Result[l] := Self[l].stop;
 end;
