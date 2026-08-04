@@ -183,14 +183,13 @@ begin
     y := (l + 1);
   if (x < y) then
     Result := Copy(Self, (x + 1), ((y - x) - 1))
-  else
-    if (x <> y) then
-    begin
-      SetLength(Result, ((x - y) - 1));
-      for i := (x - 1) downto (y + 1) do
-        Result[x - i] := Self[i];
-    end else
-      Result := '';
+  else if (x <> y) then
+  begin
+    SetLength(Result, ((x - y) - 1));
+    for i := (x - 1) downto (y + 1) do
+      Result[x - i] := Self[i];
+  end else
+    Result := '';
 end;
 
 {==============================================================================]
@@ -222,8 +221,7 @@ function TStringHelper.Get(const index: Integer; const count: Integer): string;
 var
   i: Integer;
 begin
-  SetLength(Result, count);
-  for i := 1 to count do
+  for i := 1 to Result.SetSize(count) do
     Result[i] := Self[(index + i) - 1];
 end;
 
@@ -234,12 +232,10 @@ end;
 [==============================================================================}
 function TStringHelper.Pick(const index: Integer; const count: Integer = 2147483647): string;
 var
-  s, i, p: Integer;
+  i, p: Integer;
 begin
   i := Max(index, 1);
-  s := Min(((Length(Self) - i) + 1), count);
-  SetLength(Result, s);
-  for p := 1 to s do
+  for p := 1 to Result.SetSize(Min(((Length(Self) - i) + 1), count)) do
     Result[p] := Self[(i + p) - 1];
 end;
 
@@ -267,14 +263,13 @@ begin
       y := l;
     if (x < y) then
       Result := Copy(Self, x, ((y - x) + 1))
-    else
-      if (x <> y) then
-      begin
-        SetLength(Result, ((x - y) + 1));
-        for i := x downto y do
-          Result[(x - i) + 1] := Self[i];
-      end else
-        Result := Copy(Self, x, 1);
+    else if (x <> y) then
+    begin
+      SetLength(Result, ((x - y) + 1));
+      for i := x downto y do
+        Result[(x - i) + 1] := Self[i];
+    end else
+      Result := Copy(Self, x, 1);
   end else
     Result := '';
 end;

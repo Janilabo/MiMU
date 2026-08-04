@@ -19,12 +19,10 @@ function Tokenized(const d: Char = #32): TStringArray; overload;
 function TStringHelper.Chop: TCharArray; overload;
 var
   p: PChar;
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Length(Self);
-  SetLength(Result, l);
   p := PChar(Self);
-  for i := 0 to (l - 1) do
+  for i := 0 to Result.Alloc(Length(Self)) do
   begin
     Result[i] := p^;
     Inc(p);
@@ -97,12 +95,10 @@ end;
 function TStringHelper.Explode: TCharArray; overload;
 var
   p: PChar;
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Length(Self);
-  SetLength(Result, l);
   p := PChar(Self);
-  for i := 0 to (l - 1) do
+  for i := 0 to Result.Alloc(Length(Self)) do
   begin
     Result[i] := p^;
     Inc(p);
@@ -190,15 +186,14 @@ begin
             l := Length(x);
           end;
         end;
+		SetLength(Result, (c + 1));
         if ((f > 0) and ((limit = -1) or (c < (limit - 1)))) then
         begin
           s := Copy(Self, p, (f - p));
-          SetLength(Result, (c + 1));
           Result[c.Increase] := s;
           p := (f + l);
         end else
         begin
-          SetLength(Result, (c + 1));
           Result[c] := Copy(Self, p, ((Length(Self) - p) + 1));
           r := True;
         end;
@@ -223,8 +218,7 @@ function TStringHelper.Split: TCharArray; overload;
 var
   l: Integer;
 begin
-  l := Length(Self);
-  SetLength(Result, l);
+  l := Result.SetSize(Length(Self));
   while (l.Decrement > -1) do
     Result[l] := Self[l + 1];
 end;

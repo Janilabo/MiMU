@@ -4,6 +4,8 @@ function Create(const item: MType): MArray; overload;
 function Create(const aSize: Integer; const item: MType): MArray; overload;
 function Establish(const aSize: UInt32 = 0): Boolean; overload;
 class function Forge(const rItem: MType; const rSize: Integer = 1): MArray; overload; static;
+function Seed(const item: MType; const rSize: Integer = 1): Integer; overload;
+class function Seeded(const item: MType; const rSize: Integer = 1): MArray; overload; static;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -66,8 +68,44 @@ var
 begin
   if (rSize < 1) then
     Exit([]);
-  SetLength(Result, rSize);
-  for i := 0 to (rSize - 1) do
+  for i := 0 to Result.Alloc(rSize) do
     Result[i] := rItem;
+end;
+
+{==============================================================================]
+  <Seed>
+  @action: Resets Self to `rSize` copies of `item`, returning the new length.
+  @note: rSize < 1 empties Self; rSize = 1 sets Self to a single-element array.
+[==============================================================================}
+function MArrayHelper.Seed(const item: MType; const rSize: Integer = 1): Integer; overload;
+var
+  r: Integer;
+begin
+  case rSize.Compare(1) of
+    -1: Self := [];
+    0: Self := [item];
+    1:
+    for r := 0 to Self.Alloc(rSize) do
+      Self[r] := item;
+  end;
+  Result := Self.Length;
+end;
+
+{==============================================================================]
+  <Seeded>
+  @action: Constructs and returns a new array of `rSize` copies of `item`.
+  @note: Class-constructor sibling of `Seed`.
+[==============================================================================}
+class function MArrayHelper.Seeded(const item: MType; const rSize: Integer = 1): MArray; overload;
+var
+  r: Integer;
+begin
+  case rSize.Compare(1) of
+    -1: Result := [];
+    0: Result := [item];
+    1:
+    for r := 0 to Result.Alloc(rSize) do
+      Result[r] := item;
+  end;
 end;
 {$ENDIF}

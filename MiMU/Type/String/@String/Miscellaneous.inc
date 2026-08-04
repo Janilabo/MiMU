@@ -27,8 +27,7 @@ function TStringHelper.BoolifyBinary: TBooleanArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(Self));
-  for i := 1 to Length(Self) do
+  for i := 1 to Result.SetSize(Length(Self)) do
     Result[i - 1] := (Self[i] = '1');
 end;
 
@@ -52,12 +51,10 @@ end;
 [==============================================================================}
 function TStringHelper.PregQuote(const regex: string = '.\+*?[^]$(){}=!<>|:-'): string; overload;
 var
-  l, i: Integer;
+  i: Integer;
 begin
   Result := Self;
-  l := Length(Self);
-  if (l > 0) then
-  for i := l downto 1 do
+  for i := Length(Self) downto 1 do
     if (regex.Pos(Self[i]) > 0) then
       Insert('\', Result, i);
 end;

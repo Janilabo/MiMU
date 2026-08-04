@@ -39,8 +39,7 @@ var
   i, l, r: Integer;
   s: Boolean;
 begin
-  l := Length(Self);
-  SetLength(Result, l);
+  l := Result.SetSize(Length(Self));
   if (l = 0) then
     Exit;
   r := 0;
@@ -71,8 +70,7 @@ function TStringHelper.Despaced: string; overload;
 var
   i, l, r: Integer;
 begin
-  l := Length(Self);
-  SetLength(Result, l);
+  l := Result.SetSize(Length(Self));
   if (l = 0) then
     Exit;
   r := 0;
@@ -98,8 +96,7 @@ var
   i, l, r: Integer;
   P: PChar;
 begin
-  l := Length(Self);
-  SetLength(Result, l);
+  l := Result.SetSize(Length(Self));
   if (l = 0) then
     Exit;
   P := PChar(Self);
@@ -123,8 +120,7 @@ function TStringHelper.Despacing: string; overload;
 var
   i, l, w: Integer;
 begin
-  l := Length(Self);
-  SetLength(Result, l);
+  l := Result.SetSize(Length(Self));
   if (l = 0) then
     Exit;
   w := 0;
@@ -145,8 +141,7 @@ function TStringHelper.Sanitize: string; overload;
 var
   i, l, r: Integer;
 begin
-  l := Length(Self);
-  SetLength(Result, l);
+  l := Result.SetSize(Length(Self));
   if (l = 0) then
     Exit;
   r := 0;
@@ -168,8 +163,7 @@ function TStringHelper.Tighten(const target: Char = #32): string; overload;
 var
   i, l, w, r: Integer;
 begin
-  l := Length(Self);
-  SetLength(Result, l);
+  l := Result.SetSize(Length(Self));
   if (l = 0) then
     Exit;
   w := 0;

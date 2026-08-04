@@ -126,8 +126,7 @@ end;
 [==============================================================================}
 function TCharArrayHelper.ToStr: string; overload;
 begin
-  SetLength(Result, Self.Size);
-  if Self.Exists then
+  if (Result.SetSize(Self.Size) > 0) then
     Move(Self[0], Result[1], (Self.Size * SizeOf(Char)));
 end;
 

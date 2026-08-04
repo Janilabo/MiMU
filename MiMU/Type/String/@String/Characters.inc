@@ -48,8 +48,7 @@ begin
   SetLength(c, 0);
   for i := 1 to Length(Self) do
     c.BinaryGrow(Ord(Self[i]));
-  SetLength(Result, Length(c));
-  for i := 0 to High(c) do
+  for i := 0 to Result.Alloc(Length(c)) do
     Result[i] := Char(c[i]);
 end;
 
@@ -170,9 +169,8 @@ var
   i, c: Integer;
 begin
   s := [];
-  SetLength(Result, Length(Self));
   c := 0;
-  for i := 1 to Length(Self) do
+  for i := 1 to Result.SetSize(Length(Self)) do
     if not (Ord(Self[i]) in s) then
     begin
       Include(s, Ord(Self[i]));
@@ -267,8 +265,7 @@ function TStringHelper.IDs(const ID: TIntegerArray): TCharArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Length(ID));
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Length(ID)) do
     Result[i] := Self[ID[i]];
 end;
 
@@ -327,9 +324,8 @@ var
   i, j, l: Integer;
   f: Boolean;
 begin
-  SetLength(Result, Length(Self));
   l := 0;
-  for i := 1 to Length(Self) do
+  for i := 1 to Result.SetSize(Length(Self)) do
   begin
     f := False;
     for j := 0 to (l - 1) do
@@ -354,8 +350,8 @@ function TStringHelper.SetOfChars: TCharArray; overload;
 var
   i, j, h: Integer;
 begin
-  SetLength(Result, Length(Self));
-  if (Length(Self) = 0) then
+  ;
+  if (Result.SetSize(Length(Self)) = 0) then
     Exit;
   Result[0] := Self[1];
   h := 0;

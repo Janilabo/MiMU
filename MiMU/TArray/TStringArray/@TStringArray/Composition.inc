@@ -69,8 +69,7 @@ var
   c: TCharArray;
   i, p, l: Integer;
 begin
-  l := Self.Tally;
-  SetLength(c, l);
+  l := c.SetSize(Self.Tally);
   p := 0;
   for i := 0 to High(Self) do
     if (Self[i] <> '') then
