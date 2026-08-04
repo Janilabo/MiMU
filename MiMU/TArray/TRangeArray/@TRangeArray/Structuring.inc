@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function Unzip(var startArr, stopArr: TIntegerArray): Integer;
-function Zip(const startArr, stopArr: TIntegerArray): Integer;
+function Unzip(var startArr, stopArr: TIntegerArray): Integer; overload;
+function Zip(const startArr, stopArr: TIntegerArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,13 +9,11 @@ function Zip(const startArr, stopArr: TIntegerArray): Integer;
   @action: Stores arr start and stop values to startArr and stopArr.
   @note: Returns Length(arr).
 [==============================================================================}
-function TRangeArrayHelper.Unzip(var startArr, stopArr: TIntegerArray): Integer;
+function TRangeArrayHelper.Unzip(var startArr, stopArr: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
-  Result := Self.Length;
-  SetLength(startArr, Result);
-  SetLength(stopArr, Result);
+  Result := stopArr.SetSize(startArr.SetSize(Self.Length));
   for i := 0 to (Result - 1) do
   begin
     startArr[i] := Self[i].start;
@@ -28,12 +26,11 @@ end;
   @action: Zips TPointArray with startArr and stopArr.
   @note: Uses minimum length(!), if startArr differs from stopArr size.
 [==============================================================================}
-function TRangeArrayHelper.Zip(const startArr, stopArr: TIntegerArray): Integer;
+function TRangeArrayHelper.Zip(const startArr, stopArr: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
-  Result := Min(startArr.Size, stopArr.Size);
-  SetLength(Self, Result);
+  Result := Self.SetSize(Min(startArr.Size, stopArr.Size));
   for i := 0 to (Result - 1) do
   begin
     Self[i].start := startArr[i];

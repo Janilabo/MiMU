@@ -195,13 +195,12 @@ begin
   h := High(rSizes);
   if ((Result < 2) or (Result <> (h + 1))) then
     Exit;
-  SetLength(s, Result);
   m := 0;
   for i := 0 to h do
     if (rSizes[i] > m) then
       m := rSizes[i];
   e := 1;
-  SetLength(r, Result);
+  r.SetSize(s.SetSize(Result));
   while ((m div e) > 0) do
   begin
     for i := 0 to 9 do
@@ -449,9 +448,8 @@ begin
   Result := Self.Copy;
   if (l = 0) then
     Exit;
-  SetLength(s, l);
   m := 0;
-  h := (l - 1);
+  h := r.Alloc(s.SetSize(l));
   for i := 0 to h do
   begin
     s[i] := Result[i].Size;
@@ -459,7 +457,6 @@ begin
       m := s[i];
   end;
   e := 1;
-  SetLength(r, l);
   while ((m div e) > 0) do
   begin
     for i := 0 to 9 do
@@ -589,9 +586,8 @@ begin
   if (l = 0) then
     Exit([]);
   Result := Self.Copy;
-  SetLength(s, l);
   m := 0;
-  h := (l - 1);
+  h := r.Alloc(s.SetSize(l));
   for i := 0 to h do
   begin
     s[i] := Result[i].Size;
@@ -599,7 +595,6 @@ begin
       m := s[i];
   end;
   e := 1;
-  SetLength(r, l);
   while ((m div e) > 0) do
   begin
     for i := 0 to 9 do

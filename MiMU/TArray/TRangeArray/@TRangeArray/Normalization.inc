@@ -79,8 +79,7 @@ function TRangeArrayHelper.Normalized: TRangeArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i].Create(Min(Self[i].start, Self[i].stop), Max(Self[i].start, Self[i].stop));
 end;
 
@@ -102,10 +101,8 @@ function TRangeArrayHelper.Normalized(out reversedIndices: TIntegerArray): TRang
 var
   i, r: Integer;
 begin
-  SetLength(Result, Self.Length);
-  SetLength(reversedIndices, Self.Length);
   r := 0;
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(reversedIndices.SetSize(Self.Length)) do
     if Self[i].Descending then
 	begin
       Result[i].Create(Self[i].stop, Self[i].start);
@@ -148,8 +145,7 @@ function TRangeArrayHelper.Normally: TRangeArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Size) do
     if Self[i].Asceal then
       Result[i] := Self[i]
     else
@@ -165,8 +161,7 @@ function TRangeArrayHelper.Normed: TRangeArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Self.Length) do
     if Self[i].Descending then
       Result[i] := TRange.Construct(Self[i].stop, Self[i].start)
     else
@@ -187,8 +182,7 @@ var
   i, l, n: Integer;
   f: TIntegerArray;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   if (l = 0) then
     Exit;
   SetLength(f, l);
@@ -228,8 +222,7 @@ begin
     end;
   if not f then
     Exit(Self.Copy);
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := TRange.Construct(Min(Self[i].start, Self[i].stop), Max(Self[i].start, Self[i].stop));
 end;
 {$ENDIF}

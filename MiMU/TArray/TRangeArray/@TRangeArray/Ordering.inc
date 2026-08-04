@@ -54,8 +54,7 @@ begin
   if Self.Empty then
     Exit([]);
   P := @Self[0];
-  E := (P + Self.Length);
-  SetLength(Result, Self.Length);
+  E := (P + Result.SetSize(Self.Length));
   r := 0;
   while (P < E) do
   begin
@@ -76,8 +75,7 @@ function TRangeArrayHelper.Ascend: TRangeArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := Self[i].Ascend;  
 end;
 
@@ -90,8 +88,7 @@ function TRangeArrayHelper.Ascended: TRangeArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := Self[i].Ascended;  
 end;
 
@@ -104,8 +101,7 @@ function TRangeArrayHelper.Descend: TRangeArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := Self[i].Descend;  
 end;
 
@@ -118,8 +114,7 @@ function TRangeArrayHelper.Descended: TRangeArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Self) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := Self[i].Descended;  
 end;
 
@@ -150,8 +145,7 @@ function TRangeArrayHelper.Redirected: TRangeArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := TRange.Construct(Self[i].stop, Self[i].start);
 end;
 {$ENDIF}

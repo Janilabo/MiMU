@@ -121,13 +121,11 @@ begin
       R.stop := S[i].stop;
     False:
     begin
-      SetLength(Result, (Result.Length + 1));
-      Result[High(Result)] := R;
+	  Result.Supply(R);
       R := S[i];
     end;
   end;
-  SetLength(Result, (Result.Length + 1));
-  Result[High(Result)] := R;
+  Result.Supply(R);
 end;
 
 {==============================================================================]
@@ -145,10 +143,9 @@ begin
   if (S.Length < 2) then
     Exit(S);
   S.SortByStart;
-  SetLength(Result, S.Length);
   r := 0;
   C := S[0];
-  for i := 1 to High(S) do
+  for i := 1 to Result.Alloc(S.Length) do
   case (S[i].start <= (C.stop + 1)) of
     True:
     if (S[i].stop > C.stop) then
@@ -184,10 +181,9 @@ begin
     Exit([]);
   s := Self.Normalized;
   s.Sort(True);
-  SetLength(Result, s.Length);
   l := 0;
   r := s[0];
-  for i := 1 to High(s) do
+  for i := 1 to Result.Alloc(s.Length) do
     if (s[I].start > (r.stop + 1)) then
     begin
       Result[l.Increase] := r;
@@ -232,7 +228,7 @@ begin
   for i := 0 to High(Self) do
     for j := Self[i].Minimum to Self[i].Maximum do
       s.Increase(r.BinaryGrow(j, rAscending));
-  SetLength(Result, s);
+  Result.SetSize(s);
   d := IfThen(rAscending, 1, -1);
   l := 0;
   Result[0].Create(r[0]);
@@ -270,10 +266,9 @@ begin
   end;
   S := Self.Normalized;
   S.SortByStart(True);
-  SetLength(Result, S.Length);
   l := 0;
   R := S[0];
-  for i := 1 to High(S) do
+  for i := 1 to Result.Alloc(S.Length) do
   case (S[i].start <= (R.stop + 1)) of
     True:
     if (S[i].stop > R.stop) then
@@ -357,10 +352,9 @@ begin
     Exit(Self.Copy);
   S := Self.Normalized;
   S.SortByStart;
-  SetLength(Result, S.Length);
   R := S[0];
   l := 0;
-  for i := 1 to High(S) do
+  for i := 1 to Result.Alloc(S.Length) do
     if (S[i].start > (R.stop + 1)) then
     begin
       Result[l.Increase] := R;
@@ -512,9 +506,8 @@ var
 begin
   if (Self.Length < 2) then
     Exit(Self.Normalized);
-  SetLength(h, Self.Length);
   s := 0;
-  for i := 0 to High(Self) do
+  for i := 0 to h.Alloc(Self.Length) do
     HPush(Self[i].Normalize);
   SetLength(Result, Self.Length);
   l := 0;
@@ -634,10 +627,9 @@ begin
   a := Self[0].Asceal;
   S := Self.Normalized;
   S.SortByStart;
-  SetLength(Result, S.Length);
   l := 0;
   R := S[0];
-  for i := 1 to High(S) do
+  for i := 1 to Result.Alloc(S.Length) do
     if (S[i].start > (R.stop + 1)) then
     begin
       if not a then
@@ -698,10 +690,9 @@ begin
     for j := (i + 1) to h do
       if (s[i].start > s[j].start) then
         Swap(s[i], s[j]);
-  SetLength(Result, (h + 1));
   l := 0;
   c := s[0];
-  for i := 1 to h do
+  for i := 1 to Result.Alloc(h + 1) do
   begin
     r := s[i];
     if (r.start > (c.stop + threshold + 1)) then
@@ -913,10 +904,9 @@ begin
     Exit(Self.Copy);
   S := Self.Normalized;
   S.SortByMinimum(True);
-  SetLength(Result, S.Length);
   R := S[0];
   l := 0;
-  for i := 1 to High(S) do
+  for i := 1 to Result.Alloc(S.Length) do
     if (S[i].start > (R.stop + 1)) then
     begin
       Result[l.Increase] := R;
@@ -1078,9 +1068,8 @@ begin
   h := High(Self);
   if (h < 1) then
     Exit(Self.Copy);
-  SetLength(n, (h + 1));
   r := Self[0].Normalized;
-  for i := 0 to h do
+  for i := 0 to n.Alloc(h + 1) do
   begin
     if (Self[i].start <= Self[i].stop) then
       n[i] := Self[i]
@@ -1211,15 +1200,14 @@ begin
   for i := 0 to (n - 2) do
     if (S[i + 1].start <= (h[F(i)] + 1)) then
       U(i, (i + 1));
-  SetLength(Result, n);
   r := 0;
   case oAscending of
     True:
-    for i := 0 to (n - 1) do
+    for i := 0 to Result.Alloc(n) do
       if (F(i) = i) then
         Result[r.Increase].Create(l[i], h[i]);
     False:
-    for i := (n - 1) downto 0 do
+    for i := Result.Alloc(n) downto 0 do
       if (F(i) = i) then
         Result[r.Increase].Create(h[i], l[i]);
   end;
