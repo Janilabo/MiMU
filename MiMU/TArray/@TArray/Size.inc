@@ -1,5 +1,7 @@
 {$IFDEF HELPERS}
 function Alloc(const sSize: Integer = 1): Integer; overload;
+function Cize(const target: MArray): Integer; overload;
+function Cized(const target: MArray): MArray; overload;
 function Desize(out excess: MArray; const aSize: Integer = 0): Integer; overload;
 function Desize(const aSize: Integer = 0): Integer; overload;
 function Downlength(const N: UInt32 = 1): Integer; overload;
@@ -34,7 +36,49 @@ function ToLength(const sSize: Integer = 1): Integer; overload;
 function Uplength(const N: UInt32 = 1): Integer; overload;
 {$ENDIF}
 
+{$IFDEF FUNCTIONS}
+function Sizen(const sSize: Integer; var A: MArray): Integer; overload;
+function Sizen(const sSize: Integer; var A, B: MArray): Integer; overload;
+function Sizen(const sSize: Integer; var A, B, C: MArray): Integer; overload;
+function Sizen(const sSize: Integer; var A, B, C, D: MArray): Integer; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Sizen>
+  @action: Sets all given arrays to the same length (clamped to a minimum of 0).
+  @note: Overloaded for 1, 2, 3, and 4 arrays. Result is the applied length.
+[==============================================================================}
+function Sizen(const sSize: Integer; var A: MArray): Integer; overload;
+begin
+  Result := Max(0, sSize);
+  SetLength(A, Result);
+end;
+
+function Sizen(const sSize: Integer; var A, B: MArray): Integer; overload;
+begin
+  Result := Max(0, sSize);
+  SetLength(A, Result);
+  SetLength(B, Result);
+end;
+
+function Sizen(const sSize: Integer; var A, B, C: MArray): Integer; overload;
+begin
+  Result := Max(0, sSize);
+  SetLength(A, Result);
+  SetLength(B, Result);
+  SetLength(C, Result);
+end;
+
+function Sizen(const sSize: Integer; var A, B, C, D: MArray): Integer; overload;
+begin
+  Result := Max(0, sSize);
+  SetLength(A, Result);
+  SetLength(B, Result);
+  SetLength(C, Result);
+  SetLength(D, Result);
+end;
+
 {==============================================================================]
   <Alloc>
   @action: Allocates memory for the dynamic array up to the specified size.
@@ -44,6 +88,28 @@ function Uplength(const N: UInt32 = 1): Integer; overload;
 function MArrayHelper.Alloc(const sSize: Integer = 1): Integer; overload;
 begin
   Result := (Self.SetSize(sSize) - 1);
+end;
+
+{==============================================================================]
+  <Cize>
+  @action: Captures target's length into Self, resizing Self in place.
+  @note: Mutates Self. Does not copy target's contents, only its length.
+[==============================================================================}
+function MArrayHelper.Cize(const target: MArray): Integer; overload;
+begin
+  SetLength(Self, target.Length);
+  Result := Self.Length;
+end;
+
+{==============================================================================]
+  <Cized>
+  @action: Returns a copy of Self resized to target's length.
+  @note: Non-mutating counterpart to Cize. Self is left untouched.
+[==============================================================================}
+function MArrayHelper.Cized(const target: MArray): MArray; overload;
+begin
+  Result := Self;
+  SetLength(Result, target.Length);
 end;
 
 {==============================================================================]
