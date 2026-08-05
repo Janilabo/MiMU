@@ -296,10 +296,8 @@ begin
   n := Self.Size;
   if ((n > 0) and (n = weight.Size)) then
   begin
-    SetLength(Result, n);
     Result := Self.Copy;
-    SetLength(r, n);
-    for i := 0 to (n - 1) do
+    for i := 0 to r.Alloc(n) do
       r[i] := i;
     QS_IDs(r, 0, (n - 1));
     for i := 0 to (n - 1) do
@@ -340,10 +338,8 @@ begin
   n := Self.Size;
   if ((n > 0) and (n = weight.Size)) then
   begin
-    SetLength(Result, n);
     Result := Self.Copy;
-    SetLength(r, n);
-    for i := 0 to (n - 1) do
+    for i := 0 to r.Alloc(n) do
       r[i] := i;
     QS_IDs(r, 0, (n - 1));
     for i := 0 to (n - 1) do

@@ -119,8 +119,7 @@ begin
   l := Self.Length;
   if (aFloor <= l) then
     Exit(0);
-  SetLength(Self, aFloor);
-  for i := l to (aFloor - 1) do
+  for i := l to Self.Alloc(aFloor) do
     Self[i] := null;
   Result := (Self.Length - l);
 end;
@@ -139,8 +138,7 @@ begin
   l := Self.Length;
   if (aFloor <= l) then
     Exit(0);
-  SetLength(Self, aFloor);
-  Result := (Self.Length - l);
+  Result := (Self.SetSize(aFloor) - l);
 end;
 
 {==============================================================================]

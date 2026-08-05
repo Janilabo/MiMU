@@ -495,9 +495,8 @@ begin
   h := High(Self);
   if ((h = -1) or ID.Empty) then
     Exit([]);
-  SetLength(Result, ID.Length);
   j := 0;
-  for i := 0 to High(ID) do
+  for i := 0 to Result.Alloc(ID.Length) do
     if ((ID[i] < 0) or (ID[i] > h)) then
       goto finish
     else
@@ -517,8 +516,7 @@ var
   h, i, l: Integer;
   m: TBooleanArray;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   if (l = 0) then
     Exit;
   m.Create(l, False);
@@ -635,8 +633,7 @@ begin
   if e.Empty then
     Exit([]);
   e := e.Canonical;
-  k := e.Length;
-  SetLength(Result, k);
+  k := Result.SetSize(e.Length);
   r := 0;
   j := 0;
   while (j < k) do
@@ -927,9 +924,8 @@ begin
     else
       e[ID[i]] := True;
   process:
-  SetLength(Result, l);
   j := 0;
-  for i := 0 to (l - 1) do
+  for i := 0 to Result.Alloc(l) do
     if not e[i] then
       Result[j.Increase] := Self[i];
   SetLength(Result, j);
@@ -945,8 +941,7 @@ var
   h, i, l: Integer;
   m: TBooleanArray;
 begin
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   if (l = 0) then
     Exit;
   m.Create(l, False);
@@ -972,8 +967,8 @@ var
 begin
   if forbidden.Empty then
     Exit(Self.Copy);
-  l := Self.Length;
-  if (Result.SetSize(l) = 0) then
+  l := Result.SetSize(Self.Length);
+  if (l = 0) then
     Exit;
   if not fSorted then
     f := forbidden.QuickSorted
