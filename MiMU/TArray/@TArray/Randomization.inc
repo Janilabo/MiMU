@@ -480,9 +480,8 @@ begin
   l := Self.Length;
   if (l < 2) then
     Exit(Self.Copy);
-  SetLength(Result, l);
   m.Create(l, False);
-  for i := 0 to (l - 1) do
+  for i := 0 to Result.Alloc(l) do
   begin
     repeat
       r := Random(l);
@@ -695,11 +694,9 @@ begin
   if (s < 2) then
     Exit;
   m := (s div 2);
-  SetLength(l, m);
-  for i := 0 to High(l) do
+  for i := 0 to l.Alloc(m) do
     l[i] := i;
-  SetLength(r, (s - m - 1));
-  for i := 0 to High(r) do
+  for i := 0 to r.Alloc(s - m - 1) do
     r[i] := (m + 1 + i);
   l.Mix;
   r.Mix;
@@ -822,8 +819,7 @@ begin
   l := Self.Length;
   if (l < 2) then
     Exit(Self.Copy);
-  SetLength(w, l);
-  for i := 0 to (l - 1) do
+  for i := 0 to w.Alloc(l) do
     w[i] := Random;
   Result := Self.QuickSorted(w);
 end;
@@ -884,9 +880,8 @@ begin
   l := Self.Length;
   if (l < 2) then
     Exit(Self.Copy);
-  SetLength(Result, l);
   i := Self.Indexes;
-  for s := 0 to High(Self) do
+  for s := 0 to Result.Alloc(l) do
   begin
     r := Random(l);
     Result[i[r]] := Self[s];
@@ -913,8 +908,7 @@ begin
   Result := Self.Cloned;
   if (Result.Length < 2) then
     Exit;
-  SetLength(r, Result.Length);
-  for i := 0 to High(r) do
+  for i := 0 to r.Alloc(Result.Length) do
     r[i] := Random(High(Integer));
   for i := High(Result) downto 1 do
     Result.Exch(i, (r[i] mod (i + 1)));
@@ -1141,8 +1135,7 @@ begin
   l := Self.Length;
   if ((l = 0) or (sCount < 1)) then
     Exit([]);
-  SetLength(Result, sCount);
-  for i := 0 to (sCount - 1) do
+  for i := 0 to Result.Alloc(sCount) do
     Result[i] := Self[Random(l)];
 end;
 

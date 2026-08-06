@@ -51,9 +51,8 @@ function MArrayHelper.Repulse: MArray; overload;
 var
   i, r: Integer;
 begin
-  Result.SetSize(Self.Length);
   r := 0;
-  for i := High(Self) downto 0 do
+  for i := Result.Alloc(Self.Length) downto 0 do
     Result[r.Increase] := Self[i];
   Self.SetSize(0);
 end;

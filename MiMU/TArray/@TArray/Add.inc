@@ -6,6 +6,8 @@ function Cat(const A, B: MArray): MArray; overload;
 function Accommodate(const item: MType; const index: Integer): Integer; overload;
 function Add(const item: MType; const duplicates: Boolean = True): MArray; overload;
 function Add(const items: MArray; const duplicates: Boolean = True): MArray; overload;
+function Admit(const item: MType): Integer; overload;
+function Admit(const items: MArray): Integer; overload;
 function Affix(const item: MType): MArray; overload;
 function Affix(const items: MArray): MArray; overload;
 function Annex(const item: MType): MArray; overload;
@@ -126,6 +128,33 @@ begin
     for i := 0 to High(items) do
       Result[s + i] := items[i];
   end;
+end;
+
+{==============================================================================]
+  <Admit>
+  @action: Appends a single item to the end of the array, growing it by one.
+  @note: Returns the new length of the array after the item is admitted. Uses SetSize,
+         which returns the new length (not the high index).
+[==============================================================================}
+function MArrayHelper.Admit(const item: MType): Integer; overload;
+begin
+  Result := Self.SetSize(Self.Length + 1);
+  Self[Result - 1] := item;
+end;
+
+{==============================================================================]
+  <Admit>
+  @action: Appends a set of items to the end of the array, growing it to accommodate all of them.
+  @note: Returns the new length of the array after the items are admitted. Overload of Admit for bulk insertion.
+[==============================================================================}
+function MArrayHelper.Admit(const items: MArray): Integer; overload;
+var
+  i, l: Integer;
+begin
+  l := items.Length;
+  Result := Self.SetSize(Self.Length + l);
+  for i := 0 to (l - 1) do
+    Self[Result - l + i] := items[i];
 end;
 
 {==============================================================================]

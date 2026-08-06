@@ -132,8 +132,7 @@ function MArrayHelper.Drain: MArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Length);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := Self[i];
   SetLength(Self, 0);
 end;
