@@ -21,6 +21,8 @@ function Extend(const item: MType): MArray; overload;
 function Extend(const items: MArray): MArray; overload;
 function Feed(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
 function Grow(const item: MType; const allowDuplicates: Boolean = False): Integer; overload;
+function Infuse(const item: MType): Integer; overload;
+function Infuse(const items: MArray): Integer; overload;
 function Inject(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 function Prepend(const items: MArray; const index: Integer = 0): Integer; overload;
 function Push(const item: MType): MArray; overload;
@@ -377,6 +379,31 @@ begin
     Exit(-1);
   Result := Self.Alloc(Self.Length + 1);
   Self[Result] := item;
+end;
+
+{==============================================================================]
+  <Infuse>
+  @action: Appends a single item to the end of the array, growing it by one.
+  @note: Returns the new length of the array after the item is infused.
+         Uses the RTL's Insert() with an index equal to the current length,
+		 which appends rather than inserting mid-array.
+[==============================================================================}
+function MArrayHelper.Infuse(const item: MType): Integer; overload;
+begin
+  Insert(item, Self, Self.Length);
+  Result := Self.Length;
+end;
+
+{==============================================================================]
+  <Infuse>
+  @action: Appends a set of items to the end of the array, growing it to accommodate all of them.
+  @note: Returns the new length of the array after the items are infused.
+         Overload of Infuse for bulk insertion, also via Insert() at the current end index.
+[==============================================================================}
+function MArrayHelper.Infuse(const items: MArray): Integer; overload;
+begin
+  Insert(items, Self, Self.Length);
+  Result := Self.Length;
 end;
 
 {==============================================================================]
