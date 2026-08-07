@@ -335,8 +335,8 @@ function MArrayHelper.Indexes(const aAscending: Boolean = True): TIntegerArray; 
 var
   i, l: Integer;
 begin
-  l := Result.SetSize(Self.Length);
-  for i := 0 to (l - 1) do
+  l := Self.Length;
+  for i := 0 to Result.Alloc(l) do
     Result[i] := IfThen(aAscending, i, ((l - i) - 1));
 end;
 

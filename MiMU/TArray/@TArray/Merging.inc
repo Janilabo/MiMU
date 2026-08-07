@@ -79,8 +79,7 @@ begin
   s := Self.Size;
   t := target.Size;
   r := (s + t);
-  SetLength(Result, r);
-  if (r = 0) then
+  if (Result.SetSize(r) = 0) then
     Exit;
   for i := High(target) downto 0 do
     Result[r.Decrement] := target[i];
@@ -111,8 +110,7 @@ var
 begin
   s := Self.Size;
   t := target.Size;
-  SetLength(Result, (s + t));
-  if ((s + t) = 0) then
+  if (Result.SetSize(s + t) = 0) then
     Exit;
   Self.Swapped(target);
   for i := 0 to High(Self) do

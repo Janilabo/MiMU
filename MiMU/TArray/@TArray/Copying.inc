@@ -132,8 +132,7 @@ begin
   while (l.Decrement > -1) do
     if (Self[l] = aItem) then
       Break;
-  SetLength(Result, (l + 1));
-  for r := 0 to l do
+  for r := 0 to Result.Alloc(l + 1) do
     Result[r] := Self[r];
 end;
 
@@ -224,8 +223,7 @@ function MArrayHelper.Get(const ID: TIntegerArray): MArray; overload;
 var
   i: Integer;
 begin
-  SetLength(Result, ID.Size);
-  for i := 0 to High(ID) do
+  for i := 0 to Result.Alloc(ID.Size) do
     Result[i] := Self[ID[i]];
 end;
 

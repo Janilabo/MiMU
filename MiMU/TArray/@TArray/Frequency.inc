@@ -115,16 +115,17 @@ end;
 [==============================================================================}
 function MArrayHelper.MostFrequent: MType; overload;
 var
-  i, j, c, m: Integer;
+  h, i, j, c, m: Integer;
 begin
-  if Self.Empty then
+  h := High(Self);
+  if (h = -1) then
     Exit;
   m := 0;
   Result := Self[0];
-  for i := 0 to High(Self) do
+  for i := 0 to h do
   begin
     c := 1;
-    for j := (i + 1) to High(Self) do
+    for j := (i + 1) to h do
       if (Self[j] = Self[i]) then
         Inc(c);
     if (c > m) then

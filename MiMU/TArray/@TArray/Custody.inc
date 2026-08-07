@@ -103,7 +103,7 @@ var
   r: Integer;
 begin
   Result := source.Length;
-  for r := 0 to (Self.SetSize(Result) - 1) do
+  for r := 0 to Self.Alloc(Result) do
     Self[r] := source[r];
 end;
 {$ENDIF}

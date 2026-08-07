@@ -141,8 +141,7 @@ begin
     0: Exit([]);
     1: Exit([Self[0]]);
   end;
-  SetLength(Result, Self.Size);
-  r.Create(-1, Result.Size);
+  r.Create(-1, Result.SetSize(Self.Size));
   while (r.start.Increment <= r.stop.Decrement) do
   begin
     Result[r.start] := Self[r.start];
@@ -372,7 +371,7 @@ label
 var
   s: Integer;
 begin
-  s := (Result.SetSize(Self.Length) - 1);
+  s := Result.Alloc(Self.Length);
   if (s < 0) then
     Exit;
   loop:
@@ -415,7 +414,7 @@ function MArrayHelper.Selfie: MArray; overload;
 var
   i: Integer;
 begin
-  for i := 0 to (Result.SetSize(Self.Length) - 1) do
+  for i := 0 to Result.Alloc(Self.Length) do
     Result[i] := Self[i];
 end;
 
