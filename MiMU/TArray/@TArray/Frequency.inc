@@ -28,11 +28,8 @@ begin
       else
         d.Add(Self[i], 1);
     for i := 0 to High(Self) do
-      if (d[Self[i]] < m) then
-      begin
-        m := d[Self[i]];
+      if m.Minate(d[Self[i]]) then
         Result := Self[i];
-      end;
   finally
     d.Free;
   end;
@@ -68,11 +65,8 @@ begin
     for j := (i + 1) to h do
       if (Self[j] = Self[i]) then
         Inc(c);
-    if (c < m) then
-    begin
-      m := c;
+    if m.Minate(c) then
       Result := Self[i];
-    end;
   end;
 end;
 
@@ -98,11 +92,8 @@ begin
       else
         d.Add(Self[i], 1);
     for i := 0 to High(Self) do
-      if (d[Self[i]] > m) then
-      begin
-        m := d[Self[i]];
+      if m.Maxate(d[Self[i]]) then
         Result := Self[i];
-      end;
   finally
     d.Free;
   end;
@@ -128,11 +119,8 @@ begin
     for j := (i + 1) to h do
       if (Self[j] = Self[i]) then
         Inc(c);
-    if (c > m) then
-    begin
-      m := c;
+    if m.Maxate(c) then
       Result := Self[i];
-    end;
   end;
 end;
 {$ENDIF}

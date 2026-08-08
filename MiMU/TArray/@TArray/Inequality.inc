@@ -157,12 +157,11 @@ end;
 [==============================================================================}
 function MArrayHelper.NonIdentical(const target: MArray): Boolean; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
-  if (l <> target.Length) then
+  if (Self.Length <> target.Length) then
     Exit(True);
-  for i := 0 to (l - 1) do
+  for i := 0 to High(Self) do
     if (Self[i] <> target[i]) then
       Exit(True);
   Result := False;
@@ -237,12 +236,11 @@ end;
 [==============================================================================}
 function MArrayHelper.Unequivalent(const target: MArray): Boolean; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
-  if (l <> target.Length) then
+  if (Self.Length <> target.Length) then
     Exit(True);
-  for i := 0 to (l - 1) do
+  for i := 0 to High(Self) do
     if (Self[i] <> target[i]) then
       Exit(True);
   Result := False;

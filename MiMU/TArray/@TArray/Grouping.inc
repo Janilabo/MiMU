@@ -331,8 +331,7 @@ begin
   SetLength(Result, 0);
   if ((l = 0) or (l <> groups.Size)) then
     Exit;
-  SetLength(p, l);
-  for i := 0 to (l - 1) do
+  for i := 0 to p.Alloc(l) do
     p[i] := i;
   p := p.QuickSorted(groups);
   g := groups[p[0]];

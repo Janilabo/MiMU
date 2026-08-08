@@ -191,8 +191,7 @@ begin
   if Self.Empty then
     Exit([]);
   r := Self.Domain.Sample(sSize);
-  SetLength(Result, r.Size);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(r.Size) do
     Result[i] := Self[r[i]];
 end;
 
@@ -212,9 +211,8 @@ begin
     0: Exit([]);
     1: Exit([Self[0]]);
   end;
-  SetLength(Result, l);
   r := 0;
-  s.Create(0, (l - 1));
+  s.Create(0, Result.Alloc(l));
   case zAscending of
     True:
     repeat

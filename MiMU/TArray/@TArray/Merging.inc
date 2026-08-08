@@ -85,11 +85,9 @@ begin
     Result[r.Decrement] := target[i];
   for i := High(Self) downto 0 do
     Result[r.Decrement] := Self[i];
-  SetLength(Self, t);
-  SetLength(target, s);
-  for i := 0 to (t - 1) do
+  for i := 0 to Self.Alloc(t) do
     Self[i] := Result[s + i];
-  for i := 0 to (s - 1) do
+  for i := 0 to target.Alloc(s) do
     target[i] := Result[i];
 end;
 

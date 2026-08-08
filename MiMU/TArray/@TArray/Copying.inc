@@ -257,14 +257,12 @@ function MArrayHelper.Next(const index: Integer; const count: Integer = 21474836
 var
   m, i: Integer;
 begin
-  if ((index >= 0) and (index < (Self.Size - 1)) and (count > 0)) then
-  begin
-    m := Min((Self.Size - (index + 1)), count);
-    SetLength(Result, m);
-    for i := 0 to (m - 1) do
+  case ((index >= 0) and (index < (Self.Size - 1)) and (count > 0)) of
+    True:
+    for i := 0 to Result.Alloc(Min((Self.Size - (index + 1)), count)) do
       Result[i] := Self[(index + 1) + i];
-  end else
-    SetLength(Result, 0);
+    False: SetLength(Result, 0);
+  end;
 end;
 
 {==============================================================================]
@@ -475,13 +473,11 @@ var
   i, h, r: Integer;
 begin
   r := 0;
-  if (ID.Populated and Self.Populated) then
-  begin
-    h := High(Self);
-    for i := 0 to Result.Alloc(ID.Size) do
-      if ((ID[i] <= h) and (ID[i] > -1)) then
-        Result[r.Increase] := Self[ID[i]];
-  end;
+  h := High(Self);
+  if ((h > -1) and ID.Populated) then
+  for i := 0 to Result.Alloc(ID.Size) do
+    if ((ID[i] <= h) and (ID[i] > -1)) then
+      Result[r.Increase] := Self[ID[i]];
   SetLength(Result, r);
 end;
 {$ENDIF}

@@ -199,12 +199,9 @@ end;
 [==============================================================================}
 function MArrayHelper.Plain: Boolean; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
-  if (l <= 1) then
-    Exit(True);
-  for i := 1 to (l - 1) do
+  for i := 1 to High(Self) do
     if (Self[i] <> Self[i - 1]) then
       Exit(False);
   Result := True;

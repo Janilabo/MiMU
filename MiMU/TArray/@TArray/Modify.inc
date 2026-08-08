@@ -81,8 +81,7 @@ begin
   if (h = -1) then
     Exit;
   e := exceptions.ExtractValues(TRange.Construct(0, h));
-  SetLength(r, e.Length);
-  for i := 0 to High(e) do
+  for i := 0 to r.Alloc(e.Length) do
     r[i] := Self[i];
   for i := 0 to h do
     if (Self[i] = old) then

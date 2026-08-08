@@ -12,8 +12,10 @@ function Extremify(const item: MType): Boolean; overload;
 function Guard(const gLow, gHigh, fallback: MType): MType; overload;
 function Maxate(const item: MType): Boolean; overload;
 function Maxify(const item: MType): Boolean; overload;
+function Maximate(const target: MType): Boolean; overload;
 function Minate(const item: MType): Boolean; overload;
 function Minify(const item: MType): Boolean; overload;
+function Minimate(const target: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -204,6 +206,20 @@ begin
 end;
 
 {==============================================================================]
+  <Maximate>
+  @action: Raises Self to `target` if `target` is greater; returns True if changed.
+  @note: Mutating. Equivalent to `Self := Max(Self, target)`, reporting whether an update occurred.
+[==============================================================================}
+function MTypeHelper.Maximate(const target: MType): Boolean; overload;
+var
+  s: MType;
+begin
+  s := Self;
+  Self := Max(Self, target);
+  Result := (Self <> s);
+end;
+
+{==============================================================================]
   <Minate>
   @action: Conditionally replaces Self with item if item is lower.
   @note: Returns True if item < Self, in which case Self is updated to item.
@@ -229,6 +245,20 @@ begin
   s := Self;
   if (item < Self) then
     Self := item;
+  Result := (Self <> s);
+end;
+
+{==============================================================================]
+  <Minimate>
+  @action: Lowers Self to `target` if `target` is smaller; returns True if changed.
+  @note: Mutating. Equivalent to `Self := Min(Self, target)`, reporting whether an update occurred.
+[==============================================================================}
+function MTypeHelper.Minimate(const target: MType): Boolean; overload;
+var
+  s: MType;
+begin
+  s := Self;
+  Self := Min(Self, target);
   Result := (Self <> s);
 end;
 {$ENDIF}
