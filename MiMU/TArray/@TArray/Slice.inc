@@ -125,7 +125,7 @@ function MArrayHelper.Frontery(const N: Integer = 1): MArray; overload;
 begin
   if ((N <= 0) or (Self.Length = 0)) then
     Exit(nil);
-  Result := (System.Copy(Self, 0, Self.Length - 1).Frontery(N - 1) + [Self[Min(N, Self.Length) - 1]]);
+  Result := (System.Copy(Self, 0, (Self.Length - 1)).Frontery(N - 1) + [Self[Min(N, Self.Length) - 1]]);
 end;
 
 {==============================================================================]

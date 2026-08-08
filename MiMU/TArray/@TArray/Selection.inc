@@ -1248,14 +1248,14 @@ var
   l, i: Integer;
   r: TBooleanArray;
 begin
+  Result := 0;
   l := Self.Length;
   if (l = 0) then
-    Exit(0);
+    Exit;
   SetLength(r, l);
   for i := 0 to High(ID) do
     if ((ID[i] >= 0) and (ID[i] < l)) then
       r[ID[i]] := True;
-  Result := 0;
   for i := 0 to (l - 1) do
     if r[i] then
       Self[Result.Increase] := Self[i];
@@ -1481,8 +1481,8 @@ begin
   L := Self.Length;
   if ((tRate <= 0) or (L = 0)) then
     Exit(Self.Copy);
-  if (tRate >= 50.0)
-    then Exit([]);
+  if (tRate >= 50.0) then
+    Exit([]);
   t := Trunc((L * tRate) / 100.0);
   if (t <= 0) then
     Exit(Self.Copy);

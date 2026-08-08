@@ -298,11 +298,10 @@ end;
 [==============================================================================}
 function MArrayHelper.LengthTo(const N: Integer): Integer; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
   Result := Max(N, 0);
-  l := Self.Length;
-  for i := l to Self.Alloc(Result) do
+  for i := Self.Length to Self.Alloc(Result) do
     Self[i] := Default(MType);
 end;
 
@@ -345,11 +344,10 @@ end;
 [==============================================================================}
 function MArrayHelper.Reshape(const aSize: Integer): MArray; overload;
 var
-  i, l: Integer;
+  i: Integer;
 begin
-  l := Self.Length;
   SetLength(Result, aSize);
-  for i := 0 to (Min(l, aSize) - 1) do
+  for i := 0 to (Min(Self.Length, aSize) - 1) do
     Result[i] := Self[i];
 end;
 

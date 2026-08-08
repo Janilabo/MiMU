@@ -166,14 +166,11 @@ var
 begin
   r := 0;
   if Self.Empty then
-  begin
-    SetLength(Result, ID.Size);
-    for i := 0 to High(ID) do
-      if (r >= limit) then
-        Break
-      else if (Self[ID[i]] = item) then
-        Result[r.Increase] := ID[i];
-  end;
+  for i := 0 to Result.Alloc(ID.Length) do
+    if (r >= limit) then
+      Break
+    else if (Self[ID[i]] = item) then
+      Result[r.Increase] := ID[i];
   SetLength(Result, r);
 end;
 
@@ -219,14 +216,11 @@ var
 begin
   r := 0;
   if (Self.Populated and items.Populated) then
-  begin
-    SetLength(Result, ID.Size);
-    for i := 0 to High(ID) do
-      if (r >= limit) then
-        Break
-      else if items.Contains(Self[ID[i]]) then
-        Result[r.Increase] := ID[i];
-  end;
+  for i := 0 to Result.Alloc(ID.Length) do
+    if (r >= limit) then
+      Break
+    else if items.Contains(Self[ID[i]]) then
+      Result[r.Increase] := ID[i];
   SetLength(Result, r);
 end;
 

@@ -629,7 +629,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
 var
-  i, j, a, s, p, l: Integer;
+  i, j, a, s, p: Integer;
   f: Boolean;
 begin
   SetLength(Result, 0);
@@ -638,7 +638,6 @@ begin
   if ((s = 0) or (a = 0) or (s > a) or (index < 0)) then
     Exit;
   p := Min(index, (a - s));
-  l := 0;
   for i := p downto 0 do
   begin
     f := True;
@@ -649,10 +648,7 @@ begin
         Break;
       end;
     if f then
-    begin
-      SetLength(Result, l.Increment);
-      Result[l - 1].Create(i, ((i + s) - 1));
-    end;
+      Result.Supply(TRange.Construct(i, ((i + s) - 1)));
   end;
 end;
 
