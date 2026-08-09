@@ -40,9 +40,8 @@ var
   h, i, c: Integer;
 begin
   h := High(Self);
-  if (h = -1) then
-    Exit([]);
-  SetLength(Result, (h + 1));
+  if (Result.SetSize(h + 1) = 0) then
+    Exit;
   c := 0;
   Result[c].Create(Self[0], Self[0]);
   for i := 1 to h do
@@ -89,9 +88,9 @@ function TIntegerArrayHelper.Fusion: TRangeArray; overload;
 var
   h, i, l: Integer;
 begin
-  if Self.Empty then
-    Exit([]);
   h := Result.Alloc(Self.Length);
+  if (h = -1) then
+    Exit;
   l := 0;
   i := 0;
   while (i <= h) do
@@ -357,9 +356,10 @@ var
   i, c, l, p, s: Integer;
   b: TIntegerArray;
 begin
-  l := b.SetSize(Self.Length);
+  l := Self.Length;
   if (l = 0) then
     Exit([]);
+  b.SetSize(l);
   b[0] := 0;
   c := 1;
   p := 0;
@@ -623,8 +623,9 @@ var
   b: TIntegerArray;
 begin
   l := Self.Length;
-  if (b.SetSize(l) = 0) then
+  if (l = 0) then
     Exit([]);
+  b.SetSize(l);
   b[0] := 0;
   c := 1;
   for i := 1 to (l - 1) do

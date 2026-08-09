@@ -53,18 +53,14 @@ begin
   Result := High(Self);
   if (Result < 1) then
     Exit;
-  SetLength(n, (Result + 1));
-  SetLength(a, (Result + 1));
   x := 0;
   y := 0;
-  for i := 0 to Result do
+  for i := 0 to a.Alloc(n.SetSize(Result + 1)) do
     if (Self[i] < 0) then
       n[x.Increase] := -Self[i]
     else
       a[y.Increase] := Self[i];
-  SetLength(n, x);
-  SetLength(a, y);
-  if (x > 0) then
+  if (n.SetSize(x) > 0) then
   begin
     m := n[0];
     for i := 1 to (x - 1) do
@@ -79,8 +75,7 @@ begin
         Inc(c[(n[i] div e) mod 10]);
       for j := 8 downto 0 do
         c[j] := (c[j] + c[j + 1]);
-      SetLength(Self, x);
-      for i := (x - 1) downto 0 do
+      for i := Self.Alloc(x) downto 0 do
         Self[c[((n[i] div e) mod 10)].Decrement] := n[i];
       for i := 0 to (x - 1) do
         n[i] := Self[i];
@@ -89,7 +84,7 @@ begin
     for i := 0 to (x - 1) do
       n[i] := -n[i];
   end;
-  if (y > 0) then
+  if (a.SetSize(y) > 0) then
   begin
     m := a[0];
     for i := 1 to (y - 1) do
@@ -104,8 +99,7 @@ begin
         Inc(c[(a[i] div e) mod 10]);
       for j := 1 to 9 do
         c[j] := (c[j] + c[j - 1]);
-      SetLength(Self, y);
-      for i := (y - 1) downto 0 do
+      for i := Self.Alloc(y) downto 0 do
         Self[c[(a[i] div e) mod 10].Decrement] := a[i];
       for i := 0 to (y - 1) do
         a[i] := Self[i];

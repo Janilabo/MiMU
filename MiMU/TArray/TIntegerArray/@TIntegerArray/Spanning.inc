@@ -200,7 +200,7 @@ begin
     begin
       while (Result.start > 0) and (Self[Result.start - 1] <= m.stop) do
         Dec(Result.start);
-      while (Result.stop < High(Self)) and (Self[Result.stop + 1] >= m.start) do
+      while (Result.stop < H) and (Self[Result.stop + 1] >= m.start) do
         Inc(Result.stop);
     end;
   end;

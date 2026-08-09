@@ -8,9 +8,9 @@ function Embed(const items: TIntegerArray; const index: Integer = 2147483647): I
   <Attach>
   @action: Appends all points from the given array to the end of Self.
            Returns the new total length of the array after appending.
-  @note:   Uses Move() for efficiency since Integer is an unmanaged type.
-           If the input array is empty, the function returns the current length
-           of Self without modification.
+  @note: Uses Move() for efficiency since Integer is an unmanaged type.
+         If the input array is empty, the function returns the current length
+         of Self without modification.
 [==============================================================================}
 function TIntegerArrayHelper.Attach(const items: TIntegerArray): Integer; overload;
 var
@@ -20,8 +20,7 @@ begin
   i := items.Size;
   if (i = 0) then
     Exit(l);
-  Result := (l + i);
-  SetLength(Self, Result);
+  Result := Self.SetSize(l + i);
   Move(items[0], Self[l], (i * SizeOf(Integer)));
 end;
 

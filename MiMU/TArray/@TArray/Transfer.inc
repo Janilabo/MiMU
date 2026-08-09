@@ -7,10 +7,12 @@ function Inlay(const source: MArray; const sIndexes: TIntegerArray): Integer; ov
 function Inlay(const source: MArray; const sIndexes: TRange): Integer; overload;
 function Inlay(const source: MArray; const sIndex: Integer): Integer; overload;
 function Inlay(const source: MArray; const sIndexA, sIndexB: Integer): Integer; overload;
+function Inply(const source: MArray; const sIndexes: TIntegerArray): Integer; overload;
 function Onlay(var target: MArray; const sIndexes: TIntegerArray): Integer; overload;
 function Onlay(var target: MArray; const sIndexes: TRange): Integer; overload;
 function Onlay(var target: MArray; const sIndex: Integer): Integer; overload;
 function Onlay(var target: MArray; const sIndexA, sIndexB: Integer): Integer; overload;
+function Onply(var target: MArray; const sIndexes: TIntegerArray): Integer; overload;
 function Place(var target: MArray; const aIndex: Integer = 0): MType; overload;
 function Place(var target: MArray; const aIndexes: TIntegerArray): MArray; overload;
 function Receive(const source: MArray; const aIndex: Integer = 0): Boolean; overload;
@@ -69,8 +71,7 @@ end;
   <Fetch>
   @action: Swaps elements between a `source` array and the current array (`Self`) at the indices specified by `aIndexes`,
            returning an array containing the original values from `Self`.
-  @note: CRITICAL NOTE: This method contains no bounds checking and contains compilation bugs.
-         Indexing outside valid boundaries will trigger runtime access violations.
+  @note: CRITICAL NOTE: This method contains no bounds checking. Indexing outside valid boundaries will trigger runtime access violations.
 [==============================================================================}
 function MArrayHelper.Fetch(const source: MArray; const aIndexes: TIntegerArray): MArray; overload;
 var
@@ -148,6 +149,29 @@ begin
 end;
 
 {==============================================================================]
+  <Inply>
+  @action: Copies values from `source` into `Self` at each index in `sIndexes`, leaving all other elements of `Self` untouched.
+  @note: Returns the number of indices written (equal to `sIndexes.Length`). No bounds or duplicate-index checking is performed —
+         the caller is responsible for ensuring all indices are valid for both `source` and `Self`.
+         Uses pointer traversal over `sIndexes` for efficiency. Failsafes are intentionally omitted to keep the method efficient.
+[==============================================================================}
+function MArrayHelper.Inply(const source: MArray; const sIndexes: TIntegerArray): Integer; overload;
+var
+  p: PInteger;
+  i: Integer;
+begin
+  Result := sIndexes.Length;
+  if (Result = 0) then
+    Exit;
+  p := @sIndexes[0];
+  for i := 0 to (Result - 1) do
+  begin
+    Self[p^] := source[p^];
+    Inc(p);
+  end;
+end;
+
+{==============================================================================]
   <Onlay>
   @action: Copies values from `Self` onto `target` at each index in `dIndexes`, leaving all other elements of `target` untouched.
   @note: Returns the number of indices written (equal to `dIndexes.Length`). No bounds or duplicate-index checking is performed — the caller is responsible for ensuring all indices are valid for both `Self` and `target`. Failsafes are intentionally omitted to keep the method efficient.
@@ -200,6 +224,29 @@ begin
   Result := 2;
   target[sIndexA] := Self[sIndexA];
   target[sIndexB] := Self[sIndexB];
+end;
+
+{==============================================================================]
+  <Onply>
+  @action: Copies values from `Self` onto `target` at each index in `sIndexes`, leaving all other elements of `target` untouched.
+  @note: Returns the number of indices written (equal to `sIndexes.Length`). No bounds or duplicate-index checking is performed —
+         the caller is responsible for ensuring all indices are valid for both `Self` and `target`.
+		 Uses pointer traversal over `sIndexes` for efficiency. Failsafes are intentionally omitted to keep the method efficient.
+[==============================================================================}
+function MArrayHelper.Onply(var target: MArray; const sIndexes: TIntegerArray): Integer; overload;
+var
+  p: PInteger;
+  i: Integer;
+begin
+  Result := sIndexes.Length;
+  if (Result = 0) then
+    Exit;
+  p := @sIndexes[0];
+  for i := 0 to (Result - 1) do
+  begin
+    target[p^] := Self[p^];
+    Inc(p);
+  end;
 end;
 
 {==============================================================================]

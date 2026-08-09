@@ -396,8 +396,7 @@ var
   h, l, i: Integer;
 begin
   h := High(Self);
-  SetLength(Result, (h + 1));
-  if Self.Empty then
+  if (Result.SetSize(h + 1) = 0) then
     Exit;
   l := 0;
   if ((h = 0) or (Self[0] < Self[1])) then

@@ -73,8 +73,7 @@ function MArrayHelper.MergeSortIndexed(const aAscending: Boolean = True): TInteg
 var
   i: Integer;
 begin
-  SetLength(Result, Self.Size);
-  for i := 0 to High(Result) do
+  for i := 0 to Result.Alloc(Self.Size) do
     Result[i] := i;
   if (Self.Size > 1) then
     MSI(Self, Result, 0, High(Result));
@@ -214,12 +213,12 @@ begin
       while (i <= Result) do
       begin
         l.Create(i, Min((i + (w - 1)), Result));
-	r.Create((l.stop + 1), Min((l.start + (2 * w) - 1), Result));
+        r.Create((l.stop + 1), Min((l.start + (2 * w) - 1), Result));
         for s := l.start to r.stop do
           t[s] := Self[s];
-	s := i;
+        s := i;
         while (l.Asceal and r.Asceal) do
-	  if ((aAscending and (t[l.start] <= t[r.start])) or (not aAscending and (t[l.start] >= t[r.start]))) then
+          if ((aAscending and (t[l.start] <= t[r.start])) or (not aAscending and (t[l.start] >= t[r.start]))) then
             Self[s.Increase] := t[l.start.Increase]
           else
             Self[s.Increase] := t[r.start.Increase];
