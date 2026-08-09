@@ -7,6 +7,10 @@ function Inlay(const source: MArray; const sIndexes: TIntegerArray): Integer; ov
 function Inlay(const source: MArray; const sIndexes: TRange): Integer; overload;
 function Inlay(const source: MArray; const sIndex: Integer): Integer; overload;
 function Inlay(const source: MArray; const sIndexA, sIndexB: Integer): Integer; overload;
+function Onlay(var target: MArray; const sIndexes: TIntegerArray): Integer; overload;
+function Onlay(var target: MArray; const sIndexes: TRange): Integer; overload;
+function Onlay(var target: MArray; const sIndex: Integer): Integer; overload;
+function Onlay(var target: MArray; const sIndexA, sIndexB: Integer): Integer; overload;
 function Place(var target: MArray; aIndex: Integer = 0): MType; overload;
 function Place(var target: MArray; const aIndexes: TIntegerArray): MArray; overload;
 function Receive(const source: MArray; aIndex: Integer = 0): Boolean; overload;
@@ -134,12 +138,66 @@ end;
          No bounds checking is performed — the caller must ensure both indices are valid for both `source` and `Self`.
 		 Failsafes are intentionally omitted to keep the method efficient.
 [==============================================================================}
-[==============================================================================}
 function MArrayHelper.Inlay(const source: MArray; const sIndexA, sIndexB: Integer): Integer; overload;
 begin
   Result := 2;
   Self[sIndexA] := source[sIndexA];
   Self[sIndexB] := source[sIndexB];
+end;
+
+{==============================================================================]
+  <Onlay>
+  @action: Copies values from `Self` onto `target` at each index in `dIndexes`, leaving all other elements of `target` untouched.
+  @note: Returns the number of indices written (equal to `dIndexes.Length`). No bounds or duplicate-index checking is performed — the caller is responsible for ensuring all indices are valid for both `Self` and `target`. Failsafes are intentionally omitted to keep the method efficient.
+[==============================================================================}
+function MArrayHelper.Onlay(var target: MArray; const sIndexes: TIntegerArray): Integer; overload;
+var
+  s: Integer;
+begin
+  Result := sIndexes.Length;
+  for s := 0 to (Result - 1) do
+    target[sIndexes[s]] := Self[sIndexes[s]];
+end;
+
+{==============================================================================]
+  <Onlay>
+  @action: Copies values from `Self` onto `target` at each index spanned by `sIndexes`, walking from `sIndexes.start` in the direction given by `sIndexes.Direction`, leaving all other elements of `target` untouched.
+  @note: Returns the number of indices written (equal to `sIndexes.Size`). Supports both ascending and descending ranges via `Direction`. No bounds checking is performed — the caller must ensure the full range is valid for both `Self` and `target`. Failsafes are intentionally omitted to keep the method efficient.
+[==============================================================================}
+function MArrayHelper.Onlay(var target: MArray; const sIndexes: TRange): Integer; overload;
+var
+  s, d, i: Integer;
+begin
+  Result := sIndexes.Size;
+  d := sIndexes.Direction;
+  for s := 0 to (Result - 1) do
+  begin
+    i := (sIndexes.start + (s * d));
+    target[i] := Self[i];
+  end;
+end;
+
+{==============================================================================]
+  <Onlay>
+  @action: Copies the single value at `sIndex` from `Self` onto `target`, leaving all other elements of `target` untouched.
+  @note: Always returns 1. Single-index convenience overload of the array-indexed variant. No bounds checking is performed — the caller must ensure `sIndex` is valid for both `Self` and `target`. Failsafes are intentionally omitted to keep the method efficient.
+[==============================================================================}
+function MArrayHelper.Onlay(var target: MArray; const sIndex: Integer): Integer; overload;
+begin
+  Result := 1;
+  target[sIndex] := Self[sIndex];
+end;
+
+{==============================================================================]
+  <Onlay>
+  @action: Copies the values at `sIndexA` and `sIndexB` from `Self` onto `target`, leaving all other elements of `target` untouched.
+  @note: Always returns 2. Two-index convenience overload; does not check whether `sIndexA` and `sIndexB` are equal. No bounds checking is performed — the caller must ensure both indices are valid for both `Self` and `target`. Failsafes are intentionally omitted to keep the method efficient.
+[==============================================================================}
+function MArrayHelper.Onlay(var target: MArray; const sIndexA, sIndexB: Integer): Integer; overload;
+begin
+  Result := 2;
+  target[sIndexA] := Self[sIndexA];
+  target[sIndexB] := Self[sIndexB];
 end;
 
 {==============================================================================]
