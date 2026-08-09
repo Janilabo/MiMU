@@ -332,17 +332,10 @@ begin
   if (l = 0) then
     Exit;
   if ((l mod 2) <> 0) then
-  begin
-    j := (l div 2);
-    Result[j] := Self[j];
-  end;
+    Result.Inlay(Self, (l div 2));
   if (l > 1) then
   for i := 0 to ((l div 2) - 1) do
-  begin
-    j := ((l - i) - 1);
-    Result[i] := Self[i];
-    Result[j] := Self[j];
-  end;
+    Result.Inlay(Self, i, ((l - i) - 1));
 end;
 
 {==============================================================================]

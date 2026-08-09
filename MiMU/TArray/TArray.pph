@@ -40,6 +40,7 @@
 {$I @TArray/Slice.inc}
 {$I @TArray/Sort.inc}
 {$I @TArray/Stability.inc}
+{$I @TArray/Transfer.inc}
 {$I @TArray/Transform.inc}
 {$I @TArray/Validation.inc}
 

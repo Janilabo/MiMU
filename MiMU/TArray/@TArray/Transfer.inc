@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
-function Deliver(var target: MArray; aIndex: Integer = 0): Boolean; overload;
+function Deliver(var target: MArray; const aIndex: Integer = 0): Boolean; overload;
 function Deliver(var target: MArray; const aIndexes: TIntegerArray): Integer; overload;
-function Fetch(const source: MArray; aIndex: Integer = 0): MType; overload;
+function Fetch(const source: MArray; const aIndex: Integer = 0): MType; overload;
 function Fetch(const source: MArray; const aIndexes: TIntegerArray): MArray; overload;
 function Inlay(const source: MArray; const sIndexes: TIntegerArray): Integer; overload;
 function Inlay(const source: MArray; const sIndexes: TRange): Integer; overload;
@@ -11,9 +11,9 @@ function Onlay(var target: MArray; const sIndexes: TIntegerArray): Integer; over
 function Onlay(var target: MArray; const sIndexes: TRange): Integer; overload;
 function Onlay(var target: MArray; const sIndex: Integer): Integer; overload;
 function Onlay(var target: MArray; const sIndexA, sIndexB: Integer): Integer; overload;
-function Place(var target: MArray; aIndex: Integer = 0): MType; overload;
+function Place(var target: MArray; const aIndex: Integer = 0): MType; overload;
 function Place(var target: MArray; const aIndexes: TIntegerArray): MArray; overload;
-function Receive(const source: MArray; aIndex: Integer = 0): Boolean; overload;
+function Receive(const source: MArray; const aIndex: Integer = 0): Boolean; overload;
 function Receive(const source: MArray; const aIndexes: TIntegerArray): Integer; overload;
 {$ENDIF}
 
@@ -73,10 +73,12 @@ end;
          Indexing outside valid boundaries will trigger runtime access violations.
 [==============================================================================}
 function MArrayHelper.Fetch(const source: MArray; const aIndexes: TIntegerArray): MArray; overload;
+var
+  i: Integer;
 begin
   for i := 0 to Result.Alloc(AIndexes.Length) do
   begin
-    Result := Self[aIndexes[i]];
+    Result[i] := Self[aIndexes[i]];
     Self[aIndexes[i]] := source[aIndexes[i]];
   end;
 end;
@@ -249,7 +251,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Receive(const source: MArray; const aIndexes: TIntegerArray): Integer; overload;
 var
-  i, h, s, l: Integer;
+  i, s, l: Integer;
 begin
   l := source.Length;
   s := Self.Length;
