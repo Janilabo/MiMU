@@ -3,6 +3,12 @@ function CloserThan(const target, than: Integer): Boolean; overload;
 function CloserTo(const target, than: Integer): Boolean; overload;
 function FartherFrom(const target, than: Integer): Boolean; overload;
 function FartherThan(const target, than: Integer): Boolean; overload;
+function Furthen(const A, B: Integer): Boolean; overload;
+function Further(const A, B: Integer): Boolean; overload;
+function Furthest(const A, B: Integer): Integer; overload;
+function Nearen(const A, B: Integer): Boolean; overload;
+function Nearer(const A, B: Integer): Boolean; overload;
+function Nearest(const A, B: Integer): Integer; overload;
 function Noncloser(const target, than: Integer): Boolean; overload;
 function Nonfarther(const target, than: Integer): Boolean; overload;
 function Reachable(const target: Integer; const radius: Cardinal = 1): Boolean; overload;
@@ -62,6 +68,80 @@ end;
 function TIntegerHelper.FartherThan(const target, than: Integer): Boolean; overload;
 begin
   Result := (Sign(Abs(Self - target) - Abs(Self - than)) = 1);
+end;
+
+{==============================================================================]
+  <Furthen>
+  @action: Sets Self to whichever of `A` or `B` is farther from Self. Ties resolve to `A`. Returns True if Self changed.
+  @note: Mutating. Companion to `Furthest` — applies the result rather than merely reporting it.
+[==============================================================================}
+function TIntegerHelper.Furthen(const A, B: Integer): Boolean; overload;
+var
+  s: Integer;
+begin
+  s := Self;
+  Self := Self.Furthest(A, B);
+  Result := (Self <> s);
+end;
+
+{==============================================================================]
+  <Further>
+  @action: Returns True if `A` is farther from Self than `B` is. Ties return False.
+  @note: Non-mutating. Predicate form of the Proximity family — mirrors `Nearer`.
+[==============================================================================}
+function TIntegerHelper.Further(const A, B: Integer): Boolean; overload;
+begin
+  Result := (Self.Distance(A) > Self.Distance(B));
+end;
+
+{==============================================================================]
+  <Furthest>
+  @action: Returns whichever of `A` or `B` is farther from Self. Ties resolve to `A`.
+  @note: Non-mutating. Pure comparison by absolute distance; mirrors `Nearest`.
+[==============================================================================}
+function TIntegerHelper.Furthest(const A, B: Integer): Integer; overload;
+begin
+  if (Self.Distance(A) >= Self.Distance(B)) then
+    Result := A
+  else
+    Result := B;
+end;
+
+{==============================================================================]
+  <Nearen>
+  @action: Sets Self to whichever of `A` or `B` is closer to Self. Ties resolve to `A`. Returns True if Self changed.
+  @note: Mutating. Companion to `Nearest` — applies the result rather than merely reporting it.
+[==============================================================================}
+function TIntegerHelper.Nearen(const A, B: Integer): Boolean; overload;
+var
+  s: Integer;
+begin
+  s := Self;
+  Self := Self.Nearest(A, B);
+  Result := (Self <> s);
+end;
+
+{==============================================================================]
+  <Nearer>
+  @action: Returns True if `A` is closer to Self than `B` is. Ties return False.
+  @note: Non-mutating. Predicate form of the Proximity family — answers "is A closer?" rather than "which is closer?" (see `Nearest`).
+[==============================================================================}
+function TIntegerHelper.Nearer(const A, B: Integer): Boolean; overload;
+begin
+  Result := (Self.Distance(A) < Self.Distance(B));
+end;
+
+{==============================================================================]
+  <Nearest>
+  @action: Returns whichever of `A` or `B` is closer to Self. Ties resolve to `A`.
+  @note: Non-mutating. Pure comparison by absolute distance; does not alter Self.
+[==============================================================================}
+function TIntegerHelper.Nearest(const A, B: Integer): Integer; overload;
+begin
+  if (Self.Distance(A) <= Self.Distance(B)) then
+    Result := A
+  else
+    Result := B;
 end;
 
 {==============================================================================]

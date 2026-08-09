@@ -3,6 +3,10 @@ function Deliver(var target: MArray; aIndex: Integer = 0): Boolean; overload;
 function Deliver(var target: MArray; const aIndexes: TIntegerArray): Integer; overload;
 function Fetch(const source: MArray; aIndex: Integer = 0): MType; overload;
 function Fetch(const source: MArray; const aIndexes: TIntegerArray): MArray; overload;
+function Inlay(const source: MArray; const sIndexes: TIntegerArray): Integer; overload;
+function Inlay(const source: MArray; const sIndexes: TRange): Integer; overload;
+function Inlay(const source: MArray; const sIndex: Integer): Integer; overload;
+function Inlay(const source: MArray; const sIndexA, sIndexB: Integer): Integer; overload;
 function Place(var target: MArray; aIndex: Integer = 0): MType; overload;
 function Place(var target: MArray; const aIndexes: TIntegerArray): MArray; overload;
 function Receive(const source: MArray; aIndex: Integer = 0): Boolean; overload;
@@ -71,6 +75,71 @@ begin
     Result := Self[aIndexes[i]];
     Self[aIndexes[i]] := source[aIndexes[i]];
   end;
+end;
+
+{==============================================================================]
+  <Inlay>
+  @action: Copies values from `source` into `Self` at each index in `sIndexes`, leaving all other elements of `Self` untouched.
+  @note: Returns the number of indices written (equal to `sIndexes.Length`). Indices are not validated for bounds or duplicates.
+         No bounds or duplicate-index checking is performed — the caller is responsible for ensuring all indices are valid for both `source` and `Self`.
+		 Failsafes are intentionally omitted to keep the method efficient.
+[==============================================================================}
+function MArrayHelper.Inlay(const source: MArray; const sIndexes: TIntegerArray): Integer; overload;
+var
+  s: Integer;
+begin
+  Result := sIndexes.Length;
+  for s := 0 to (Result - 1) do
+    Self[sIndexes[s]] := source[sIndexes[s]];
+end;
+
+{==============================================================================]
+  <Inlay>
+  @action: Copies values from `source` into `Self` at each index spanned by `sIndexes`,
+           walking from `sIndexes.start` in the direction given by `sIndexes.Direction`, leaving all other elements of `Self` untouched.
+  @note: Returns the number of indices written (equal to `sIndexes.Size`). Supports both ascending and descending ranges via `Direction`.
+         No bounds checking is performed — the caller must ensure the full range is valid for both `source` and `Self`.
+		 Failsafes are intentionally omitted to keep the method efficient.
+[==============================================================================}
+function MArrayHelper.Inlay(const source: MArray; const sIndexes: TRange): Integer; overload;
+var
+  s, d, i: Integer;
+begin
+  Result := sIndexes.Size;
+  d := sIndexes.Direction;
+  for s := 0 to (Result - 1) do
+  begin
+    i := (sIndexes.start + (s * d));
+    Self[i] := source[i];
+  end;
+end;
+
+{==============================================================================]
+  <Inlay>
+  @action: Copies the single value at `sIndex` from `source` into `Self`, leaving all other elements of `Self` untouched.
+  @note: Always returns 1. Single-index convenience overload of the array-indexed variant.
+         No bounds checking is performed — the caller must ensure `sIndex` is valid for both `source` and `Self`.
+		 Failsafes are intentionally omitted to keep the method efficient.
+[==============================================================================}
+function MArrayHelper.Inlay(const source: MArray; const sIndex: Integer): Integer; overload;
+begin
+  Result := 1;
+  Self[sIndex] := source[sIndex];
+end;
+
+{==============================================================================]
+  <Inlay>
+  @action: Copies the values at `sIndexA` and `sIndexB` from `source` into `Self`, leaving all other elements of `Self` untouched.
+  @note: Always returns 2. Two-index convenience overload; does not check whether `sIndexA` and `sIndexB` are equal.
+         No bounds checking is performed — the caller must ensure both indices are valid for both `source` and `Self`.
+		 Failsafes are intentionally omitted to keep the method efficient.
+[==============================================================================}
+[==============================================================================}
+function MArrayHelper.Inlay(const source: MArray; const sIndexA, sIndexB: Integer): Integer; overload;
+begin
+  Result := 2;
+  Self[sIndexA] := source[sIndexA];
+  Self[sIndexB] := source[sIndexB];
 end;
 
 {==============================================================================]
