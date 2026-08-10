@@ -25,6 +25,11 @@ function XY2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArr
 function XYAs2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArray; out selfIDsX, selfIDsY: T2DIntegerArray): Integer; overload;
 function XYAt2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArray): Integer; overload;
 function XYTo2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArray; out selfIDsX, selfIDsY: T2DIntegerArray): Integer; overload;
+
+class function X1D(const yArr: TIntegerArray; const xGroups: T2DIntegerArray): TPointArray; overload; static;
+class function X1D(const yArr: TIntegerArray; const xGroups, selfIDs: T2DIntegerArray): TPointArray; overload; static;
+class function Y1D(const xArr: TIntegerArray; const yGroups: T2DIntegerArray): TPointArray; overload; static;
+class function Y1D(const xArr: TIntegerArray; const yGroups, selfIDs: T2DIntegerArray): TPointArray; overload; static;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1314,5 +1319,129 @@ begin
       selfIDsY[i][m + 1] := s;
     end;
   end;
+end;
+
+{==============================================================================]
+  <X1D>
+  @action: Reconstructs a TPointArray from yArr (unique Y values) and xGroups
+           (X values grouped by Y), the inverse of the "X grouped by Y"
+           operation (e.g. XAs2D/XTo2D/XIn2D's yArr+xGroups outputs).
+  @note: For each i, produces one point (xGroups[i][j], yArr[i]) for every j.
+         Result order follows yArr order, then xGroups[i] order within each
+         Y. Does not restore original point order or indices — pair with a
+         selfIDs-tracking grouping function if exact reconstruction is needed.
+[==============================================================================}
+class function TPointArrayHelper.X1D(const yArr: TIntegerArray; const xGroups: T2DIntegerArray): TPointArray; overload;
+var
+  i, j, g, r: Integer;
+begin
+  if ((yArr.Length = 0) or (yArr.Length <> xGroups.Length)) then
+    Exit([]);
+  g := 0;
+  for i := 0 to High(xGroups) do
+    Inc(g, xGroups[i].Length);
+  SetLength(Result, g);
+  r := 0;
+  for i := 0 to High(yArr) do
+    for j := 0 to High(xGroups[i]) do
+      Result[r.Increase] := Point(xGroups[i][j], yArr[i]);
+end;
+
+{==============================================================================]
+  <X1D>
+  @action: Reconstructs a TPointArray from yArr (unique Y values), xGroups
+           (X values grouped by Y), and selfIDs (original indices aligned
+           with xGroups) — restoring points to their exact original order.
+  @note: For each i, j: Result[selfIDs[i][j]] := (xGroups[i][j], yArr[i]).
+         Total point count is inferred as 1 + the maximum selfIDs value
+         found, so the array is sized correctly even if selfIDs values
+         aren't contiguous from 0. Mismatched yArr/xGroups/selfIDs lengths,
+         or ragged selfIDs vs. xGroups per group, yield an empty Result.
+[==============================================================================}
+class function TPointArrayHelper.X1D(const yArr: TIntegerArray; const xGroups, selfIDs: T2DIntegerArray): TPointArray; overload;
+var
+  i, j, m, r: Integer;
+begin
+  if ((yArr.Length = 0) or (yArr.Length <> xGroups.Length) or (yArr.Length <> selfIDs.Length)) then
+    Exit([]);
+  m := -1;
+  r := 0;
+  for i := 0 to High(xGroups) do
+  begin
+    if (xGroups[i].Length <> selfIDs[i].Length) then
+      Exit([]);
+    Inc(r, xGroups[i].Length);
+    for j := 0 to High(selfIDs[i]) do
+      if (selfIDs[i][j] > m) then
+        m := selfIDs[i][j];
+  end;
+  if ((m < 0) or (r = 0)) then
+    Exit([]);
+  SetLength(Result, (m + 1));
+  for i := 0 to High(yArr) do
+    for j := 0 to High(xGroups[i]) do
+      Result[selfIDs[i][j]] := Point(xGroups[i][j], yArr[i]);
+end;
+
+{==============================================================================]
+  <Y1D>
+  @action: Reconstructs a TPointArray from xArr (unique X values) and yGroups
+           (Y values grouped by X), the inverse of the "Y grouped by X"
+           operation (e.g. YAs2D/YTo2D/YIn2D's xArr+yGroups outputs).
+  @note: For each i, produces one point (xArr[i], yGroups[i][j]) for every j.
+         Result order follows xArr order, then yGroups[i] order within each
+         X. Does not restore original point order or indices — pair with a
+         selfIDs-tracking grouping function if exact reconstruction is needed.
+[==============================================================================}
+class function TPointArrayHelper.Y1D(const xArr: TIntegerArray; const yGroups: T2DIntegerArray): TPointArray; overload;
+var
+  i, j, g, r: Integer;
+begin
+  if ((xArr.Length = 0) or (xArr.Length <> yGroups.Length)) then
+    Exit([]);
+  g := 0;
+  for i := 0 to High(yGroups) do
+    Inc(g, yGroups[i].Length);
+  SetLength(Result, g);
+  r := 0;
+  for i := 0 to High(xArr) do
+    for j := 0 to High(yGroups[i]) do
+      Result[r.Increase] := Point(xArr[i], yGroups[i][j]);
+end;
+
+{==============================================================================]
+  <Y1D>
+  @action: Reconstructs a TPointArray from xArr (unique X values), yGroups
+           (Y values grouped by X), and selfIDs (original indices aligned
+           with yGroups) — restoring points to their exact original order.
+  @note: For each i, j: Result[selfIDs[i][j]] := (xArr[i], yGroups[i][j]).
+         Total point count is inferred as 1 + the maximum selfIDs value
+         found, so the array is sized correctly even if selfIDs values
+         aren't contiguous from 0. Mismatched xArr/yGroups/selfIDs lengths,
+         or ragged selfIDs vs. yGroups per group, yield an empty Result.
+[==============================================================================}
+class function TPointArrayHelper.Y1D(const xArr: TIntegerArray; const yGroups, selfIDs: T2DIntegerArray): TPointArray; overload;
+var
+  i, j, m, r: Integer;
+begin
+  if ((xArr.Length = 0) or (xArr.Length <> yGroups.Length) or (xArr.Length <> selfIDs.Length)) then
+    Exit([]);
+  m := -1;
+  r := 0;
+  for i := 0 to High(yGroups) do
+  begin
+    if (yGroups[i].Length <> selfIDs[i].Length) then
+      Exit([]);
+    Inc(r, yGroups[i].Length);
+    for j := 0 to High(selfIDs[i]) do
+      if (selfIDs[i][j] > m) then
+        m := selfIDs[i][j];
+  end;
+  if ((m < 0) or (r = 0)) then
+    Exit([]);
+  SetLength(Result, (m + 1));
+  for i := 0 to High(xArr) do
+    for j := 0 to High(yGroups[i]) do
+      Result[selfIDs[i][j]] := Point(xArr[i], yGroups[i][j]);
 end;
 {$ENDIF}
