@@ -57,7 +57,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.XAs2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
 var
-  i, j, k: Integer;
+  i, j, k, v, s, m: Integer;
   g: specialize TDictionary<Integer, specialize TList<Integer>>;
   d: specialize TDictionary<Integer, specialize TList<Integer>>;
   x, p: specialize TList<Integer>;
@@ -92,7 +92,20 @@ begin
       yArr[i] := k;
       x := g[k];
       p := d[k];
-      x.Sort;
+      for j := 1 to (x.Count - 1) do
+      begin
+        v := x[j];
+        s := p[j];
+        m := (j - 1);
+        while ((m >= 0) and (x[m] > v)) do
+        begin
+          x[m + 1] := x[m];
+          p[m + 1] := p[m];
+          Dec(m);
+        end;
+        x[m + 1] := v;
+        p[m + 1] := s;
+      end;
       SetLength(Result[i], x.Count);
       SetLength(selfIDs[i], x.Count);
       for j := 0 to (x.Count - 1) do
@@ -280,7 +293,7 @@ end;
 [==============================================================================}
 function TPointArrayHelper.YAs2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
 var
-  i, j, k: Integer;
+  i, j, k, v, s, m: Integer;
   g, d: specialize TDictionary<Integer, specialize TList<Integer>>;
   y, p: specialize TList<Integer>;
 begin
@@ -314,7 +327,20 @@ begin
       xArr[i] := k;
       y := g[k];
       p := d[k];
-      y.Sort;
+      for j := 1 to (y.Count - 1) do
+      begin
+        v := y[j];
+        s := p[j];
+        m := (j - 1);
+        while ((m >= 0) and (y[m] > v)) do
+        begin
+          y[m + 1] := y[m];
+          p[m + 1] := p[m];
+          Dec(m);
+        end;
+        y[m + 1] := v;
+        p[m + 1] := s;
+      end;
       SetLength(Result[i], y.Count);
       SetLength(selfIDs[i], y.Count);
       for j := 0 to (y.Count - 1) do
