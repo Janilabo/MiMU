@@ -3,14 +3,20 @@ function X2D(var yArr: TIntegerArray; const xOrder: Boolean = True; const xAscen
 function XAs2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
 function XAs2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
 function XAt2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+function XAt2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
 function XTo2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
 function XIn2D(var yArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+function XIn2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
+function XOn2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
 function XTo2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
 function Y2D(var xArr: TIntegerArray; const yOrder: Boolean = True; const yAscending: Boolean = True): T2DIntegerArray; overload;
 function YAs2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
 function YAs2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
 function YAt2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+function YAt2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
 function YIn2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
+function YIn2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
+function YOn2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
 function YTo2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntegerArray; overload;
 function YTo2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
 {$ENDIF}
@@ -254,6 +260,64 @@ begin
 end;
 
 {==============================================================================]
+  <XAt2D>
+  @action: Groups X-coordinates by unique Y values and sorts each X-group ascending.
+  @note: x is built as before. No selfIDs, so no permutation needed — x is
+         sorted directly with a plain insertion sort.
+[==============================================================================}
+function TPointArrayHelper.XAt2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
+var
+  i, j, k, n, t, c: Integer;
+  g: specialize TDictionary<Integer, specialize TList<Integer>>;
+  x: specialize TList<Integer>;
+begin
+  SetLength(Result, 0);
+  SetLength(yArr, 0);
+  if Self.Empty then
+    Exit;
+  g := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  try
+    for i := 0 to High(Self) do
+    begin
+      if not g.TryGetValue(Self[i].Y, x) then
+      begin
+        x := specialize TList<Integer>.Create;
+        g.Add(Self[i].Y, x);
+      end;
+      x.Add(Self[i].X);
+    end;
+    SetLength(yArr, g.Count);
+    SetLength(Result, g.Count);
+    i := 0;
+    for k in g.Keys do
+    begin
+      yArr[i] := k;
+      x := g[k];
+      n := x.Count;
+      for j := 1 to (n - 1) do
+      begin
+        t := x[j];
+        c := (j - 1);
+        while ((c >= 0) and (x[c] > t)) do
+        begin
+          x[c + 1] := x[c];
+          Dec(c);
+        end;
+        x[c + 1] := t;
+      end;
+      SetLength(Result[i], n);
+      for j := 0 to (n - 1) do
+        Result[i][j] := x[j];
+      Inc(i);
+    end;
+  finally
+    for x in g.Values do
+      x.Free;
+    g.Free;
+  end;
+end;
+
+{==============================================================================]
   <XIn2D>
   @action: Groups X-coordinates by unique Y values and sorts each X-group ascending.
            Also returns 2D array of self-indices (original point indices).
@@ -309,6 +373,77 @@ begin
       Inc(g);
       r := i;
     end;
+end;
+
+{==============================================================================]
+  <XIn2D>
+  @action: Groups X-coordinates by unique Y values and sorts each X-group ascending.
+  @note: No TDictionary/TList — builds one index array sorted by (Y, X), then
+         splits into groups on Y boundaries in a single linear pass.
+[==============================================================================}
+function TPointArrayHelper.XIn2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
+var
+  n, i, j, t, c, g, r: Integer;
+  o: TIntegerArray;
+begin
+  SetLength(Result, 0);
+  SetLength(yArr, 0);
+  n := Self.Length;
+  if (n = 0) then
+    Exit;
+  for i := 0 to o.Alloc(n) do
+    o[i] := i;
+  for i := 1 to (n - 1) do
+  begin
+    t := o[i];
+    j := (i - 1);
+    while ((j >= 0) and ((Self[o[j]].Y > Self[t].Y) or ((Self[o[j]].Y = Self[t].Y) and (Self[o[j]].X > Self[t].X)))) do
+    begin
+      o[j + 1] := o[j];
+      Dec(j);
+    end;
+    o[j + 1] := t;
+  end;
+  c := 1;
+  for i := 1 to (n - 1) do
+    if (Self[o[i]].Y <> Self[o[i - 1]].Y) then
+      Inc(c);
+  SetLength(yArr, c);
+  SetLength(Result, c);
+  g := 0;
+  r := 0;
+  for i := 1 to n do
+    if ((i = n) or (Self[o[i]].Y <> Self[o[r]].Y)) then
+    begin
+      yArr[g] := Self[o[r]].Y;
+      SetLength(Result[g], (i - r));
+      for j := r to (i - 1) do
+        Result[g][j - r] := Self[o[j]].X;
+      Inc(g);
+      r := i;
+    end;
+end;
+
+{==============================================================================]
+  <XOn2D>
+  @action: Groups X-coordinates by unique Y values, each group sorted ascending.
+  @note: Reuses YAxis + BinaryAppend, same mechanism as X2D. Functionally
+         equivalent to X2D(yArr, True, True) — consider whether both names
+         should exist, or whether this overload should just alias X2D.
+[==============================================================================}
+function TPointArrayHelper.XOn2D(var yArr: TIntegerArray): T2DIntegerArray; overload;
+var
+  i, l: Integer;
+begin
+  yArr := Self.YAxis;
+  l := yArr.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([yArr]);
+  end;
+  SetLength(Result, l);
+  for i := 0 to High(Self) do
+    Result[yArr.BinarySearch(Self[i].Y)].BinaryAppend(Self[i].X, True);
 end;
 
 {==============================================================================]
@@ -603,7 +738,7 @@ begin
         c := (j - 1);
         while ((c >= 0) and (y[o[c]] > y[t])) do
 		begin
-          o[k + 1] := o[c];
+          o[c + 1] := o[c];
 		  Dec(c);
 		end;
         o[c + 1] := t;
@@ -624,6 +759,64 @@ begin
       p.Free;
     g.Free;
     d.Free;
+  end;
+end;
+
+{==============================================================================]
+  <YAt2D>
+  @action: Groups Y-coordinates by unique X values and sorts each Y-group ascending.
+  @note: y is built as before. No selfIDs, so no permutation needed — y is
+         sorted directly with a plain insertion sort.
+[==============================================================================}
+function TPointArrayHelper.YAt2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
+var
+  i, j, k, n, t, c: Integer;
+  g: specialize TDictionary<Integer, specialize TList<Integer>>;
+  y: specialize TList<Integer>;
+begin
+  SetLength(Result, 0);
+  SetLength(xArr, 0);
+  if Self.Empty then
+    Exit;
+  g := specialize TDictionary<Integer, specialize TList<Integer>>.Create;
+  try
+    for i := 0 to High(Self) do
+    begin
+      if not g.TryGetValue(Self[i].X, y) then
+      begin
+        y := specialize TList<Integer>.Create;
+        g.Add(Self[i].X, y);
+      end;
+      y.Add(Self[i].Y);
+    end;
+    SetLength(xArr, g.Count);
+    SetLength(Result, g.Count);
+    i := 0;
+    for k in g.Keys do
+    begin
+      xArr[i] := k;
+      y := g[k];
+      n := y.Count;
+      for j := 1 to (n - 1) do
+      begin
+        t := y[j];
+        c := (j - 1);
+        while ((c >= 0) and (y[c] > t)) do
+        begin
+          y[c + 1] := y[c];
+          Dec(c);
+        end;
+        y[c + 1] := t;
+      end;
+      SetLength(Result[i], n);
+      for j := 0 to (n - 1) do
+        Result[i][j] := y[j];
+      Inc(i);
+    end;
+  finally
+    for y in g.Values do
+      y.Free;
+    g.Free;
   end;
 end;
 
@@ -683,6 +876,85 @@ begin
       Inc(g);
       r := i;
     end;
+end;
+
+{==============================================================================]
+  <YIn2D>
+  @action: Groups Y-coordinates by unique X values and sorts each Y-group ascending.
+  @note: Builds one index permutation over all points, sorted primarily by X
+         then by Y, and splits it into groups on X boundaries in a single
+         linear pass. No TDictionary/TList involved — likely faster for large
+         point counts since there's no per-unique-X hashing/allocation.
+[==============================================================================}
+function TPointArrayHelper.YIn2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
+var
+  n, i, j, t, c, g, r: Integer;
+  o: TIntegerArray;
+begin
+  SetLength(Result, 0);
+  SetLength(xArr, 0);
+  n := Self.Length;
+  if (n = 0) then
+    Exit;
+  for i := 0 to o.Alloc(n) do
+    o[i] := i;
+  for i := 1 to (n - 1) do
+  begin
+    t := o[i];
+    j := (i - 1);
+    while ((j >= 0) and ((Self[o[j]].X > Self[t].X) or ((Self[o[j]].X = Self[t].X) and (Self[o[j]].Y > Self[t].Y)))) do
+    begin
+      o[j + 1] := o[j];
+      Dec(j);
+    end;
+    o[j + 1] := t;
+  end;
+  c := 1;
+  for i := 1 to (n - 1) do
+    if (Self[o[i]].X <> Self[o[i - 1]].X) then
+      Inc(c);
+  SetLength(xArr, c);
+  SetLength(Result, c);
+  g := 0;
+  r := 0;
+  for i := 1 to n do
+    if ((i = n) or (Self[o[i]].X <> Self[o[r]].X)) then
+    begin
+      xArr[g] := Self[o[r]].X;
+      SetLength(Result[g], (i - r));
+      for j := r to (i - 1) do
+        Result[g][j - r] := Self[o[j]].Y;
+      Inc(g);
+      r := i;
+    end;
+end;
+
+{==============================================================================]
+  <YOn2D>
+  @action: Groups all Y-coordinates by their corresponding X-coordinate, each
+           group sorted ascending.
+  @note: Returns 2D array of Y values where Result[i] contains all Y's for
+         X = xArr[i], sorted ascending within each group.
+   - The output parameter xArr receives the sorted list of unique X values.
+   - If no points exist, Result = [].
+   - If only one X value exists, Result = [xArr].
+   - Y values are inserted in sorted-ascending order using BinaryAppend.
+   - No self-index tracking, and no unsorted/descending option — this is a
+     fixed-behavior equivalent of Y2D(xArr, True, True).
+[==============================================================================}
+function TPointArrayHelper.YOn2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
+var
+  i, l: Integer;
+begin
+  xArr := Self.XAxis;
+  l := xArr.Length;
+  case l of
+    0: Exit([]);
+    1: Exit([xArr]);
+  end;
+  SetLength(Result, l);
+  for i := 0 to High(Self) do
+    Result[xArr.BinarySearch(Self[i].X)].BinaryAppend(Self[i].Y, True);
 end;
 
 {==============================================================================]
