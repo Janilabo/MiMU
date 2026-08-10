@@ -22,6 +22,8 @@ function YTo2D(var xArr: TIntegerArray; var selfIDs: T2DIntegerArray): T2DIntege
 function YTo2D(var xArr: TIntegerArray): T2DIntegerArray; overload;
 
 function XY2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArray): Integer; overload;
+function XYAs2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArray; out selfIDsX, selfIDsY: T2DIntegerArray): Integer; overload;
+function XYAt2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArray): Integer; overload;
 function XYTo2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArray; out selfIDsX, selfIDsY: T2DIntegerArray): Integer; overload;
 {$ENDIF}
 
@@ -1084,7 +1086,7 @@ begin
 end;
 
 {==============================================================================]
-  <XYTo2D>
+  <XYAs2D>
   @action: Groups X-coordinates by unique Y values AND Y-coordinates by unique
            X values, in one call, each with self-index tracking.
   @note: xGroups[i] = sorted X values for Y = yArr[i]; selfIDsX[i][*] = their
@@ -1095,7 +1097,7 @@ end;
          (one sorted by (Y,X), one by (X,Y)) and splits each on boundaries.
          Same mechanism as XIn2D/YIn2D, run back-to-back.
 [==============================================================================}
-function TPointArrayHelper.XYTo2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArray; out selfIDsX, selfIDsY: T2DIntegerArray): Integer; overload;
+function TPointArrayHelper.XYAs2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArray; out selfIDsX, selfIDsY: T2DIntegerArray): Integer; overload;
 var
   i, j, t, c, g, r: Integer;
   v, h: TIntegerArray;
@@ -1132,7 +1134,7 @@ begin
   g := 0;
   r := 0;
   for i := 1 to Result do
-    if (i = Result) or (Self[v[i]].Y <> Self[v[r]].Y) then
+    if ((i = Result) or (Self[v[i]].Y <> Self[v[r]].Y)) then
     begin
       yArr[g] := Self[v[r]].Y;
       SetLength(xGroups[g], (i - r));
@@ -1181,5 +1183,136 @@ begin
       Inc(g);
       r := i;
     end;
+end;
+
+{==============================================================================]
+  <XYAt2D>
+  @action: Groups X-coordinates by unique Y values AND Y-coordinates by unique
+           X values, in one call, no self-index tracking.
+  @note: xGroups[i] = sorted X values for Y = yArr[i].
+         yGroups[i] = sorted Y values for X = xArr[i].
+         xArr/yArr precomputed once via XAxis/YAxis, then a single pass over
+         Self does both BinaryAppend insertions per point — one traversal of
+         Self total, no TDictionary/TList anywhere.
+[==============================================================================}
+function TPointArrayHelper.XYAt2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArray): Integer; overload;
+var
+  i, h, v: Integer;
+begin
+  SetLength(xGroups, 0);
+  SetLength(yGroups, 0);
+  SetLength(xArr, 0);
+  SetLength(yArr, 0);
+  Result := Self.Length;
+  if (Result = 0) then
+    Exit;
+  xArr := Self.XAxis;
+  yArr := Self.YAxis;
+  h := xArr.Length;
+  v := yArr.Length;
+  if (v = 1) then
+    xGroups := [yArr]
+  else
+    SetLength(xGroups, v);
+  if (h = 1) then
+    yGroups := [xArr]
+  else
+    SetLength(yGroups, h);
+  for i := 0 to (Result - 1) do
+  begin
+    if (v > 1) then
+      xGroups[yArr.BinarySearch(Self[i].Y)].BinaryAppend(Self[i].X, True);
+    if (h > 1) then
+      yGroups[xArr.BinarySearch(Self[i].X)].BinaryAppend(Self[i].Y, True);
+  end;
+end;
+
+{==============================================================================]
+  <XYTo2D>
+  @action: Groups X-coordinates by unique Y values AND Y-coordinates by unique
+           X values, in one call, each with self-index tracking.
+  @note: Same mechanism as XTo2D/YTo2D — for each axis, count matches per
+         key, allocate exactly, place, then insertion-sort each group with
+         selfIDs carried in lockstep. Run once for each axis. No dictionaries,
+         no permutation arrays, O(n * uniqueKeys) per axis.
+[==============================================================================}
+function TPointArrayHelper.XYTo2D(out xGroups, yGroups: T2DIntegerArray; out xArr, yArr: TIntegerArray; out selfIDsX, selfIDsY: T2DIntegerArray): Integer; overload;
+var
+  i, j, k, p, s, m, l: Integer;
+begin
+  SetLength(xGroups, 0);
+  SetLength(yGroups, 0);
+  SetLength(xArr, 0);
+  SetLength(yArr, 0);
+  SetLength(selfIDsX, 0);
+  SetLength(selfIDsY, 0);
+  Result := Self.Length;
+  if (Result = 0) then
+    Exit;
+  l := Result;
+  yArr := Self.YAxis;
+  for i := 0 to selfIDsX.Alloc(xGroups.SetSize(yArr.Size)) do
+  begin
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].Y = yArr[i]) then
+        Inc(k);
+    SetLength(xGroups[i], k);
+    SetLength(selfIDsX[i], k);
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].Y = yArr[i]) then
+      begin
+        xGroups[i][k] := Self[j].X;
+        selfIDsX[i][k] := j;
+        Inc(k);
+      end;
+    for j := 1 to (k - 1) do
+    begin
+      p := xGroups[i][j];
+      s := selfIDsX[i][j];
+      m := j - 1;
+      while ((m >= 0) and (xGroups[i][m] > p)) do
+      begin
+        xGroups[i][m + 1] := xGroups[i][m];
+        selfIDsX[i][m + 1] := selfIDsX[i][m];
+        Dec(m);
+      end;
+      xGroups[i][m + 1] := p;
+      selfIDsX[i][m + 1] := s;
+    end;
+  end;
+  xArr := Self.XAxis;
+  for i := 0 to selfIDsY.Alloc(yGroups.SetSize(xArr.Size)) do
+  begin
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].X = xArr[i]) then
+        Inc(k);
+    SetLength(yGroups[i], k);
+    SetLength(selfIDsY[i], k);
+    k := 0;
+    for j := 0 to (l - 1) do
+      if (Self[j].X = xArr[i]) then
+      begin
+        yGroups[i][k] := Self[j].Y;
+        selfIDsY[i][k] := j;
+        Inc(k);
+      end;
+    for j := 1 to (k - 1) do
+    begin
+      p := yGroups[i][j];
+      s := selfIDsY[i][j];
+      m := j - 1;
+      while ((m >= 0) and (yGroups[i][m] > p)) do
+      begin
+        yGroups[i][m + 1] := yGroups[i][m];
+        selfIDsY[i][m + 1] := selfIDsY[i][m];
+        Dec(m);
+      end;
+      yGroups[i][m + 1] := p;
+      selfIDsY[i][m + 1] := s;
+    end;
+  end;
 end;
 {$ENDIF}
