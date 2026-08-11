@@ -4,4 +4,5 @@
 {$I @Boolean/Operation.inc}
 {$I @Boolean/Randomness.inc}
 {$I @Boolean/Select.inc}
+{$I @Boolean/Sign.inc}
 {$I @Boolean/State.inc}

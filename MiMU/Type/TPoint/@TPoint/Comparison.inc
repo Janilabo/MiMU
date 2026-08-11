@@ -4,7 +4,7 @@ function Behind(const target: TPoint; const oAscending: Boolean = True): Boolean
 function Cmp(const target: TPoint): Integer; overload;
 function Comp(const target: TPoint): Integer; overload;
 function Compare(const target: TPoint): Integer; overload;
-function Compared(const target: TPoint): Integer; overload;
+function Compared(const target: TPoint; const oAscending: Boolean = True): Integer; overload;
 function CompareX(const target: TPoint): Integer;
 function CompareY(const target: TPoint): Integer;
 function Comparison(const target: TPoint): Integer; overload;
@@ -129,23 +129,27 @@ end;
 
 {==============================================================================]
   <Compared>
-  @action: Compares two points lexicographically by X then Y.
+  @action: Compares two points by Y then X, honoring sort direction.
   @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
+         When oAscending is False, the comparison sign is inverted.
 [==============================================================================}
-function TPoint.Compared(const target: TPoint): Integer; overload;
+function TPoint.Compared(const target: TPoint; const oAscending: Boolean = True): Integer; overload;
 begin
-  if (X <> target.X) then
-    Exit(Ord(X > target.X) - Ord(X < target.X));
   if (Y <> target.Y) then
-    Exit(Ord(Y > target.Y) - Ord(Y < target.Y));
-  Result := 0;
+    Result := (Ord(Y > target.Y) - Ord(Y < target.Y))
+  else if (X <> target.X) then
+    Result := (Ord(X > target.X) - Ord(X < target.X))
+  else
+    Result := 0;
+  if not oAscending then
+    Result := -Result;
 end;
 
 {==============================================================================]
   <CompareX>
-  @action: Compares two points by their Y coordinate only.
-  @note: - Returns -1 if Self.Y < target.Y, 1 if Self.Y > target.Y, and 0 if equal.
-         - The X coordinate is ignored.
+  @action: Compares two points by their X coordinate only.
+  @note: - Returns -1 if Self.X < target.X, 1 if Self.X > target.X, and 0 if equal.
+         - The Y coordinate is ignored.
 [==============================================================================}
 function TPoint.CompareX(const target: TPoint): Integer;
 begin
