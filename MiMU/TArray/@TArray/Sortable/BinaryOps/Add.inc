@@ -1,9 +1,70 @@
 {$IFDEF HELPERS}
+function BinaryInsert(const x: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryInserta(const item: MType; const allowDuplicates: Boolean = True): Integer; overload;
 function BinaryInsertion(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySupply(const item: MType; const aAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryInsert>
+  @action: Insert an item (x) into a sorted array using binary search, preserving order.
+  @note: Returns the index where the element was inserted. Supports ascending or descending order.
+[==============================================================================}
+function MArrayHelper.BinaryInsert(const x: MType; const aAscending: Boolean = True): Integer; overload;
+var
+  m, i: Integer;
+  r: TRange;
+begin
+  Result := Self.Length;
+  if (Self.SetSize(Result + 1) > 1) then
+  begin
+    r.Create(0, (Result - 1));
+    while (r.start <= r.stop) do
+    begin
+      m := r.Pivot;
+      if ((aAscending and (Self[m] >= x)) or ((not aAscending) and (Self[m] <= x))) then
+      begin
+        Result := m;
+        r.stop := (m - 1);
+      end else
+        r.start := (m + 1);
+    end;
+    for i := High(Self) downto (Result + 1) do
+      Self[i] := Self[i - 1];
+    Self[Result] := x;
+  end else
+    Self[0] := x;
+end;
+
+{==============================================================================]
+  <BinaryInserta>
+  @action: Inserts a specified item into a sorted array while maintaining order.
+  @note: - If allowDuplicates = False, no insertion occurs if the item already exists.
+         - Returns the index of the inserted or existing item.
+[==============================================================================}
+function MArrayHelper.BinaryInserta(const item: MType; const allowDuplicates: Boolean = True): Integer; overload;
+var
+  H, M: Integer;
+begin
+  Result := 0;
+  H := High(Self);
+  while (Result <= H) do
+  begin
+    M := ((Result + H) div 2);
+    case Self[M].Compare(item) of
+      -1: Result := (M + 1);
+      1: H := (M - 1);
+      0:
+      if allowDuplicates then
+        Result := (M + 1)
+      else
+        Exit(M);
+    end;
+  end;
+  Insert(item, Self, Result);
+end;
+
 {==============================================================================]
   <BinaryInsertion>
   @action: Inserts an item into a sorted array while preserving order.

@@ -3,7 +3,6 @@ function BinaryAdd(const x: Integer; const aAscending: Boolean = True): TInteger
 function BinaryAppend(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
 function BinaryGrow(const x: TRange; const aAscending: Boolean = True): Integer; overload;
-function BinaryInsert(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryPlacement(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
@@ -108,37 +107,6 @@ begin
   Result := 0;
   for s := x.Minimum to x.Maximum do
     Result.Increase(Self.BinaryGrow(s, aAscending));
-end;
-
-{==============================================================================]
-  <BinaryInsert>
-  @action: Insert an integer into a sorted array using binary search, preserving order.
-  @note: Returns the index where the element was inserted. Supports ascending or descending order.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryInsert(const x: Integer; const aAscending: Boolean = True): Integer; overload;
-var
-  m, i: Integer;
-  r: TRange;
-begin
-  Result := Self.Length;
-  if (Self.SetSize(Result + 1) > 1) then
-  begin
-    r.Create(0, (Result - 1));
-    while (r.start <= r.stop) do
-    begin
-      m := r.Pivot;
-      if ((aAscending and (Self[m] >= x)) or ((not aAscending) and (Self[m] <= x))) then
-      begin
-        Result := m;
-        r.stop := (m - 1);
-      end else
-        r.start := (m + 1);
-    end;
-    for i := High(Self) downto (Result + 1) do
-      Self[i] := Self[i - 1];
-    Self[Result] := x;
-  end else
-    Self[0] := x;
 end;
 
 {==============================================================================]

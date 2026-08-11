@@ -1,30 +1,18 @@
 {$IFDEF HELPERS}
 function BinaryBoundL(const x: Double; const aAscending: Boolean = True): Integer;
-function BinaryBoundLeft(const value: Double; const oAscending: Boolean = True): Integer; overload;
 function BinaryBoundR(const x: Double; const aAscending: Boolean = True): Integer;
-function BinaryBoundRight(const value: Double; const oAscending: Boolean = True): Integer; overload;
-function BinaryCeil(const value: Double; const oAscending: Boolean = True): Integer; overload;
 function BinaryClosest(const value: Double; const oAscending: Boolean = True): Integer; overload;
 function BinaryFarthest(const value: Double; const oAscending: Boolean = True): Integer; overload;
-function BinaryFindFirst(const value: Double; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindFirst(const range: TRange; const oAscending: Boolean = True): Integer; overload;
-function BinaryFindLast(const value: Double; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindLast(const range: TRange; const oAscending: Boolean = True): Integer; overload;
 function BinaryFirst(const x: Double; const aAscending: Boolean = True): Integer; overload;
-function BinaryFloor(const value: Double; const oAscending: Boolean = True): Integer; overload;
 function BinaryLast(const x: Double; const aAscending: Boolean = True): Integer; overload;
-function BinaryLeftmost(const x: Double; const aAscending: Boolean = True): Integer; overload;
-function BinaryLowerBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
 function BinaryPosL(const x: Double; const aAscending: Boolean = True): Integer;
 function BinaryPosR(const x: Double; const aAscending: Boolean = True): Integer;
-function BinaryRightmost(const x: Double; const aAscending: Boolean = True): Integer; overload;
 function BinaryRound(const value: Double; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer;
-function BinarySearchFirst(const value: Double; const aAscending: Boolean = True): Integer; overload;
 function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer;
-function BinarySearchLast(const value: Double; const aAscending: Boolean = True): Integer; overload;
 function BinaryTrunc(const value: Double; const oAscending: Boolean = True): Integer; overload;
-function BinaryUpperBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -52,50 +40,6 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryBoundLeft>
-  @action: Finds the left boundary index for the given value in the array.
-  @note: Returns the index of the first element greater than or equal to the value for ascending arrays,
-         or the first element less than or equal for descending arrays.
-         If all elements are smaller/larger, returns Length(Self).
-[==============================================================================}
-function TDoubleArrayHelper.BinaryBoundLeft(const value: Double; const oAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := Self.Size;
-  R.Create(0, High(Self));
-  case oAscending of
-    True:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] < value) of
-        False:
-        begin
-          Result := M;
-          R.stop := (M - 1);
-        end;
-        True: R.start := (M + 1);
-      end;
-    end;
-    False:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] > value) of
-        False:
-        begin
-          Result := M;
-          R.stop := (M - 1);
-        end;
-        True: R.start := (M + 1);
-      end;
-    end;
-  end;
-end;
-
-{==============================================================================]
   <BinaryBoundR>
   @action: Returns Binary Search Upper Bound based on x-value.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
@@ -116,96 +60,6 @@ begin
       r.stop := m;
   end;
   Result := r.start;
-end;
-
-{==============================================================================]
-  <BinaryBoundRight>
-  @action: Finds the right boundary index for the given value in the array.
-  @note: Returns the index of the first element strictly greater than the value for ascending arrays,
-         or strictly smaller for descending arrays.
-         If all elements satisfy the condition, returns Length(Self).
-[==============================================================================}
-function TDoubleArrayHelper.BinaryBoundRight(const value: Double; const oAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := Self.Size;
-  R.Create(0, High(Self));
-  case oAscending of
-    True:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] <= value) of
-        False:
-        begin
-          Result := M;
-          R.stop := (M - 1);
-        end;
-        True: R.start := (M + 1);
-      end;
-    end;
-    False:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] >= value) of
-        False:
-        begin
-          Result := M;
-          R.stop := (M - 1);
-        end;
-        True: R.start := (M + 1);
-      end;
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryCeil>
-  @action: Returns the index of the smallest array element that is greater than
-           or equal to `value`. If no such element exists, returns -1.
-  @note: The array must be sorted according to `oAscending`. For ascending
-         order, this corresponds to the mathematical ceiling. For descending
-         order, the search logic is inverted but the resulting index still
-         identifies the nearest upper-or-equal bound with respect to `value`.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryCeil(const value: Double; const oAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(0, High(Self));
-  case oAscending of
-    True:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] < value) of
-        False:
-        begin
-          Result := M;
-          R.stop := (M - 1);
-        end;
-        True: R.start := (M + 1);
-      end;
-    end;
-    False:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] > value) of
-        False:
-        begin
-          Result := M;
-          R.stop := (M - 1);
-        end;
-        True: R.start := (M + 1);
-      end;
-    end;
-  end;
 end;
 
 {==============================================================================]
@@ -290,55 +144,6 @@ end;
 
 {==============================================================================]
   <BinaryFindFirst>
-  @action: Performs a binary search on the entire array and returns the index of
-           the first occurrence of `value`. If the value is not present,
-           returns -1.
-
-  @note:   Assumes the array is pre-sorted according to `oAscending`. The
-           “first” occurrence corresponds to the lowest index in an ascending
-           array or the highest index in a descending array.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryFindFirst(const value: Double; const oAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(0, High(Self));
-  case oAscending of
-    True:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] < value) of
-        False:
-        begin
-          R.stop := (M - 1);
-          if (Self[M] = value) then
-            Result := M;
-        end;
-        True: R.start := (M + 1);
-      end;
-    end;
-    False:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] > value) of
-        False:
-        begin
-          R.stop := (M - 1);
-          if (Self[M] = value) then
-            Result := M;
-        end;
-        True: R.start := (M + 1);
-      end;
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryFindFirst>
   @action: Executes a binary search to locate the first element within the
            specified numeric range (`range.start`..`range.stop`) and returns its
            index. Returns -1 if no element falls within that range.
@@ -385,55 +190,6 @@ begin
           end;
           True: R.start := (M + 1);
         end;
-      end;
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryFindLast>
-  @action: Performs a binary search on the entire array and returns the index of
-           the last occurrence of `value`. If the value is not present,
-           returns -1.
-
-  @note:   Assumes the array is sorted according to `oAscending`. The “last”
-           occurrence corresponds to the highest index in an ascending array or
-           the lowest index in a descending array.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryFindLast(const value: Double; const oAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(0, High(Self));
-  case oAscending of
-    True:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] > value) of
-        False:
-        begin
-          R.start := (M + 1);
-          if (Self[M] = value) then
-            Result := M;
-        end;
-        True: R.stop := (M - 1);
-      end;
-    end;
-    False:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] < value) of
-        False:
-        begin
-          R.start := (M + 1);
-          if (Self[M] = value) then
-            Result := M;
-        end;
-        True: R.stop := (M - 1);
       end;
     end;
   end;
@@ -523,53 +279,6 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryFloor>
-  @action: Returns the index of the greatest array element that is less than or
-           equal to `value`. If no such element exists, returns -1.
-  @note: The array must be sorted according to `oAscending`. For ascending
-         order, this corresponds to the mathematical floor. For descending
-         order, the search logic is reversed but the returned index still
-         represents the element whose value is the nearest lower-or-equal
-         bound relative to `value`.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryFloor(const value: Double; const oAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(0, High(Self));
-  case oAscending of
-    True:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] > value) of
-        False:
-        begin
-          Result := M;
-          R.start := (M + 1);
-        end;
-        True: R.stop := (M - 1);
-      end;
-    end;
-    False:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      case (Self[M] < value) of
-        False:
-        begin
-          Result := M;
-          R.start := (M + 1);
-        end;
-        True: R.stop := (M - 1);
-      end;
-    end;
-  end;
-end;
-
-{==============================================================================]
   <BinaryLast>
   @action: Return the index of the last element in the sorted array
            that is less than or equal to x.
@@ -595,82 +304,6 @@ begin
         r.start := (m + 1);
       end;
       True: r.stop := (m - 1);
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryLeftmost>
-  @action: Finds the first index where the array value is greater than or equal to x
-           (ascending) or less than or equal to x (descending).
-  @note:
-    - Returns -1 if no element satisfies the condition.
-    - Useful for “leftmost occurrence” searches.
-    - Equivalent to BinaryLowerBound but returns -1 when not found instead of Length(Self).
-[==============================================================================}
-function TDoubleArrayHelper.BinaryLeftmost(const x: Double; const aAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(0, High(Self));
-  while (R.start <= R.stop) do
-  begin
-    M := R.Pivot;
-    case aAscending of
-      True:
-      if (Self[M] >= x) then
-      begin
-        Result := M;
-        R.stop := (M - 1);
-      end else
-        R.start := (M + 1);
-      False:
-      if (Self[M] <= x) then
-      begin
-        Result := M;
-        R.stop := (M - 1);
-      end else
-        R.start := (M + 1);
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryLowerBound>
-  @action: Finds the first index where the array value is greater than or equal to x
-           (ascending) or less than or equal to x (descending).
-  @note:
-    - Returns Length(Self) if no element satisfies the condition.
-    - Equivalent to std::lower_bound in C++.
-    - Works correctly for arrays sorted either ascending or descending.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryLowerBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := Self.Size;
-  R.Create(0, High(Self));
-  while (R.start <= R.stop) do
-  begin
-    M := R.Pivot;
-    case aAscending of
-      True:
-      if (Self[M] >= x) then
-      begin
-        Result := M;
-        R.stop := (M - 1);
-      end else
-        R.start := (M + 1);
-      False:
-      if (Self[M] <= x) then
-      begin
-        Result := M;
-        R.stop := (M - 1);
-      end else
-        R.start := (M + 1);
     end;
   end;
 end;
@@ -723,44 +356,6 @@ begin
   end;
   if ((r.start > 0) and (Self[r.start - 1] = x)) then
     Result := (r.Start - 1);
-end;
-
-{==============================================================================]
-  <BinaryRightmost>
-  @action: Finds the last index where the array value is less than or equal to x
-           (ascending) or greater than or equal to x (descending).
-  @note:
-    - Returns -1 if no element satisfies the condition.
-    - Useful for “rightmost occurrence” searches.
-    - Differs from BinaryUpperBound: includes elements equal to x.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryRightmost(const x: Double; const aAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(0, High(Self));
-  while (R.start <= R.stop) do
-  begin
-    M := R.Pivot;
-    case aAscending of
-      True:
-      if (Self[M] <= x) then
-      begin
-        Result := M;
-        R.start := (M + 1);
-      end else
-        R.stop := (M - 1);
-      False:
-      if (Self[M] >= x) then
-      begin
-        Result := M;
-        R.start := (M + 1);
-      end else
-        R.stop := (M - 1);
-    end;
-  end;
 end;
 
 {==============================================================================]
@@ -817,39 +412,6 @@ begin
 end;
 
 {==============================================================================]
-  <BinarySearchFirst>
-  @action: Performs a binary search to find the first (lowest) index of a specified
-           double value within a sorted TDoubleArray.
-  @note: - The array must be sorted in ascending order.
-         - If the value occurs multiple times, the index of its first occurrence is returned.
-         - If the value is not found, returns -1.
-[==============================================================================}
-function TDoubleArrayHelper.BinarySearchFirst(const value: Double; const aAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  R.Create(0, High(Self));
-  Result := -1;
-  while (R.start <= R.stop) do
-  begin
-    M := R.Pivot;
-    case (Self[M] = value) of
-      True:
-      begin
-        Result := M;
-        R.stop := (M - 1);
-      end;
-      False:
-      if ((aAscending and (Self[M] < value)) or ((not aAscending) and (Self[M] > value))) then
-        R.start := (M + 1)
-      else
-        R.stop := (M - 1);
-    end;
-  end;
-end;
-
-{==============================================================================]
   <BinarySearchL>
   @action: Binary Search which supports TRange search, uses last match from x-range.
   @note: Works with sorted arrays! (aAscending or descending)
@@ -879,39 +441,6 @@ begin
 end;
 
 {==============================================================================]
-  <BinarySearchLast>
-  @action: Performs a binary search to find the last (highest) index of a specified
-           double value within a sorted TDoubleArray.
-  @note: - The array must be sorted in ascending order.
-         - If the value occurs multiple times, the index of its last occurrence is returned.
-         - If the value is not found, returns -1.
-[==============================================================================}
-function TDoubleArrayHelper.BinarySearchLast(const value: Double; const aAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  R.Create(0, High(Self));
-  Result := -1;
-  while (R.start <= R.stop) do
-  begin
-    M := R.Pivot;
-    case (Self[M] = value) of
-      True:
-      begin
-        Result := M;
-        R.start := (M + 1);
-      end;
-      False:
-      if ((aAscending and (Self[M] < value)) or ((not aAscending) and (Self[M] > value))) then
-        R.start := (M + 1)
-      else
-        R.stop := (M - 1);
-    end;
-  end;
-end;
-
-{==============================================================================]
   <BinaryTrunc>
   @action: Returns the index of the array element closest to `value` when
            truncating towards zero. For positive values, behaves like Floor
@@ -926,43 +455,5 @@ begin
     Result := Self.BinaryFloor(value, oAscending)
   else
     Result := Self.BinaryCeil(value, oAscending);
-end;
-
-{==============================================================================]
-  <BinaryUpperBound>
-  @action: Finds the first index where the array value is strictly greater than x
-           (ascending) or strictly less than x (descending).
-  @note:
-    - Returns Length(Self) if no element satisfies the condition.
-    - Equivalent to std::upper_bound in C++.
-    - Works correctly for arrays sorted either ascending or descending.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryUpperBound(const x: Double; const aAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := Self.Size;
-  R.Create(0, High(Self));
-  while (R.start <= R.stop) do
-  begin
-    M := R.Pivot;
-    case aAscending of
-      True:
-      if (Self[M] > x) then
-      begin
-        Result := M;
-        R.stop := (M - 1);
-      end else
-        R.start := (M + 1);
-      False:
-      if (Self[M] < x) then
-      begin
-        Result := M;
-        R.stop := (M - 1);
-      end else
-        R.start := (M + 1);
-    end;
-  end;
 end;
 {$ENDIF}

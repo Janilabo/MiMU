@@ -1,7 +1,6 @@
 {$IFDEF HELPERS}
 function BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
 function BinaryFeed(const item: TPoint): Integer; overload;
-function BinaryInsert(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -40,36 +39,5 @@ begin
   for i := Self.Alloc(Self.Size + 1) downto (Result + 1) do
     Self[i] := Self[i - 1];
   Self[Result] := item;
-end;
-
-{==============================================================================]
-  <BinaryInsert>
-  @action: Inserts a specified point into a sorted TPointArray while maintaining
-           lexicographic order.
-  @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
-           consistent with TPoint.Compare.
-         - If allowDuplicates = False, no insertion occurs if the point already exists.
-         - Returns the index of the inserted or existing point.
-[==============================================================================}
-function TPointArrayHelper.BinaryInsert(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
-var
-  H, M: Integer;
-begin
-  Result := 0;
-  H := High(Self);
-  while (Result <= H) do
-  begin
-    M := ((Result + H) div 2);
-    case Self[M].Compare(item) of
-      -1: Result := (M + 1);
-      1: H := (M - 1);
-      0:
-      if allowDuplicates then
-        Result := (M + 1)
-      else
-        Exit(M);
-    end;
-  end;
-  Insert(item, Self, Result);
 end;
 {$ENDIF}
