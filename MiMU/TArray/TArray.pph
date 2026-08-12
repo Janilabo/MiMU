@@ -1,4 +1,5 @@
 {$I @TArray/Add.inc}
+{$I @TArray/Admission.inc}
 {$I @TArray/Bookends.inc}
 {$I @TArray/Clearing.inc}
 {$I @TArray/Cloning.inc}

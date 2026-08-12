@@ -3,9 +3,6 @@ function BinaryPrune(const aAscending: Boolean = True): Integer;
 function BinaryPruned(const aAscending: Boolean = True): TIntegerArray;
 function BinarySinglified(const item: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
 function BinarySinglify(const item: Integer; const aAscending: Boolean = True): Integer; overload;
-function BinaryUndupe: Integer;
-function BinaryUnduped: TIntegerArray;
-function BinaryUnified(const dAscending: Boolean = True): TIntegerArray;
 function BinaryUnique(const oAscending: Boolean = True): Integer; overload;
 function BinaryUniqued(const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
@@ -96,69 +93,6 @@ begin
   Result := (s - (l + 1));
   if (Result > 0) then
     SetLength(Self, (l + 1));
-end;
-
-{==============================================================================]
-  <BinaryUndupe>
-  @action: Binary Search-based Undupe method.
-  @note: None
-[==============================================================================}
-function TIntegerArrayHelper.BinaryUndupe: Integer;
-var
-  u: TIntegerArray;
-  i: Integer;
-begin
-  if (Self.Size < 2) then
-    Exit(Self.Size);
-  Result := 0;
-  for i := 0 to High(Self) do
-    if u.BinaryGrow(Self[i]) then
-      Self[Result.Increase] := Self[i];
-  SetLength(Self, Result);
-end;
-
-{==============================================================================]
-  <BinaryUnduped>
-  @action: Binary Search-based Unduped method.
-  @note: None
-[==============================================================================}
-function TIntegerArrayHelper.BinaryUnduped: TIntegerArray;
-var
-  i: Integer;
-begin
-  if Self.Empty then
-    Exit([]);
-  SetLength(Result, 1);
-  Result[0] := Self[0];
-  for i := 1 to High(Self) do
-    Result.BinaryGrow(Self[i]);
-end;
-
-{==============================================================================]
-  <BinaryUnified>
-  @action: Binary Search-based Unified method.
-  @note: None
-[==============================================================================}
-function TIntegerArrayHelper.BinaryUnified(const dAscending: Boolean = True): TIntegerArray;
-var
-  u: TIntegerArray;
-  i, l: Integer;
-begin
-  if (Self.Size < 2) then
-    Exit(Self.Copy);
-  SetLength(Result, Self.Size);
-  l := 0;
-  case dAscending of
-    True:
-    for i := 0 to High(Self) do
-      if u.BinaryGrow(Self[i]) then
-        Result[l.Increase] := Self[i];
-    False:
-    for i := High(Self) downto 0 do
-      if u.BinaryGrow(Self[i]) then
-        Result[l.Increase] := Self[i];
-  end;
-  SetLength(Result, l);
 end;
 
 {==============================================================================]
