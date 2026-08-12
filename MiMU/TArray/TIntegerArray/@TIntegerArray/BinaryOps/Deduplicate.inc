@@ -1,61 +1,16 @@
 {$IFDEF HELPERS}
-function BinaryDeduplicate(const aAscending: Boolean = True): Integer; overload;
-function BinaryDeduplicated(const aAscending: Boolean = True): TIntegerArray; overload;
 function BinaryPrune(const aAscending: Boolean = True): Integer;
 function BinaryPruned(const aAscending: Boolean = True): TIntegerArray;
 function BinarySinglified(const item: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
 function BinarySinglify(const item: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryUndupe: Integer;
 function BinaryUnduped: TIntegerArray;
-function BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload;
-function BinaryUnduplicated(const aAscending: Boolean = True): TIntegerArray; overload;
 function BinaryUnified(const dAscending: Boolean = True): TIntegerArray;
-function BinaryUniq(const oAscending: Boolean = True): Integer; overload;
-function BinaryUniqd(const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryUnique(const oAscending: Boolean = True): Integer; overload;
 function BinaryUniqued(const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <BinaryDeduplicate>
-  @action: Rebuilds the array in place by removing duplicate elements using binary search.
-  @note: Creates a temporary copy of the original array and appends only unique values back.
-         Returns the number of elements removed.
-         Requires the array to be sorted (ascending or descending according to aAscending).
-         Runs in O(n log n) time with O(n) additional memory usage.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryDeduplicate(const aAscending: Boolean = True): Integer; overload;
-var
-  u: TIntegerArray;
-  i, l: Integer;
-begin
-  l := Self.Length;
-  if (l < 2) then
-    Exit(0);
-  for i := 0 to (u.Capture(Self) - 1) do
-    if (Self.BinarySearch(u[i], aAscending) = -1) then
-      Self.Supply(u[i]);
-  Result := (l - Self.Size);
-end;
-
-{==============================================================================]
-  <BinaryDeduplicated>
-  @action: Return a new array containing unique elements from the current one.
-  @note: The original array remains unchanged.
-         Uses binary search to avoid inserting duplicates.
-         Sorting is recommended before calling for best results.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryDeduplicated(const aAscending: Boolean = True): TIntegerArray; overload;
-var
-  i: Integer;
-begin
-  SetLength(Result, 0);
-  for i := 0 to High(Self) do
-    if (Result.BinarySearch(Self[i], aAscending) = -1) then
-      Result.Supply(Self[i]);
-end;
-
 {==============================================================================]
   <BinaryPrune>
   @action: Binary Search-based Prune method.
@@ -180,50 +135,6 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryUnduplicate>
-  @action: Removes duplicate elements from the array in place using binary search.
-  @note: Keeps only the first occurrence of each unique value.
-         Returns the number of elements removed.
-         Requires the array to be sorted (ascending or descending as specified).
-         Operates in O(n log n) time and O(1) extra space.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload;
-var
-  i, u, l: Integer;
-begin
-  l := Self.Length;
-  if (l < 2) then
-    Exit(0);
-  u := 0;
-  for i := 1 to (l - 1) do
-    if (Self.BinarySearchRange(Self[i], 0, u, aAscending) = -1) then
-      Self[u.Increment] := Self[i];
-  Result := (l - (u + 1));
-  if (Result > 0) then
-    SetLength(Self, (u + 1));
-end;
-
-{==============================================================================]
-  <BinaryUnduplicated>
-  @action: Return a deduplicated copy of the current array using in-place logic.
-  @note: Works like BinaryUnduplicate but produces a new array instead of modifying Self.
-         Requires sorted input for correct results.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryUnduplicated(const aAscending: Boolean = True): TIntegerArray; overload;
-var
-  i, u: Integer;
-begin
-  Result := Self.Copy;
-  if (Self.Size < 2) then
-    Exit;
-  u := 0;
-  for i := 1 to High(Self) do
-    if (Result.BinarySearchRange(Result[i], 0, u, aAscending) = -1) then
-      Result[u.Increment] := Result[i];
-  SetLength(Result, (u + 1));
-end;
-
-{==============================================================================]
   <BinaryUnified>
   @action: Binary Search-based Unified method.
   @note: None
@@ -248,71 +159,6 @@ begin
         Result[l.Increase] := Self[i];
   end;
   SetLength(Result, l);
-end;
-
-{==============================================================================]
-  <BinaryUniq>
-  @action: Removes duplicate values from an already monotonic array (ascending
-           or descending), preserving only unique values and returning the final
-           count.
-  @note: Unlike BinaryUnique, this routine does not sort the array. It assumes
-         the array is already ordered in the direction specified by oAscending.
-         It performs a linear scan to compact unique values and truncates the
-         array afterward.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryUniq(const oAscending: Boolean = True): Integer; overload;
-var
-  i, l: Integer;
-begin
-  l := Self.Length;
-  if (l < 2) then
-    Exit(l);
-  Result := 1;
-  case oAscending of
-    True:
-    for i := 1 to (l - 1) do
-      if (Self[i] > Self[Result - 1]) then
-        Self[Result.Increase] := Self[i];
-    False:
-    for i := 1 to (l - 1) do
-      if (Self[i] < Self[Result - 1]) then
-        Self[Result.Increase] := Self[i];
-  end;
-  if (Result < l) then
-    SetLength(Self, Result);
-end;
-
-{==============================================================================]
-  <BinaryUniqd>
-  @action: Returns a new array containing only the unique values from the source
-           array, assuming the source is already ordered (ascending or descending),
-           without modifying the original array.
-  @note: This routine does not perform sorting. It creates a copy of the source
-         array and then performs a linear uniqueness pass based on the direction
-         specified by oAscending. Only strictly increasing (or strictly
-         decreasing) transitions are preserved. The result is compacted in-place
-         and truncated to the number of unique values.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryUniqd(const oAscending: Boolean = True): TIntegerArray; overload;
-var
-  i, l: Integer;
-begin
-  Result := Self.Copy;
-  if (Result.Size < 2) then
-    Exit;
-  l := 1;
-  case oAscending of
-    True:
-    for i := 1 to High(Result) do
-      if (Result[i] > Result[l - 1]) then
-        Result[l.Increase] := Result[i];
-    False:
-    for i := 1 to High(Result) do
-      if (Result[i] < Result[l - 1]) then
-        Result[l.Increase] := Result[i];
-  end;
-  if (Result.Size > l) then
-    SetLength(Result, l);
 end;
 
 {==============================================================================]

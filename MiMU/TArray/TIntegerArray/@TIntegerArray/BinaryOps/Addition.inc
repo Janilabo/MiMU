@@ -70,15 +70,16 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.BinaryGrow(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
 var
-  m, i, o: Integer;
+  m, i, o, z: Integer;
   r: TRange;
 begin
   r.Create(0, High(Self));
   o := aAscending.Select(1, -1);
+  z := (o * x);
   while r.Asceal do
   begin
     m := r.Pivot;
-    if ((o * Self[m]) < (o * x)) then
+    if ((o * Self[m]) < z) then
       r.start := (m + 1)
     else
       r.stop := (m - 1);

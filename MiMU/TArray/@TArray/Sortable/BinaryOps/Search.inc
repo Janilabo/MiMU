@@ -29,6 +29,11 @@ function BinaryProxy(const item: MType; const oAscending: Boolean = True): Integ
 function BinaryRank(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinarySearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinarySearchEx(const item: MType; const ignore: MType; const aAscending: Boolean = True): Integer; overload;
+function BinarySearchNth(const item: MType; const N: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinarySearchRange(const item: MType; const rLeft, rRight: Integer; const aAscending: Boolean = True): Integer; overload;
+function BinarySearchSpan(const item: MType; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
+function BinarySeek(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUniformSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -1015,6 +1020,154 @@ begin
       R.stop := (M - 1);
   end;
   Result := -1;
+end;
+
+{==============================================================================]
+  <BinarySearchEx>
+  @action: Performs a binary search on a sorted array to locate a specific item,
+           skipping over ignored elements and supporting both ascending and descending order.
+  @note: The array must be pre-sorted according to the `aAscending` flag. Elements equal
+         to `ignore` are bypassed when searching. Returns the index of a matching element
+         (not guaranteed to be the first if duplicates exist), or -1 if the item is not
+         found or if all elements are ignored.
+[==============================================================================}
+function MArrayHelper.BinarySearchEx(const item: MType; const ignore: MType; const aAscending: Boolean = True): Integer; overload;
+var
+  m, l, r: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  if Self.Empty then
+    Exit;
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    m := s.Center;
+    if (Self[m] = ignore) then
+    begin
+      l := (m - 1);
+      r := (m + 1);
+      while ((l >= s.start) or (r <= s.stop)) do
+      begin
+        if ((l >= s.start) and (Self[l] <> ignore)) then
+        begin
+          m := l;
+          Break;
+        end;
+        if ((r <= s.stop) and (Self[r] <> ignore)) then
+        begin
+          m := r;
+          Break;
+        end;
+        Dec(l);
+        Inc(r);
+      end;
+      if ((l < s.start) and (r > s.stop)) then
+        Exit(-1);
+    end;
+    case (Self[m] = item) of
+      False:
+      if IfThen(aAscending, (Self[m] < item), (Self[m] > item)) then
+        s.start := (m + 1)
+      else
+        s.stop := (m - 1);
+      True: Exit(m);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <BinarySearchNth>
+  @action: Returns the index of the N-th occurrence of the given item in the array.
+  @note:
+    - Uses binary search to locate the first occurrence of the item, then adds N to find the N-th occurrence.
+    - Returns -1 if:
+        * N is out of bounds (negative or larger than the array size),
+        * the item is not found,
+        * or the N-th occurrence does not exist.
+    - Works for both ascending and descending sorted arrays (controlled by oAscending).
+[==============================================================================}
+function MArrayHelper.BinarySearchNth(const item: MType; const N: Integer; const oAscending: Boolean = True): Integer; overload;
+begin
+  if ((N < 0) or (N > High(Self))) then
+    Exit(-1);
+  Result := Self.BinarySearchFirst(item, oAscending);
+  if (Result > -1) then
+    Inc(Result, N);
+  if ((Result > -1) and ((Result > High(Self)) or (Self[Result] <> item))) then
+    Result := -1;
+end;
+
+{==============================================================================]
+  <BinarySearchRange>
+  @action: Perform a binary search for a item within a specific index range.
+  @note: Returns the index of the found element or -1 if not present.
+         Works on ascending or descending arrays, depending on aAscending.
+[==============================================================================}
+function MArrayHelper.BinarySearchRange(const item: MType; const rLeft, rRight: Integer; const aAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(rLeft, rRight);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+      Exit(M)
+    else if ((aAscending and (Self[M] < item)) or ((not aAscending) and (Self[M] > item))) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinarySearchSpan>
+  @action: Performs a recursive binary search for an exact item within a specified
+           sub-range [L, R] of a sorted array, supporting ascending or descending order.
+  @note: The array must be pre-sorted according to `aAscending` across the given
+         [L, R] span. Returns the index of `item` if found, or -1 if L > R, L < 0,
+         R exceeds the array's upper bound, or `item` is not present within [L, R].
+[==============================================================================}
+function MArrayHelper.BinarySearchSpan(const item: MType; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+begin
+  if ((L > R) or (L < 0) or (R > High(Self))) then
+    Exit(-1);
+  M := (L + ((R - L) div 2));
+  if (Self[M] = item) then
+    Exit(M);
+  if ((aAscending and (item < Self[M])) or ((not aAscending) and (item > Self[M]))) then
+    Result := Self.BinarySearchSpan(item, L, (M - 1), aAscending)
+  else
+    Result := Self.BinarySearchSpan(item, (M + 1), R, aAscending);
+end;
+
+{==============================================================================]
+  <BinarySeek>
+  @action: Binary Search function for arrays. Searches item from arr and returns the index.
+  @note: Works with sorted arrays, ascending or descending.
+[==============================================================================}
+function MArrayHelper.BinarySeek(const item: MType; const aAscending: Boolean = True): Integer; overload;
+var
+  i: Integer;
+  r: TRange;
+begin
+  Result := -1;
+  r.Create(0, High(Self));
+  while r.Asceal do
+  begin
+    i := r.Pivot;
+    if (Self[i] = item) then
+      Exit(i);
+    if ((aAscending and (Self[i] < item)) or ((not aAscending) and (Self[i] > item))) then
+      r.start := (i + 1)
+    else
+      r.stop := (i - 1);
+  end;
 end;
 
 {==============================================================================]

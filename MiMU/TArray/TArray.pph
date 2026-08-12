@@ -74,6 +74,7 @@
 {$I @TArray/Sortable/BinaryOps/Add.inc}
 {$I @TArray/Sortable/BinaryOps/Bounds.inc}
 {$I @TArray/Sortable/BinaryOps/Counting.inc}
+{$I @TArray/Sortable/BinaryOps/Deduplicate.inc}
 {$I @TArray/Sortable/BinaryOps/Miscellaneous.inc}
 {$I @TArray/Sortable/BinaryOps/Query.inc}
 {$I @TArray/Sortable/BinaryOps/Removal.inc}

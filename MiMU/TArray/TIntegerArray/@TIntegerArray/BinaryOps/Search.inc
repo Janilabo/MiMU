@@ -11,12 +11,7 @@ function BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; 
 function BinarySearch(const x: TRange; const aAscending: Boolean = True): Integer; overload;
 function BinarySearch2(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinarySearchApproximate(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload;
-function BinarySearchEx(const x: Integer; const ignore: Integer = -2147483648; const aAscending: Boolean = True): Integer; overload;
-function BinarySearchNth(const value: Integer; const N: Integer; const oAscending: Boolean = True): Integer; overload;
-function BinarySearchRange(const x: Integer; const rLeft, rRight: Integer; const aAscending: Boolean = True): Integer; overload;
-function BinarySearchSpan(const value: Integer; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
-function BinarySeek(const x: Integer; const aAscending: Boolean = True): Integer;
 function BSearch(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinarySnap(const target: Integer; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -444,120 +439,16 @@ begin
 end;
 
 {==============================================================================]
-  <BinarySearchEx>
-  @action: Performs a binary search on a sorted integer array to locate a specific value,
-           skipping over ignored elements and supporting both ascending and descending order.
-  @note:   The array must be pre-sorted according to the `aAscending` flag. Elements equal
-           to `ignore` are bypassed when searching. Returns the index of the first matching
-           element, or -1 if the value is not found or if all elements are ignored.
+  <BinarySearchSpan>
+  @action: Performs a recursive binary search within a specified sub-range [L, R] of a
+           sorted array to locate any element whose value falls inside a given TRange,
+           supporting ascending or descending order.
+  @note: The array must be pre-sorted according to `aAscending` across the given
+         [L, R] span. `range` is normalized internally, so its start/stop order does
+         not matter. Returns the index of an element whose value lies within `range`
+         (not guaranteed to be the first such element in the array), or -1 if none is
+         found, or if L < 0 or R exceeds the array's upper bound.
 [==============================================================================}
-function TIntegerArrayHelper.BinarySearchEx(const x: Integer; const ignore: Integer = -2147483648; const aAscending: Boolean = True): Integer; overload;
-var
-  m, l, r: Integer;
-  s: TRange;
-begin
-  Result := -1;
-  if Self.Empty then
-    Exit;
-  s.Create(0, High(Self));
-  while (s.start <= s.stop) do
-  begin
-    m := s.Center;
-    if (Self[m] = ignore) then
-    begin
-      l := (m - 1);
-      r := (m + 1);
-      while ((l >= s.start) or (r <= s.stop)) do
-      begin
-        if ((l >= s.start) and (Self[l] <> ignore)) then
-        begin
-          m := l;
-          Break;
-        end;
-        if ((r <= s.stop) and (Self[r] <> ignore)) then
-        begin
-          m := r;
-          Break;
-        end;
-        Dec(l);
-        Inc(r);
-      end;
-      if ((l < s.start) and (r > s.stop)) then
-        Exit(-1);
-    end;
-    case (Self[m] = x) of
-      False:
-      if IfThen(aAscending, (Self[m] < x), (Self[m] > x)) then
-        s.start := (m + 1)
-      else
-        s.stop := (m - 1);
-      True: Exit(m);
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinarySearchNth>
-  @action: Returns the index of the N-th occurrence of the given value in the array.
-  @note:
-    - Uses binary search to locate the first occurrence of the value, then adds N to find the N-th occurrence.
-    - Returns -1 if:
-        * N is out of bounds (negative or larger than the array size),
-        * the value is not found,
-        * or the N-th occurrence does not exist.
-    - Works for both ascending and descending sorted arrays (controlled by oAscending).
-[==============================================================================}
-function TIntegerArrayHelper.BinarySearchNth(const value: Integer; const N: Integer; const oAscending: Boolean = True): Integer; overload;
-begin
-  if ((N < 0) or (N > High(Self))) then
-    Exit(-1);
-  Result := Self.BinarySearchFirst(value, oAscending);
-  if (Result > -1) then
-    Inc(Result, N);
-  if ((Result > -1) and ((Result > High(Self)) or (Self[Result] <> value))) then
-    Result := -1;
-end;
-
-{==============================================================================]
-  <BinarySearchRange>
-  @action: Perform a binary search for a value within a specific index range.
-  @note: Returns the index of the found element or -1 if not present.
-         Works on ascending or descending arrays, depending on aAscending.
-[==============================================================================}
-function TIntegerArrayHelper.BinarySearchRange(const x: Integer; const rLeft, rRight: Integer; const aAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(rLeft, rRight);
-  while (R.start <= R.stop) do
-  begin
-    M := R.Pivot;
-    if (Self[M] = x) then
-      Exit(M)
-    else if ((aAscending and (Self[M] < x)) or ((not aAscending) and (Self[M] > x))) then
-      R.start := (M + 1)
-    else
-      R.stop := (M - 1);
-  end;
-end;
-
-function TIntegerArrayHelper.BinarySearchSpan(const value: Integer; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-begin
-  if ((L > R) or (L < 0) or (R > High(Self))) then
-    Exit(-1);
-  M := (L + ((R - L) div 2));
-  if (Self[M] = value) then
-    Exit(M);
-  if ((aAscending and (value < Self[M])) or ((not aAscending) and (value > Self[M]))) then
-    Result := Self.BinarySearchSpan(value, L, (M - 1), aAscending)
-  else
-    Result := Self.BinarySearchSpan(value, (M + 1), R, aAscending);
-end;
-
 function TIntegerArrayHelper.BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
   function BSS(const range: TRange; const L, R: Integer; const aAscending: Boolean): Integer;
   var
@@ -577,30 +468,6 @@ begin
   if (L < 0) or (R > High(Self)) then
     Exit(-1);
   Result := BSS(range.Normalize, L, R, aAscending);
-end;
-
-{==============================================================================]
-  <BinarySeek>
-  @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
-  @note: Works with sorted arrays! (aAscending or descending)
-[==============================================================================}
-function TIntegerArrayHelper.BinarySeek(const x: Integer; const aAscending: Boolean = True): Integer;
-var
-  i: Integer;
-  r: TRange;
-begin
-  Result := -1;
-  r.Create(0, High(Self));
-  while r.Asceal do
-  begin
-    i := r.Pivot;
-    if (Self[i] = x) then
-      Exit(i);
-    if ((aAscending and (Self[i] < x)) or ((not aAscending) and (Self[i] > x))) then
-      r.start := (i + 1)
-    else
-      r.stop := (i - 1);
-  end;
 end;
 
 {==============================================================================]

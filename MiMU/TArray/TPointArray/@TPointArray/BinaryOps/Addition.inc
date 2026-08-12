@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
 function BinaryAppend(const item: TPoint; const allowDuplicates: Boolean = True): Integer; overload;
-function BinaryFeed(const item: TPoint): Integer; overload;
+function BinaryFeedy(const item: TPoint): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -22,7 +22,7 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryFeed>
+  <BinaryFeedy>
   @action: Inserts a specified point into the sorted TPointArray while preserving
            ascending lexicographic order by X, then Y.
   @note: - The array must already be sorted in ascending order consistent with
@@ -31,7 +31,7 @@ end;
          - Shifts subsequent elements to make room for the new point.
          - Returns the index at which the point was inserted.
 [==============================================================================}
-function TPointArrayHelper.BinaryFeed(const item: TPoint): Integer; overload;
+function TPointArrayHelper.BinaryFeedy(const item: TPoint): Integer; overload;
 var
   i: Integer;
 begin
