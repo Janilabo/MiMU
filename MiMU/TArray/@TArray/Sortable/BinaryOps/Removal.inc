@@ -1,8 +1,67 @@
 {$IFDEF HELPERS}
+function BinaryEat(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryExclude(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryRemoveAll(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+function BinaryTake(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryEat>
+  @action: Removes item from Self via binary search, preserving sorted order.
+           Works with ascending or descending order based on oAscending.
+  @note: Returns True if item was found and removed, False if not present.
+[==============================================================================}
+function MArrayHelper.BinaryEat(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  m, i: Integer;
+  r: TRange;
+begin
+  r.Create(0, High(Self));
+  while r.Asceal do
+  begin
+    m := r.Pivot;
+    if (oAscending = (Self[m] < item)) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  Result := ((r.start <= High(Self)) and (Self[r.start] = item));
+  if not Result then
+    Exit;
+  for i := r.start to (High(Self) - 1) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, (Self.Length - 1));
+end;
+
+{==============================================================================]
+  <BinaryExclude>
+  @action: Removes item from Self via binary search, preserving sorted order.
+           Works with ascending or descending order based on oAscending.
+  @note: Returns True if item was found and removed, False if not present.
+[==============================================================================}
+function MArrayHelper.BinaryExclude(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  m: Integer;
+  r: TRange;
+begin
+  r := TRange.Construct(0, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    if (Self[m] = item) then
+    begin
+      System.Delete(Self, m, 1);
+      Exit(True);
+    end;
+    if ((oAscending and (Self[m] < item)) or (not oAscending and (Self[m] > item))) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  Result := False;
+end;
+
 {==============================================================================]
   <BinaryRemoveAll>
   @action: Removes all elements from Self that also appear in the items array,
@@ -45,5 +104,35 @@ begin
     Exit(0);
   SetLength(Self, Result);
   Result := (l - Result);
+end;
+
+{==============================================================================]
+  <BinaryTake>
+  @action: Removes item from Self via binary search, preserving sorted order.
+           Works with ascending or descending order based on oAscending.
+  @note: Returns True if item was found and removed, False if not present.
+[==============================================================================}
+function MArrayHelper.BinaryTake(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  l, h, m, i, s: Integer;
+begin
+  l := 0;
+  h := High(Self);
+  while (l <= h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if (Self[m] = item) then
+    begin
+      for i := m to (High(Self) - 1) do
+        Self[i] := Self[i + 1];
+      s := Self.Alloc(Self.Length - 1);
+      Exit(True);
+    end;
+    if ((oAscending and (Self[m] < item)) or (not oAscending and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := (m - 1);
+  end;
+  Result := False;
 end;
 {$ENDIF}

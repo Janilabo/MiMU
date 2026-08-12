@@ -1,4 +1,7 @@
 {$IFDEF HELPERS}
+function BinaryFeed(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryGive(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryInclude(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryInsert(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryInserta(const item: MType; const allowDuplicates: Boolean = True): Integer; overload;
 function BinaryInsertion(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -6,6 +9,89 @@ function BinarySupply(const item: MType; const aAscending: Boolean = True): Bool
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryFeed>
+  @action: Inserts item into Self while maintaining sorted order. Works with
+           ascending or descending order based on oAscending.
+  @note: Returns True if item was inserted, False if it already exists.
+[==============================================================================}
+function MArrayHelper.BinaryFeed(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  m, i: Integer;
+  r: TRange;
+begin
+  r.Create(0, High(Self));
+  while r.Asceal do
+  begin
+    m := r.Pivot;
+    if (oAscending = (Self[m] < item)) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  Result := ((Self.Length = r.start) or (Self[r.start] <> item));
+  if not Result then
+    Exit;
+  SetLength(Self, (Self.Length + 1));
+  for i := High(Self) downto (r.start + 1) do
+    Self[i] := Self[i - 1];
+  Self[r.start] := item;
+end;
+
+{==============================================================================]
+  <BinaryGive>
+  @action: Inserts item into Self while maintaining sorted order. Works with
+           ascending or descending order based on oAscending.
+  @note: Returns True if item was inserted, False if it already exists.
+[==============================================================================}
+function MArrayHelper.BinaryGive(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  l, h, m, i: Integer;
+begin
+  l := 0;
+  h := High(Self);
+  while (l <= h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if (Self[m] = item) then
+      Exit(False);
+    if ((oAscending and (Self[m] < item)) or (not oAscending and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := (m - 1);
+  end;
+  for i := Self.Alloc(Self.Length + 1) downto (l + 1) do
+    Self[i] := Self[i - 1];
+  Self[l] := item;
+  Result := True;
+end;
+
+{==============================================================================]
+  <BinaryInclude>
+  @action: Inserts item into Self while maintaining sorted order. Works with
+           ascending or descending order based on oAscending.
+  @note: Returns True if item was inserted, False if it already exists.
+[==============================================================================}
+function MArrayHelper.BinaryInclude(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  m: Integer;
+  r: TRange;
+begin
+  r := TRange.Construct(0, High(Self));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    if (Self[m] = item) then
+      Exit(False);
+    if ((oAscending and (Self[m] < item)) or (not oAscending and (Self[m] > item))) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  Insert(item, Self, r.start);
+  Result := True;
+end;
+
 {==============================================================================]
   <BinaryInsert>
   @action: Insert an item (x) into a sorted array using binary search, preserving order.
