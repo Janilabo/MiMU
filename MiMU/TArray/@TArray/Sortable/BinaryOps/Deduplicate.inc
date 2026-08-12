@@ -3,8 +3,8 @@ function BinaryDeduplicate(const aAscending: Boolean = True): Integer; overload;
 function BinaryDeduplicated(const aAscending: Boolean = True): MArray; overload;
 function BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload;
 function BinaryUnduplicated(const aAscending: Boolean = True): MArray; overload;
-function BinaryUndupe(const oAscending: Boolean = True): Integer; overload;
-function BinaryUnduped(const oAscending: Boolean = True): MArray; overload;
+function BinaryUndupe: Integer; overload;
+function BinaryUnduped: MArray; overload;
 function BinaryUnified(const dAscending: Boolean = True): MArray; overload;
 function BinaryUniq(const oAscending: Boolean = True): Integer; overload;
 function BinaryUniqd(const oAscending: Boolean = True): MArray; overload;
@@ -104,24 +104,17 @@ end;
   @note: Arrays of fewer than 2 elements are returned unchanged, as
          they are trivially unique.
 [==============================================================================}
-function MArrayHelper.BinaryUndupe(const oAscending: Boolean = True): Integer; overload;
+function MArrayHelper.BinaryUndupe: Integer; overload;
 var
-  s, u: MArray;
+  s: MArray;
   i: Integer;
 begin
   if (Self.Length < 2) then
     Exit(Self.Length);
-  Result := u.Empten;
-  case oAscending of
-    True:
-    for i := 0 to High(Self) do
-      if u.BinaryFeed(Self[i], oAscending) then
-        Self[Result.Increase] := Self[i];
-    False:
-	for i := (s.Capture(Self) - 1) downto 0 do
-      if Self.BinaryFeed(s[i], oAscending) then
-        Inc(Result);
-  end;
+  Result := s.Empten;
+  for i := 0 to High(Self) do
+    if s.BinaryFeed(Self[i]) then
+      Self[Result.Increase] := Self[i];
   SetLength(Self, Result);
 end;
 
@@ -129,18 +122,22 @@ end;
   <BinaryUnduped>
   @action: Returns a new array containing Self's unique elements,
            built via sorted binary insertion. Output is sorted
-           to oAscending, not in Self's original order.
+           to Self's original order.
   @note: An empty Self returns an empty array.
 [==============================================================================}
-function MArrayHelper.BinaryUnduped(const oAscending: Boolean = True): MArray; overload;
+function MArrayHelper.BinaryUnduped: MArray; overload;
 var
-  i: Integer;
+  s: MArray;
+  i, r: Integer;
+  a: Boolean;
 begin
   if (Self.Length < 2) then
     Exit(Self.Clone);
-  Result := [Self[0]];
-  for i := 1 to High(Self) do
-    Result.BinaryFeed(Self[i], oAscending);
+  r := s.Empten;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if s.BinaryFeed(Self[i]) then
+	  Result[r.Increase] := Self[i];
+  SetLength(Result, r);
 end;
 
 {==============================================================================]
