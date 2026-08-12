@@ -9,6 +9,7 @@
 {$I @TArray/Custody.inc}
 {$I @TArray/Disjoint.inc}
 {$I @TArray/Domain.inc}
+{$I @TArray/Dominion.inc}
 {$I @TArray/Duplication.inc}
 {$I @TArray/Endpoints.inc}
 {$I @TArray/Equality.inc}

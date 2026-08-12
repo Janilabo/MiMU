@@ -33,9 +33,7 @@ begin
   l := Self.Length;
   if (l < 2) then
     Exit(0);
-  u := Self.Copy;
-  SetLength(Self, 0);
-  for i := 0 to (l - 1) do
+  for i := 0 to (u.Capture(Self) - 1) do
     if (Self.BinarySearch(u[i], aAscending) = -1) then
       Self.Supply(u[i]);
   Result := (l - Self.Size);
