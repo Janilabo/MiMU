@@ -1,23 +1,23 @@
 {$IFDEF HELPERS}
-function BinaryFind(const item: TPoint): Integer; overload;
+function BinaryFinder(const item: TPoint): Integer; overload;
 function BinaryFind(const area: TBox): Integer; overload;
-function BinaryIndexOf(const item: TPoint): Integer; overload;
+function BinaryIndexy(const item: TPoint): Integer; overload;
 function BinaryPosL(const item: TPoint): Integer; overload;
 function BinaryPosR(const item: TPoint): Integer; overload;
-function BinaryRank(const item: TPoint): Integer; overload;
-function BinarySearch(const item: TPoint): Integer; overload;
+function BinaryRanked(const item: TPoint): Integer; overload;
+function BinarySearcha(const item: TPoint): Integer; overload;
 function BinarySearch(const area: TBox): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <BinaryFind>
+  <BinaryFinder>
   @action: Performs binary search on the sorted point array to locate the exact TPoint whose coordinates match the specified item.
            The search is lexicographical: first by Y, then by X.
   @note: The array must be pre-sorted by Y ascending and, for identical Y values, by X ascending.
          Returns the index of the matching element, or -1 if no match is found.
 [==============================================================================}
-function TPointArrayHelper.BinaryFind(const item: TPoint): Integer; overload;
+function TPointArrayHelper.BinaryFinder(const item: TPoint): Integer; overload;
 var
   M: Integer;
   R: TRange;
@@ -93,13 +93,13 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryIndexOf>
+  <BinaryIndexy>
   @action: Performs a binary search for a specified point in a sorted TPointArray.
   @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
            consistent with TPoint.Compare.
           - Returns the index of the matching point if found, or -1 if not found.
 [==============================================================================}
-function TPointArrayHelper.BinaryIndexOf(const item: TPoint): Integer; overload;
+function TPointArrayHelper.BinaryIndexy(const item: TPoint): Integer; overload;
   function BS(const L, R: Integer): Integer;
   var
     M: Integer;
@@ -168,7 +168,7 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryRank>
+  <BinaryRanked>
   @action: Returns the rank (0-based index) of a point within a sorted TPointArray.
            The rank is the position at which the point would be inserted to
            maintain ascending lexicographic order by X, then Y.
@@ -176,7 +176,7 @@ end;
          - If the item exists, returns the index of its first occurrence.
          - The array must be sorted ascending, consistent with TPoint.Compare.
 [==============================================================================}
-function TPointArrayHelper.BinaryRank(const item: TPoint): Integer; overload;
+function TPointArrayHelper.BinaryRanked(const item: TPoint): Integer; overload;
 var
   R, M: Integer;
 begin
@@ -193,13 +193,13 @@ begin
 end;
 
 {==============================================================================]
-  <BinarySearch>
+  <BinarySearcha>
   @action: Performs a binary search for a specified point in a sorted TPointArray.
   @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
            consistent with TPoint.Compare.
           - Returns the index of the matching point if found, or -1 if not found.
 [==============================================================================}
-function TPointArrayHelper.BinarySearch(const item: TPoint): Integer; overload;
+function TPointArrayHelper.BinarySearcha(const item: TPoint): Integer; overload;
 var
   M: Integer;
   R: TRange;

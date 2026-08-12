@@ -13,7 +13,7 @@ function BinaryExists(const item: TPoint): Boolean; overload;
 [==============================================================================}
 function TPointArrayHelper.BinaryContains(const item: TPoint): Boolean; overload;
 begin
-  Result := (Self.BinarySearch(item) > -1);
+  Result := (Self.BinarySearcha(item) > -1);
 end;
 
 {==============================================================================]

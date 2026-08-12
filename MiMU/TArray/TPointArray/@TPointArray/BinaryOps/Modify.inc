@@ -22,7 +22,7 @@ function TPointArrayHelper.BinaryDelete(const item: TPoint): Boolean; overload;
 var
   i, p: Integer;
 begin
-  p := Self.BinarySearch(item);
+  p := Self.BinarySearcha(item);
   Result := (p > -1);
   if not Result then
     Exit;

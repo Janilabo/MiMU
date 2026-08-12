@@ -2,29 +2,14 @@
 function BinaryAdaptiveSearch(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryApproximateSearch(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryEstimate(const item: Integer; const oAscending: Boolean = True): Integer; overload;
-function BinaryFind(const val: Integer; const aAscending: Boolean): Integer; overload;
-function BinaryFind(const val: Integer; const scan: TRange; const ascending: Boolean = True): Integer; overload;
-function BinaryHybridSearch(const value: Integer; const oAscending: Boolean = True; const threshold: Integer = 8): Integer; overload;
-function BinaryHybridSearch(const value: Integer; const threshold: Integer; const oAscending: Boolean = True): Integer; overload;
-function BinaryIndex(const x: Integer; const aAscending: Boolean = True): Integer; overload;
-function BinaryIndexFor(const item: Integer; const oAscending: Boolean = True): Integer; overload;
-function BinaryIndexOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryInterp(const target: Integer; const oAscending: Boolean = True): Double; overload;
 function BinaryInterpolationSearch(const x: Integer; const aAscending: Boolean = True): Integer;
-function BinaryLocalize(const value: Integer; const aAscending: Boolean = True): Integer; overload;
-function BinaryLookup(const value: Integer): Integer; overload;
 function BinaryPinpoint(const x: Integer; const aAscending: Boolean = True): Integer;
-function BinaryPoint(const value: Integer; const oAscending: Boolean = True): Integer; overload;
-function BinaryPos(const value: Integer; const oAscending: Boolean = True): Integer; overload;
-function BinaryPosition(const value: Integer; const oAscending: Boolean = True): Integer; overload;
-function BinaryPositionOf(const item: Integer; const chunkRadius: Integer = 5; const ascending: Boolean = True): Integer; overload;
-function BinaryPositionOf(const item: Integer; const ascending: Boolean; const chunkRadius: Integer = 5): Integer; overload;
 function BinaryPosOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryProbabilisticSearch(const x: Integer; const bias: Double = 0.0; const aAscending: Boolean = True): Integer; overload;
 function BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; const bias: Double = 0.0): Integer; overload;
-function BinaryRank(const x: Integer; const aAscending: Boolean = True): Integer; overload;
-function BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinarySearch(const x: TRange; const aAscending: Boolean = True): Integer; overload;
+function BinarySearch2(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinarySearchApproximate(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchEx(const x: Integer; const ignore: Integer = -2147483648; const aAscending: Boolean = True): Integer; overload;
 function BinarySearchNth(const value: Integer; const N: Integer; const oAscending: Boolean = True): Integer; overload;
@@ -201,191 +186,6 @@ begin
     else
       R.stop := (p - 1);
   end;
-end;  
-
-{==============================================================================]
-  <BinaryFind>
-  @action: Performs a binary search on a sorted integer array to locate a specific value.
-  @note:   The array must be sorted in either ascending or descending order,
-           as specified by `aAscending`. If the value is found, its index is
-           returned; otherwise, -1 is returned. This function assumes there are
-           no ignored or placeholder values in the array.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryFind(const val: Integer; const aAscending: Boolean): Integer; overload;
-var
-  m: Integer;
-  s: TRange;
-begin
-  Result := -1;
-  s.Create(0, High(Self));
-  while (s.start <= s.stop) do
-  begin
-    m := s.Pivot;
-    if (Self[m] = val) then
-      Exit(m);
-    if (IfThen(aAscending, Ord(Self[m] < val), Ord(Self[m] > val)) <> 0) then
-      s.start := (m + 1)
-    else
-      s.stop := (m - 1);
-  end;
-end;
-
-{==============================================================================]
-  <BinaryFind>
-  @action: Performs a bounded binary search for a specified value within the
-           current integer array (Self), restricted to the index range defined
-           by `scan`. Returns the index of the matching element if found;
-           otherwise returns -1.
-  @note:
-    - The array (or the specified subrange) must already be sorted
-      according to `ascending`.
-    - `scan` is normalized and clamped to valid array bounds before search.
-    - Only the effective range [Max(0, scan.start) .. Min(High(Self), scan.stop)]
-      is examined.
-    - Time complexity: O(log n) relative to the size of the effective range.
-    - If Self is empty, returns -1.
-    - If the clamped range is invalid (start > stop), returns -1.
-    - If duplicate values exist, the returned index is not guaranteed
-      to be the first or last occurrence.
-    - The method does not verify that the range is sorted; correctness
-      depends on the ordering invariant being satisfied.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryFind(const val: Integer; const scan: TRange; const ascending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  S: TRange;
-begin
-  if Self.Empty then
-    Exit(-1);
-  S := scan.Normalize;
-  S.start := Max(0, S.start);
-  S.stop := Min(High(Self), S.stop);
-  while (S.start <= S.stop) do
-  begin
-    M := S.Pivot;
-    if (Self[M] = val) then
-      Exit(M);
-    case ascending of
-      True:
-      if (Self[M] < val) then
-        S.start := (M + 1)
-      else
-        S.stop := (M - 1);
-      False:
-      if (Self[M] > val) then
-        S.start := (M + 1)
-      else
-        S.stop := (M - 1);
-    end;
-  end;
-  Result := -1;
-end; 
-
-function TIntegerArrayHelper.BinaryHybridSearch(const value: Integer; const oAscending: Boolean = True; const threshold: Integer = 8): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(0, High(Self));
-  while ((R.stop - R.start) > threshold) do
-  begin
-    M := R.Pivot;
-    if (Self[M] = value) then
-      Exit(M);
-    if ((oAscending and (value < Self[M])) or ((not oAscending) and (value > Self[M]))) then
-      R.stop := (M - 1)
-    else
-      R.start := (M + 1);
-  end;
-  for M := R.start to R.stop do
-    if (Self[M] = value) then
-      Exit(M);
-end;
-
-function TIntegerArrayHelper.BinaryHybridSearch(const value: Integer; const threshold: Integer; const oAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(0, High(Self));
-  while ((R.stop - R.start) > threshold) do
-  begin
-    M := R.Pivot;
-    if (Self[M] = value) then
-      Exit(M);
-    if ((oAscending and (value < Self[M])) or ((not oAscending) and (value > Self[M]))) then
-      R.stop := (M - 1)
-    else
-      R.start := (M + 1);
-  end;
-  for M := R.start to R.stop do
-    if (Self[M] = value) then
-      Exit(M);
-end;
-
-{==============================================================================]
-  <BinaryIndex>
-  @action: Returns the index of a given value in the sorted array using binary search.
-  @note: If the value is not found, returns -1.
-         Works for both ascending and descending arrays.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryIndex(const x: Integer; const aAscending: Boolean = True): Integer; overload;
-var
-  m: Integer;
-  r: TRange;
-begin
-  Result := -1;
-  r.Create(0, High(Self));
-  while (r.start <= r.stop) do
-  begin
-    m := r.Pivot;
-    if (Self[m] = x) then
-      Exit(m)
-    else if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
-      r.start := (m + 1)
-    else
-      r.stop := (m - 1);
-  end;
-end;
-
-function TIntegerArrayHelper.BinaryIndexFor(const item: Integer; const oAscending: Boolean = True): Integer; overload;
-  function BS(const L, H: Integer): Integer;
-  var
-    M: Integer;
-  begin
-    if (L > H) then
-      Exit(-1);
-    M := ((L + H) shr 1);
-    if (Self[M] = item) then
-      Exit(M);
-    if ((Self[M] < item) = oAscending) then
-      Result := BS((M + 1), H)
-    else
-      Result := BS(L, (M - 1));
-  end;
-begin
-  Result := BS(0, High(Self));
-end;
-
-function TIntegerArrayHelper.BinaryIndexOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;
-  function BS(const L, R: Integer): Integer;
-  var
-    M: Integer;
-  begin
-    if (L > R) then
-      Exit(-1);
-    M := (L + ((R - L) div 2));
-    if (Self[M] = value) then
-      Exit(M);
-    if ((oAscending and (value < Self[M])) or ((not oAscending) and (value > Self[M]))) then
-      Result := BS(L, (M - 1))
-    else
-      Result := BS((M + 1), R);
-  end;
-begin
-  Result := BS(0, High(Self));
 end;
 
 {==============================================================================]
@@ -468,74 +268,6 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryLocalize>
-  @action: Determines the insertion position for a specified integer value within
-           a sorted TIntegerArray.
-  @note: - The array must be sorted in ascending order.
-         - Returns the index where the value should be inserted to maintain sort order.
-         - If the value already exists, returns the index of its first occurrence.
-         - Commonly used to find insertion points for sorted inserts or range lookups.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryLocalize(const value: Integer; const aAscending: Boolean = True): Integer; overload;
-var
-  R, M: Integer;
-begin
-  Result := 0;
-  R := Self.Size;
-  while (Result < R) do
-  begin
-    M := ((Result + R) div 2);
-    if ((aAscending and (Self[M] < value)) or ((not aAscending) and (Self[M] > value))) then
-      Result := (M + 1)
-    else
-      R := M;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryLookup>
-  @action: Performs a binary search on the array to find the index of the specified value.
-           Automatically detects whether the array is sorted in ascending or descending order.
-           Returns the index of the value if found; otherwise returns -1.
-  @note:   The array must be monotonic (fully ascending or fully descending).
-           If the array contains duplicates, the function returns an arbitrary occurrence.
-           This method does not modify the array.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryLookup(const value: Integer): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  R.Create(0, High(Self));
-  if (R.stop > -1) then
-  case (Self[R.start] <= Self[R.stop]) of
-    True:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      if (Self[M] = value) then
-        Exit(M);
-      if (value < Self[M]) then
-        R.stop := (M - 1)
-      else
-        R.start := (M + 1);
-    end;
-    False:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      if (Self[M] = value) then
-        Exit(M);
-      if (value > Self[M]) then
-        R.stop := (M - 1)
-      else
-        R.start := (M + 1);
-    end;
-  end;
-  Result := -1;
-end;
-
-{==============================================================================]
   <BinaryPinpoint>
   @action: Finds the index of the element closest in value to the specified integer.
   @note: - The array must be sorted in ascending or descending order as specified by aAscending.
@@ -569,186 +301,6 @@ begin
     Dec(Result)
   else if (D > x.Distance(Self[Result + 1])) then
     Inc(Result);
-end;
-
-{==============================================================================]
-  <BinaryPoint>
-  @action: Determines the positional index at which `value` should be inserted
-           to preserve the array's sorted order. Returns the first index whose
-           element is not less than `value` when ascending, or not greater than
-           `value` when descending. If all elements are less (ascending) or
-           greater (descending), returns Length(Self).
-  @note: This routine does not search for an existing match. It calculates the
-         stable insertion point (lower-bound position) using binary search.
-         The array must already be sorted according to `oAscending`. The
-         returned index will always be in the range 0..Length(Self).
-[==============================================================================}
-function TIntegerArrayHelper.BinaryPoint(const value: Integer; const oAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  Result := 0;
-  R.Create(0, High(Self));
-  case oAscending of
-    True:
-    begin
-      Result := Self.Size;
-      while (R.start <= R.stop) do
-      begin
-        M := R.Pivot;
-        case (Self[M] < value) of
-          False:
-          begin
-            Result := M;
-            R.stop := (M - 1);
-          end;
-          True: R.start := (M + 1);
-        end;
-      end;
-    end;
-    False:
-    begin
-      Result := Self.Size;
-      while (R.start <= R.stop) do
-      begin
-        M := R.Pivot;
-        case (Self[M] > value) of
-          False:
-          begin
-            Result := M;
-            R.stop := (M - 1);
-          end;
-          True: R.start := (M + 1);
-        end;
-      end;
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryPos>
-  @action: Binary Search
-  @note: Alternative.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryPos(const value: Integer; const oAscending: Boolean = True): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  R.Create(0, High(Self));
-  case oAscending of
-    True:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      if (Self[M] = value) then
-        Exit(M);
-      if (value < Self[M]) then
-        R.stop := (M - 1)
-      else
-        R.start := (M + 1);
-    end;
-    False:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      if (Self[M] = value) then
-        Exit(M);
-      if (value > Self[M]) then
-        R.stop := (M - 1)
-      else
-        R.start := (M + 1);
-    end;
-  end;
-  Result := -1;
-end;
-
-{==============================================================================]
-  <BinaryPosition>
-  @action: Binary Search
-  @note: Alternative.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryPosition(const value: Integer; const oAscending: Boolean = True): Integer; overload;
-var
-  O, M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(0, High(Self));
-  O := IfThen(oAscending, 1, -1);
-  while (R.start <= R.stop) do
-  begin
-    M := R.Pivot;
-    case (value.Compare(Self[M]) * O) of
-      0: Exit(M);
-      -1: R.stop := (M - 1);
-      1: R.start := (M + 1);
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryPositionOf>
-  @action: Performs a hybrid binary search for `item` in the current integer array.
-           At each pivot step, a bounded "chunk" centered on the pivot (defined by
-           `chunkRadius`) is inspected before continuing the binary reduction.
-           Returns the index of the matching element if found; otherwise returns -1.
-  @note:
-    - The array must be sorted according to `ascending`.
-    - `chunkRadius` defines a local window [M - r .. M + r] around the pivot.
-      This window is clamped to valid array bounds.
-    - The algorithm checks:
-        1) The pivot element.
-        2) The chunk boundaries.
-        3) If `item` lies within the chunk’s value range, a bounded
-           BinaryFind is executed within that chunk.
-        4) Otherwise, the normal binary search narrowing continues.
-    - Intended for datasets where nearby clustering around pivot is common.
-    - Worst-case time complexity remains O(log n), but may incur small
-      additional constant overhead per iteration due to chunk checks.
-    - If duplicates exist, any matching index may be returned.
-    - No internal verification of sortedness is performed.
-    - If Self is empty, returns -1.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryPositionOf(const item: Integer; const chunkRadius: Integer = 5; const ascending: Boolean = True): Integer; overload;
-var
-  H, M: Integer;
-  S, R: TRange;
-begin
-  H := High(Self);
-  S.Create(0, H);
-  while (S.start <= S.stop) do
-  begin
-    M := S.Pivot;
-    if (Self[M] = item) then
-      Exit(M);
-    R.Create(Max(0, (M - chunkRadius)), Min(H, (M + chunkRadius)));
-    if (Self[R.start] = item) then
-      Exit(R.start)
-    else if (Self[R.stop] = item) then
-      Exit(R.stop);
-    if InRange(item, Self[R.start], Self[R.stop]) then
-      Exit(Self.BinaryFind(item, R, ascending));
-    case ascending of
-      True:
-      if (Self[M] < item) then
-        S.start := (M + 1)
-      else
-        S.stop := (M - 1);
-      False:
-      if (Self[M] > item) then
-        S.start := (M + 1)
-      else
-        S.stop := (M - 1);
-    end;
-  end;
-  Result := -1;
-end;
-
-function TIntegerArrayHelper.BinaryPositionOf(const item: Integer; const ascending: Boolean; const chunkRadius: Integer = 5): Integer; overload;
-begin
-  Result := Self.BinaryPositionOf(item, chunkRadius, ascending);
 end;
 
 {==============================================================================]
@@ -816,66 +368,6 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryRank>
-  @action: Returns the insertion index (rank) of a value in the sorted array.
-  @note: If the value exists, its first occurrence index is returned.
-         If not found, returns the position where it should be inserted
-         to maintain sort order.
-         Works for ascending or descending arrays.
-         Complexity: O(log n)
-[==============================================================================}
-function TIntegerArrayHelper.BinaryRank(const x: Integer; const aAscending: Boolean = True): Integer; overload;
-var
-  m: Integer;
-  r: TRange;
-begin
-  r.Create(0, High(Self));
-  while (r.start <= r.stop) do
-  begin
-    m := r.Pivot;
-    case (Self[m] = x) of
-      True:
-      begin
-        while ((m > 0) and (Self[m - 1] = x)) do
-          Dec(m);
-        Exit(m);
-      end;
-      False:
-      if ((aAscending and (Self[m] < x)) or ((not aAscending) and (Self[m] > x))) then
-        r.start := (m + 1)
-      else
-        r.stop := (m - 1);
-    end;
-  end;
-  Result := r.start;
-end;
-
-{==============================================================================]
-  <BinarySearch>
-  @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
-  @note: Works with sorted arrays! (aAscending or descending)
-[==============================================================================}
-function TIntegerArrayHelper.BinarySearch(const x: Integer; const aAscending: Boolean = True): Integer; overload;
-var
-  m, o: Integer;
-  r: TRange;
-begin
-  Result := -1;
-  o := aAscending.Select(1, -1);
-  r.Create(0, High(Self));
-  while (r.Asceal and (Result = -1)) do
-  begin
-    m := r.Pivot;
-    if ((o * Self[m]) = (o * x)) then
-      Result := m
-    else if ((o * Self[m]) < (o * x)) then
-      r.start := (m + 1)
-    else
-      r.stop := (m - 1);
-  end;
-end;
-
-{==============================================================================]
   <BinarySearch>
   @action: Searches the integer array for any element whose value falls within the specified range.
            The search is performed using a binary-search strategy based on the assumption that the array is sorted either ascending or descending.
@@ -905,6 +397,32 @@ begin
       s.start := (M + 1);
   end;
   Result := -1;
+end;
+
+{==============================================================================]
+  <BinarySearch>
+  @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
+  @note: Works with sorted arrays! (aAscending or descending)
+[==============================================================================}
+function TIntegerArrayHelper.BinarySearch2(const x: Integer; const aAscending: Boolean = True): Integer; overload;
+var
+  m, o, s: Integer;
+  r: TRange;
+begin
+  Result := -1;
+  o := aAscending.Select(1, -1);
+  s := (o * x);
+  r.Create(0, High(Self));
+  while (r.Asceal and (Result = -1)) do
+  begin
+    m := r.Pivot;
+    if ((o * Self[m]) = s) then
+      Result := m
+    else if ((o * Self[m]) < s) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
 end;
 
 {==============================================================================]
