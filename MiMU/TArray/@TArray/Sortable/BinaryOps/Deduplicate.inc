@@ -112,10 +112,16 @@ begin
   if (Self.Length < 2) then
     Exit(Self.Length);
   Result := u.Empten;
-  s := Self.Cloned;
-  for i := 0 downto 0 do
-    if u.BinaryFeed(s[i], oAscending) then
-      Self[Result.Increase] := s[i];
+  case oAscending of
+    True:
+    for i := 0 to High(Self) do
+      if u.BinaryFeed(Self[i], oAscending) then
+        Self[Result.Increase] := Self[i];
+    False:
+	for i := (s.Capture(Self) - 1) downto 0 do
+      if Self.BinaryFeed(s[i], oAscending) then
+        Inc(Result);
+  end;
   SetLength(Self, Result);
 end;
 
@@ -130,13 +136,12 @@ function MArrayHelper.BinaryUnduped(const oAscending: Boolean = True): MArray; o
 var
   i: Integer;
 begin
-  if Self.Empty then
-    Exit([]);
+  if (Self.Length < 2) then
+    Exit(Self.Clone);
   Result := [Self[0]];
   for i := 1 to High(Self) do
     Result.BinaryFeed(Self[i], oAscending);
 end;
-
 
 {==============================================================================]
   <BinaryUnified>
