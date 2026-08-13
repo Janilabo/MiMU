@@ -1,10 +1,9 @@
 {$IFDEF METHODS}
 function Ahead(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
 function Behind(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-function Cmp(const target: TPoint): Integer; overload;
+function Cmp2(const target: TPoint): Integer; overload;
 function Comp(const target: TPoint): Integer; overload;
-function Compare(const target: TPoint): Integer; overload;
-function Compared(const target: TPoint; const oAscending: Boolean = True): Integer; overload;
+function Compared2(const target: TPoint; const oAscending: Boolean = True): Integer; overload;
 function CompareX(const target: TPoint): Integer;
 function CompareY(const target: TPoint): Integer;
 function Comparison(const target: TPoint): Integer; overload;
@@ -20,10 +19,6 @@ function YComp(const target: TPoint): Integer;
 function YCompare(const target: TPoint): Integer;
 {$ENDIF}
 
-{$IFDEF HELPERS}
-function Decompare(const target: TPoint): Integer; overload;
-{$ENDIF}
-
 {$IFDEF FUNCTIONS}
 function Compare(const A, B: TPoint): Integer; overload;
 function Comparison(const A, B: TPoint): Integer; overload;
@@ -32,29 +27,6 @@ function Min(const A, B: TPoint): TPoint; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Decompare>
-  @action: Reversed three-way comparison between Self and target.
-           Returns the opposite sign of a standard comparison, effectively
-           negating the traditional -1,0,1 result.
-  @note: Returns:
-          1  if Self < target  (standard comparison would return -1)
-          0  if Self = target  (standard comparison returns 0)
-          -1 if Self > target  (standard comparison would return 1)
-         This method is semantically equivalent to: -(Self.Compare(target))
-         Perfect for descending order sorting or when reversed comparison logic
-         is required without inverting the entire sorting algorithm.
-[==============================================================================}
-function TPointHelper.Decompare(const target: TPoint): Integer; overload;
-begin
-  if (Self = target) then
-    Result := 0
-  else if (Self < target) then
-    Result := 1
-  else
-    Result := -1;
-end;
-
 {==============================================================================]
   <Ahead>
   @action: Returns True if Self is "ahead" of the target in scanline order.
@@ -96,7 +68,7 @@ end;
   @action: Compares two points lexicographically by X then Y.
   @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
 [==============================================================================}
-function TPoint.Cmp(const target: TPoint): Integer; overload;
+function TPoint.Cmp2(const target: TPoint): Integer; overload;
 begin
   Result := Sign(X - target.X);
   if (Result = 0) then
@@ -104,7 +76,7 @@ begin
 end;
 
 {==============================================================================]
-  <Comp>
+  <Comp2>
   @action: Compares two points lexicographically by X then Y.
   @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
 [==============================================================================}
@@ -114,26 +86,12 @@ begin
 end;
 
 {==============================================================================]
-  <Compare>
-  @action: Compares two points lexicographically by X then Y.
-  @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
-[==============================================================================}
-function TPoint.Compare(const target: TPoint): Integer; overload;
-begin
-  if (Self = target) then
-    Exit(0);
-  if (Self < target) then
-    Exit(-1);
-  Result := 1;
-end;
-
-{==============================================================================]
-  <Compared>
+  <Compared2>
   @action: Compares two points by Y then X, honoring sort direction.
   @note: Returns -1 if Self < target, 1 if Self > target, and 0 if both coordinates are equal.
          When oAscending is False, the comparison sign is inverted.
 [==============================================================================}
-function TPoint.Compared(const target: TPoint; const oAscending: Boolean = True): Integer; overload;
+function TPoint.Compared2(const target: TPoint; const oAscending: Boolean = True): Integer; overload;
 begin
   if (Y <> target.Y) then
     Result := (Ord(Y > target.Y) - Ord(Y < target.Y))

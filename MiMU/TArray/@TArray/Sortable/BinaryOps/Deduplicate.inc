@@ -129,7 +129,6 @@ function MArrayHelper.BinaryUnduped: MArray; overload;
 var
   s: MArray;
   i, r: Integer;
-  a: Boolean;
 begin
   if (Self.Length < 2) then
     Exit(Self.Clone);
@@ -152,23 +151,23 @@ end;
 [==============================================================================}
 function MArrayHelper.BinaryUnified(const dAscending: Boolean = True): MArray; overload;
 var
-  u: MArray;
-  i, l: Integer;
+  s: MArray;
+  i, r: Integer;
 begin
   if (Self.Length < 2) then
     Exit(Self.Copy);
-  l := u.Empten;
+  r := s.Empten;
   case dAscending of
     True:
     for i := 0 to Result.Alloc(Self.Length) do
-      if u.BinaryFeed(Self[i]) then
-        Result[l.Increase] := Self[i];
+      if s.BinaryFeed(Self[i]) then
+        Result[r.Increase] := Self[i];
     False:
     for i := Result.Alloc(Self.Length) downto 0 do
-      if u.BinaryFeed(Self[i]) then
-        Result[l.Increase] := Self[i];
+      if s.BinaryFeed(Self[i]) then
+        Result[r.Increase] := Self[i];
   end;
-  SetLength(Result, l);
+  SetLength(Result, r);
 end;
 
 {==============================================================================]

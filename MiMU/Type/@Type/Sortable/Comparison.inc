@@ -1,14 +1,162 @@
 {$IFDEF HELPERS}
+function Cmp(const target: MType): Integer; overload;
+function Cmpr(const target: MType): Integer; overload;
+function Compare(const target: MType): Integer; overload;
+function CompareAt(const target: MType): Integer; overload;
+function Comparify(const target: MType): Integer; overload;
+function Decompare(const target: MType): Integer; overload;
+
+function Compared(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function CompareTo(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function CompareWith(const target: MType; const oAscending: Boolean = True): Integer; overload;
+
 function Battle(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function Clash(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Compete(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Contest(const target: MType; const oAscending: Boolean = True): Integer; overload;
-function Clash(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Duel(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Trial(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Versus(const target: MType; const oAscending: Boolean = True): Integer; overload;
+
+function Ascending(const target: MType): Boolean; overload;
+function Descending(const target: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Cmp>
+  @action: Compares Self with target target.
+           Results: 0=EQUAL, 1=Self>target, -1=Self<target
+  @note: None
+[==============================================================================}
+function MTypeHelper.Cmp(const target: MType): Integer; overload;
+begin
+  Result := (Integer(Self > target) - Integer(Self < target));
+end;
+
+{==============================================================================]
+  <Cmpr>
+  @action: Compares Self with target target.
+           Results: 0=EQUAL, 1=Self>target, -1=Self<target
+  @note: None
+[==============================================================================}
+function MTypeHelper.Cmpr(const target: MType): Integer; overload;
+begin
+  Result := (Ord(Self > target) - Ord(Self < target));
+end;
+
+{==============================================================================]
+  <Compare>
+  @action: Compares Self with target target.
+           Results: 0=EQUAL, 1=Self>target, -1=Self<target
+  @note: None
+[==============================================================================}
+function MTypeHelper.Compare(const target: MType): Integer; overload;
+begin
+  if (Self = target) then
+    Exit(0);
+  if (Self > target) then
+    Result := 1
+  else
+    Result := -1;
+end;
+
+{==============================================================================]
+  <CompareAt>
+  @action: Performs a standard three-way (trichotomous) comparison between 
+           Self and the target value.
+  @note: Returns -1 if Self is less than target, 1 if Self is greater than 
+         target, and 0 if both values are perfectly equal. This is highly 
+         useful as a clean, predictable sorting or routing primitive.
+[==============================================================================}
+function MTypeHelper.CompareAt(const target: MType): Integer; overload;
+begin
+  if (Self < target) then
+    Result := -1
+  else if (Self > target) then
+    Result := 1
+  else
+    Result := 0;
+end;
+
+{==============================================================================]
+  <Comparify>
+  @action: Transforms the relationship between Self and a target value into 
+           a normalized three-way positional scalar (-1, 0, 1).
+  @note: Utilizing a single-line functional fold, this method evaluates the 
+         less-than condition first, falling back onto a direct integer cast 
+         of the greater-than boolean expression to eliminate nesting.
+[==============================================================================}
+function MTypeHelper.Comparify(const target: MType): Integer; overload;
+begin
+  Result := IfThen((Self < target), -1, Integer(Self > target));
+end;
+
+{==============================================================================]
+  <Decompare>
+  @action: Reversed three-way comparison between Self and target.
+           Returns the opposite sign of a standard comparison, effectively
+           negating the traditional -1,0,1 result.
+  @note: Returns:
+          1  if Self < target  (standard comparison would return -1)
+          0  if Self = target  (standard comparison returns 0)
+          -1 if Self > target  (standard comparison would return 1)
+         This method is semantically equivalent to: -(Self.Compare(target))
+         Perfect for descending order sorting or when reversed comparison logic
+         is required without inverting the entire sorting algorithm.
+[==============================================================================}
+function MTypeHelper.Decompare(const target: MType): Integer; overload;
+begin
+  if (Self = target) then
+    Result := 0
+  else if (Self < target) then
+    Result := 1
+  else
+    Result := -1;
+end;
+
+{==============================================================================]
+  <Compared>
+  @action: Compares Self with target value.
+  @note: Supports ascending/descending
+[==============================================================================}
+function MTypeHelper.Compared(const target: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := (Ord(Self > target) - Ord(Self < target));
+  if not oAscending then
+    Result := -Result;
+end;
+
+{==============================================================================]
+  <CompareTo>
+  @action: Compares Self with target value.
+  @note: Supports ascending/descending
+[==============================================================================}
+function MTypeHelper.CompareTo(const target: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  if (Self = target) then
+    Exit(0);
+  if oAscending then
+    Result := ((Ord(Self > target) * 2) - 1)
+  else
+    Result := ((Ord(target > Self) * 2) - 1);
+end;
+
+{==============================================================================]
+  <CompareWith>
+  @action: Compares Self with target value.
+  @note: Supports ascending/descending
+[==============================================================================}
+function MTypeHelper.CompareWith(const target: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  if (Self = target) then
+    Exit(0);
+  if oAscending then
+    Result := IfThen((Self > target), 1, -1)
+  else
+    Result := IfThen((target > Self), 1, -1);
+end;
+
 {==============================================================================]
   <Battle>
   @action: Compares Self against target, honoring sort direction.
@@ -114,5 +262,29 @@ begin
     Result := 1
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <Ascending>
+  @action  Returns True if the helper’s value is less than or equal to
+           the given target value. Useful as a comparison predicate when
+           sorting or merging arrays in ascending order.
+  @note: This method does not modify either value; it simply performs a <= comparison.
+[==============================================================================}
+function MTypeHelper.Ascending(const target: MType): Boolean; overload;
+begin
+  Result := (Self <= target);
+end;
+
+{==============================================================================]
+  <Descending>
+  @action: Returns True if the helper’s value is greater than or equal to
+           the given target value. Use as a comparison predicate when
+           sorting or merging arrays in descending order.
+  @note: Pure comparison only; equivalent to Self >= target.
+[==============================================================================}
+function MTypeHelper.Descending(const target: MType): Boolean; overload;
+begin
+  Result := (Self >= target);
 end;
 {$ENDIF}
