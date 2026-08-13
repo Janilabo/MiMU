@@ -2,14 +2,8 @@
 function Bound(const minimum, maximum: Integer): Integer;
 function BoundMax(const limit: Integer): Integer;
 function BoundMin(const limit: Integer): Integer;
-function Clamp(const minimum, maximum: Integer): Integer; overload;
 function Clamp(const range: TRange): Integer; overload;
-function ClampMax(const limit: Integer): Integer;
-function ClampMin(const limit: Integer): Integer;
-function Constraint(const minimum, maximum: Integer): Boolean; overload;
 function Constraint(const range: TRange): Boolean; overload;
-function ConstraintMax(const limit: Integer): Boolean;
-function ConstraintMin(const limit: Integer): Boolean;
 function Limit(const minimum, maximum: Integer): Integer;
 function LimitMax(const limit: Integer): Integer;
 function LimitMin(const limit: Integer): Integer;
@@ -57,62 +51,11 @@ end;
   @action: Returns Integer clamped by minimum and maximum limit
   @note: None
 [==============================================================================}
-function TIntegerHelper.Clamp(const minimum, maximum: Integer): Integer; overload;
-begin
-  if (Self < minimum) then
-    Result := minimum
-  else if(Self > maximum) then
-    Result := maximum
-  else
-    Result := Self;
-end;
-
-{==============================================================================]
-  <Clamp>
-  @action: Returns Integer clamped by minimum and maximum limit
-  @note: None
-[==============================================================================}
 function TIntegerHelper.Clamp(const range: TRange): Integer; overload;
 begin
   Result := Self.ClampMin(range.Minimum);
   if (Self = Result) then
     Result := Self.ClampMax(range.Maximum);
-end;
-
-{==============================================================================]
-  <ClampMax>
-  @action: Returns Integer clamped by maximum limit
-  @note: None
-[==============================================================================}
-function TIntegerHelper.ClampMax(const limit: Integer): Integer;
-begin
-  if (Self > limit) then
-    Result := limit
-  else
-    Result := Self;
-end;
-
-{==============================================================================]
-  <ClampMin>
-  @action: Returns Integer clamped by minimum limit
-  @note: None
-[==============================================================================}
-function TIntegerHelper.ClampMin(const limit: Integer): Integer;
-begin
-  if (Self < limit) then
-    Result := limit
-  else
-    Result := Self;
-end;
-
-{==============================================================================]
-  <Constraint>
-  @action: Returns true if Integer is constrainted with minimum or maximum limit
-  @note: None
-[==============================================================================}
-function TIntegerHelper.Constraint(const minimum, maximum: Integer): Boolean; overload;
-begin
-  Result := (Self.ConstraintMin(minimum) or Self.ConstraintMax(maximum));
 end;
 
 {==============================================================================]
@@ -123,30 +66,6 @@ end;
 function TIntegerHelper.Constraint(const range: TRange): Boolean; overload;
 begin
   Result := (Self.ConstraintMin(range.Minimum) or Self.ConstraintMax(range.Maximum));
-end;
-
-{==============================================================================]
-  <ConstraintMax>
-  @action: Returns true if Integer is constrainted with maximum limit
-  @note: None
-[==============================================================================}
-function TIntegerHelper.ConstraintMax(const limit: Integer): Boolean;
-begin
-  Result := (Self > limit);
-  if Result then
-    Self := limit;
-end;
-
-{==============================================================================]
-  <ConstraintMin>
-  @action: Returns true if Integer is constrainted with minimum limit
-  @note: None
-[==============================================================================}
-function TIntegerHelper.ConstraintMin(const limit: Integer): Boolean;
-begin
-  Result := (Self < limit);
-  if Result then
-    Self := limit;
 end;
 
 {==============================================================================]

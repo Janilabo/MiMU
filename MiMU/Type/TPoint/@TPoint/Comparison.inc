@@ -20,8 +20,8 @@ function YCompare(const target: TPoint): Integer;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
-function Compare(const A, B: TPoint): Integer; overload;
-function Comparison(const A, B: TPoint): Integer; overload;
+function Compare2(const A, B: TPoint): Integer; overload;
+function Compared(const A, B: TPoint): Integer; overload;
 function Max(const A, B: TPoint): TPoint; overload;
 function Min(const A, B: TPoint): TPoint; overload;
 {$ENDIF}
@@ -282,7 +282,7 @@ begin
   Result := 0;
 end;
 
-function Compare(const A, B: TPoint): Integer; overload;
+function Compare2(const A, B: TPoint): Integer; overload;
 begin
   if (A.Y < B.Y) then
     Exit(-1);
@@ -295,13 +295,11 @@ begin
   Result := 0;
 end;
 
-function Comparison(const A, B: TPoint): Integer; overload;
+function Compared(const A, B: TPoint): Integer; overload;
 begin
-  if (A < B) then
-    Exit(-1);
-  if (A > B) then
-    Exit(1);
-  Result := 0;
+  Result := Compare(A.Y, B.Y);
+  if (Result = 0) then
+    Result := Compare(A.X, B.X);
 end;
 
 function Max(const A, B: TPoint): TPoint; overload;

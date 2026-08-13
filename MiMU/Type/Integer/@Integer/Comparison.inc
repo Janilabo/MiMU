@@ -9,10 +9,6 @@ function Under(const target: Integer): Boolean; overload;
 function Undersize(const limit: Integer): Boolean; overload;
 {$ENDIF}
 
-{$IFDEF FUNCTIONS}
-function Comparison(const A, B: Integer): Integer; overload;
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Comp>
@@ -109,14 +105,5 @@ end;
 function TIntegerHelper.Undersize(const limit: Integer): Boolean; overload;
 begin
   Result := (Self < limit);
-end;
-
-function Comparison(const A, B: Integer): Integer; overload;
-begin
-  if (A < B) then
-    Exit(-1);
-  if (A > B) then
-    Exit(1);
-  Result := 0;
 end;
 {$ENDIF}

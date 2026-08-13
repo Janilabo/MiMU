@@ -65,16 +65,14 @@ end;
 
 {==============================================================================]
   <Signing>
-  @action: Determines the mathematical sign of a given integer, returning 
-           -1 for negative numbers, 1 for positive numbers, and 0 for zero.
-  @note: Implemented using standard conditional branching (if-then-else). 
-         While highly readable, it introduces CPU branch evaluation points.
+  @action: Non-mutating, three-way comparator relative to an origin.
+  @note: Returns -1 if Self < origin, 1 if Self > origin, or 0 if Self = origin.
 [==============================================================================}
 function TIntegerHelper.Signing(const origin: Integer = 0): Integer; overload;
 begin
-  if (origin < 0) then
+  if (Self < origin) then
     Result := -1
-  else if (origin > 0) then
+  else if (Self > origin) then
     Result := 1
   else
     Result := 0;
@@ -82,14 +80,12 @@ end;
 
 {==============================================================================]
   <SignOf>
-  @action: Returns the mathematical sign of an integer (-1 for negative, 
-           0 for zero, and 1 for positive).
-  @note: Implemented using a branchless bitwise/logical trick via Ord() 
-         to optimize performance by avoiding CPU branch mispredictions.
+  @action: Determines the sign of the current instance relative to an origin reference point.
+  @note: Returns 1 if Self > origin, -1 if Self < origin, or 0 if Self equals origin.
 [==============================================================================}
 function TIntegerHelper.SignOf(const origin: Integer = 0): Integer; overload;
 begin
-  Result := (Ord(origin > 0) - Ord(origin < 0));
+  Result := (Ord(Self > origin) - Ord(Self < origin));
 end;
 
 {==============================================================================]

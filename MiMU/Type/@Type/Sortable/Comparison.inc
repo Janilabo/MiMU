@@ -1,3 +1,8 @@
+{$IFDEF FUNCTIONS}
+function Compare(const A, B: MType): Integer; overload;
+function Comparison(const A, B: MType): Integer; overload;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 function Cmp(const target: MType): Integer; overload;
 function Cmpr(const target: MType): Integer; overload;
@@ -18,11 +23,31 @@ function Duel(const target: MType; const oAscending: Boolean = True): Integer; o
 function Trial(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Versus(const target: MType; const oAscending: Boolean = True): Integer; overload;
 
+function Asceal(const target: MType): Boolean; overload;
 function Ascending(const target: MType): Boolean; overload;
+function Desceal(const target: MType): Boolean; overload;
 function Descending(const target: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+function Compare(const A, B: MType): Integer; overload;
+begin
+  if (A > B) then
+    Exit(1);
+  if (A < B) then
+    Exit(-1);
+  Result := 0;
+end;
+
+function Comparison(const A, B: MType): Integer; overload;
+begin
+  if (A < B) then
+    Exit(-1);
+  if (A > B) then
+    Exit(1);
+  Result := 0;
+end;
+
 {==============================================================================]
   <Cmp>
   @action: Compares Self with target target.
@@ -265,26 +290,42 @@ begin
 end;
 
 {==============================================================================]
-  <Ascending>
-  @action  Returns True if the helper’s value is less than or equal to
-           the given target value. Useful as a comparison predicate when
-           sorting or merging arrays in ascending order.
-  @note: This method does not modify either value; it simply performs a <= comparison.
+  <Asceal> (Asce)nding or Equ(al).
+  @action: Checks if the current instance is less than or equal to the target instance.
+  @note: Performs an ascending comparison inclusive of equality (Self <= target).
 [==============================================================================}
-function MTypeHelper.Ascending(const target: MType): Boolean; overload;
+function MTypeHelper.Asceal(const target: MType): Boolean; overload;
 begin
   Result := (Self <= target);
 end;
 
 {==============================================================================]
+  <Ascending>
+  @action: Checks if the current instance is strictly less than the target instance.
+  @note: Performs a strict ascending comparison (Self < target).
+[==============================================================================}
+function MTypeHelper.Ascending(const target: MType): Boolean; overload;
+begin
+  Result := (Self < target);
+end;
+
+{==============================================================================]
+  <Desceal> (Desce)nding or Equ(al).
+  @action: Checks if the current instance is greater than or equal to the target instance.
+  @note: Performs a descending comparison inclusive of equality (Self >= target).
+[==============================================================================}
+function MTypeHelper.Desceal(const target: MType): Boolean; overload;
+begin
+  Result := (Self >= target);
+end;
+
+{==============================================================================]
   <Descending>
-  @action: Returns True if the helper’s value is greater than or equal to
-           the given target value. Use as a comparison predicate when
-           sorting or merging arrays in descending order.
-  @note: Pure comparison only; equivalent to Self >= target.
+  @action: Checks if the current instance is strictly greater than the target instance.
+  @note: Performs a strict descending comparison (Self > target).
 [==============================================================================}
 function MTypeHelper.Descending(const target: MType): Boolean; overload;
 begin
-  Result := (Self >= target);
+  Result := (Self > target);
 end;
 {$ENDIF}

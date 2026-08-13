@@ -6,10 +6,6 @@ function Under(const target: Double): Boolean;
 function Undersize(const limit: Double): Boolean;
 {$ENDIF}
 
-{$IFDEF FUNCTIONS}
-function Comparison(const A, B: Double): Integer; overload;
-{$ENDIF}
-
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Over>
@@ -59,14 +55,5 @@ end;
 function TDoubleHelper.Undersize(const limit: Double): Boolean;
 begin
   Result := (Self < limit);
-end;
-
-function Comparison(const A, B: Double): Integer; overload;
-begin
-  if (A < B) then
-    Exit(-1);
-  if (A > B) then
-    Exit(1);
-  Result := 0;
 end;
 {$ENDIF}

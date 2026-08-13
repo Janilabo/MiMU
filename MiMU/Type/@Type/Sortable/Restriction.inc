@@ -1,4 +1,11 @@
 {$IFDEF HELPERS}
+function Clamp(const minimum, maximum: MType): MType; overload;
+function ClampMax(const limit: MType): MType; overload;
+function ClampMin(const limit: MType): MType; overload;
+function Constraint(const minimum, maximum: MType): Boolean; overload;
+function ConstraintMax(const limit: MType): Boolean; overload;
+function ConstraintMin(const limit: MType): Boolean; overload;
+
 function Cap(const sMinimum, sMaximum: MType): Boolean; overload;
 function CapMax(const sMaximum: MType): Boolean; overload;
 function CapMin(const sMinimum: MType): Boolean; overload;
@@ -19,6 +26,81 @@ function Minimate(const target: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Clamp>
+  @action: Restricts the current instance to the closed interval defined by [minimum, maximum].
+  @note: Pure method. Returns minimum if Self < minimum, maximum if Self > maximum, otherwise returns Self.
+[==============================================================================}
+function MTypeHelper.Clamp(const minimum, maximum: MType): MType; overload;
+begin
+  if (Self < minimum) then
+    Result := minimum
+  else if (Self > maximum) then
+    Result := maximum
+  else
+    Result := Self;
+end;
+
+{==============================================================================]
+  <ClampMax>
+  @action: Caps the current instance so it does not exceed the upper limit.
+  @note: Pure method. Returns limit if Self > limit, otherwise returns Self.
+[==============================================================================}
+function MTypeHelper.ClampMax(const limit: MType): MType; overload;
+begin
+  if (Self > limit) then
+    Result := limit
+  else
+    Result := Self;
+end;
+
+{==============================================================================]
+  <ClampMin>
+  @action: Floors the current instance so it does not fall below the lower limit.
+  @note: Pure method. Returns limit if Self < limit, otherwise returns Self.
+[==============================================================================}
+function MTypeHelper.ClampMin(const limit: MType): MType; overload;
+begin
+  if (Self < limit) then
+    Result := limit
+  else
+    Result := Self;
+end;
+
+{==============================================================================]
+  <Constraint>
+  @action: Constrains the current instance in-place to the [minimum, maximum] range.
+  @note: Mutates Self if it falls outside the range and returns True if Self was modified.
+[==============================================================================}
+function MTypeHelper.Constraint(const minimum, maximum: MType): Boolean; overload;
+begin
+  Result := (Self.ConstraintMin(minimum) or Self.ConstraintMax(maximum));
+end;
+
+{==============================================================================]
+  <ConstraintMax>
+  @action: Constrains the current instance in-place to not exceed an upper limit.
+  @note: Mutates Self to limit if Self > limit and returns True; otherwise leaves Self unchanged and returns False.
+[==============================================================================}
+function MTypeHelper.ConstraintMax(const limit: MType): Boolean; overload;
+begin
+  Result := (Self > limit);
+  if Result then
+    Self := limit;
+end;
+
+{==============================================================================]
+  <ConstraintMin>
+  @action: Constrains the current instance in-place to not fall below a lower limit.
+  @note: Mutates Self to limit if Self < limit and returns True; otherwise leaves Self unchanged and returns False.
+[==============================================================================}
+function MTypeHelper.ConstraintMin(const limit: MType): Boolean; overload;
+begin
+  Result := (Self < limit);
+  if Result then
+    Self := limit;
+end;
+
 {==============================================================================]
   <Cap>
   @action: Constrains the instance item within a specified minimum and maximum range, modifying the value in-place.

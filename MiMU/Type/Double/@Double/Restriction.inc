@@ -2,12 +2,6 @@
 function Bound(const minimum, maximum: Double): Double;
 function BoundMax(const limit: Double): Double;
 function BoundMin(const limit: Double): Double;
-function Clamp(const minimum, maximum: Double): Double;
-function ClampMax(const limit: Double): Double;
-function ClampMin(const limit: Double): Double;
-function Constraint(const minimum, maximum: Double): Boolean;
-function ConstraintMax(const limit: Double): Boolean;
-function ConstraintMin(const limit: Double): Boolean;
 function Limit(const minimum, maximum: Double): Double;
 function LimitMax(const limit: Double): Double;
 function LimitMin(const limit: Double): Double;
@@ -48,81 +42,6 @@ end;
 function TDoubleHelper.BoundMin(const limit: Double): Double;
 begin
   Result := (((Self + limit) + Abs(Self - limit)) / 2);
-end;
-
-{==============================================================================]
-  <Clamp>
-  @action: Returns Double clamped by minimum and maximum limit
-  @note: None
-[==============================================================================}
-function TDoubleHelper.Clamp(const minimum, maximum: Double): Double;
-begin
-  if (Self < minimum) then
-    Result := minimum
-  else if (Self > maximum) then
-    Result := maximum
-  else
-    Result := Self;
-end;
-
-{==============================================================================]
-  <ClampMax>
-  @action: Returns Double clamped by maximum limit
-  @note: None
-[==============================================================================}
-function TDoubleHelper.ClampMax(const limit: Double): Double;
-begin
-  if (Self > limit) then
-    Result := limit
-  else
-    Result := Self;
-end;
-
-{==============================================================================]
-  <ClampMin>
-  @action: Returns Double clamped by minimum limit
-  @note: None
-[==============================================================================}
-function TDoubleHelper.ClampMin(const limit: Double): Double;
-begin
-  if (Self < limit) then
-    Result := limit
-  else
-    Result := Self;
-end;
-
-{==============================================================================]
-  <Constraint>
-  @action: Returns true if Double is constrainted with minimum or maximum limit
-  @note: None
-[==============================================================================}
-function TDoubleHelper.Constraint(const minimum, maximum: Double): Boolean;
-begin
-  Result := (Self.ConstraintMin(minimum) or Self.ConstraintMax(maximum));
-end;
-
-{==============================================================================]
-  <ConstraintMax>
-  @action: Returns true if Double is constrainted with maximum limit
-  @note: None
-[==============================================================================}
-function TDoubleHelper.ConstraintMax(const limit: Double): Boolean;
-begin
-  Result := (Self > limit);
-  if Result then
-    Self := limit;
-end;
-
-{==============================================================================]
-  <ConstraintMin>
-  @action: Returns true if Double is constrainted with minimum limit
-  @note: None
-[==============================================================================}
-function TDoubleHelper.ConstraintMin(const limit: Double): Boolean;
-begin
-  Result := (Self < limit);
-  if Result then
-    Self := limit;
 end;
 
 {==============================================================================]

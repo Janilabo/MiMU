@@ -3,7 +3,6 @@ function Precede(const target: Char; const aAscending: Boolean): Boolean; overlo
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
-function Comparison(const A, B: Char): Integer; overload;
 function Max(const a, b: Char): Char; overload;
 function Min(const a, b: Char): Char; overload;
 {$ENDIF}
@@ -17,15 +16,6 @@ function Min(const a, b: Char): Char; overload;
 function TCharHelper.Precede(const target: Char; const aAscending: Boolean): Boolean; overload;
 begin
   Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
-end;
-
-function Comparison(const A, B: Char): Integer; overload;
-begin
-  if (A < B) then
-    Exit(-1);
-  if (A > B) then
-    Exit(1);
-  Result := 0;
 end;
 
 function Max(const A, B: Char): Char; overload;
