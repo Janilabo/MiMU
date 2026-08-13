@@ -25,6 +25,7 @@
 {$I @Type/Sortable/Numeric/Polarity.inc}
 {$I @Type/Sortable/Numeric/Proximity.inc}
 {$I @Type/Sortable/Numeric/Signing.inc}
+{$I @Type/Sortable/Numeric/Sort.inc}
 {$I @Type/Sortable/Numeric/Transform.inc}
 {$ENDIF}
 {$ENDIF}
