@@ -18,4 +18,13 @@
 {$I @Type/Sortable/Sort.inc}
 {$I @Type/Sortable/Sorted.inc}
 {$I @Type/Sortable/Validation.inc}
+
+{$IF DEFINED(Integer) OR DEFINED(Int64) OR DEFINED(Double)}
+{$I @Type/Sortable/Numeric/Adjust.inc}
+{$I @Type/Sortable/Numeric/Distance.inc}
+{$I @Type/Sortable/Numeric/Polarity.inc}
+{$I @Type/Sortable/Numeric/Proximity.inc}
+{$I @Type/Sortable/Numeric/Signing.inc}
+{$I @Type/Sortable/Numeric/Transform.inc}
+{$ENDIF}
 {$ENDIF}

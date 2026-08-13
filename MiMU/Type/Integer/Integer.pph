@@ -11,12 +11,8 @@
 {$I @Integer/Generation.inc}
 {$I @Integer/Math.inc}
 {$I @Integer/Parity.inc}
-{$I @Integer/Polarity.inc}
-{$I @Integer/Proximity.inc}
 {$I @Integer/Randomness.inc}
 {$I @Integer/Restriction.inc}
-{$I @Integer/Signing.inc}
 {$I @Integer/Sort.inc}
-{$I @Integer/Transform.inc}
 {$I @Integer/Validation.inc}
 {$I @Integer/Vector.inc}

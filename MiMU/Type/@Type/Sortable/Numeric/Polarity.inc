@@ -14,7 +14,7 @@ function Zero: Boolean; overload;
   @action: Determines whether the current integer is exactly zero.
   @note: Uses explicit less-than and greater-than guard clauses to eliminate non-zero values before returning True.
 [==============================================================================}
-function TIntegerHelper.IsZero: Boolean; overload;
+function MTypeHelper.IsZero: Boolean; overload;
 begin
   if (Self < 0) then
     Exit(False)
@@ -28,7 +28,7 @@ end;
   @action: Returns True if Integer value x is lower than 0 (negative), otherwise False.
   @note: 0 is not negative or positive!
 [==============================================================================}
-function TIntegerHelper.Negative: Boolean; overload;
+function MTypeHelper.Negative: Boolean; overload;
 begin
   Result := (Self < 0);
 end;
@@ -38,7 +38,7 @@ end;
   @action: Determines whether the current integer is mathematically neutral (neither positive nor negative).
   @note: Uses boolean negation (`not`) on the combined boundaries of positive and negative states to isolate zero.
 [==============================================================================}
-function TIntegerHelper.Neutral: Boolean; overload;
+function MTypeHelper.Neutral: Boolean; overload;
 begin
   Result := not ((Self < 0) or (Self > 0));
 end;
@@ -48,7 +48,7 @@ end;
   @action: Checks if the integer value is any value other than zero.
   @note: Returns True if Self does not equal 0 (covers both positive and negative integers).
 [==============================================================================}
-function TIntegerHelper.Nonzero: Boolean; overload;
+function MTypeHelper.Nonzero: Boolean; overload;
 begin
   Result := (Self <> 0);
 end;
@@ -58,7 +58,7 @@ end;
   @action: Determines whether the current integer is any value other than zero.
   @note: Uses explicit greater-than and less-than guard clauses to immediately evaluate non-zero integers before returning False.
 [==============================================================================}
-function TIntegerHelper.NotZero: Boolean; overload;
+function MTypeHelper.NotZero: Boolean; overload;
 begin
   if (Self > 0) then
     Exit(True)
@@ -72,7 +72,7 @@ end;
   @action: Returns True if Integer value x is higher than 0 (positive), otherwise False.
   @note: 0 is not negative or positive!
 [==============================================================================}
-function TIntegerHelper.Positive: Boolean; overload;
+function MTypeHelper.Positive: Boolean; overload;
 begin
   Result := (Self > 0);
 end;
@@ -82,7 +82,7 @@ end;
   @action: Checks if the integer value is exactly zero.
   @note: Returns True if Self equals 0; otherwise returns False.
 [==============================================================================}
-function TIntegerHelper.Zero: Boolean; overload;
+function MTypeHelper.Zero: Boolean; overload;
 begin
   Result := (Self = 0);
 end;

@@ -1,26 +1,19 @@
 {$IFDEF HELPERS}
-function Difference(const T: Double): Double;
-function Distance(const T: Double): Double;
+function Distance2(const target: Double): Double; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Difference>
-  @action: Returns the difference from x to T.
-  @note: None
+  <Distance2>
+  @action: Calculates the absolute distance between two values using a geometric approach (square root of the squared difference).
+  @note: Uses floating-point math routines (Sqr, Sqrt).
+         Unlike the Integer function, no overflow concern here — Double's
+         range comfortably covers the squared difference for any realistic
+         magnitude, though extreme values near Double's upper range could
+         still theoretically overflow during squaring.
 [==============================================================================}
-function TDoubleHelper.Difference(const T: Double): Double;
+function TDoubleHelper.Distance2(const target: Double): Double; overload;
 begin
-  Result := (T - Self);
-end;
-
-{==============================================================================]
-  <Distance>
-  @action: Returns the distance between x and T.
-  @note: None
-[==============================================================================}
-function TDoubleHelper.Distance(const T: Double): Double;
-begin
-  Result := Abs(T - Self);
+  Result := Sqrt(Sqr(Self - target));
 end;
 {$ENDIF}

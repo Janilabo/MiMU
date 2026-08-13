@@ -1,26 +1,15 @@
 {$IFDEF HELPERS}
-function Difference(const T: Int64): Int64;
-function Distance(const T: Int64): Int64;
+function Distance2(const target: Int64): Int64; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Difference>
-  @action: Returns the difference from x to T.
-  @note: None
+  <Distance2>
+  @action: Calculates the absolute distance between two Int64's using a geometric approach (square root of the squared difference).
+  @note: Uses floating-point math routines (Sqr, Sqrt, Round).
 [==============================================================================}
-function TInt64Helper.Difference(const T: Int64): Int64;
+function TInt64Helper.Distance2(const target: Int64): Int64; overload;
 begin
-  Result := (T - Self);
-end;
-
-{==============================================================================]
-  <Distance>
-  @action: Returns the distance between x and T.
-  @note: None
-[==============================================================================}
-function TInt64Helper.Distance(const T: Int64): Int64;
-begin
-  Result := Abs(T - Self);
+  Result := Round(Sqrt(Sqr(Self - target)));
 end;
 {$ENDIF}

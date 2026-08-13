@@ -1,3 +1,15 @@
+{$IFDEF Int64}
+  {$DEFINE MType := Int64}
+  {$DEFINE MArray := TInt64Array}
+  {$DEFINE M2DArray := T2DInt64Array}
+  {$DEFINE MCompare := TInt64Compare}
+  {$DEFINE MTypeHelper := TInt64Helper}
+  {$DEFINE MArrayHelper := TInt64ArrayHelper}
+  {$DEFINE M2DArrayHelper := T2DInt64ArrayHelper}
+  {$DEFINE MPointer := PInt64}
+  {$DEFINE Sortable}
+{$ENDIF}
+
 {$IFDEF Integer}
   {$DEFINE MType := Integer}
   {$DEFINE MArray := TIntegerArray}
@@ -146,16 +158,4 @@
   {$DEFINE M2DArrayHelper := T2DSegmentArrayHelper}
   {$DEFINE MPointer := PSegment}
   {$UNDEF Sortable}
-{$ENDIF}
-
-{$IFDEF Int64}
-  {$DEFINE MType := Int64}
-  {$DEFINE MArray := TInt64Array}
-  {$DEFINE M2DArray := T2DInt64Array}
-  {$DEFINE MCompare := TInt64Compare}
-  {$DEFINE MTypeHelper := TInt64Helper}
-  {$DEFINE MArrayHelper := TInt64ArrayHelper}
-  {$DEFINE M2DArrayHelper := T2DInt64ArrayHelper}
-  {$DEFINE MPointer := PInt64}
-  {$DEFINE Sortable}
 {$ENDIF}

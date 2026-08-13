@@ -1,18 +1,18 @@
 {$IFDEF HELPERS}
-function CloserThan(const target, than: Integer): Boolean; overload;
-function CloserTo(const target, than: Integer): Boolean; overload;
-function FartherFrom(const target, than: Integer): Boolean; overload;
-function FartherThan(const target, than: Integer): Boolean; overload;
-function Furthen(const A, B: Integer): Boolean; overload;
-function Further(const A, B: Integer): Boolean; overload;
-function Furthest(const A, B: Integer): Integer; overload;
-function Nearen(const A, B: Integer): Boolean; overload;
-function Nearer(const A, B: Integer): Boolean; overload;
-function Nearest(const A, B: Integer): Integer; overload;
-function Noncloser(const target, than: Integer): Boolean; overload;
-function Nonfarther(const target, than: Integer): Boolean; overload;
-function Reachable(const target: Integer; const radius: Cardinal = 1): Boolean; overload;
-function Within(const target: Integer; const radius: Cardinal = 1): Boolean; overload;
+function CloserThan(const target, than: MType): Boolean; overload;
+function CloserTo(const target, than: MType): Boolean; overload;
+function FartherFrom(const target, than: MType): Boolean; overload;
+function FartherThan(const target, than: MType): Boolean; overload;
+function Furthen(const A, B: MType): Boolean; overload;
+function Further(const A, B: MType): Boolean; overload;
+function Furthest(const A, B: MType): MType; overload;
+function Nearen(const A, B: MType): Boolean; overload;
+function Nearer(const A, B: MType): Boolean; overload;
+function Nearest(const A, B: MType): MType; overload;
+function Noncloser(const target, than: MType): Boolean; overload;
+function Nonfarther(const target, than: MType): Boolean; overload;
+function Reachable(const target: MType; const radius: MType = 1): Boolean; overload;
+function Within(const target: MType; const radius: MType = 1): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -25,7 +25,7 @@ function Within(const target: Integer; const radius: Cardinal = 1): Boolean; ove
          the distance differential, it creates a clean, relational proximity
          check without nested logical branching.
 [==============================================================================}
-function TIntegerHelper.CloserThan(const target, than: Integer): Boolean; overload;
+function MTypeHelper.CloserThan(const target, than: MType): Boolean; overload;
 begin
   Result := (Sign(Abs(Self - target) - Abs(Self - than)) = -1);
 end;
@@ -38,7 +38,7 @@ end;
   @note: Returns False if distances are equal or if target is farther.
          Equivalent to |Self - target| < |Self - than|
 [==============================================================================}
-function TIntegerHelper.CloserTo(const target, than: Integer): Boolean; overload;
+function MTypeHelper.CloserTo(const target, than: MType): Boolean; overload;
 begin
   Result := (Abs(Self - target) < Abs(Self - than));
 end;
@@ -52,7 +52,7 @@ end;
   @note: Returns False if distances are equal or if target is closer.
          Equivalent to |Self - target| > |Self - than|
 [==============================================================================}
-function TIntegerHelper.FartherFrom(const target, than: Integer): Boolean; overload;
+function MTypeHelper.FartherFrom(const target, than: MType): Boolean; overload;
 begin
   Result := (Abs(Self - target) > Abs(Self - than));
 end;
@@ -65,7 +65,7 @@ end;
          away from Self as than is (or farther). This complements Nonfarther by
          inverting the sign evaluation of the absolute distance delta.
 [==============================================================================}
-function TIntegerHelper.FartherThan(const target, than: Integer): Boolean; overload;
+function MTypeHelper.FartherThan(const target, than: MType): Boolean; overload;
 begin
   Result := (Sign(Abs(Self - target) - Abs(Self - than)) = 1);
 end;
@@ -75,9 +75,9 @@ end;
   @action: Sets Self to whichever of `A` or `B` is farther from Self. Ties resolve to `A`. Returns True if Self changed.
   @note: Mutating. Companion to `Furthest` — applies the result rather than merely reporting it.
 [==============================================================================}
-function TIntegerHelper.Furthen(const A, B: Integer): Boolean; overload;
+function MTypeHelper.Furthen(const A, B: MType): Boolean; overload;
 var
-  s: Integer;
+  s: MType;
 begin
   s := Self;
   Self := Self.Furthest(A, B);
@@ -89,7 +89,7 @@ end;
   @action: Returns True if `A` is farther from Self than `B` is. Ties return False.
   @note: Non-mutating. Predicate form of the Proximity family — mirrors `Nearer`.
 [==============================================================================}
-function TIntegerHelper.Further(const A, B: Integer): Boolean; overload;
+function MTypeHelper.Further(const A, B: MType): Boolean; overload;
 begin
   Result := (Self.Distance(A) > Self.Distance(B));
 end;
@@ -99,7 +99,7 @@ end;
   @action: Returns whichever of `A` or `B` is farther from Self. Ties resolve to `A`.
   @note: Non-mutating. Pure comparison by absolute distance; mirrors `Nearest`.
 [==============================================================================}
-function TIntegerHelper.Furthest(const A, B: Integer): Integer; overload;
+function MTypeHelper.Furthest(const A, B: MType): MType; overload;
 begin
   if (Self.Distance(A) >= Self.Distance(B)) then
     Result := A
@@ -112,9 +112,9 @@ end;
   @action: Sets Self to whichever of `A` or `B` is closer to Self. Ties resolve to `A`. Returns True if Self changed.
   @note: Mutating. Companion to `Nearest` — applies the result rather than merely reporting it.
 [==============================================================================}
-function TIntegerHelper.Nearen(const A, B: Integer): Boolean; overload;
+function MTypeHelper.Nearen(const A, B: MType): Boolean; overload;
 var
-  s: Integer;
+  s: MType;
 begin
   s := Self;
   Self := Self.Nearest(A, B);
@@ -126,7 +126,7 @@ end;
   @action: Returns True if `A` is closer to Self than `B` is. Ties return False.
   @note: Non-mutating. Predicate form of the Proximity family — answers "is A closer?" rather than "which is closer?" (see `Nearest`).
 [==============================================================================}
-function TIntegerHelper.Nearer(const A, B: Integer): Boolean; overload;
+function MTypeHelper.Nearer(const A, B: MType): Boolean; overload;
 begin
   Result := (Self.Distance(A) < Self.Distance(B));
 end;
@@ -136,7 +136,7 @@ end;
   @action: Returns whichever of `A` or `B` is closer to Self. Ties resolve to `A`.
   @note: Non-mutating. Pure comparison by absolute distance; does not alter Self.
 [==============================================================================}
-function TIntegerHelper.Nearest(const A, B: Integer): Integer; overload;
+function MTypeHelper.Nearest(const A, B: MType): MType; overload;
 begin
   if (Self.Distance(A) <= Self.Distance(B)) then
     Result := A
@@ -152,7 +152,7 @@ end;
          away from Self as than is (or farther). This complements Nonfarther by
          inverting the sign evaluation of the absolute distance delta.
 [==============================================================================}
-function TIntegerHelper.Noncloser(const target, than: Integer): Boolean; overload;
+function MTypeHelper.Noncloser(const target, than: MType): Boolean; overload;
 begin
   Result := (Sign(Abs(Self - target) - Abs(Self - than)) >= 0);
 end;
@@ -165,22 +165,22 @@ end;
          the distance differential, it creates a clean, relational proximity
          check without nested logical branching.
 [==============================================================================}
-function TIntegerHelper.Nonfarther(const target, than: Integer): Boolean; overload;
+function MTypeHelper.Nonfarther(const target, than: MType): Boolean; overload;
 begin
   Result := (Sign(Abs(Self - target) - Abs(Self - than)) <= 0);
 end;
 
 {==============================================================================]
   <Reachable>
-  @action: Determines whether the current integer value falls within a maximum
+  @action: Determines whether the current value falls within a maximum
            allowable radius (tolerance window) centered around a target value.
   @note: Evaluates True if Self is trapped between (target - radius) and 
          (target + radius). If radius is 0, it skips the bounds calculation 
          and performs a strict equality check (Self = target).
 [==============================================================================}
-function TIntegerHelper.Reachable(const target: Integer; const radius: Cardinal = 1): Boolean; overload;
+function MTypeHelper.Reachable(const target: MType; const radius: MType = 1): Boolean; overload;
 var
-  r: Integer;
+  r: MType;
 begin
   if (radius = 0) then
     Exit(Self = target); 
@@ -195,8 +195,8 @@ end;
   @note: Uses an absolute distance calculation. A radius of 0 requires 
          exact equality (Self = target).
 [==============================================================================}
-function TIntegerHelper.Within(const target: Integer; const radius: Cardinal = 1): Boolean; overload;
+function MTypeHelper.Within(const target: MType; const radius: MType = 1): Boolean; overload;
 begin
-  Result := (Abs(Self - target) <= Integer(radius));
+  Result := (Abs(Self - target) <= radius);
 end;
 {$ENDIF}
