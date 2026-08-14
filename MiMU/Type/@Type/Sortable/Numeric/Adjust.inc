@@ -37,6 +37,9 @@ function X10(const N: MType = 1): MType; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
+function Dec2(var A, B: MType; const N: MType = 1): MType; overload;
+function Dec3(var A, B, C: MType; const N: MType = 1): MType; overload;
+function Dec4(var A, B, C, D: MType; const N: MType = 1): MType; overload;
 function DecGet(var val: MType; const N: MType = 1): MType; overload;
 function DecGet(var val: MType; const B: Boolean; const N: MType = 1): MType; overload;
 function GetDec(var val: MType; const N: MType = 1): MType; overload;
@@ -44,6 +47,9 @@ function GetDec(var val: MType; const B: Boolean; const N: MType = 1): MType; ov
 
 function GetInc(var val: MType; const N: MType = 1): MType; overload;
 function GetInc(var val: MType; const B: Boolean; const N: MType = 1): MType; overload;
+function Inc2(var A, B: MType; const N: MType = 1): MType; overload;
+function Inc3(var A, B, C: MType; const N: MType = 1): MType; overload;
+function Inc4(var A, B, C, D: MType; const N: MType = 1): MType; overload;
 function IncGet(var val: MType; const N: MType = 1): MType; overload;
 function IncGet(var val: MType; const B: Boolean; const N: MType = 1): MType; overload;
 
@@ -562,6 +568,84 @@ begin
   Result := val;
   if B then
     val := (val + N);
+end;
+
+{==============================================================================]
+  <Dec2>
+  @action: Decrements two variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to subtracting 1.
+[==============================================================================}
+function Dec2(var A, B: MType; const N: MType = 1): MType; overload;
+begin
+  A := (A - N);
+  B := (B - N);
+  Result := (A + B);
+end;
+
+{==============================================================================]
+  <Dec3>
+  @action: Decrements three variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to subtracting 1.
+[==============================================================================}
+function Dec3(var A, B, C: MType; const N: MType = 1): MType; overload;
+begin
+  A := (A - N);
+  B := (B - N);
+  C := (C - N);
+  Result := (A + B + C);
+end;
+
+{==============================================================================]
+  <Dec4>
+  @action: Decrements four variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to subtracting 1.
+[==============================================================================}
+function Dec4(var A, B, C, D: MType; const N: MType = 1): MType; overload;
+begin
+  A := (A - N);
+  B := (B - N);
+  C := (C - N);
+  D := (D - N);
+  Result := (A + B + C + D);
+end;
+
+{==============================================================================]
+  <Inc2>
+  @action: Increments two variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to adding 1.
+[==============================================================================}
+function Inc2(var A, B: MType; const N: MType = 1): MType; overload;
+begin
+  A := (A + N);
+  B := (B + N);
+  Result := (A + B);
+end;
+
+{==============================================================================]
+  <Inc3>
+  @action: Increments three variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to adding 1.
+[==============================================================================}
+function Inc3(var A, B, C: MType; const N: MType = 1): MType; overload;
+begin
+  A := (A + N);
+  B := (B + N);
+  C := (C + N);
+  Result := (A + B + C);
+end;
+
+{==============================================================================]
+  <Inc4>
+  @action: Increments four variables by a specified value and returns their sum.
+  @note: Operates directly on the passed variables (var). Defaults to adding 1.
+[==============================================================================}
+function Inc4(var A, B, C, D: MType; const N: MType = 1): MType; overload;
+begin
+  A := (A + N);
+  B := (B + N);
+  C := (C + N);
+  D := (D + N);
+  Result := (A + B + C + D);
 end;
 
 {==============================================================================]

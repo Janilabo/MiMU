@@ -21,9 +21,11 @@
 
 {$IF DEFINED(Integer) OR DEFINED(Int64) OR DEFINED(Double)}
 {$I @Type/Sortable/Numeric/Adjust.inc}
+{$I @Type/Sortable/Numeric/Comparison.inc}
 {$I @Type/Sortable/Numeric/Distance.inc}
 {$I @Type/Sortable/Numeric/Polarity.inc}
 {$I @Type/Sortable/Numeric/Proximity.inc}
+{$I @Type/Sortable/Numeric/Restriction.inc}
 {$I @Type/Sortable/Numeric/Signing.inc}
 {$I @Type/Sortable/Numeric/Sort.inc}
 {$I @Type/Sortable/Numeric/Transform.inc}

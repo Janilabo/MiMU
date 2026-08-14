@@ -1,6 +1,5 @@
 {$I ../Type.inc}
 
-{$I @Int64/Comparison.inc}
 {$I @Int64/Digit.inc}
 {$I @Int64/Distance.inc}
 {$I @Int64/Math.inc}

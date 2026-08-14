@@ -4,11 +4,6 @@ function BoundMax(const limit: Integer): Integer;
 function BoundMin(const limit: Integer): Integer;
 function Clamp(const range: TRange): Integer; overload;
 function Constraint(const range: TRange): Boolean; overload;
-function Limit(const minimum, maximum: Integer): Integer;
-function LimitMax(const limit: Integer): Integer;
-function LimitMin(const limit: Integer): Integer;
-function Maximite(const target: Integer): Integer; overload;
-function Minimite(const target: Integer): Integer; overload;
 function Restrict(const minimum, maximum: Integer): Integer;
 function RestrictMax(const limit: Integer): Integer;
 function RestrictMin(const limit: Integer): Integer;
@@ -66,62 +61,6 @@ end;
 function TIntegerHelper.Constraint(const range: TRange): Boolean; overload;
 begin
   Result := (Self.ConstraintMin(range.Minimum) or Self.ConstraintMax(range.Maximum));
-end;
-
-{==============================================================================]
-  <Limit>
-  @action: Returns Integer with minimum and maximum limits
-  @note: EnsureRange() call.
-[==============================================================================}
-function TIntegerHelper.Limit(const minimum, maximum: Integer): Integer;
-begin
-  Result := EnsureRange(Self, minimum, maximum);
-end;
-
-{==============================================================================]
-  <LimitMax>
-  @action: Returns Integer with maximum limit
-  @note: Min() call.
-[==============================================================================}
-function TIntegerHelper.LimitMax(const limit: Integer): Integer;
-begin
-  Result := Min(Self, limit);
-end;
-
-{==============================================================================]
-  <LimitMin>
-  @action: Returns Integer with minimum limit
-  @note: Max() call.
-[==============================================================================}
-function TIntegerHelper.LimitMin(const limit: Integer): Integer;
-begin
-  Result := Max(Self, limit);
-end;
-
-{==============================================================================]
-  <Maximite>
-  @action: Raises Self to `target` if `target` exceeds Self; returns the magnitude of the increase, or 0 if unchanged.
-  @note: Mutating. Reports the surplus applied. Contrast with `Maximate` (Boolean, reports only whether a change occurred).
-[==============================================================================}
-function TIntegerHelper.Maximite(const target: Integer): Integer; overload;
-begin
-  if (target <= Self) then
-    Exit(0);
-  Result := (target - Self);
-  Self := (Self + Result);
-end;
-
-{==============================================================================]
-  <Minimite>
-  @action: Lowers Self to `target` if `target` is smaller than Self; returns the magnitude of the decrease, or 0 if unchanged.
-  @note: Mutating. Reports the deficit applied. Contrast with `Minimate` (Boolean, reports only whether a change occurred).
-[==============================================================================}
-function TIntegerHelper.Minimite(const target: Integer): Integer; overload;
-begin
-  if (target >= Self) then
-    Exit(0);
-  Result := (Self - target);
-  Self := (Self - Result);
 end;
 
 {==============================================================================]

@@ -1,23 +1,9 @@
-{$IFDEF HELPERS}
-function Precede(const target: string; const aAscending: Boolean): Boolean; overload;
-{$ENDIF}
-
 {$IFDEF FUNCTIONS}
 function Max(const a, b: string): string; overload;
 function Min(const a, b: string): string; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <Precede>
-  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
-  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
-[==============================================================================}
-function TStringHelper.Precede(const target: string; const aAscending: Boolean): Boolean; overload;
-begin
-  Result := ((aAscending and (Self <= target)) or ((not aAscending) and (Self >= target)));
-end;
-
 function Max(const A, B: string): string; overload;
 begin
   if (A > B) then

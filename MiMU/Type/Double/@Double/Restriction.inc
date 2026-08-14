@@ -2,9 +2,6 @@
 function Bound(const minimum, maximum: Double): Double;
 function BoundMax(const limit: Double): Double;
 function BoundMin(const limit: Double): Double;
-function Limit(const minimum, maximum: Double): Double;
-function LimitMax(const limit: Double): Double;
-function LimitMin(const limit: Double): Double;
 function Restrict(const minimum, maximum: Double): Double;
 function RestrictMax(const limit: Double): Double;
 function RestrictMin(const limit: Double): Double;
@@ -42,36 +39,6 @@ end;
 function TDoubleHelper.BoundMin(const limit: Double): Double;
 begin
   Result := (((Self + limit) + Abs(Self - limit)) / 2);
-end;
-
-{==============================================================================]
-  <Limit>
-  @action: Returns Double with minimum and maximum limits
-  @note: EnsureRange() call.
-[==============================================================================}
-function TDoubleHelper.Limit(const minimum, maximum: Double): Double;
-begin
-  Result := EnsureRange(Self, minimum, maximum);
-end;
-
-{==============================================================================]
-  <LimitMax>
-  @action: Returns Double with maximum limit
-  @note: Min() call.
-[==============================================================================}
-function TDoubleHelper.LimitMax(const limit: Double): Double;
-begin
-  Result := Min(Self, limit);
-end;
-
-{==============================================================================]
-  <LimitMin>
-  @action: Returns Double with minimum limit
-  @note: Max() call.
-[==============================================================================}
-function TDoubleHelper.LimitMin(const limit: Double): Double;
-begin
-  Result := Max(Self, limit);
 end;
 
 {==============================================================================]

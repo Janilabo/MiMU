@@ -18,6 +18,10 @@ function IsInside(const A, B: MType; const strictly: Boolean = False): Boolean; 
 function IsOutside(const A, B: MType): Boolean; overload;
 function IsStrictlyBetween(const A, B: MType): Boolean; overload;
 function IsStrictlyIn(const A, B: MType): Boolean; overload;
+function Above(const target: MType): Boolean; overload;
+function Below(const limit: MType): Boolean; overload;
+function Over(const target: MType): Boolean; overload;
+function Under(const limit: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -211,5 +215,45 @@ end;
 function MTypeHelper.IsStrictlyIn(const A, B: MType): Boolean; overload;
 begin
   Result := ((Self > Min(A, B)) and (Self < Max(A, B)));
+end;
+
+{==============================================================================]
+  <Above>
+  @action: Returns True if Self is higher than target.
+  @note: Direct comparison form.
+[==============================================================================}
+function MTypeHelper.Above(const target: MType): Boolean; overload;
+begin
+  Result := (Self > target);
+end;
+
+{==============================================================================]
+  <Below>
+  @action: Returns True if Self is lower than limit.
+  @note: Direct comparison form.
+[==============================================================================}
+function MTypeHelper.Below(const limit: MType): Boolean; overload;
+begin
+  Result := (Self < limit);
+end;
+
+{==============================================================================]
+  <Over>
+  @action: Returns True if Self is higher than target.
+  @note: Expressed via De Morgan negation of <=.
+[==============================================================================}
+function MTypeHelper.Over(const target: MType): Boolean; overload;
+begin
+  Result := not (Self <= target);
+end;
+
+{==============================================================================]
+  <Under>
+  @action: Returns True if Self is lower than limit.
+  @note: Expressed via De Morgan negation of >=.
+[==============================================================================}
+function MTypeHelper.Under(const limit: MType): Boolean; overload;
+begin
+  Result := not (Self >= limit);
 end;
 {$ENDIF}

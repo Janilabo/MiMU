@@ -8,6 +8,7 @@ function Cmp(const target: MType): Integer; overload;
 function Cmpr(const target: MType): Integer; overload;
 function Compare(const target: MType): Integer; overload;
 function CompareAt(const target: MType): Integer; overload;
+function Comparem(const target: MType): Integer; overload;
 function Comparify(const target: MType): Integer; overload;
 function Decompare(const target: MType): Integer; overload;
 
@@ -27,6 +28,9 @@ function Asceal(const target: MType): Boolean; overload;
 function Ascending(const target: MType): Boolean; overload;
 function Desceal(const target: MType): Boolean; overload;
 function Descending(const target: MType): Boolean; overload;
+
+function Precede(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+function Succeed(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -102,6 +106,22 @@ begin
     Result := 1
   else
     Result := 0;
+end;
+
+{==============================================================================]
+  <Comparem>
+  @action: Performs a branchless three-way comparison between Self and the 
+           target value using a pre-computed matrix lookup.
+  @note: By mapping the boolean outcomes of (Self > target) and (Self < target) 
+         directly into a 2x2 multi-dimensional array matrix, this method 
+         eliminates conditional jump instructions (if/else). This maximizes 
+         CPU pipeline efficiency in performance-critical loops or sorting algorithms.
+[==============================================================================}
+function MTypeHelper.Comparem(const target: MType): Integer; overload;
+const
+  COMP_MATRIX: array[Boolean, Boolean] of Integer = ((0, -1), (1, 0));
+begin
+  Result := COMP_MATRIX[(Self > target), (Self < target)];
 end;
 
 {==============================================================================]
@@ -327,5 +347,26 @@ end;
 function MTypeHelper.Descending(const target: MType): Boolean; overload;
 begin
   Result := (Self > target);
+end;
+
+{==============================================================================]
+  <Precede>
+  @action: Determines whether the current item should precede or equal the target item in a sorted sequence based on the specified order.
+  @note: Returns True if Self <= target for ascending order or Self >= target for descending order. Useful for sorting or merging operations.
+[==============================================================================}
+function MTypeHelper.Precede(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((oAscending and (Self <= target)) or ((not oAscending) and (Self >= target)));
+end;
+
+{==============================================================================]
+  <Succeed>
+  @action: Determines whether the current item should succeed the target item in a sorted sequence based on the specified order.
+  @note: Returns True if Self > target for ascending order or Self < target for descending order.
+         Strict complement of Precede — never True when Self equals target.
+[==============================================================================}
+function MTypeHelper.Succeed(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((oAscending and (Self > target)) or ((not oAscending) and (Self < target)));
 end;
 {$ENDIF}
