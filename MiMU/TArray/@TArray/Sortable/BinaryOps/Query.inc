@@ -121,8 +121,8 @@ begin
   begin
     index := R.Pivot;
     C := Self[index].Compare(item);
-	if (C = 0) then
-	  Exit(True);
+    if (C = 0) then
+      Exit(True);
     if ((oAscending and (C < 0)) or ((not oAscending) and (C > 0))) then
       R.start := (index + 1)
     else
@@ -200,7 +200,7 @@ begin
   if (L = 0) then
     Exit(False);
   M := (L div 2);
-  Result := ((Self.BinaryStop(Self[M]) - Self.BinaryStart(Self[M]) + 1) > M);
+  Result := ((Self.BinaryStop(Self[M], oAscending) - Self.BinaryStart(Self[M], oAscending) + 1) > M);
   if Result then
     oItem := Self[M];
 end;
@@ -222,10 +222,10 @@ begin
   L := Self.Length;
   case L of
     0: Exit(False);
-	1: Exit(True);
+    1: Exit(True);
   end;
   M := (L div 2);
-  Result := ((Self.BinaryStop(Self[M]) - Self.BinaryStart(Self[M]) + 1) > M);
+  Result := ((Self.BinaryStop(Self[M], oAscending) - Self.BinaryStart(Self[M], oAscending) + 1) > M);
 end;
 
 {==============================================================================]

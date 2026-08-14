@@ -501,7 +501,7 @@ end;
 [==============================================================================}
 function TRange.Startcast: TIntegerArray; overload;
 var
-  s, i: Integer;
+  s: Integer;
   r: TRange;
 begin
   s := Self.Size;
@@ -658,7 +658,7 @@ end;
 [==============================================================================}
 function TRange.Stopcast: TIntegerArray; overload;
 var
-  s, i: Integer;
+  s: Integer;
   r: TRange;
 begin
   s := Self.Size;

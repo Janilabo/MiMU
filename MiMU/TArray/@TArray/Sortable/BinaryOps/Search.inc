@@ -1220,7 +1220,7 @@ end;
 [==============================================================================}
 function MArrayHelper.BinaryUniformSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 var
-  S, M, K: Integer;
+  S, K: Integer;
   R: TRange;
 begin
   if Self.Empty then

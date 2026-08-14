@@ -364,7 +364,7 @@ end;
 [==============================================================================}
 function TRange.Indexing: TIntegerArray; overload;
 var
-  b, i, o, d, s: Integer;
+  b, i, o, s: Integer;
 begin
   b := System.Length(BASE_DIGITS);
   s := Self.Size;
@@ -644,7 +644,7 @@ end;
 [==============================================================================}
 function TRange.Paging(const pageSize: Integer = 2): T2DIntegerArray; overload;
 var
-  s, c, p, r, l, o, z: Integer;
+  s, c, p, l, o, z: Integer;
   i: TIntegerArray;
 begin
   if (pageSize < 1) then

@@ -113,7 +113,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Where(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 var
-  i, l, x, y, z, c: Integer;
+  l, x, y, z, c: Integer;
   s: MArray;
 begin
   l := Self.Length;

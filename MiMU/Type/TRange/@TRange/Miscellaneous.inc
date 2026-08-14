@@ -111,7 +111,6 @@ function TRangeHelper.Disjunct(const other: TRange): TRangeArray; overload;
 var
   s, o: TRange;
   a, b: Integer;
-  rightStart, rightStop: Integer;
 begin
   SetLength(Result, 0);
   s := Self.Normalized;
@@ -161,7 +160,6 @@ function TRangeHelper.Disjunction(const other: TRange): TRangeArray; overload;
 var
   s, o: TRange;
   b, e, l, r: Integer;
-  left, right: Integer;
 begin
   SetLength(Result, 0);
   s := Self.Normalized;

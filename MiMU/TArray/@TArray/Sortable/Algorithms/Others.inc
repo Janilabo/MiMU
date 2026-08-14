@@ -38,7 +38,6 @@ var
   procedure InsertNode(const val: MType; var root: Integer);
   var
     c, n: Integer;
-    l: Boolean;
   begin
     n := f;
     Inc(f);

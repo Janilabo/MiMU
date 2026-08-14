@@ -718,7 +718,7 @@ end;
 [==============================================================================}
 function TRangeArrayHelper.Mergify(const threshold: Integer = -1): Integer; overload;
 var
-  h, i, w: Integer;
+  h, i: Integer;
 begin
   h := High(Self);
   Result := 0;

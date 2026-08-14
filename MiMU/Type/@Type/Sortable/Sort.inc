@@ -158,8 +158,6 @@ end;
            `oAscending` is True, or the maximum value if `oAscending` is False).
 [==============================================================================}
 function Trisort(var A, B, C: MType; const oAscending: Boolean = True): MType; overload;
-var
-  D: MType;
 begin
   if ((oAscending and (A > B)) or ((not oAscending) and (A < B))) then
     Swap(A, B);

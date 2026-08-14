@@ -133,7 +133,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Upsize(const aFloor: Integer = 1): Integer; overload;
 var
-  l, i: Integer;
+  l: Integer;
 begin
   l := Self.Length;
   if (aFloor <= l) then

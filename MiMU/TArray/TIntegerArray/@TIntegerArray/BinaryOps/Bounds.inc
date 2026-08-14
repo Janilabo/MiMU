@@ -302,7 +302,7 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.BinaryFindNearest(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 var
-  O, B, D, L, H, M: Integer;
+  O, D, L, M: Integer;
   R: TRange;
 begin
   if Self.Empty then
@@ -440,7 +440,6 @@ end;
 function TIntegerArrayHelper.BinaryNear(const target: Integer; const oAscending: Boolean = True): Integer; overload;
 var
   h, s: Integer;
-  p, c: Int64;
 begin
   h := High(Self);
   if (h = -1) then

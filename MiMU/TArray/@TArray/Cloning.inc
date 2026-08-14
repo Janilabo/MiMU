@@ -326,7 +326,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Dupe: MArray; overload;
 var
-  i, l, j: Integer;
+  i, l: Integer;
 begin
   l := Result.SetSize(Self.Length);
   if (l = 0) then

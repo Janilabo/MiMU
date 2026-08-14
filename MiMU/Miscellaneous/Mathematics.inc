@@ -133,7 +133,7 @@ end;
 
 function GetPowersOf2(const upTo: Integer = 2147483647): TIntegerArray; overload;
 var
-  i, p, l: Integer;
+  i, l: Integer;
 begin
   if (upTo < 1) then
     Exit([]);

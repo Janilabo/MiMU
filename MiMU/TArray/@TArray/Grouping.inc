@@ -199,7 +199,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Group: M2DArray; overload;
 var
-  h, i, r, g: Integer;
+  i, r, g: Integer;
   f: Boolean;
 begin
   if Self.Empty then

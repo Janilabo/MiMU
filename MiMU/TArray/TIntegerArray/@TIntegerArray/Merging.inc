@@ -173,7 +173,7 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Merged(const rAscending: Boolean = True): TRangeArray; overload;
 var
-  h, i, l, r, c: Integer;
+  h, l, r, c: Integer;
   s: TIntegerArray;
 begin
   if (Result.SetSize(Self.Length) = 0) then
@@ -619,7 +619,7 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Streams: TRangeArray; overload;
 var
-  i, j, c, l: Integer;
+  i, c, l: Integer;
   b: TIntegerArray;
 begin
   l := Self.Length;

@@ -51,7 +51,6 @@ end;
 function MArrayHelper.Trajectoring: Integer; overload;
 var
   h, i: Integer;
-  e: Boolean;
 begin
   if Self.Stationary then
     Exit(0);

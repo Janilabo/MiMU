@@ -81,13 +81,13 @@ end;
 [==============================================================================}
 function MTypeHelper.Held(const A, B: MType): Boolean; overload;
 var
-  X, Y: MType;
+  C, D: MType;
 begin
-  X := A;
-  Y := B;
-  if (X > Y) then
-    Swap(X, Y);
-  Result := ((Self >= X) and (Self <= Y));
+  C := A;
+  D := B;
+  if (C > D) then
+    Swap(C, D);
+  Result := ((Self >= C) and (Self <= D));
 end;
 
 {==============================================================================]

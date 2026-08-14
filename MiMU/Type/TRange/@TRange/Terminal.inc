@@ -35,7 +35,7 @@ end;
 [==============================================================================}
 function TRange.Closing(const N: Integer = 1): TIntegerArray; overload;
 var
-  i, d, c: Integer;
+  i, d: Integer;
   p: PInteger;
 begin
   if (N < 1) then

@@ -126,7 +126,7 @@ end;
 [==============================================================================}
 function MArrayHelper.EndWith(const aItem: MType): MArray; overload;
 var
-  i, l, r: Integer;
+  l, r: Integer;
 begin
   l := Self.Length;
   while (l.Decrement > -1) do
@@ -148,7 +148,7 @@ end;
 [==============================================================================}
 function MArrayHelper.EndWith(const aItem: MArray): MArray; overload;
 var
-  i, l, r: Integer;
+  l, r: Integer;
 begin
   l := Self.Length;
   if ((l > 0) and (aItem.Length > 0)) then
@@ -255,7 +255,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 var
-  m, i: Integer;
+  i: Integer;
 begin
   case ((index >= 0) and (index < (Self.Size - 1)) and (count > 0)) of
     True:

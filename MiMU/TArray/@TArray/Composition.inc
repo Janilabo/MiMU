@@ -12,7 +12,7 @@ function Patch(const index: Integer; const items: MArray): Integer; overload;
 [==============================================================================}
 function MArrayHelper.Overlay(const items: MArray; const index: Integer; const init: MType): MArray; overload;
 var
-  s, l, r, i, a, j: Integer;
+  s, l, i, a, j: Integer;
 begin
   l := items.Length;
   if (l = 0) then

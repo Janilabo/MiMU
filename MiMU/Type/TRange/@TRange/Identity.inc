@@ -39,8 +39,6 @@ end;
   @note: Evaluates boundary containment using the target range's Contains method.
 [==============================================================================}
 function TRange.StartIs(const items: TRange): Boolean; overload;
-var
-  i: Integer;
 begin
   Result := items.Contains(Self.start);
 end;
@@ -76,8 +74,6 @@ end;
   @note: Evaluates boundary containment using the target range's Contains method.
 [==============================================================================}
 function TRange.StopIs(const items: TRange): Boolean; overload;
-var
-  i: Integer;
 begin
   Result := items.Contains(Self.stop);
 end;

@@ -157,7 +157,7 @@ end;
 function TIntegerArrayHelper.Numerized: Int64; overload;
 var
   i: Integer;
-  v, w: Int64;
+  w: Int64;
   a: TInt64Array;
 begin
   if (Self.Length = 0) then

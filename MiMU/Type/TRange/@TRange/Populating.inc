@@ -59,7 +59,7 @@ end;
 [==============================================================================}
 function TRange.FillBackward(var arr: TIntegerArray): Integer; overload;
 var
-  i, n, d: Integer;
+  i, d: Integer;
 begin
   Result := Min(arr.Length, Self.Size);
   d := Self.Direction;
@@ -97,7 +97,7 @@ end;
 [==============================================================================}
 function TRange.FillBackwards(var arr: TIntegerArray): Integer; overload;
 var
-  i, n, d: Integer;
+  i, d: Integer;
 begin
   Result := Max(arr.Length, Self.Size);
   d := Self.Direction;
@@ -113,7 +113,7 @@ end;
 [==============================================================================}
 function TRange.FillForward(var arr: TIntegerArray): Integer; overload;
 var
-  i, n, d: Integer;
+  i, d: Integer;
 begin
   Result := Min(arr.Length, Self.Size);
   d := Self.Direction;
@@ -151,7 +151,7 @@ end;
 [==============================================================================}
 function TRange.FillForwards(var arr: TIntegerArray): Integer; overload;
 var
-  i, n, d: Integer;
+  i, d: Integer;
 begin
   Result := Max(arr.Length, Self.Size);
   d := Self.Direction;

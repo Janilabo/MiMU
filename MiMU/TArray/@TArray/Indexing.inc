@@ -683,7 +683,7 @@ function MArrayHelper.ToIndices(const aAscending: Boolean = True): TIntegerArray
 label
   filling;
 var
-  i, s, h, r: Integer;
+  s, h, r: Integer;
 begin
   h := High(Self);
   case h of

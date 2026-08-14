@@ -263,7 +263,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Repetite(const rCount: Integer = 1): Integer; overload;
 var
-  s, l, i: Integer;
+  s, i: Integer;
 begin
   s := Self.Length;
   if ((rCount = 1) or (s = 0)) then

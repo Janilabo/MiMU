@@ -309,7 +309,6 @@ end;
 function TIntegerHelper.Way(const target: Integer = 0): TIntegerArray; overload;
 var
   i, s, z: Integer;
-  P: PInteger;
 begin
   if (Self = target) then
     Exit([Self]);

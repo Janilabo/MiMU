@@ -132,7 +132,7 @@ end;
 [==============================================================================}
 function Disarray(const A, B: MArray): MArray; overload;
 var
-  i, j, r, x, y, z: Integer;
+  r, x, y, z: Integer;
   C, D: TIntegerArray;
 begin
   x := A.Length;
@@ -144,8 +144,6 @@ begin
   SetLength(Result, (x + y));
   C := A.Indexes;
   D := B.Indexes;
-  i := 0;
-  j := 0;
   r := 0;
   while ((x > 0) and (y > 0)) do
   case (Random(x + y) < x) of
@@ -795,7 +793,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Randomally(const swaps: Integer = -1): MArray; overload;
 var
-  i, s, r, a, b: Integer;
+  i, r, a, b: Integer;
 begin
   Result := Self.Copy;
   r := Result.Length;
@@ -1151,7 +1149,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Unsettle: Integer; overload;
 var
-  i, r: Integer;
+  i: Integer;
 begin
   Result := Self.Length;
   for i := (Result - 1) downto 1 do

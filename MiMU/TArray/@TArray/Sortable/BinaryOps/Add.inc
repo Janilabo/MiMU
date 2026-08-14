@@ -204,11 +204,10 @@ end;
 [==============================================================================}
 function MArrayHelper.BinarySupply(const item: MType; const aAscending: Boolean = True): Boolean; overload;
 var
-  m, i, o: Integer;
+  m, i: Integer;
   r: TRange;
 begin
   r.Create(0, High(Self));
-  o := aAscending.Select(1, -1);
   while r.Asceal do
   begin
     m := r.Pivot;

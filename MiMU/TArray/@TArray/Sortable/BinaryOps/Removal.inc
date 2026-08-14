@@ -84,7 +84,7 @@ end;
 [==============================================================================}
 function MArrayHelper.BinaryRemoveAll(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 var
-  i, j, l, t, r: Integer;
+  i, j, l, t: Integer;
 begin
   t := items.Length;
   if (t = 0) then
@@ -114,7 +114,7 @@ end;
 [==============================================================================}
 function MArrayHelper.BinaryTake(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 var
-  l, h, m, i, s: Integer;
+  l, h, m, i: Integer;
 begin
   l := 0;
   h := High(Self);
@@ -125,7 +125,7 @@ begin
     begin
       for i := m to (High(Self) - 1) do
         Self[i] := Self[i + 1];
-      s := Self.Alloc(Self.Length - 1);
+      SetLength(Self, (Self.Length - 1));
       Exit(True);
     end;
     if ((oAscending and (Self[m] < item)) or (not oAscending and (Self[m] > item))) then

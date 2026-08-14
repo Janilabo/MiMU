@@ -103,7 +103,7 @@ function TBox.Allness: TPointArray; overload;
 const
   CHUNK_SIZE = 1024;
 var
-  w, s, j, i, r, c: Integer;
+  w, s, j, i: Integer;
 function Below(const val: Integer; const aTarget, bTarget: Integer): Boolean;
 begin
   Result := ((val < aTarget) and (val < bTarget));

@@ -205,7 +205,7 @@ end;
 [==============================================================================}
 function TIntegerArrayHelper.Clusters(const radius: UInt32 = 0): T2DIntegerArray; overload;
 var
-  s, i, j, c, r, x, p, d, z: Integer;
+  s, i, j, c, r, x, d, z: Integer;
   a, b: TRange;
   v: TBooleanArray;
   g: T2DIntegerArray;

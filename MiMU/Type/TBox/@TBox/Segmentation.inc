@@ -10,7 +10,7 @@ function Batched(const batchSize: Integer = 2): T2DPointArray; overload;
 [==============================================================================}
 function TBox.Batched(const batchSize: Integer = 2): T2DPointArray; overload;
 var
-  p, i, j, h, v, b: Integer;
+  p, i, h, v, b: Integer;
 begin
   p := Self.Area;
   SetLength(Result, ((p + batchSize - 1) div batchSize));
@@ -18,10 +18,10 @@ begin
   for v := Self.Y1 to Self.Y2 do
     for h := Self.X1 to Self.X2 do
     begin
-      j := (b mod BatchSize);
-      if (j = 0) then
+      i := (b mod BatchSize);
+      if (i = 0) then
         SetLength(Result[b div batchSize], Min(batchSize, (p - b)));
-      Result[b.Increase div batchSize][j] := Point(h, v);
+      Result[b.Increase div batchSize][i] := Point(h, v);
     end;
 end;
 {$ENDIF}

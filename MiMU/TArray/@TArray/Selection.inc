@@ -537,7 +537,7 @@ end;
 [==============================================================================}
 function MArrayHelper.ExtractIndexes(const allowed: TIntegerArray; const aSorted: Boolean = False): MArray; overload;
 var
-  h, i, l: Integer;
+  h, i: Integer;
   a: TIntegerArray;
 begin
   if (Self.Empty or allowed.Empty) then
@@ -624,7 +624,7 @@ end;
 function MArrayHelper.ExtractWithIDs(const ID: TIntegerArray): MArray; overload;
 var
   e: TIntegerArray;
-  h, i, j, r, k, s, f: Integer;
+  h, i, r, k, s, f: Integer;
 begin
   h := High(Self);
   if (h = -1) then
@@ -635,16 +635,16 @@ begin
   e := e.Canonical;
   k := Result.SetSize(e.Length);
   r := 0;
-  j := 0;
-  while (j < k) do
+  i := 0;
+  while (i < k) do
   begin
-    s := e[j];
+    s := e[i];
     f := s;
-    Inc(j);
-    while ((j < k) and (e[j] = (f + 1))) do
+    Inc(i);
+    while ((i < k) and (e[i] = (f + 1))) do
     begin
-      f := e[j];
-      Inc(j);
+      f := e[i];
+      Inc(i);
     end;
     Move(Self[s], Result[r], (((f - s) + 1) * SizeOf(Self[0])));
     Inc(r, ((f - s) + 1));
@@ -1065,7 +1065,7 @@ end;
 function MArrayHelper.FilterWithIDs(const ID: TIntegerArray): MArray; overload;
 var
   f: TIntegerArray;
-  h, i, j, r, k, s, e: Integer;
+  h, i, r, k, s, e: Integer;
 begin
   h := High(Self);
   if (h = -1) then
@@ -1078,15 +1078,15 @@ begin
   SetLength(Result, ((h + 1) - k));
   r := 0;
   s := 0;
-  for j := 0 to (k - 1) do
+  for i := 0 to (k - 1) do
   begin
-    e := (f[j] - 1);
+    e := (f[i] - 1);
     if (e >= s) then
     begin
       Move(Self[s], Result[r], (((e - s) + 1) * SizeOf(Self[0])));
       Inc(r, ((e - s) + 1));
     end;
-    s := (f[j] + 1);
+    s := (f[i] + 1);
   end;
   if (s <= h) then
   begin

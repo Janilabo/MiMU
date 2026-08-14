@@ -219,7 +219,7 @@ end;
 [==============================================================================}
 function TRange.Raffle(const N: Integer = 1): TIntegerArray; overload;
 var
-  a, c, i, m, v, w: Integer;
+  c, i, m, v, w: Integer;
   u: TBooleanArray;
 begin
   if (N < 1) then
@@ -547,7 +547,7 @@ end;
 function TRange.Roll(const rCount: Integer = 1): TIntegerArray; overload;
 var
   m: specialize TDictionary<Integer, Integer>;
-  c, i, j, s, p: Integer;
+  c, i, s, p: Integer;
   function GV(idx: Integer): Integer;
   begin
     if not m.TryGetValue(idx, Result) then

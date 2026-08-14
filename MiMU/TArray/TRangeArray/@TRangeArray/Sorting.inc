@@ -188,7 +188,7 @@ function TRangeArrayHelper.SortBySizes(var rSizes: TIntegerArray; const oAscendi
 var
   r: TRangeArray;
   s: TIntegerArray;
-  h, i, j, e, d, m: Integer;
+  h, i, e, d, m: Integer;
   c: array[0..9] of Integer;
 begin
   Result := Self.Length;

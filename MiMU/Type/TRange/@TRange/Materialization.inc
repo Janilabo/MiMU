@@ -377,7 +377,7 @@ end;
 [==============================================================================}
 function TRange.Assemble: TIntegerArray; overload;
 var
-  i, v, d, s: Integer;
+  d, s: Integer;
   procedure P(var arr: TIntegerArray; const idx, value, step: Integer);
   begin
     if (idx >= arr.Length) then
@@ -518,7 +518,7 @@ end;
 [==============================================================================}
 function TRange.Bitwise: TIntegerArray; overload;
 var
-  i, b, r, n, s, d, v: Integer;
+  i, b, r, n, s, d: Integer;
   function F(const x, b: Integer): Integer;
   var
     j, t: Integer;
@@ -715,7 +715,7 @@ end;
 function TRange.Collect: TIntegerArray; overload;
   procedure Return(var arr: TIntegerArray);
   var
-    c, i, f, s: Integer;
+    i, f, s: Integer;
   begin
     s := 1;
     if (Self.start > Self.stop) then
@@ -1002,8 +1002,6 @@ function TRange.Decompose: TIntegerArray; overload;
     FillRange(arr, offset, start, m, step);
     FillRange(arr, (offset + ((Abs(m - start) div Abs(step)) + 1)), (m + step), stop, step);
   end;
-var
-  d: Integer;
 begin
   SetLength(Result, Self.Count);
   FillRange(Result, 0, Self.Start, Self.Stop, Self.Direction);
@@ -2230,7 +2228,7 @@ end;
 [==============================================================================}
 function TRange.Itemize: TIntegerArray; overload;
 var
-  i, s: Integer;
+  i: Integer;
 begin
   SetLength(Result, Self.Size);
   Result[0] := Self.start;
@@ -2382,7 +2380,7 @@ end;
 [==============================================================================}
 function TRange.Iterate: TIntegerArray; overload;
 var
-  i, s, r: Integer;
+  s, r: Integer;
 begin
   if Self.Singular then
     Exit([Self.start]);
@@ -2797,18 +2795,18 @@ end;
 function TRange.Listed: TIntegerArray; overload;
 var
   l: specialize TList<Integer>;
-  v, s, i: Integer;
+  v, s: Integer;
 begin
   l := specialize TList<Integer>.Create;
   try
     s := Self.Direction;
     if (s = 0) then
-	  s := 1;
+      s := 1;
     v := Self.start;
     repeat
       l.Add(v);
       if (v = Self.stop) then
-	    Break;
+        Break;
       Inc(v, s);
     until False;
     Result := l.ToArray;
@@ -2926,7 +2924,7 @@ end;
 [==============================================================================}
 function TRange.Manifold(const totalElements: Integer; const oAscending: Boolean = True): TIntegerArray; overload;
 var
-  p, s, z: Integer;
+  s, z: Integer;
 begin
   if (totalElements < 1) then
     Exit([]);
@@ -3180,7 +3178,7 @@ end;
 function TRange.Numeralize: TIntegerArray; overload;
   procedure DividedFill(var arr: TIntegerArray; const offset, rangeStart, rangeStop: Integer);
   var
-    c, m, i, s: Integer;
+    c, m, s: Integer;
   begin
     c := (Abs(rangeStop - rangeStart) + 1);
     if (c <= 2) then

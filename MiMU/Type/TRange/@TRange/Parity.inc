@@ -263,7 +263,7 @@ end;
 [==============================================================================}
 function TRange.GetEvens: TIntegerArray; overload;
 var
-  d, i, s, r: Integer;
+  d, r: Integer;
 begin
   if (Result.SetSize(Self.Evenc) = 0) then
     Exit;
@@ -304,7 +304,7 @@ end;
 [==============================================================================}
 function TRange.GetOdds: TIntegerArray; overload;
 var
-  d, i, s, r: Integer;
+  d, r: Integer;
 begin
   if (Result.SetSize(Self.Oddc) = 0) then
     Exit;

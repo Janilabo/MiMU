@@ -41,7 +41,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Deliver(var target: MArray; const aIndexes: TIntegerArray): Integer; overload;
 var
-  i, h, s, l: Integer;
+  i, s, l: Integer;
 begin
   l := target.Length;
   s := Self.Length;

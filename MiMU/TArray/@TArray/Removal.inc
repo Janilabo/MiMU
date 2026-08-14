@@ -137,7 +137,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Deload(var target: MArray; const clearing: Boolean = True): Integer; overload;
 var
-  i, j, l: Integer;
+  i: Integer;
 begin
   Result := Self.Length;
   if (Result <> target.Length) then

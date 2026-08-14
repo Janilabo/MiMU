@@ -174,7 +174,7 @@ end;
 
 operator Explicit(const R: TRange): TIntegerArray;
 var
-  i, l, s: Integer;
+  i, s: Integer;
 begin
   SetLength(Result, R.Size);
   s := IfThen(R.Descending, -1, 1);

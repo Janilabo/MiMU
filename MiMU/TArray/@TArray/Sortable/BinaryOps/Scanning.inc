@@ -122,7 +122,7 @@ end;
 [==============================================================================}
 function MArrayHelper.BinaryIndices(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 var
-  i, p, c: Integer;
+  i, c: Integer;
   t: MArray;
 begin
   if items.Empty then

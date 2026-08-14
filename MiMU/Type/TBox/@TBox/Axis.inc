@@ -217,7 +217,7 @@ end;
 [==============================================================================}
 function TBox.X(const oAscending: Boolean = True): TIntegerArray; overload;
 var
-  i, r, s: Integer;
+  i, r: Integer;
 begin
   SetLength(Result, Self.Width);
   Result[0] := IfThen(oAscending, Self.X1, Self.X2);

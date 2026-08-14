@@ -49,7 +49,7 @@ end;
 function TRangeArrayHelper.Aligned(const oAscending: Boolean = True): TRangeArray; overload;
 var
   P, E: PRange;
-  r, s: Integer;
+  r: Integer;
 begin
   if Self.Empty then
     Exit([]);
@@ -60,8 +60,8 @@ begin
   begin
     if ((oAscending and (P^.start > P^.stop)) or ((not oAscending) and (P^.start < P^.stop))) then
       Result[r.Increase] := TRange.Construct(P^.stop, P^.start)
-	else
-	  Result[r.Increase] := TRange.Construct(P^.start, P^.stop);
+    else
+      Result[r.Increase] := TRange.Construct(P^.start, P^.stop);
     Inc(P);
   end;
 end;
