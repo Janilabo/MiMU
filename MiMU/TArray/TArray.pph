@@ -65,6 +65,10 @@
 {$I @TArray/Sortable/Trend.inc}
 {$I @TArray/Sortable/Validation.inc}
 
+{$IF DEFINED(Integer) OR DEFINED(Int64) OR DEFINED(Double)}
+{$I @TArray/Sortable/Numeric/Adjust.inc}
+{$ENDIF}
+
 {$I @TArray/Sortable/Algorithms/BubbleSort.inc}
 {$I @TArray/Sortable/Algorithms/HybridSort.inc}
 {$I @TArray/Sortable/Algorithms/MergeSort.inc}

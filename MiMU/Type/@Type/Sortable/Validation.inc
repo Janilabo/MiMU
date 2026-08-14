@@ -22,6 +22,9 @@ function Above(const target: MType): Boolean; overload;
 function Below(const limit: MType): Boolean; overload;
 function Over(const target: MType): Boolean; overload;
 function Under(const limit: MType): Boolean; overload;
+function Between(const aMin, aMax: MType): Boolean; overload;
+function Betweenish(const aMin, aMax: MType): Boolean; overload;
+function BoundedBy(const aMin, aMax: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -255,5 +258,38 @@ end;
 function MTypeHelper.Under(const limit: MType): Boolean; overload;
 begin
   Result := not (Self >= limit);
+end;
+
+{==============================================================================]
+  <Between>
+  @action: Determines whether the value falls inclusively between a min and max.
+  @note: Fluent replacement for standard Delphi InRange function.
+[==============================================================================}
+function MTypeHelper.Between(const aMin, aMax: MType): Boolean; overload;
+begin
+  Result := not ((Self < aMin) or (Self > aMax));
+end;
+
+{==============================================================================]
+  <Betweenish>
+  @action: Determines whether the value falls inclusively between a min and max.
+  @note: Fluent replacement for standard Delphi InRange function.
+[==============================================================================}
+function MTypeHelper.Betweenish(const aMin, aMax: MType): Boolean; overload;
+begin
+  Result := ((Self >= aMin) and (Self <= aMax));
+end;
+
+{==============================================================================]
+  <BoundedBy>
+  @action: Determines whether the integer falls inclusively between a specified 
+           minimum and maximum value.
+  @note: Uses TIntegerHelper's internal Compare method to perform a safe 
+         bounds check. Returns True if the value is equal to or greater than 
+         aMin, and equal to or less than aMax.
+[==============================================================================}
+function MTypeHelper.BoundedBy(const aMin, aMax: MType): Boolean; overload;
+begin
+  Result := ((Self.Compare(aMin) >= 0) and (Self.Compare(aMax) <= 0));
 end;
 {$ENDIF}

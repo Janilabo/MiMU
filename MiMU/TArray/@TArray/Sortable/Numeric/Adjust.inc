@@ -1,17 +1,17 @@
 {$IFDEF HELPERS}
-function Addend(const N: Integer): Integer; overload;
-function Addended(const N: Integer): TIntegerArray; overload;
-function Deced(const N: Integer): TIntegerArray; overload;
-function Decrem(const N: Integer = 1): Integer; overload;
-function Decrementation(const N: Integer = 1): Integer; overload;
-function Delend(const N: Integer): Integer; overload;
-function Delended(const N: Integer): TIntegerArray; overload;
-function Inced(const N: Integer): TIntegerArray; overload;
-function Increm(const N: Integer = 1): Integer; overload;
-function Incrementation(const N: Integer = 1): Integer; overload;
-function Minus(const N: Integer = 1): TIntegerArray; overload;
-function Plus(const N: Integer = 1): TIntegerArray; overload;
-function Ramp(const rStep: Integer = 1; const rOffset: Integer = 0; const rMode: Integer = 0): TIntegerArray; overload;
+function Addend(const N: MType): Integer; overload;
+function Addended(const N: MType): MArray; overload;
+function Deced(const N: MType): MArray; overload;
+function Decrem(const N: MType = 1): Integer; overload;
+function Decrementation(const N: MType = 1): Integer; overload;
+function Delend(const N: MType): Integer; overload;
+function Delended(const N: MType): MArray; overload;
+function Inced(const N: MType): MArray; overload;
+function Increm(const N: MType = 1): Integer; overload;
+function Incrementation(const N: MType = 1): Integer; overload;
+function Minus(const N: MType = 1): MArray; overload;
+function Plus(const N: MType = 1): MArray; overload;
+function Ramp(const rStep: MType = 1; const rOffset: MType = 0; const rMode: Integer = 0): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -21,7 +21,7 @@ function Ramp(const rStep: Integer = 1; const rOffset: Integer = 0; const rMode:
   @note: Modifies the original array. Returns length for chaining.
   @example: [1,2,3].Addend(10) → [11,12,13]
 [==============================================================================}
-function TIntegerArrayHelper.Addend(const N: Integer): Integer; overload;
+function MArrayHelper.Addend(const N: MType): Integer; overload;
 var
   i: Integer;
 begin
@@ -36,7 +36,7 @@ end;
   @note: Original array unchanged.
   @example: [1,2,3].Addended(10) → [11,12,13]
 [==============================================================================}
-function TIntegerArrayHelper.Addended(const N: Integer): TIntegerArray; overload;
+function MArrayHelper.Addended(const N: MType): MArray; overload;
 var
   i: Integer;
 begin
@@ -48,7 +48,7 @@ end;
   <Deced>
   @action: Returns a new array with each element decremented by N.
   @param N: Value to subtract from each element (default: none, must be specified)
-  @returns: New TIntegerArray where Result[i] = Self[i] - N
+  @returns: New array where Result[i] = Self[i] - N
   @note:
     - Non-mutating: Original array is NOT modified
     - Past tense name indicates "already decremented" (result state)
@@ -56,7 +56,7 @@ end;
     - Time complexity: O(n)
     - Memory: Allocates a new array of same length
 [==============================================================================}
-function TIntegerArrayHelper.Deced(const N: Integer): TIntegerArray; overload;
+function MArrayHelper.Deced(const N: MType): MArray; overload;
 var
   i: Integer;
 begin
@@ -70,13 +70,13 @@ end;
   @returns: The number of elements modified (array length).
   @note: Modifies the array in-place. Returns length for chaining.
 [==============================================================================}
-function TIntegerArrayHelper.Decrem(const N: Integer = 1): Integer; overload;
+function MArrayHelper.Decrem(const N: MType = 1): Integer; overload;
 var
   i: Integer;
 begin
   Result := Self.Length;
   for i := 0 to (Result - 1) do
-    Dec(Self[i], N);
+    Self[i] := (Self[i] - N);
 end;
 
 {==============================================================================]
@@ -85,9 +85,9 @@ end;
   @returns: The number of elements modified (array length).
   @note: Modifies the array in-place. Returns length for chaining.
 [==============================================================================}
-function TIntegerArrayHelper.Decrementation(const N: Integer = 1): Integer; overload;
+function MArrayHelper.Decrementation(const N: MType = 1): Integer; overload;
 var
-  p: PInteger;
+  p: MPointer;
   i: Integer;
 begin
   Result := Self.Length;
@@ -107,7 +107,7 @@ end;
   @note: Modifies the original array. Returns length for chaining.
   @example: [1,2,3].Delend(10) → [9,8,7]
 [==============================================================================}
-function TIntegerArrayHelper.Delend(const N: Integer): Integer; overload;
+function MArrayHelper.Delend(const N: MType): Integer; overload;
 var
   i: Integer;
 begin
@@ -122,7 +122,7 @@ end;
   @note: Original array unchanged.
   @example: [1,2,3].Delended(10) → [9,8,7]
 [==============================================================================}
-function TIntegerArrayHelper.Delended(const N: Integer): TIntegerArray; overload;
+function MArrayHelper.Delended(const N: MType): MArray; overload;
 var
   i: Integer;
 begin
@@ -134,14 +134,14 @@ end;
   <Inced>
   @action: Returns a new array with each element incremented by N.
   @param N: Value to add to each element (default: none, must be specified)
-  @returns: New TIntegerArray where Result[i] = Self[i] + N
+  @returns: New array where Result[i] = Self[i] + N
   @note:
     - Non-mutating: Original array is NOT modified
     - Past tense name indicates "already incremented" (result state)
     - Time complexity: O(n)
     - Memory: Allocates a new array of same length
 [==============================================================================}
-function TIntegerArrayHelper.Inced(const N: Integer): TIntegerArray; overload;
+function MArrayHelper.Inced(const N: MType): MArray; overload;
 var
   i: Integer;
 begin
@@ -155,13 +155,13 @@ end;
   @returns: The number of elements modified (array length).
   @note: Modifies the array in-place. Returns length for chaining.
 [==============================================================================}
-function TIntegerArrayHelper.Increm(const N: Integer = 1): Integer; overload;
+function MArrayHelper.Increm(const N: MType = 1): Integer; overload;
 var
   i: Integer;
 begin
   Result := Self.Length;
   for i := 0 to (Result - 1) do
-    Inc(Self[i], N);
+    Self[i] := (Self[i] + N);
 end;
 
 {==============================================================================]
@@ -170,9 +170,9 @@ end;
   @returns: The number of elements modified (array length).
   @note: Modifies the array in-place. Returns length for chaining.
 [==============================================================================}
-function TIntegerArrayHelper.Incrementation(const N: Integer = 1): Integer; overload;
+function MArrayHelper.Incrementation(const N: MType = 1): Integer; overload;
 var
-  p: PInteger;
+  p: MPointer;
   i: Integer;
 begin
   Result := Self.Length;
@@ -188,13 +188,13 @@ end;
 
 {==============================================================================]
   <Minus>
-  @action: Decrements every element in the array by a specified integer value.
+  @action: Decrements every element in the array by a specified N value.
   @note: Performs a linear transformation across the entire set. If N is not
          provided, it defaults to a decrement of 1.
 [==============================================================================}
-function TIntegerArrayHelper.Minus(const N: Integer = 1): TIntegerArray; overload;
+function MArrayHelper.Minus(const N: MType = 1): MArray; overload;
 var
-  s, r: PInteger;
+  s, r: MPointer;
   i: Integer;
 begin
   if (Result.SetSize(Self.Length) = 0) then
@@ -211,13 +211,13 @@ end;
 
 {==============================================================================]
   <Plus>
-  @action: Increments every element in the array by a specified integer value.
+  @action: Increments every element in the array by a specified N value.
   @note: Uses pointer arithmetic for high-performance iteration. Returns a new
          array without modifying the original (non-destructive).
 [==============================================================================}
-function TIntegerArrayHelper.Plus(const N: Integer = 1): TIntegerArray; overload;
+function MArrayHelper.Plus(const N: MType = 1): MArray; overload;
 var
-  s, r: PInteger;
+  s, r: MPointer;
   i: Integer;
 begin
   if (Result.SetSize(Self.Length) = 0) then
@@ -238,7 +238,7 @@ end;
   @param rStep: Amount the offset increases by each position (default: 1)
   @param rOffset: Initial displacement added to the first step (default: 0)
   @param rMode: Operation mode (0-3, default: 0)
-  @returns: New TIntegerArray with ramp operation applied.
+  @returns: New array with ramp operation applied.
   @note:
     **Modes:**
     - Mode 0 (Add):        Result[i] := Self[i] + current
@@ -246,9 +246,10 @@ end;
     - Mode 2 (Complement): Result[i] := current - Self[i]
     - Mode 3 (Add Twice):  Result[i] := current + Self[i]
 [==============================================================================}
-function TIntegerArrayHelper.Ramp(const rStep: Integer = 1; const rOffset: Integer = 0; const rMode: Integer = 0): TIntegerArray; overload;
+function MArrayHelper.Ramp(const rStep: MType = 1; const rOffset: MType = 0; const rMode: Integer = 0): MArray; overload;
 var
-  i, r: Integer;
+  r: MType;
+  i: Integer;
 begin
   if not InRange(rMode, 0, 3) then
     Exit(Self.Copy);

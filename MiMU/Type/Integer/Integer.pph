@@ -2,7 +2,6 @@
 
 {$I @Integer/Adjust.inc}
 {$I @Integer/Bit.inc}
-{$I @Integer/Containment.inc}
 {$I @Integer/Digit.inc}
 {$I @Integer/Distance.inc}
 {$I @Integer/Duplication.inc}

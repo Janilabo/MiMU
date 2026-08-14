@@ -17,7 +17,6 @@
 {$I @TIntegerArray/BinaryOps/Sort.inc}
 {$I @TIntegerArray/BinaryOps/Verify.inc}
 
-{$I @TIntegerArray/Adjust.inc}
 {$I @TIntegerArray/Analytics.inc}
 {$I @TIntegerArray/Bounding.inc}
 {$I @TIntegerArray/Cloning.inc}
