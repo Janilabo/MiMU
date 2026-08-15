@@ -7,6 +7,7 @@ function Ranges: TRangeArray; overload;
 function Ranges(const aAscending: Boolean): TRangeArray; overload;
 function Stringify: string; overload;
 function Stringify(var chars: TCharArray): string; overload;
+function To64: TInt64Array; overload;
 function ToRanges: TRangeArray; overload;
 function ToRanges(const aAscending: Boolean): TRangeArray; overload;
 function ToString(const rSeparator: string = ', '; const rBracketed: Boolean = True): string; overload;
@@ -235,6 +236,22 @@ var
 begin
   for i := 0 to chars.Alloc(Result.SetSize(Self.Length)) do
     Result[i + 1] := chars[i].Assign(Chr(Self[i]));
+end;
+
+{==============================================================================]
+  <To64>
+  @action: Converts a TIntegerArray to a TInt64Array, casting each element
+           to Int64.
+  @note: Widening conversion — always safe, no truncation or overflow
+         possible going from 32-bit to 64-bit. Result.Alloc(Self.Length)
+         sizes the result array before the loop. Self is not mutated.
+[==============================================================================}
+function TIntegerArrayHelper.To64: TInt64Array; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to Result.Alloc(Self.Length) do
+    Result[i] := Int64(Self[i]);  
 end;
 
 {==============================================================================]
