@@ -1,12 +1,10 @@
 {$I ../TArray.inc}
 
 {$I @TPointArray/BinaryOps/Addition.inc}
-{$I @TPointArray/BinaryOps/Counting.inc}
 {$I @TPointArray/BinaryOps/Extraction.inc}
 {$I @TPointArray/BinaryOps/Grouping.inc}
 {$I @TPointArray/BinaryOps/Membership.inc}
 {$I @TPointArray/BinaryOps/Modify.inc}
-{$I @TPointArray/BinaryOps/Range.inc}
 {$I @TPointArray/BinaryOps/Scanning.inc}
 {$I @TPointArray/BinaryOps/Search.inc}
 {$I @TPointArray/BinaryOps/Selection.inc}

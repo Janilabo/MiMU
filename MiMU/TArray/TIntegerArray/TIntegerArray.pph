@@ -30,7 +30,6 @@
 {$I @TIntegerArray/Navigation.inc}
 {$I @TIntegerArray/Scanning.inc}
 {$I @TIntegerArray/Selection.inc}
-{$I @TIntegerArray/Sorted.inc}
 {$I @TIntegerArray/Sorting.inc}
 {$I @TIntegerArray/Spanning.inc}
 {$I @TIntegerArray/Transformation.inc}

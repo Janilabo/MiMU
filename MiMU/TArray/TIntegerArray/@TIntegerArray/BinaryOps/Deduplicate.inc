@@ -1,8 +1,6 @@
 {$IFDEF HELPERS}
 function BinaryPrune(const aAscending: Boolean = True): Integer;
 function BinaryPruned(const aAscending: Boolean = True): TIntegerArray;
-function BinarySinglified(const item: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
-function BinarySinglify(const item: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryUnique(const oAscending: Boolean = True): Integer; overload;
 function BinaryUniqued(const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
@@ -47,52 +45,6 @@ begin
     if (Sign(Result[r] - Self[i]) = o) then
       Result[r.Increment] := Self[i];
   SetLength(Result, (r + 1));
-end;
-
-{==============================================================================]
-  <BinarySinglified>
-  @action: Returns a new array where consecutive duplicates of the specified value
-           are collapsed into a single instance.
-  @note: The source array must be sorted. The order is preserved, and if the value
-         does not exist, a full copy of the array is returned unchanged.
-[==============================================================================}
-function TIntegerArrayHelper.BinarySinglified(const item: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
-var
-  i, l, p: Integer;
-begin
-  p := Self.BinaryPosL(item, aAscending);
-  if (p = -1) then
-    Exit(Self.Copy);
-  SetLength(Result, Self.Size);
-  l := 0;
-  for i := 0 to High(Self) do
-    if ((i = p) or (Self[i] <> item)) then
-      Result[l.Increase] := Self[i];
-  SetLength(Result, l);
-end;
-
-{==============================================================================]
-  <BinarySinglify>
-  @action: Removes consecutive duplicates of the specified value in a sorted array,
-           keeping only one occurrence.
-  @note: The array must be sorted (ascending or descending as specified).
-         Uses binary search for fast location. Returns the number of removed items.
-[==============================================================================}
-function TIntegerArrayHelper.BinarySinglify(const item: Integer; const aAscending: Boolean = True): Integer; overload;
-var
-  i, l, s, p: Integer;
-begin
-  p := Self.BinaryPosL(item, aAscending);
-  if (p = -1) then
-    Exit(0);
-  s := Self.Size;
-  l := p;
-  for i := (p + 1) to (s - 1) do
-    if (Self[i] <> item) then
-      Self[l.Increment] := Self[i];
-  Result := (s - (l + 1));
-  if (Result > 0) then
-    SetLength(Self, (l + 1));
 end;
 
 {==============================================================================]

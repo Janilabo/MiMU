@@ -39,6 +39,8 @@ function BinaryThreshold(const item: MType; const oAscending: Boolean = True): I
 function BinaryUBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUpperB(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUpperBound(const x: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryLefty(const x: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryRighty(const x: MType; const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1571,5 +1573,68 @@ begin
         R.start := (M + 1);
     end;
   end;
+end;
+
+{==============================================================================]
+  <BinaryLefty>
+  @action: Returns L-side pos of x in arr with Binary Search. -1 if x does not exist.
+  @note: Works with sorted arrays! (supports both aAscending and descending order)
+[==============================================================================}
+function MArrayHelper.BinaryLefty(const x: MType; const aAscending: Boolean = True): Integer; overload;
+var
+  m: Integer;
+  r: TRange;
+begin
+  Result := -1;
+  r.Create(0, Self.Size);
+  while r.Ascends do
+  begin
+    m := r.Pivot;
+    case aAscending of
+      True:
+      if (Self[m] < x) then
+        r.start := (m + 1)
+      else
+        r.stop := m;
+      False:
+      if (Self[m] > x) then
+        r.start := (m + 1)
+      else
+        r.stop := m;
+    end;
+  end;
+  if ((r.start < Self.Size) and (Self[r.start] = x)) then
+    Result := r.start;
+end;
+{==============================================================================]
+  <BinaryRighty>
+  @action: Returns R-side pos of x in arr with Binary Search. -1 if x does not exist.
+  @note: Works with sorted arrays! (supports both aAscending and descending order)
+[==============================================================================}
+function MArrayHelper.BinaryRighty(const x: MType; const aAscending: Boolean = True): Integer; overload;
+var
+  m: Integer;
+  r: TRange;
+begin
+  Result := -1;
+  r.Create(0, Self.Size);
+  while r.Ascends do
+  begin
+    m := r.Pivot;
+    case aAscending of
+      True:
+      if (Self[m] <= x) then
+        r.start := (m + 1)
+      else
+        r.stop := m;
+      False:
+      if (Self[m] >= x) then
+        r.start := (m + 1)
+      else
+        r.stop := m;
+    end;
+  end;
+  if ((r.start > 0) and (Self[r.start - 1] = x)) then
+    Result := (r.start - 1);
 end;
 {$ENDIF}

@@ -1,7 +1,10 @@
 {$IFDEF HELPERS}
 function BinaryAmount(const x: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryAmountage(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryAmountOf(const x: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCardinality(const itemMin, itemMax: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryCount(const item: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryCountage(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCounted(const x: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCounter(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCountFor(const x: MType; const oAscending: Boolean = True): Integer; overload;
@@ -73,6 +76,25 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryAmountage>
+  @action: Returns the number of elements in the array equal to item, by
+           locating the full matching range via BinaryRangeOf and measuring
+           its size.
+  @note: Assumes the array is sorted according to oAscending. Returns 0 if
+         item is not present. Time complexity is O(log n), matching the
+         complexity of BinaryRangeOf.
+[==============================================================================}
+function MArrayHelper.BinaryAmountage(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  r: TRange;
+begin
+  r := Self.BinaryRangeOf(item, oAscending);
+  if (r.start = -1) then
+    Exit(0);
+  Result := r.Size;
+end;
+
+{==============================================================================]
   <BinaryAmountOf>
   @action: Returns the number of occurrences of the specified value using
            binary search bound operations.
@@ -127,6 +149,61 @@ begin
     Result := (Self.BinaryBoundUpper(l, oAscending) - Self.BinaryBoundLower(h, oAscending));
   if (Result < 0) then
     Result := 0;
+end;
+
+{==============================================================================]
+  <BinaryCount>
+  @action: Binary Count function for arrays.
+  @note: Works with sorted arrays! (aAscending or descending)
+[==============================================================================}
+function MArrayHelper.BinaryCount(const item: MType; const aAscending: Boolean = True): Integer; overload;
+var
+  r: TRange;
+begin
+  r := Self.BinaryLocate(item, aAscending);
+  Result := IfThen((r.start > -1), r.Size, 0);
+end;
+
+{==============================================================================]
+  <BinaryCountage>
+  @action: Returns the number of elements in the array equal to item, using
+           binary search to locate any occurrence and linear expansion to
+           count the full contiguous run.
+  @note: Assumes the array is sorted according to oAscending. Returns 0 if
+         item is not present. Time complexity is O(log n) to locate a match,
+         degrading toward O(n) when the equal-value run is large.
+[==============================================================================}
+function MArrayHelper.BinaryCountage(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M, i: Integer;
+  R: TRange;
+begin
+  Result := 0;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case Self[M].CompareTo(item, oAscending) of
+      -1: R.start := (M + 1);
+      1: R.stop := (M - 1);
+      0:
+      begin
+        i := M;
+        while ((i >= 0) and (Self[i] = item)) do
+        begin
+          Inc(Result);
+          Dec(i);
+        end;
+        i := (M + 1);
+        while ((i <= High(Self)) and (Self[i] = item)) do
+        begin
+          Inc(Result);
+          Inc(i);
+        end;
+        Exit;
+      end;
+    end;
+  end;
 end;
 
 {==============================================================================]

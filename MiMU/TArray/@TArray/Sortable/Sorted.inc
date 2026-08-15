@@ -3,6 +3,7 @@ function IsSorted(const aAscending: Boolean = True): Boolean; overload;
 function IsSorted(const iStart, iStop: Integer; const aAscending: Boolean = True): Boolean; overload;
 function IsSorted(const indexes: TRange; const aAscending: Boolean = True): Boolean; overload;
 function IsSorted(const index: Integer; const aAscending: Boolean = True): Boolean; overload;
+function Orderliness(const oAscending: Boolean = True): Boolean; overload;
 function Sortable: Boolean; overload;
 function Sorted(const aAscending: Boolean = True): Boolean; overload;
 function SortedAs(const oAscending: Boolean = True): Boolean; overload;
@@ -88,6 +89,34 @@ begin
     Exit(False);
   if ((index > 0) and (aAscending and (Self[index] < Self[index - 1])) or ((not aAscending) and (Self[index] > Self[index - 1]))) then
     Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Orderliness>
+  @action: Determines whether the integer array is ordered in ascending or descending order.
+  @note:
+    - Adjacent equal values are allowed.
+    - Sorting direction is controlled by oAscending (True = ascending, False = descending).
+    - Uses pointer-based iteration for efficiency.
+    - Stops at the first detected ordering violation.
+    - Arrays with fewer than two elements are considered ordered.
+[==============================================================================}
+function MArrayHelper.Orderliness(const oAscending: Boolean = True): Boolean; overload;
+var
+  H: Integer;
+  P, E: MPointer;
+begin
+  H := High(Self);
+  if (H < 1) then
+    Exit(True);
+  P := @Self[0];
+  E := @Self[H];
+  while (P < E) do
+    if ((P^ <> (P + 1)^) and ((P^ < (P + 1)^) xor oAscending)) then
+      Exit(False)
+	else
+      Inc(P);
   Result := True;
 end;
 

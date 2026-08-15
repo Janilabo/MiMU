@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function BinaryDeduplicate(const aAscending: Boolean = True): Integer; overload;
 function BinaryDeduplicated(const aAscending: Boolean = True): MArray; overload;
+function BinarySinglified(const item: MType; const aAscending: Boolean = True): MArray; overload;
+function BinarySinglify(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryUnduplicate(const aAscending: Boolean = True): Integer; overload;
 function BinaryUnduplicated(const aAscending: Boolean = True): MArray; overload;
 function BinaryUndupe: Integer; overload;
@@ -48,6 +50,51 @@ begin
   for i := 0 to High(Self) do
     if (Result.BinarySearch(Self[i], aAscending) = -1) then
       Result.Supply(Self[i]);
+end;
+
+{==============================================================================]
+  <BinarySinglified>
+  @action: Returns a new array where consecutive duplicates of the specified value
+           are collapsed into a single instance.
+  @note: The source array must be sorted. The order is preserved, and if the value
+         does not exist, a full copy of the array is returned unchanged.
+[==============================================================================}
+function MArrayHelper.BinarySinglified(const item: MType; const aAscending: Boolean = True): MArray; overload;
+var
+  i, l, p: Integer;
+begin
+  p := Self.BinaryLefty(item, aAscending);
+  if (p = -1) then
+    Exit(Self.Copy);
+  l := 0;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if ((i = p) or (Self[i] <> item)) then
+      Result[l.Increase] := Self[i];
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <BinarySinglify>
+  @action: Removes consecutive duplicates of the specified value in a sorted array,
+           keeping only one occurrence.
+  @note: The array must be sorted (ascending or descending as specified).
+         Uses binary search for fast location. Returns the number of removed items.
+[==============================================================================}
+function MArrayHelper.BinarySinglify(const item: MType; const aAscending: Boolean = True): Integer; overload;
+var
+  i, l, s, p: Integer;
+begin
+  p := Self.BinaryLefty(item, aAscending);
+  if (p = -1) then
+    Exit(0);
+  s := Self.Size;
+  l := p;
+  for i := (p + 1) to (s - 1) do
+    if (Self[i] <> item) then
+      Self[l.Increment] := Self[i];
+  Result := (s - (l + 1));
+  if (Result > 0) then
+    SetLength(Self, (l + 1));
 end;
 
 {==============================================================================]

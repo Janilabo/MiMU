@@ -1,6 +1,5 @@
 {$IFDEF HELPERS}
 function BinaryAmount(const x: TRange; const aAscending: Boolean = True): Integer; overload;
-function BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinaryCount(const x: TRange; const aAscending: Boolean = True): Integer; overload;
 function BinaryCounted(const x: TRange; const oAscending: Boolean = True): Integer; overload;
 function BinaryCountFor(const x: TRange; const oAscending: Boolean = True): Integer; overload;
@@ -58,19 +57,6 @@ begin
     end;
   end;
   Result := ((l - f) + 1);
-end;
-
-{==============================================================================]
-  <BinaryCount>
-  @action: Binary Count function for TIntegerArrays.
-  @note: Works with sorted arrays! (aAscending or descending)
-[==============================================================================}
-function TIntegerArrayHelper.BinaryCount(const x: Integer; const aAscending: Boolean = True): Integer; overload;
-var
-  r: TRange;
-begin
-  r := Self.BinaryLocate(x, aAscending);
-  Result := IfThen((r.start > -1), r.Size, 0);
 end;
 
 function TIntegerArrayHelper.BinaryCount(const x: TRange; const aAscending: Boolean = True): Integer; overload;

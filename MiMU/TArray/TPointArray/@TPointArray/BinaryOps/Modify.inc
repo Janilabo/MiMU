@@ -4,8 +4,6 @@ function BinaryMerge(const items: TPointArray): TPointArray; overload;
 function BinaryRemove(const item: TPoint; const all: Boolean = True): Integer; overload;
 function BinaryReplace(const oItem, nItem: TPoint): Boolean; overload;
 function BinaryReplaceAll(const oItem, nItem: TPoint): Integer; overload;
-function BinarySinglified(const item: TPoint): TPointArray; overload;
-function BinarySinglify(const item: TPoint): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -137,53 +135,5 @@ begin
       Break;
   if r then
     Self.BinaryInsertionSort;
-end;
-
-{==============================================================================]
-  <BinarySinglified>
-  @action: Returns a copy of the array with all occurrences of a specified point
-           removed, preserving the original order.
-  @note: - The array must be sorted ascending by X then Y, consistent with TPoint.Compare.
-         - Uses BinaryPosL to locate the first occurrence efficiently.
-[==============================================================================}
-function TPointArrayHelper.BinarySinglified(const item: TPoint): TPointArray; overload;
-var
-  i, l, p: Integer;
-begin
-  p := Self.BinaryPosL(item);
-  if (p = -1) then
-    Exit(Self.Copy);
-  l := 0;
-  for i := 0 to Result.Alloc(Self.Size) do
-    if ((i = p) or (Self[i] <> item)) then
-      Result[l.Increase] := Self[i];
-  SetLength(Result, l);
-end;
-
-{==============================================================================]
-  <BinarySinglify>
-  @action: Removes all occurrences of a specified point from the sorted TPointArray
-           in place, preserving ascending lexicographic order by X, then Y.
-  @note: - The array must be sorted ascending by X, then Y, consistent with TPoint.Compare.
-         - Uses BinaryPosL to locate the first occurrence efficiently.
-         - Shifts subsequent elements left to fill removed entries.
-         - Returns the number of points removed.
-		 - KEEPS ONLY ONE!
-[==============================================================================}
-function TPointArrayHelper.BinarySinglify(const item: TPoint): Integer; overload;
-var
-  i, l, s, p: Integer;
-begin
-  p := Self.BinaryPosL(item);
-  if (p = -1) then
-    Exit(0);
-  s := Self.Size;
-  l := p;
-  for i := (p + 1) to (s - 1) do
-    if (Self[i] <> item)then
-      Self[l.Increment] := Self[i];
-  Result := (s - (l + 1));
-  if (Result > 0) then
-    SetLength(Self, (l + 1));
 end;
 {$ENDIF}
