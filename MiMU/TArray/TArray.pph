@@ -68,6 +68,8 @@
 {$IF DEFINED(Integer) OR DEFINED(Int64) OR DEFINED(Double)}
 {$I @TArray/Sortable/Numeric/Adjust.inc}
 {$I @TArray/Sortable/Numeric/Analytics.inc}
+{$I @TArray/Sortable/Numeric/Bounding.inc}
+{$I @TArray/Sortable/Numeric/Extrema.inc}
 {$ENDIF}
 
 {$I @TArray/Sortable/Algorithms/BubbleSort.inc}

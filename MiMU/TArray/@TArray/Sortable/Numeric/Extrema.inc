@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function MaxVal: Integer; overload;
-function MinVal: Integer; overload;
+function MaxVal: MType; overload;
+function MinVal: MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,11 +9,15 @@ function MinVal: Integer; overload;
   @action: Returns maximum value from arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.MaxVal: Integer; overload;
+function MArrayHelper.MaxVal: MType; overload;
 var
   i: Integer;
 begin
-  Result := Low(Integer);
+  {$IFDEF Double}
+    Result := MinDouble;
+  {$ELSE}
+    Result := Low(MType);
+  {$ENDIF}
   if not Self.Empty then
   for i := 0 to High(Self) do
     if (Self[i] > Result) then
@@ -25,11 +29,15 @@ end;
   @action: Returns minimum value from arr.
   @note: None.
 [==============================================================================}
-function MArrayHelper.MinVal: Integer; overload;
+function MArrayHelper.MinVal: MType; overload;
 var
   i: Integer;
 begin
-  Result := High(Integer);
+  {$IFDEF Double}
+    Result := MaxDouble;
+  {$ELSE}
+    Result := High(MType);
+  {$ENDIF}
   if not Self.Empty then
   for i := 0 to High(Self) do
     if (Self[i] < Result) then
