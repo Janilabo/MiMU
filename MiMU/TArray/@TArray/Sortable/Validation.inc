@@ -3,6 +3,7 @@ function AllDifferent: Boolean; overload;
 function Echo: Boolean; overload;
 function Injective(const isSorted: Boolean = False): Boolean; overload;
 function IsInjective(const isSorted: Boolean = False): Boolean; overload;
+function Pure(const allowed: MArray): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -126,6 +127,28 @@ begin
     Exit(Self.QuickSorted.IsInjective(True));
   for i := 1 to High(Self) do
     if (Self[i] = Self[i - 1]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Pure>
+  @action: Returns True if every element of Self is present in allowed
+           (i.e. Self contains no elements outside the allowed set).
+  @note: Returns False if allowed is empty, even if Self is also empty.
+         Sorts a copy of allowed and uses binary search per element for
+         efficiency.
+[==============================================================================}
+function MArrayHelper.Pure(const allowed: MArray): Boolean; overload;
+var
+  a: MArray;
+  i: Integer;
+begin
+  if allowed.Empty then
+    Exit(False);
+  a := allowed.QuickSorted;
+  for i := 0 to High(Self) do
+    if not a.BinaryContains(Self[i]) then
       Exit(False);
   Result := True;
 end;

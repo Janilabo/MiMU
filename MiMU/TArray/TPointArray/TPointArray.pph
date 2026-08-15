@@ -3,7 +3,6 @@
 {$I @TPointArray/BinaryOps/Addition.inc}
 {$I @TPointArray/BinaryOps/Extraction.inc}
 {$I @TPointArray/BinaryOps/Grouping.inc}
-{$I @TPointArray/BinaryOps/Membership.inc}
 {$I @TPointArray/BinaryOps/Modify.inc}
 {$I @TPointArray/BinaryOps/Scanning.inc}
 {$I @TPointArray/BinaryOps/Search.inc}

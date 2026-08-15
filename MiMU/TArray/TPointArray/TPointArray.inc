@@ -15,7 +15,6 @@ end;
 {$IFDEF HELPERS}
 TPointArrayHelper = type helper for TPointArray
   {$I TPointArray.pph}
-  function Pure(const allowed: TPointArray): Boolean; overload;
   function Reinit: Integer; overload;
 end;
 {$ENDIF}
@@ -29,20 +28,6 @@ end;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-function TPointArrayHelper.Pure(const allowed: TPointArray): Boolean; overload;
-var
-  a: TPointArray;
-  i: Integer;
-begin
-  if allowed.Empty then
-    Exit(False);
-  a := allowed.QuickSorted;
-  for i := 0 to High(Self) do
-    if not a.BinaryContains(Self[i]) then
-      Exit(False);
-  Result := True;
-end;
-
 {==============================================================================]
   <Reinit>
   @action: Clears all elements of the array by zero-filling the underlying memory,

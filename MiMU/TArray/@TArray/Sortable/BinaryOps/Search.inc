@@ -28,6 +28,7 @@ function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscen
 function BinaryProxy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRank(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinarySearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinarySearcha(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchEx(const item: MType; const ignore: MType; const aAscending: Boolean = True): Integer; overload;
 function BinarySearchNth(const item: MType; const N: Integer; const oAscending: Boolean = True): Integer; overload;
@@ -985,6 +986,36 @@ begin
       s.start := (m + 1)
     else
       s.stop := (m - 1);
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
+  <BinarySearcha>
+  @action: Performs a binary search on a sorted array using the element's
+           custom .Contest() method to compare against item, adjusted by
+           sort order.
+  @note: For record/composite types without a native operator-based order
+         (e.g. TPoint, TBox), where sort order is defined by the type's own
+         .Contest() method. Array must be sorted consistent with .Contest()'s
+         convention and oAscending. Returns the index of the matching item
+         if found, or -1 if not found. .Contest() must return a value in
+         {-1, 0, 1}.
+[==============================================================================}
+function MArrayHelper.BinarySearcha(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    case Self[M].Contest(item, oAscending) of
+	  -1: R.start := (M + 1);
+      1: R.stop := (M - 1);
+      0: Exit(M);
+	end;
   end;
   Result := -1;
 end;

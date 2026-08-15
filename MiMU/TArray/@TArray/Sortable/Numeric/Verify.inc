@@ -13,7 +13,7 @@ function BinaryBreaks(const oAscending: Boolean = True): Integer; overload;
          scanning forward. Returns -1 when the array satisfies the specified
          ordering.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryBreach(const oAscending: Boolean = True): Integer; overload;
+function MArrayHelper.BinaryBreach(const oAscending: Boolean = True): Integer; overload;
 var
   d: Integer;
 begin
@@ -33,7 +33,7 @@ end;
          without branching inside the loop. Returns -1 when the array
          respects the specified ordering.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryBreaks(const oAscending: Boolean = True): Integer; overload;
+function MArrayHelper.BinaryBreaks(const oAscending: Boolean = True): Integer; overload;
 var
   d: Integer;
 begin

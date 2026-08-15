@@ -3,11 +3,8 @@
 {$I @TDoubleArray/BinaryOps/Addition.inc}
 {$I @TDoubleArray/BinaryOps/Bounds.inc}
 {$I @TDoubleArray/BinaryOps/Deduplicate.inc}
-{$I @TDoubleArray/BinaryOps/Membership.inc}
 {$I @TDoubleArray/BinaryOps/Merging.inc}
 {$I @TDoubleArray/BinaryOps/Modify.inc}
 {$I @TDoubleArray/BinaryOps/Query.inc}
 {$I @TDoubleArray/BinaryOps/Search.inc}
 {$I @TDoubleArray/BinaryOps/Sort.inc}
-
-{$I @TDoubleArray/Monotone.inc}

@@ -5,7 +5,6 @@ function BinaryIndexy(const item: TPoint): Integer; overload;
 function BinaryPosL(const item: TPoint): Integer; overload;
 function BinaryPosR(const item: TPoint): Integer; overload;
 function BinaryRanked(const item: TPoint): Integer; overload;
-function BinarySearcha(const item: TPoint): Integer; overload;
 function BinarySearch(const area: TBox): Integer; overload;
 {$ENDIF}
 
@@ -190,31 +189,6 @@ begin
     else
       R := M;
   end;
-end;
-
-{==============================================================================]
-  <BinarySearcha>
-  @action: Performs a binary search for a specified point in a sorted TPointArray.
-  @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
-           consistent with TPoint.Compare.
-          - Returns the index of the matching point if found, or -1 if not found.
-[==============================================================================}
-function TPointArrayHelper.BinarySearcha(const item: TPoint): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  R.Create(0, High(Self));
-  while (R.start <= R.stop) do
-  begin
-    M := R.Pivot;
-    case Self[M].Compare(item) of
-	  -1: R.start := (M + 1);
-      1: R.stop := (M - 1);
-      0: Exit(M);
-	end;
-  end;
-  Result := -1;
 end;
 
 {==============================================================================]
