@@ -10,9 +10,10 @@ function Monotony: Boolean; overload;
   @action: Returns True if the array elements are monotonic (entirely non-decreasing or non-increasing).
   @note: Works for empty and single-element arrays (they are trivially monotonic).
 [==============================================================================}
-function TIntegerArrayHelper.IsMonotonic: Boolean; overload;
+function MArrayHelper.IsMonotonic: Boolean; overload;
 var
-  c, i: Integer;
+  c: MType;
+  i: Integer;
   A, D: Boolean;
 begin
   A := True;
@@ -45,7 +46,7 @@ end;
     • Uses Sign(A - B) to determine the direction between consecutive elements.
     • Short-circuits for efficiency — exits as soon as a violation is detected.
 [==============================================================================}
-function TIntegerArrayHelper.Monotonicity: Boolean; overload;
+function MArrayHelper.Monotonicity: Boolean; overload;
 var
   s, d, i: Integer;
 begin
@@ -76,7 +77,7 @@ end;
       accumulated trend variable instead of separate Booleans for ascending
       and descending.
 [==============================================================================}
-function TIntegerArrayHelper.Monotony: Boolean; overload;
+function MArrayHelper.Monotony: Boolean; overload;
 var
   i, t, s: Integer;
 begin

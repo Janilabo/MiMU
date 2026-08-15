@@ -19,27 +19,20 @@
 
 {$I @TIntegerArray/Analytics.inc}
 {$I @TIntegerArray/Bounding.inc}
-{$I @TIntegerArray/Cloning.inc}
 {$I @TIntegerArray/Clustering.inc}
 {$I @TIntegerArray/Combine.inc}
 {$I @TIntegerArray/Conversion.inc}
-{$I @TIntegerArray/Counting.inc}
 {$I @TIntegerArray/Deduplicate.inc}
-{$I @TIntegerArray/Directionality.inc}
 {$I @TIntegerArray/Disjoint.inc}
 {$I @TIntegerArray/Equality.inc}
 {$I @TIntegerArray/Inequality.inc}
-{$I @TIntegerArray/Insertion.inc}
 {$I @TIntegerArray/Merging.inc}
-{$I @TIntegerArray/Monotone.inc}
 {$I @TIntegerArray/Navigation.inc}
-{$I @TIntegerArray/Reversal.inc}
 {$I @TIntegerArray/Scanning.inc}
 {$I @TIntegerArray/Selection.inc}
 {$I @TIntegerArray/Sorted.inc}
 {$I @TIntegerArray/Sorting.inc}
 {$I @TIntegerArray/Spanning.inc}
-{$I @TIntegerArray/Ternary.inc}
 {$I @TIntegerArray/Transformation.inc}
 {$I @TIntegerArray/Traversal.inc}
 {$I @TIntegerArray/Unparsing.inc}

@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function AllDifferent: Boolean; overload;
+function Echo: Boolean; overload;
 function Injective(const isSorted: Boolean = False): Boolean; overload;
 function IsInjective(const isSorted: Boolean = False): Boolean; overload;
 {$ENDIF}
@@ -29,6 +30,38 @@ begin
   for i := 1 to h do
     if not s.BinarySupply(Self[i]) then
       Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Echo>
+  @action: Determines if the array is symmetrical (a palindrome) by comparing 
+           elements from both ends simultaneously.
+  @note: 
+    - Strategy: Employs a dual-pointer "converging" approach. The 'S' (Start) 
+      pointer moves forward while the 'E' (End) pointer moves backward.
+    - Efficiency: O(N) time complexity with a 0.5x iteration factor. 
+      Exits immediately (False) at the first point of divergence.
+    - Performance: Highly optimized; avoids the overhead of array index 
+      calculations and bounds checking by using raw pointer dereferencing.
+    - Safety: Returns True for empty arrays or single-element arrays, as 
+      they are inherently symmetrical.
+[==============================================================================}
+function MArrayHelper.Echo: Boolean; overload;
+var
+  S, E: MPointer;
+begin
+  if (Self.Length < 2) then
+    Exit(True);
+  S := @Self[0];
+  E := @Self[High(Self)];
+  while (S < E) do
+  begin
+    if (S^ <> E^) then
+	  Exit(False);
+    Inc(S);
+    Dec(E);
+  end;
   Result := True;
 end;
 

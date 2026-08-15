@@ -22,6 +22,9 @@ function StrictlyDescends: Boolean; overload;
 function StrictlyIncreasing: Boolean; overload;
 function Unidirectional: Boolean; overload;
 function Upward: Boolean; overload;
+
+function Astricly: Boolean; overload;
+function Destricly: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -449,6 +452,50 @@ begin
   while (h.Decrement > -1) do
     if (Self[h] > Self[h + 1]) then
       Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Astricly>
+  @action: Returns True if Self is strictly ascending (each element < the next).
+  @note: Returns False for arrays with fewer than 2 elements.
+[==============================================================================}
+function MArrayHelper.Astricly: Boolean; overload;
+var
+  p, e: MPointer;
+begin
+  if (Self.Length < 2) then
+    Exit(False);
+  p := @Self[0];
+  e := @Self[High(Self)];
+  while (p < e) do
+  begin
+    if (p^ >= (p + 1)^) then
+      Exit(False);
+    Inc(p);
+  end;
+  Result := True;
+end;
+
+{==============================================================================]
+  <Destricly>
+  @action: Returns True if Self is strictly descending (each element > the next).
+  @note: Returns False for arrays with fewer than 2 elements.
+[==============================================================================}
+function MArrayHelper.Destricly: Boolean; overload;
+var
+  p, e: MPointer;
+begin
+  if (Self.Length < 2) then
+    Exit(False);
+  p := @Self[0];
+  e := @Self[High(Self)];
+  while (p < e) do
+  begin
+    if (p^ <= (p + 1)^) then
+      Exit(False);
+    Inc(p);
+  end;
   Result := True;
 end;
 {$ENDIF}

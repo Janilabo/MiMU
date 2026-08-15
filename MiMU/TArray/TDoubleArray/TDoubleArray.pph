@@ -12,4 +12,3 @@
 {$I @TDoubleArray/BinaryOps/Sort.inc}
 
 {$I @TDoubleArray/Monotone.inc}
-{$I @TDoubleArray/TernaryOps.inc}

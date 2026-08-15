@@ -61,6 +61,7 @@
 {$I @TArray/Sortable/Scanning.inc}
 {$I @TArray/Sortable/Search.inc}
 {$I @TArray/Sortable/Sorted.inc}
+{$I @TArray/Sortable/Ternary.inc}
 {$I @TArray/Sortable/Trajectory.inc}
 {$I @TArray/Sortable/Trend.inc}
 {$I @TArray/Sortable/Validation.inc}
@@ -69,7 +70,12 @@
 {$I @TArray/Sortable/Numeric/Adjust.inc}
 {$I @TArray/Sortable/Numeric/Analytics.inc}
 {$I @TArray/Sortable/Numeric/Bounding.inc}
+{$I @TArray/Sortable/Numeric/Cloning.inc}
+{$I @TArray/Sortable/Numeric/Counting.inc}
 {$I @TArray/Sortable/Numeric/Extrema.inc}
+{$I @TArray/Sortable/Numeric/Insertion.inc}
+{$I @TArray/Sortable/Numeric/Monotone.inc}
+{$I @TArray/Sortable/Numeric/Validation.inc}
 {$ENDIF}
 
 {$I @TArray/Sortable/Algorithms/BubbleSort.inc}

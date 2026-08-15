@@ -8,6 +8,9 @@ function Convert: MArray; overload;
 function Desrever: MArray; overload;
 function Destack: MArray; overload;
 function Esrever: Boolean; overload;
+function Evert: Boolean; overload;
+function Everted: MArray; overload;
+function Evertify: MArray; overload;
 function Flip: Boolean; overload;
 function Obverse: MArray; overload;
 function Obversed: MArray; overload;
@@ -222,6 +225,86 @@ begin
   if Result then
   while (R.start.Increment < R.stop.Decrement) do
     Swap(Self[R.start], Self[R.stop]);
+end;
+
+{==============================================================================]
+  <Evert>
+  @action: Reverses the array elements in-place using a dual-pointer swap.
+  @note:
+    - Efficiency: Operates at O(1) space complexity.
+    - Speed: Uses raw PInteger dereferencing for optimal CPU throughput.
+[==============================================================================}
+function MArrayHelper.Evert: Boolean; overload;
+var
+  S, E: MPointer;
+  H: Integer;
+  R: MType;
+begin
+  H := High(Self);
+  Result := (H > 0);
+  if not Result then
+    Exit;
+  S := @Self[0];
+  E := @Self[H];
+  while (S < E) do
+  begin
+    R := S^;
+    S^ := E^;
+    E^ := R;
+    Inc(S);
+    Dec(E);
+  end;
+end;
+
+{==============================================================================]
+  <Everted>
+  @action: Returns a reversed clone of the array.
+  @note:
+    - Strategy: Employs a single-pass pointer stream (Tail-to-Head) to
+      populate the result.
+    - Safety: Non-mutating; ideal for immutable data patterns.
+[==============================================================================}
+function MArrayHelper.Everted: MArray; overload;
+var
+  S, D: MPointer;
+  i, L: Integer;
+begin
+  L := Self.Length;
+  if (L < 2) then
+    Exit(Self.Copy);
+  SetLength(Result, L);
+  S := @Self[L - 1];
+  D := @Result[0];
+  for i := 1 to L do
+  begin
+    D^ := S^;
+    Inc(D);
+    Dec(S);
+  end;
+end;
+
+{==============================================================================]
+  <Evertify>
+  @action: Reverses the array using direct pointer manipulation.
+  @note: Faster than index-based loops because it eliminates bound checking
+         and index-to-address calculation overhead.
+[==============================================================================}
+function MArrayHelper.Evertify: MArray; overload;
+var
+  i, o: MPointer;
+  s, h: Integer;
+begin
+  h := Result.Alloc(Self.Length);
+  if (h = -1) then
+    Exit;
+  i := @Self[0];
+  o := @Result[h];
+  for s := 0 to h do
+  begin
+    o^ := i^;
+    Inc(i);
+    Dec(o);
+  end;
 end;
 
 {==============================================================================]

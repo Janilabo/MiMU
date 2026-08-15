@@ -184,7 +184,7 @@ function TIntegerArrayHelper.Numero: Int64; overload;
 var
   i, j, t: Integer;
   s: ShortString;
-  r: String;
+  r: string;
 begin
   if (Self.Length = 0) then
     Exit(0);

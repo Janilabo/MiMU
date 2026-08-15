@@ -1,17 +1,17 @@
 {$IFDEF HELPERS}
-function Countage(const value: Integer): Integer; overload;
+function Countage(const value: MType): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Countage>
-  @action: Counts the total number of times a specific integer value occurs in the array.
-  @note: Leverages pointer arithmetic (PInteger) to sequentially traverse the array 
+  @action: Counts the total number of times a specific value occurs in the array.
+  @note: Leverages pointer arithmetic to sequentially traverse the array 
          in memory for optimized performance. Returns 0 if the array is empty.
 [==============================================================================}
-function TIntegerArrayHelper.Countage(const value: Integer): Integer; overload;
+function MArrayHelper.Countage(const value: MType): Integer; overload;
 var
-  p: PInteger;
+  p: MPointer;
   i: Integer;
 begin
   Result := 0;

@@ -1,7 +1,7 @@
 {$IFDEF HELPERS}
 function TernaryMountain: Integer; overload;
 function TernaryPeak: Integer; overload;
-function TernarySearch(const value: Double; const oAscending: Boolean = True): Integer; overload;
+function TernarySearch(const value: MType; const oAscending: Boolean = True): Integer; overload;
 function TernaryValley: Integer; overload;
 {$ENDIF}
 
@@ -17,7 +17,7 @@ function TernaryValley: Integer; overload;
          converges to the region containing the highest value encountered.
          Returns the index of the final converged position.
 [==============================================================================}
-function TDoubleArrayHelper.TernaryMountain: Integer; overload;
+function MArrayHelper.TernaryMountain: Integer; overload;
 var
   H, L, R: Integer;
   S: TRange;
@@ -25,7 +25,7 @@ begin
   H := High(Self);
   if (H < 1) then
     Exit(H);
-  S.Create(0, High(Self));
+  S.Create(0, H);
   while (S.start < S.stop) do
   begin
     L := (S.start + ((S.stop - S.start) div 3));
@@ -48,7 +48,7 @@ end;
          The method guarantees O(log n) probe behavior in the expected case
          but completes with a linear fallback scan when necessary.
 [==============================================================================}
-function TDoubleArrayHelper.TernaryPeak: Integer; overload;
+function MArrayHelper.TernaryPeak: Integer; overload;
 var
   H, L, R: Integer;
   S: TRange;
@@ -92,7 +92,7 @@ end;
          This implementation executes in logarithmic time relative to array length,
          but is generally not faster than binary search in practical scenarios due to the additional comparisons.
 [==============================================================================}
-function TDoubleArrayHelper.TernarySearch(const value: Double; const oAscending: Boolean = True): Integer; overload;
+function MArrayHelper.TernarySearch(const value: MType; const oAscending: Boolean = True): Integer; overload;
 var
   L, R: Integer;
   S: TRange;
@@ -125,7 +125,7 @@ end;
          narrowed search interval, the function returns -1. Expected
          complexity is O(log n) with a linear fallback validation.
 [==============================================================================}
-function TDoubleArrayHelper.TernaryValley: Integer; overload;
+function MArrayHelper.TernaryValley: Integer; overload;
 var
   H, L, R: Integer;
   S: TRange;
