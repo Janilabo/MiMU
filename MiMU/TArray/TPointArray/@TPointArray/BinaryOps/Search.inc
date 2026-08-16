@@ -2,8 +2,6 @@
 function BinaryFinder(const item: TPoint): Integer; overload;
 function BinaryFind(const area: TBox): Integer; overload;
 function BinaryIndexy(const item: TPoint): Integer; overload;
-function BinaryPosL(const item: TPoint): Integer; overload;
-function BinaryPosR(const item: TPoint): Integer; overload;
 function BinaryRanked(const item: TPoint): Integer; overload;
 function BinarySearch(const area: TBox): Integer; overload;
 {$ENDIF}
@@ -115,55 +113,6 @@ function TPointArrayHelper.BinaryIndexy(const item: TPoint): Integer; overload;
   end;
 begin
   Result := BS(0, High(Self));
-end;
-
-{==============================================================================]
-  <BinaryPosL>
-  @action: Finds the leftmost index at which a given point could be inserted
-           in sorted order (first element >= item).
-  @note: - The array must be sorted in ascending lexicographic order by X, then Y.
-          - Returns the insertion index (0..Length(Self)).
-[==============================================================================}
-function TPointArrayHelper.BinaryPosL(const item: TPoint): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  R.Create(0, Self.Size);
-  while (R.start < R.stop) do
-  begin
-    M := R.Pivot;
-    if (Self[M].Compare(item) < 0) then
-      R.start := (M + 1)
-    else
-      R.stop := M;
-  end;
-  Result := R.start;
-end;
-
-{==============================================================================]
-  <BinaryPosR>
-  @action: Finds the rightmost index at which a given point could be inserted
-           in sorted order (last element <= item).
-  @note: - The array must be sorted in ascending lexicographic order by X, then Y.
-          - Returns the index of the last element <= item,
-            or -1 if all elements are greater than item.
-[==============================================================================}
-function TPointArrayHelper.BinaryPosR(const item: TPoint): Integer; overload;
-var
-  M: Integer;
-  R: TRange;
-begin
-  R.Create(0, Self.Size);
-  while (R.start < R.stop) do
-  begin
-    M := R.Pivot;
-    if (Self[M].Compare(item) <= 0) then
-      R.start := (M + 1)
-    else
-      R.stop := M;
-  end;
-  Result := (R.start - 1);
 end;
 
 {==============================================================================]

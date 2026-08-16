@@ -3,6 +3,12 @@ function BinaryInsertingSort(const aAscending: Boolean = True): Integer; overloa
 function BinaryInsertingSorted(const aAscending: Boolean = True): MArray; overload;
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertionSorted(const aAscending: Boolean = True): MArray; overload;
+function BinaryInsertSort(const oAscending: Boolean = True): Integer; overload;
+function BinaryInsertSorted(const oAscending: Boolean = True): MArray; overload;
+function BinarySort(const aAscending: Boolean = True): Integer; overload;
+function BinarySorted(const aAscending: Boolean = True): MArray; overload;
+function BSort(const aAscending: Boolean = True): Integer; overload;
+function BSorted(const aAscending: Boolean = True): MArray; Overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -185,6 +191,260 @@ begin
     while (j.Decrement >= p) do
       Result[j + 1] := Result[j];
     Result[p] := k;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryInsertSort>
+  @action: Sorts Self in place using binary insertion sort — for each
+           element, its correct position among the already-sorted prefix
+           is located via binary search (O(log n)), then elements are
+           shifted right to make room.
+  @note:
+    - Sorts according to oAscending.
+    - Stable: equal elements retain their original relative order, since
+      ties are resolved by inserting the new element after existing
+      equal elements (Loses returns False on equality, pushing the
+      search right).
+    - Time complexity: O(n log n) comparisons via binary search, but
+      O(n²) overall due to the linear-time element shift on each
+      insertion — same asymptotic class as standard insertion sort,
+      just with fewer comparisons.
+    - Returns Self.Length.
+[==============================================================================}
+function MArrayHelper.BinaryInsertSort(const oAscending: Boolean = True): Integer; overload;
+var
+  s: MType;
+  i, j, L, R, M, P: Integer;
+begin
+  Result := Self.Length;
+  for i := 1 to (Result - 1) do
+  begin
+    s := Self[i];
+    L := 0;
+    R := (i - 1);
+    while (L <= R) do
+    begin
+      M := (L + ((R - L) div 2));
+      if s.Loses(Self[M], oAscending) then
+        R := (M - 1)
+      else
+        L := (M + 1);
+    end;
+    P := L;
+    j := (i - 1);
+    while (j >= P) do
+      Self[j + 1] := Self[j.Decrease];
+    Self[P] := s;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryInsertSorted>
+  @action: Returns a new array containing the elements of Self sorted via
+           binary insertion sort. Self is not modified.
+  @note:
+    - Sorts according to oAscending.
+    - Stable: equal elements retain their original relative order (ties
+      resolve by inserting the new element after existing equal elements,
+      since Loses returns False on equality).
+    - Time complexity: O(n log n) comparisons via binary search, but
+      O(n²) overall due to the linear-time element shift on each
+      insertion — same asymptotic class as standard insertion sort.
+[==============================================================================}
+function MArrayHelper.BinaryInsertSorted(const oAscending: Boolean = True): MArray; overload;
+var
+  s: MType;
+  i, j, L, R, M, P: Integer;
+begin
+  Result := Self.Copy;
+  for i := 1 to High(Result) do
+  begin
+    s := Result[i];
+    L := 0;
+    R := (i - 1);
+    while (L <= R) do
+    begin
+      M := (L + ((R - L) div 2));
+      if s.Loses(Result[M], oAscending) then
+        R := (M - 1)
+      else
+        L := (M + 1);
+    end;
+    P := L;
+    j := (i - 1);
+    while (j >= P) do
+      Result[j + 1] := Result[j.Decrease];
+    Result[P] := s;
+  end;
+end;
+
+{==============================================================================]
+  <BinarySort>
+  @action: Sorts Self in place using binary insertion sort, locating each
+           element's position via three-way comparison (Compare).
+  @note:
+    - Sorts according to aAscending.
+    - Returns High(Self).
+    - Ties are resolved leftward: a newly-placed element is inserted
+      before any existing equal elements, not after.
+[==============================================================================}
+function MArrayHelper.BinarySort(const aAscending: Boolean = True): Integer; overload;
+var
+  a, j, m, i, o: Integer;
+  s: MType;
+  r: TRange;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+  begin
+    o := aAscending.Select(-1, 1);
+    for j := 1 to Result do
+    begin
+      s := Self[j];
+      r.Create(0, j);
+      while r.Ascends do
+      begin
+        m := r.Pivot;
+        if (Self[m].Compare(s) = o) then
+          r.start := (m + 1)
+        else
+          r.stop := m;
+      end;
+      for i := j downto (r.start + 1) do
+        Self[i] := Self[i - 1];
+      Self[r.start] := s;
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <BinarySorted>
+  @action: Returns a new array containing the elements of Self sorted via
+           binary insertion sort, locating each element's position via
+           three-way comparison (Compare). Self is not modified.
+  @note:
+    - Sorts according to aAscending.
+    - Ties are resolved leftward: a newly-placed element is inserted
+      before any existing equal elements, not after.
+[==============================================================================}
+function MArrayHelper.BinarySorted(const aAscending: Boolean = True): MArray; overload;
+var
+  j, m, i, o: Integer;
+  s: MType;
+  r: TRange;
+begin
+  if (Result.SetSize(Self.Length) > 0) then
+  begin
+    o := aAscending.Select(-1, 1);
+    Result[0] := Self[0];
+    for j := 1 to High(Result) do
+    begin
+      s := Self[j];
+      r.Create(0, j);
+      while r.Ascends do
+      begin
+        m := r.Pivot;
+        if (Result[m].Compare(s) = o) then
+          r.start := (m + 1)
+        else
+          r.stop := m;
+      end;
+      for i := j downto (r.start + 1) do
+        Result[i] := Result[i - 1];
+      Result[r.start] := s;
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <BSort>
+  @action: Sorts Self in place using binary insertion sort, locating each
+           element's position via three-way comparison (Compare) and
+           inserting with the RTL's dynamic-array Insert procedure.
+  @note:
+    - Sorts according to aAscending.
+    - Not guaranteed stable.
+    - Time complexity: O(n log n) comparisons via binary search; O(n²)
+      overall due to per-insertion shift cost (via Insert).
+[==============================================================================}
+function MArrayHelper.BSort(const aAscending: Boolean = True): Integer; overload;
+var
+  C, i, M: Integer;
+  s: MArray;
+  R: TRange;
+begin
+  Result := Self.Size;
+  if (Result < 2) then
+    Exit;
+  s := Self.Copy;
+  SetLength(Self, 1);
+  for i := 1 to (Result - 1) do
+  begin
+    R.Create(0, High(Self));
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      if aAscending then
+        C := Self[M].Compare(s[i])
+      else
+        C := s[i].Compare(Self[M]);
+      case C of
+        -1: R.start := (M + 1);
+        1: R.stop := (M - 1);
+	    0:
+	    begin
+          R.start := M;
+          Break;
+        end;
+      end;
+    end;
+    Insert(s[i], Self, R.start);
+  end;
+end;
+
+{==============================================================================]
+  <BSorted>
+  @action: Returns a new array containing the elements of Self sorted via
+           binary insertion sort, locating each element's position via
+           three-way comparison (Compare) and inserting with the RTL's
+           dynamic-array Insert procedure. Self is not modified.
+  @note:
+    - Sorts according to aAscending.
+    - Not guaranteed stable.
+    - Time complexity: O(n log n) comparisons via binary search; O(n²)
+      overall due to per-insertion shift cost (via Insert).
+[==============================================================================}
+function MArrayHelper.BSorted(const aAscending: Boolean = True): MArray; Overload;
+var
+  C, i, M: Integer;
+  R: TRange;
+begin
+  if (Self.Size < 2) then
+    Exit(Self.Copy);
+  SetLength(Result, 1);
+  Result[0] := Self[0];
+  for i := 1 to High(Self) do
+  begin
+    R.Create(0, High(Result));
+    while (R.start <= R.stop) do
+    begin
+      M := R.Pivot;
+      if aAscending then
+        C := Result[M].Compare(Self[i])
+      else
+        C := Self[i].Compare(Result[M]);
+      case C of
+        -1: R.start := (M + 1);
+        1: R.stop := (M - 1);
+	    0:
+        begin
+          R.start := M;
+          Break;
+        end;
+      end;
+    end;
+    Insert(Self[i], Result, R.start);
   end;
 end;
 {$ENDIF}

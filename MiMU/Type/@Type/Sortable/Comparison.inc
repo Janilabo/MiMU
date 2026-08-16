@@ -31,6 +31,9 @@ function Descending(const target: MType): Boolean; overload;
 
 function Precede(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 function Succeed(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+
+function Wins(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+function Loses(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -368,5 +371,34 @@ end;
 function MTypeHelper.Succeed(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := ((oAscending and (Self > target)) or ((not oAscending) and (Self < target)));
+end;
+
+{==============================================================================]
+  <Wins>
+  @action: Returns True if Self outranks target under the given sort order —
+           i.e. Self would sort after target in ascending order, or before
+           target in descending order.
+  @note:
+    - Equal values return False (neither Wins nor Loses).
+    - Direction is controlled by oAscending, matching the convention used
+      throughout the Binary* search/insert family.
+[==============================================================================}
+function MTypeHelper.Wins(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((oAscending and (Self > target)) or ((not oAscending) and (Self < target)));
+end;
+{==============================================================================]
+  <Loses>
+  @action: Returns True if Self is outranked by target under the given sort
+           order — i.e. Self would sort before target in ascending order,
+           or after target in descending order.
+  @note:
+    - Equal values return False (neither Wins nor Loses).
+    - Direction is controlled by oAscending, matching the convention used
+      throughout the Binary* search/insert family.
+[==============================================================================}
+function MTypeHelper.Loses(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((oAscending and (Self < target)) or ((not oAscending) and (Self > target)));
 end;
 {$ENDIF}

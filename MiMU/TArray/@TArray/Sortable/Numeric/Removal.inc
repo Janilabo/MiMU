@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function BinaryRemoval(const items: TIntegerArray; const oAscending: Boolean = True): TIntegerArray; overload;
-function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
+function BinaryRemoval(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function BinaryShrink(const item: MType; const aAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -13,8 +13,8 @@ function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boole
   @param: oAscending  – Sort order of both arrays:
                         True  = arrays are sorted ascending (default)
                         False = arrays are sorted descending
-  @return: A new TIntegerArray containing elements from Self that are not
-           present in items.
+  @return: A new array containing elements from Self that are not present
+           in items.
   @note:
     - Both Self and items must already be sorted according to oAscending.
       If the order is incorrect, the result may be invalid.
@@ -25,20 +25,20 @@ function BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boole
     - If items is empty, a copy of Self is returned.
     - If Self is empty, an empty array is returned.
     - All occurrences in Self that match values in items are removed.
+    - Element matching uses exact equality (=).
 [==============================================================================}
-function TIntegerArrayHelper.BinaryRemoval(const items: TIntegerArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function MArrayHelper.BinaryRemoval(const items: MArray; const oAscending: Boolean = True): MArray; overload;
 var
   i, j, k, s, l, t, z: Integer;
 begin
   t := items.Length;
   if (t = 0) then
     Exit(Self.Copy);
-  l := Self.Length;
-  SetLength(Result, l);
+  l := Result.SetSize(Self.Length);
   i := 0;
   j := 0;
   k := 0;
-  z := SizeOf(Integer);
+  z := SizeOf(MType);
   while (i < l) do
   begin
     s := i;
@@ -68,10 +68,10 @@ end;
 
 {==============================================================================]
   <BinaryShrink>
-  @action: Removes an integer x from the array while maintaining sorted order.
-  @note: Returns True if the value was removed, False if it was not found.
+  @action: Removes an item from the array while maintaining sorted order.
+  @note: Returns True if the item was removed, False if it was not found.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryShrink(const x: Integer; const aAscending: Boolean = True): Boolean; overload;
+function MArrayHelper.BinaryShrink(const item: MType; const aAscending: Boolean = True): Boolean; overload;
 var
   m, i, o: Integer;
   r: TRange;
@@ -81,12 +81,12 @@ begin
   while r.Asceal do
   begin
     m := r.Pivot;
-    if ((o * Self[m]) < (o * x)) then
+    if ((o * Self[m]) < (o * item)) then
       r.start := (m + 1)
     else
       r.stop := (m - 1);
   end;
-  Result := ((Self.Size > r.start) and (Self[r.start] = x));
+  Result := ((Self.Size > r.start) and (Self[r.start] = item));
   if not Result then
     Exit;
   for i := r.start to (High(Self) - 1) do

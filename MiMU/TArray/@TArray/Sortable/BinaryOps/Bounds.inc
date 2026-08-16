@@ -39,7 +39,9 @@ function BinaryThreshold(const item: MType; const oAscending: Boolean = True): I
 function BinaryUBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUpperB(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUpperBound(const x: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryLeftpos(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLefty(const x: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryRightpos(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRighty(const x: MType; const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
@@ -1576,6 +1578,37 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryLeftpos>
+  @action: Finds the leftmost valid index at which item could appear in a
+           sorted array — the first index where the element does not sort
+           strictly before item (equivalent to std::lower_bound, expressed
+           via Contest rather than direct comparison operators).
+  @note:
+    - Self must already be sorted according to oAscending.
+    - If item is present with duplicates, returns the index of the first
+      occurrence.
+    - If item is not present, returns the index at which it would need to
+      be inserted to preserve sort order.
+    - Returns Self.Size if item would sort after every existing element.
+[==============================================================================}
+function MArrayHelper.BinaryLeftpos(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, Self.Size);
+  while (R.start < R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M].Contest(item, oAscending) < 0) then
+      R.start := (M + 1)
+    else
+      R.stop := M;
+  end;
+  Result := R.start;
+end;
+
+{==============================================================================]
   <BinaryLefty>
   @action: Returns L-side pos of x in arr with Binary Search. -1 if x does not exist.
   @note: Works with sorted arrays! (supports both aAscending and descending order)
@@ -1606,6 +1639,39 @@ begin
   if ((r.start < Self.Size) and (Self[r.start] = x)) then
     Result := r.start;
 end;
+
+{==============================================================================]
+  <BinaryRightpos>
+  @action: Finds the rightmost valid index at which item currently occupies
+           in a sorted array — the last index whose element does not sort
+           strictly after item (equivalent to std::upper_bound minus one).
+  @note:
+    - Self must already be sorted according to oAscending.
+    - If item is present with duplicates, returns the index of the last
+      occurrence.
+    - If item is not present, returns the index immediately before its
+      would-be insertion point — this may be -1 if item sorts before
+      every existing element.
+    - Paired with BinaryLeftpos, (BinaryRightpos - BinaryLeftpos + 1)
+      gives the count of occurrences of item in the array.
+[==============================================================================}
+function MArrayHelper.BinaryRightpos(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  R.Create(0, Self.Size);
+  while (R.start < R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M].Contest(item, oAscending) <= 0) then
+      R.start := (M + 1)
+    else
+      R.stop := M;
+  end;
+  Result := (R.start - 1);
+end;
+
 {==============================================================================]
   <BinaryRighty>
   @action: Returns R-side pos of x in arr with Binary Search. -1 if x does not exist.
