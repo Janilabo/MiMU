@@ -5,7 +5,6 @@ function BinaryEstimate(const item: Integer; const oAscending: Boolean = True): 
 function BinaryInterp(const target: Integer; const oAscending: Boolean = True): Double; overload;
 function BinaryInterpolationSearch(const x: Integer; const aAscending: Boolean = True): Integer;
 function BinaryPinpoint(const x: Integer; const aAscending: Boolean = True): Integer;
-function BinaryPosOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryProbabilisticSearch(const x: Integer; const bias: Double = 0.0; const aAscending: Boolean = True): Integer; overload;
 function BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; const bias: Double = 0.0): Integer; overload;
 function BinarySearch(const x: TRange; const aAscending: Boolean = True): Integer; overload;
@@ -295,33 +294,6 @@ begin
     Dec(Result)
   else if (D > x.Distance(Self[Result + 1])) then
     Inc(Result);
-end;
-
-{==============================================================================]
-  <BinaryPosOf>
-  @action: Binary Search
-  @note: Alternative.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryPosOf(const value: Integer; const oAscending: Boolean = True): Integer; overload;
-var
-  C, M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(0, High(Self));
-  while (R.start <= R.stop) do
-  begin
-    M := R.Pivot;
-    C := (value - Self[M]);
-    if (C = 0) then
-      Exit(M);
-    if not oAscending then
-      C := -C;
-    if (C < 0) then
-      R.stop := (M - 1)
-    else
-      R.start := (M + 1);
-  end;
 end;
 
 {==============================================================================]

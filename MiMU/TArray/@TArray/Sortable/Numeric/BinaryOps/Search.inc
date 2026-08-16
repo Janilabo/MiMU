@@ -1,8 +1,37 @@
 {$IFDEF HELPERS}
+function BinaryPosOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryQuest(const item: MType; const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryPosOf>
+  @action: Binary Search
+  @note: Alternative.
+[==============================================================================}
+function MArrayHelper.BinaryPosOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  C: MType;
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(0, High(Self));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    C := (item - Self[M]);
+    if (C = 0) then
+      Exit(M);
+    if not oAscending then
+      C := -C;
+    if (C < 0) then
+      R.stop := (M - 1)
+    else
+      R.start := (M + 1);
+  end;
+end;
+
 {==============================================================================]
   <BinaryQuest>
   @action: Binary search for item in the array, returning its index.

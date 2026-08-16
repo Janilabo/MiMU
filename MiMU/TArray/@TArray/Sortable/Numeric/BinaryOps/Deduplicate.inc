@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
-function BinaryPrune(const aAscending: Boolean = True): Integer;
-function BinaryPruned(const aAscending: Boolean = True): TIntegerArray;
+function BinaryPrune(const aAscending: Boolean = True): Integer; overload;
+function BinaryPruned(const aAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -9,7 +9,7 @@ function BinaryPruned(const aAscending: Boolean = True): TIntegerArray;
   @action: Binary Search-based Prune method.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryPrune(const aAscending: Boolean = True): Integer;
+function MArrayHelper.BinaryPrune(const aAscending: Boolean = True): Integer; overload;
 var
   i, o: Integer;
 begin
@@ -29,7 +29,7 @@ end;
   @action: Binary Search-based Pruned method.
   @note: None.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryPruned(const aAscending: Boolean = True): TIntegerArray;
+function MArrayHelper.BinaryPruned(const aAscending: Boolean = True): MArray; overload;
 var
   i, o, r: Integer;
 begin

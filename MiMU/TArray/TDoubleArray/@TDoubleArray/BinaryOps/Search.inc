@@ -1,6 +1,5 @@
 {$IFDEF HELPERS}
 function BinaryApproximateSearch(const value: Double; const tolerance: Double; const oAscending: Boolean = True): Integer; overload;
-function BinaryPosOf(const value: Double; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchApproximate(const value: Double; const tolerance: Double; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -60,34 +59,6 @@ begin
       else
         R.stop := (M - 1);
     end;
-  end;
-end;
-
-{==============================================================================]
-  <BinaryPosOf>
-  @action: Binary Search
-  @note: Alternative.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryPosOf(const value: Double; const oAscending: Boolean = True): Integer; overload;
-var
-  C: Double;
-  M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  R.Create(0, High(Self));
-  while (R.start <= R.stop) do
-  begin
-    M := R.Pivot;
-    C := (value - Self[M]);
-    if (C = 0) then
-      Exit(M);
-    if not oAscending then
-      C := -C;
-    if (C < 0) then
-      R.stop := (M - 1)
-    else
-      R.start := (M + 1);
   end;
 end;
 
