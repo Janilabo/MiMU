@@ -80,6 +80,9 @@
 {$I @TArray/Sortable/Numeric/Validation.inc}
 
 {$I @TArray/Sortable/Numeric/BinaryOps/Addition.inc}
+{$I @TArray/Sortable/Numeric/BinaryOps/Analytics.inc}
+{$I @TArray/Sortable/Numeric/BinaryOps/Bounds.inc}
+{$I @TArray/Sortable/Numeric/BinaryOps/Membership.inc}
 {$I @TArray/Sortable/Numeric/BinaryOps/Merging.inc}
 {$I @TArray/Sortable/Numeric/BinaryOps/Removal.inc}
 {$I @TArray/Sortable/Numeric/BinaryOps/Search.inc}

@@ -10,6 +10,7 @@ function BinaryFindIndex(const item: MType; const oAscending: Boolean = True): I
 function BinaryGallopingSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryHybridSearch(const item: MType; const oAscending: Boolean = True; const threshold: Integer = 8): Integer; overload;
 function BinaryHybridSearch(const item: MType; const threshold: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryID(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryIndex(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryIndexFor(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryIndexOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -27,6 +28,7 @@ function BinaryProbe(const item: MType; const oAscending: Boolean = True; const 
 function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryProxy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRank(const item: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryRanked(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearcha(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -421,6 +423,36 @@ begin
   for M := R.start to R.stop do
     if (Self[M] = item) then
       Exit(M);
+end;
+
+{==============================================================================]
+  <BinaryID>
+  @action: Recursive binary search for item in the array, returning its index.
+  @note:
+    - Self must already be sorted ascending. oAscending is accepted but
+      unused — see below.
+    - Returns -1 if item is not found.
+    - If item appears multiple times, the returned index is whichever
+      match the recursion happens to land on first — not guaranteed to
+      be the first or last occurrence.
+[==============================================================================}
+function MArrayHelper.BinaryID(const item: MType; const oAscending: Boolean = True): Integer; overload;
+  function BS(const L, R: Integer): Integer;
+  var
+    M: Integer;
+  begin
+    if (L > R) then
+      Exit(-1);
+    M := (L + ((R - L) div 2));
+    if (Self[M] = item) then
+      Exit(M);
+    if (Self[M].Contest(item) = 1) then
+      Result := BS(L, (M - 1))
+    else
+      Result := BS((M + 1), R);
+  end;
+begin
+  Result := BS(0, High(Self));
 end;
 
 {==============================================================================]
@@ -964,6 +996,35 @@ begin
     end;
   end;
   Result := r.start;
+end;
+
+{==============================================================================]
+  <BinaryRanked>
+  @action: Finds the leftmost valid index at which item could appear in a
+           sorted array — the first index where the element does not sort
+           strictly before item (lower-bound semantics, via Contest).
+  @note:
+    - Self must already be sorted according to oAscending.
+    - If item is present with duplicates, returns the index of the first
+      occurrence.
+    - If item is not present, returns the index at which it would need to
+      be inserted to preserve sort order.
+    - Returns Self.Size if item would sort after every existing element.
+[==============================================================================}
+function MArrayHelper.BinaryRanked(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  R, M: Integer;
+begin
+  Result := 0;
+  R := Self.Size;
+  while (Result < R) do
+  begin
+    M := ((Result + R) div 2);
+    if (Self[M].Contest(item, oAscending) < 0) then
+      Result := (M + 1)
+    else
+      R := M;
+  end;
 end;
 
 {==============================================================================]

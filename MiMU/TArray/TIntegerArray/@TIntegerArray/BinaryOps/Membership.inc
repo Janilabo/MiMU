@@ -1,7 +1,6 @@
 {$IFDEF HELPERS}
 function BinaryAvailable(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
 function BinaryContact(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
-function BinaryExistent(const item: Integer; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
 function BinaryMember(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
 function BinaryOverlaps(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
 function BinaryUnavailable(const x: TRange; const oAscending: Boolean = True): Boolean; overload;
@@ -83,38 +82,6 @@ begin
     else if ((oAscending and (Self[M] > N.stop)) or ((not oAscending) and (Self[M] < N.start))) then
       R.stop := (M - 1);
   end;
-end;
-
-{==============================================================================]
-  <BinaryExistent>
-  @action: Performs a binary search on the integer array to determine if a
-           specified item exists. Returns True if found and provides the
-           item's index via the out parameter.
-  @note: Assumes the array is pre-sorted in ascending or descending order,
-         depending on the oAscending flag. Uses a directional multiplier
-         for handling sort order efficiently. Returns -1 in the index
-         parameter when the item is not found.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryExistent(const item: Integer; out index: Integer; const oAscending: Boolean = True): Boolean; overload;
-var
-  C, D: Integer;
-  R: TRange;
-begin
-  R.Create(0, High(Self));
-  D := ((Ord(oAscending) * 2) - 1);
-  while (R.start <= R.stop) do
-  begin
-    index := R.Pivot;
-    C := ((Self[index] - item) * D);
-    if (C = 0) then
-      Exit(True);
-    if (C < 0) then
-      R.start := (index + 1)
-    else
-      R.stop := (index - 1);
-  end;
-  index := -1;
-  Result := False;
 end;
 
 {==============================================================================]

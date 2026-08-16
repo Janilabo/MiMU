@@ -1,8 +1,6 @@
 {$IFDEF HELPERS}
 function BinaryFinder(const item: TPoint): Integer; overload;
 function BinaryFind(const area: TBox): Integer; overload;
-function BinaryIndexy(const item: TPoint): Integer; overload;
-function BinaryRanked(const item: TPoint): Integer; overload;
 function BinarySearch(const area: TBox): Integer; overload;
 {$ENDIF}
 
@@ -86,57 +84,6 @@ begin
     if ((Self[R.start].X >= area.X1) and (Self[R.start].X <= area.X2)) then
       Exit(R.start);
     Inc(R.start);
-  end;
-end;
-
-{==============================================================================]
-  <BinaryIndexy>
-  @action: Performs a binary search for a specified point in a sorted TPointArray.
-  @note: - The array must be sorted in ascending lexicographic order by X, then by Y,
-           consistent with TPoint.Compare.
-          - Returns the index of the matching point if found, or -1 if not found.
-[==============================================================================}
-function TPointArrayHelper.BinaryIndexy(const item: TPoint): Integer; overload;
-  function BS(const L, R: Integer): Integer;
-  var
-    M: Integer;
-  begin
-    if (L > R) then
-      Exit(-1);
-    M := (L + ((R - L) div 2));
-    if (Self[M] = item) then
-      Exit(M);
-    if (Self[M].Compare(item) = 1) then
-      Result := BS(L, (M - 1))
-    else
-      Result := BS((M + 1), R);
-  end;
-begin
-  Result := BS(0, High(Self));
-end;
-
-{==============================================================================]
-  <BinaryRanked>
-  @action: Returns the rank (0-based index) of a point within a sorted TPointArray.
-           The rank is the position at which the point would be inserted to
-           maintain ascending lexicographic order by X, then Y.
-  @note: - Equivalent to the index of the first element >= item.
-         - If the item exists, returns the index of its first occurrence.
-         - The array must be sorted ascending, consistent with TPoint.Compare.
-[==============================================================================}
-function TPointArrayHelper.BinaryRanked(const item: TPoint): Integer; overload;
-var
-  R, M: Integer;
-begin
-  Result := 0;
-  R := Self.Size;
-  while (Result < R) do
-  begin
-    M := ((Result + R) div 2);
-    if (Self[M].Compare(item) < 0) then
-      Result := (M + 1)
-    else
-      R := M;
   end;
 end;
 
