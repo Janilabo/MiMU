@@ -1,12 +1,9 @@
 {$IFDEF HELPERS}
 function BinaryCapture(const items: TIntegerArray; const iAscending: Boolean = True): TIntegerArray; overload;
 function BinaryExtract(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
-function BinaryExtract(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
 function BinaryFilter(const area: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
-function BinaryFilter(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
 function BinaryIsolate(const items: TIntegerArray; const iAscending: Boolean = True): TIntegerArray; overload;
-function BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
-function BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
+function BinaryItems(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -73,34 +70,6 @@ begin
     Result[i - R.start] := Self[i];
 end;
 
-function TIntegerArrayHelper.BinaryExtract(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
-var
-  v: TIntegerArray;
-  h, i, r: Integer;
-begin
-  if (Self.Empty or values.Empty) then
-    Exit([]);
-  v := values.QuickSorted;
-  h := High(v);
-  SetLength(Result, Self.Size);
-  r := 0;
-  case aAscending of
-    True:
-    for i := 0 to High(Self) do
-      if (Self[i] > v[h]) then
-        Break
-      else if ((Self[i] >= v[0]) and v.BinaryContains(Self[i])) then
-        Result[r.Increase] := Self[i];
-    False:
-    for i := 0 to High(Self) do
-      if (Self[i] < v[0]) then
-        Break
-      else if ((Self[i] <= v[h]) and v.BinaryContains(Self[i])) then
-        Result[r.Increase] := Self[i];
-  end;
-  SetLength(Result, r);
-end;
-
 {==============================================================================]
   <BinaryFilter>
   @action: Returns all integers from Self that lie outside the specified range.
@@ -125,22 +94,6 @@ begin
   for i := 0 to (L - 1) do
     if ((i < R.start) or (i > R.stop)) then
       Result[h.Increase] := Self[i];
-end;
-
-function TIntegerArrayHelper.BinaryFilter(const values: TIntegerArray; const aAscending: Boolean = True): TIntegerArray; overload;
-var
-  i, r: Integer;
-begin
-  if Self.Empty then
-    Exit([]);
-  if values.Empty then
-    Exit(Self.Copy);
-  SetLength(Result, Self.Size);
-  r := 0;
-  for i := 0 to High(Self) do
-    if not values.BinaryContains(Self[i], aAscending) then
-      Result[r.Increase] := Self[i];
-  SetLength(Result, r);
 end;
 
 {==============================================================================]
@@ -184,27 +137,7 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryValues>
-  @action: Returns all items in the array that match a given value using binary search.
-  @note: The array must be sorted (ascending or descending) depending on
-         the value of aAscending. If the value does not occur in the array,
-         an empty array is returned.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryValues(const value: Integer; const aAscending: Boolean = True): TIntegerArray; overload;
-var
-  i: Integer;
-  r: TRange;
-begin
-  r := Self.BinaryRange(value, aAscending);
-  if r.Employs(-1) then
-    Exit([]);
-  SetLength(Result, r.Size);
-  for i := 0 to High(Result) do
-    Result[i] := Self[r.start + i];
-end;
-
-{==============================================================================]
-  <BinaryValues>
+  <BinaryItems>
   @action: Returns all items in the array whose values fall within a given
            numeric range, determined via binary search.
   @note: The array must be sorted (ascending or descending) according to
@@ -213,7 +146,7 @@ end;
          and descending input returns results in descending order. If no
          items fall within the specified range, an empty array is returned.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
+function TIntegerArrayHelper.BinaryItems(const values: TRange; const aAscending: Boolean = True): TIntegerArray; overload;
 var
   h, i: Integer;
   r: TRange;

@@ -10,6 +10,8 @@ function BinaryUnduped: MArray; overload;
 function BinaryUnified(const dAscending: Boolean = True): MArray; overload;
 function BinaryUniq(const oAscending: Boolean = True): Integer; overload;
 function BinaryUniqd(const oAscending: Boolean = True): MArray; overload;
+function BinaryUnique(const oAscending: Boolean = True): Integer; overload;
+function BinaryUniqued(const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -278,6 +280,56 @@ begin
       if (Result[i] < Result[l - 1]) then
         Result[l.Increase] := Result[i];
   end;
+  if (Result.Size > l) then
+    SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <BinaryUnique>
+  @action: Sorts the array using binary sort, removes duplicate values in-place,
+           and returns the final number of unique elements.
+  @note: This routine always performs a full binary sort prior to uniqueness
+         filtering. After sorting, it compacts the array by overwriting
+         duplicates and truncating the underlying storage to the count of
+         uniques.
+[==============================================================================}
+function MArrayHelper.BinaryUnique(const oAscending: Boolean = True): Integer; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(l);
+  Self.BinarySort(oAscending);
+  Result := 1;
+  for i := 1 to (l - 1) do
+    if (Self[i] <> Self[Result - 1]) then
+      Self[Result.Increase] := Self[i];
+  if (Result < l) then
+    SetLength(Self, Result);
+end;
+
+{==============================================================================]
+  <BinaryUniqued>
+  @action: Returns a new array containing the unique values of the source array,
+           sorted according to the specified order, without modifying the
+           original array.
+  @note: The function makes a full copy of the source array, applies a binary
+         sort, removes duplicates by in-place compaction of the copy, and
+         trims the resulting array to the count of unique elements.
+[==============================================================================}
+function MArrayHelper.BinaryUniqued(const oAscending: Boolean = True): MArray; overload;
+var
+  i, l: Integer;
+begin
+  Result := Self.Copy;
+  if (Result.Size < 2) then
+    Exit;
+  Result.BinarySort(oAscending);
+  l := 1;
+  for i := 1 to High(Result) do
+    if (Result[i] <> Result[l - 1]) then
+      Result[l.Increase] := Result[i];
   if (Result.Size > l) then
     SetLength(Result, l);
 end;

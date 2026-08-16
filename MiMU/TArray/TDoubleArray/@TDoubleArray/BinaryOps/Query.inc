@@ -5,8 +5,7 @@ function BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): T
 function BinarySpan(const x: TRange; const aAscending: Boolean = True): TRange; overload;
 function BinarySpanning(const range: TRange; const oAscending: Boolean = True): TRange; overload;
 function BinarySpanOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
-function BinaryValues(const value: Double; const aAscending: Boolean = True): TDoubleArray; overload;
-function BinaryValues(const values: TRange; const aAscending: Boolean = True): TDoubleArray; overload;
+function BinaryItems(const values: TRange; const aAscending: Boolean = True): TDoubleArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -298,26 +297,6 @@ end;
 
 {==============================================================================]
   <BinaryValues>
-  @action: Returns all items in the array that match a given value using binary search.
-  @note: The array must be sorted (ascending or descending) depending on
-         the value of aAscending. If the value does not occur in the array,
-         an empty array is returned.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryValues(const value: Double; const aAscending: Boolean = True): TDoubleArray; overload;
-var
-  i: Integer;
-  r: TRange;
-begin
-  r := Self.BinaryRange(value, aAscending);
-  if r.Employs(-1) then
-    Exit([]);
-  SetLength(Result, r.Size);
-  for i := 0 to High(Result) do
-    Result[i] := Self[r.start + i];
-end;
-
-{==============================================================================]
-  <BinaryValues>
   @action: Returns all items in the array whose values fall within a given
            numeric range, determined via binary search.
   @note: The array must be sorted (ascending or descending) according to
@@ -326,7 +305,7 @@ end;
          and descending input returns results in descending order. If no
          items fall within the specified range, an empty array is returned.
 [==============================================================================}
-function TDoubleArrayHelper.BinaryValues(const values: TRange; const aAscending: Boolean = True): TDoubleArray; overload;
+function TDoubleArrayHelper.BinaryItems(const values: TRange; const aAscending: Boolean = True): TDoubleArray; overload;
 var
   h, i: Integer;
   r: TRange;

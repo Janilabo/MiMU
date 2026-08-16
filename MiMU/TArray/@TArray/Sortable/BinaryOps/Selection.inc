@@ -2,6 +2,9 @@
 function BinaryClampMax(const aMax: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClampMin(const aMin: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryExcept(const target: MArray; const oAscending: Boolean = True): MArray; overload;
+function BinaryExtract(const items: MArray; const aAscending: Boolean = True): MArray; overload;
+function BinaryFilter(const items: MArray; const aAscending: Boolean = True): MArray; overload;
+function BinaryItems(const item: MType; const aAscending: Boolean = True): MArray; overload;
 function BinarySlice(const itemMin, itemMax: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryWithout(const target: MArray; const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
@@ -163,6 +166,94 @@ begin
         Inc(i);
   end;
   SetLength(Result, k);
+end;
+
+{==============================================================================]
+  <BinaryExtract>
+  @action: Returns a new array containing every element of Self that also
+           appears in items (set intersection), preserving Self's original
+           order.
+  @note:
+    - Both Self and items must be sorted according to aAscending.
+    - Uses an early-exit optimization: once an element of Self exceeds
+      (ascending) or falls below (descending) the range of items, no
+      further elements of Self can match, and the scan stops.
+    - Time complexity: O(S) worst case with early exit, using
+      BinaryContains (O(log T)) per candidate element.
+[==============================================================================}
+function MArrayHelper.BinaryExtract(const items: MArray; const aAscending: Boolean = True): MArray; overload;
+var
+  v: MArray;
+  h, i, r: Integer;
+begin
+  if (Self.Empty or items.Empty) then
+    Exit([]);
+  v := items.QuickSorted;
+  h := High(v);
+  r := 0;
+  case aAscending of
+    True:
+    for i := 0 to Result.Alloc(Self.Size) do
+      if (Self[i] > v[h]) then
+        Break
+      else if ((Self[i] >= v[0]) and v.BinaryContains(Self[i])) then
+        Result[r.Increase] := Self[i];
+    False:
+    for i := 0 to Result.Alloc(Self.Size) do
+      if (Self[i] < v[0]) then
+        Break
+      else if ((Self[i] <= v[h]) and v.BinaryContains(Self[i])) then
+        Result[r.Increase] := Self[i];
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <BinaryFilter>
+  @action: Returns a new array containing every element of Self that does
+           NOT appear in items (set difference / complement of BinaryExtract),
+           preserving Self's original order.
+  @note:
+    - items must be sorted according to aAscending. Self does not need
+      to be sorted — every element of Self is checked individually via
+      BinaryContains, since no early-exit shortcut is possible when
+      producing a complement (unlike BinaryExtract's intersection case).
+    - If items is empty, a copy of Self is returned unchanged.
+    - If Self is empty, an empty array is returned.
+    - Time complexity: O(S log T), where S = Length(Self), T = Length(items).
+[==============================================================================}
+function MArrayHelper.BinaryFilter(const items: MArray; const aAscending: Boolean = True): MArray; overload;
+var
+  i, r: Integer;
+begin
+  if Self.Empty then
+    Exit([]);
+  if items.Empty then
+    Exit(Self.Copy);
+  r := 0;
+  for i := 0 to Result.Alloc(Self.Size) do
+    if not items.BinaryContains(Self[i], aAscending) then
+      Result[r.Increase] := Self[i];
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <BinaryItems>
+  @action: Returns all items in the array that match a given item using binary search.
+  @note: The array must be sorted (ascending or descending) depending on
+         the item of aAscending. If the item does not occur in the array,
+         an empty array is returned.
+[==============================================================================}
+function MArrayHelper.BinaryItems(const item: MType; const aAscending: Boolean = True): MArray; overload;
+var
+  i: Integer;
+  r: TRange;
+begin
+  r := Self.BinaryRange(item, aAscending);
+  if r.Employs(-1) then
+    Exit([]);
+  for i := 0 to Result.Alloc(r.Size) do
+    Result[i] := Self[r.start + i];
 end;
 
 {==============================================================================]

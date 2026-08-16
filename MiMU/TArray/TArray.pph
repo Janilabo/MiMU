@@ -79,6 +79,7 @@
 {$I @TArray/Sortable/Numeric/Merging.inc}
 {$I @TArray/Sortable/Numeric/Monotone.inc}
 {$I @TArray/Sortable/Numeric/Removal.inc}
+{$I @TArray/Sortable/Numeric/Search.inc}
 {$I @TArray/Sortable/Numeric/Sorted.inc}
 {$I @TArray/Sortable/Numeric/Validation.inc}
 {$I @TArray/Sortable/Numeric/Verify.inc}
@@ -95,6 +96,7 @@
 {$I @TArray/Sortable/BinaryOps/Bounds.inc}
 {$I @TArray/Sortable/BinaryOps/Counting.inc}
 {$I @TArray/Sortable/BinaryOps/Deduplicate.inc}
+{$I @TArray/Sortable/BinaryOps/Grouping.inc}
 {$I @TArray/Sortable/BinaryOps/Locus.inc}
 {$I @TArray/Sortable/BinaryOps/Membership.inc}
 {$I @TArray/Sortable/BinaryOps/Merging.inc}

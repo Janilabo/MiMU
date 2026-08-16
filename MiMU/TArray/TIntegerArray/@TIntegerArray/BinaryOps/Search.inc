@@ -9,7 +9,6 @@ function BinaryPosOf(const value: Integer; const oAscending: Boolean = True): In
 function BinaryProbabilisticSearch(const x: Integer; const bias: Double = 0.0; const aAscending: Boolean = True): Integer; overload;
 function BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; const bias: Double = 0.0): Integer; overload;
 function BinarySearch(const x: TRange; const aAscending: Boolean = True): Integer; overload;
-function BinarySearch2(const x: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinarySearchApproximate(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
 function BSearch(const value: Integer; const oAscending: Boolean = True): Integer; overload;
@@ -392,32 +391,6 @@ begin
       s.start := (M + 1);
   end;
   Result := -1;
-end;
-
-{==============================================================================]
-  <BinarySearch>
-  @action: Binary Search function for TIntegerArrays. Searches x from arr and returns the index.
-  @note: Works with sorted arrays! (aAscending or descending)
-[==============================================================================}
-function TIntegerArrayHelper.BinarySearch2(const x: Integer; const aAscending: Boolean = True): Integer; overload;
-var
-  m, o, s: Integer;
-  r: TRange;
-begin
-  Result := -1;
-  o := aAscending.Select(1, -1);
-  s := (o * x);
-  r.Create(0, High(Self));
-  while (r.Asceal and (Result = -1)) do
-  begin
-    m := r.Pivot;
-    if ((o * Self[m]) = s) then
-      Result := m
-    else if ((o * Self[m]) < s) then
-      r.start := (m + 1)
-    else
-      r.stop := (m - 1);
-  end;
 end;
 
 {==============================================================================]
