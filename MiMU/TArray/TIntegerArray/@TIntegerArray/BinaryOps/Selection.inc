@@ -30,8 +30,7 @@ var
 begin
   if items.Empty then
     Exit([]);
-  SetLength(Result, Self.Length);
-  if Self.Empty then
+  if (Result.SetSize(Self.Length) = 0) then
     Exit;
   case iAscending of
     True: r.Create(items[0], items[High(items)]);

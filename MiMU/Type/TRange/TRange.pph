@@ -4,6 +4,7 @@
 
 {$I @TRange/Access.inc}
 {$I @TRange/Adjust.inc}
+{$I @TRange/Arity.inc}
 {$I @TRange/Arraying.inc}
 {$I @TRange/Cardinality.inc}
 {$I @TRange/Centrality.inc}
@@ -63,4 +64,3 @@
 {$I @TRange/Terminal.inc}
 {$I @TRange/Transform.inc}
 {$I @TRange/Validation.inc}
-{$I @TRange/Vector.inc}

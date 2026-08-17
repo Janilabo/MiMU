@@ -5,8 +5,8 @@ function Comparison(const A, B: MType): Integer; overload;
 
 {$IFDEF HELPERS}
 function Cmp(const target: MType): Integer; overload;
-function Cmpr(const target: MType): Integer; overload;
 function Compare(const target: MType): Integer; overload;
+function Compared(const target: MType): Integer; overload;
 function CompareAt(const target: MType): Integer; overload;
 function Comparem(const target: MType): Integer; overload;
 function Comparify(const target: MType): Integer; overload;
@@ -66,17 +66,6 @@ begin
 end;
 
 {==============================================================================]
-  <Cmpr>
-  @action: Compares Self with target target.
-           Results: 0=EQUAL, 1=Self>target, -1=Self<target
-  @note: None
-[==============================================================================}
-function MTypeHelper.Cmpr(const target: MType): Integer; overload;
-begin
-  Result := (Ord(Self > target) - Ord(Self < target));
-end;
-
-{==============================================================================]
   <Compare>
   @action: Compares Self with target target.
            Results: 0=EQUAL, 1=Self>target, -1=Self<target
@@ -90,6 +79,17 @@ begin
     Result := 1
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <Compared>
+  @action: Compares Self with target target.
+           Results: 0=EQUAL, 1=Self>target, -1=Self<target
+  @note: None
+[==============================================================================}
+function MTypeHelper.Compared(const target: MType): Integer; overload;
+begin
+  Result := (Ord(Self > target) - Ord(Self < target));
 end;
 
 {==============================================================================]
