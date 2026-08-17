@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function BinaryEstimate(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryInterp(const target: MType; const oAscending: Boolean = True): Double; overload;
+function BinaryPinpoint(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryPosOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryApproximateSearch(const value: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchApproximate(const value: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
@@ -77,6 +78,43 @@ begin
   if ((L = R) or (Self[R] = Self[L])) then
     Exit(L);
   Result := (L + ((target - Self[L]) / (Self[R] - Self[L])));
+end;
+
+{==============================================================================]
+  <BinaryPinpoint>
+  @action: Finds the index of the element closest in value to the specified integer.
+  @note: - The array must be sorted in ascending or descending order as specified by aAscending.
+         - Returns the index of the exact match if found, otherwise the index of the nearest element
+           by absolute distance to x.
+         - Runs in O(log n) time using BinaryRank to locate the insertion position and then compares
+           adjacent elements to choose the closest one.
+[==============================================================================}
+function MArrayHelper.BinaryPinpoint(const item: MType; const aAscending: Boolean = True): Integer; overload;
+var
+  D: MType;
+  H: Integer;
+begin
+  H := High(Self);
+  case H of
+    -1: Exit(-1);
+    0: Exit(0);
+  end;
+  Result := Self.BinaryRank(item, aAscending);
+  if (Result > H) then
+    Exit(H);
+  if (Result < 0) then
+    Exit(0);
+  if (Self[Result] = item) then
+    Exit;
+  D := item.Distance(Self[Result]);
+  if (Result = 0) then
+     Exit(IfThen((D < item.Distance(Self[Result + 1])), Result, (Result + 1)));
+  if (Result = H) then
+    Exit(IfThen((D < item.Distance(Self[Result - 1])), Result, (Result - 1)));
+  if (D > item.Distance(Self[Result - 1])) then
+    Dec(Result)
+  else if (D > item.Distance(Self[Result + 1])) then
+    Inc(Result);
 end;
 
 {==============================================================================]

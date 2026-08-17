@@ -8,8 +8,10 @@ function Classify(const weight: TDoubleArray): M2DArray; overload;
 function Group: M2DArray; overload;
 function Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload;
 function Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload;
+function Grouped: M2DArray; overload;
 function Grouped(const groups: TIntegerArray): M2DArray; overload;
 function Groupify(const groups: TIntegerArray): M2DArray; overload;
+function Grouping: M2DArray; overload;
 function Grouping(const groups: TIntegerArray): M2DArray; overload;
 {$ENDIF}
 
@@ -264,6 +266,41 @@ end;
 
 {==============================================================================]
   <Grouped>
+  @action: Partitions Self into groups of consecutive equal elements via a
+           two-pass count-then-fill strategy — no outer-array reallocation
+           mid-loop.
+  @note: POD-only (uses Move for group copies). Same O(n) time as the naive
+         single-pass version, but trades one extra full scan for zero
+         incremental SetLength growth on Result itself. Best when s is large.
+[==============================================================================}
+function MArrayHelper.Grouped: M2DArray; overload;
+var
+  i, j, s, c, g, p: Integer;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  c := 1;
+  for i := 1 to (s - 1) do
+    if (Self[i] <> Self[i - 1]) then
+      Inc(c);
+  SetLength(Result, c);
+  g := 0;
+  p := 0;
+  for i := 1 to (s - 1) do
+    if (Self[i] <> Self[i - 1]) then
+    begin
+      for j := 0 to Result[g].Alloc(i - p) do
+        Result[g][j] := Self[p];
+      Inc(g);
+      p := i;
+    end;
+  for j := 0 to Result[g].Alloc(s - p) do
+    Result[g][j] := Self[p];
+end;
+
+{==============================================================================]
+  <Grouped>
   @action: Groups the current array (Self) into sub-arrays based on the
            integer group IDs provided in groups, without performing any
            sorting. Unique group IDs are detected in the order they first
@@ -306,6 +343,39 @@ begin
         Result[j].Supply(Self[i]);
         Break;
       end;
+end;
+
+{==============================================================================]
+  <Grouping>
+  @action: Partitions Self into groups of consecutive equal elements, preserving
+           original encounter order.
+  @note: Only merges elements that are already adjacent — does not sort first.
+         To group *all* occurrences of a value regardless of position, Self
+         must be pre-sorted (e.g. via BinarySort). Requires MType to support
+         equality (=/<>) only.
+[==============================================================================}
+function MArrayHelper.Grouping: M2DArray; overload;
+var
+  i, g, s, r: Integer;
+begin
+  s := Self.Length;
+  if (Result.SetSize(s) = 0) then
+    Exit;
+  g := 0;
+  SetLength(Result[0], s);
+  Result[0][0] := Self[0];
+  r := 1;
+  for i := 1 to (s - 1) do
+    if (Result[g][0] <> Self[i]) then
+    begin
+      SetLength(Result[g], r);
+      SetLength(Result[g.Increment], (s - i));
+      Result[g][0] := Self[i];
+      r := 1;
+    end else
+      Result[g][r.Increase] := Self[i];
+  SetLength(Result[g], r);
+  SetLength(Result, (g + 1));
 end;
 
 {==============================================================================]

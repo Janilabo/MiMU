@@ -1,7 +1,6 @@
 {$IFDEF HELPERS}
 function BinaryAdaptiveSearch(const item: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryInterpolationSearch(const x: Integer; const aAscending: Boolean = True): Integer;
-function BinaryPinpoint(const x: Integer; const aAscending: Boolean = True): Integer;
 function BinaryProbabilisticSearch(const x: Integer; const bias: Double = 0.0; const aAscending: Boolean = True): Integer; overload;
 function BinaryProbabilisticSearch(const x: Integer; const aAscending: Boolean; const bias: Double = 0.0): Integer; overload;
 function BinarySearch(const x: TRange; const aAscending: Boolean = True): Integer; overload;
@@ -128,42 +127,6 @@ begin
       H := (M - 1);
   end;
   Result := -1;
-end;
-
-{==============================================================================]
-  <BinaryPinpoint>
-  @action: Finds the index of the element closest in value to the specified integer.
-  @note: - The array must be sorted in ascending or descending order as specified by aAscending.
-         - Returns the index of the exact match if found, otherwise the index of the nearest element
-           by absolute distance to x.
-         - Runs in O(log n) time using BinaryRank to locate the insertion position and then compares
-           adjacent elements to choose the closest one.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryPinpoint(const x: Integer; const aAscending: Boolean = True): Integer;
-var
-  H, D: Integer;
-begin
-  H := High(Self);
-  case H of
-    -1: Exit(-1);
-    0: Exit(0);
-  end;
-  Result := Self.BinaryRank(x, aAscending);
-  if (Result > H) then
-    Exit(H);
-  if (Result < 0) then
-    Exit(0);
-  if (Self[Result] = x) then
-    Exit;
-  D := x.Distance(Self[Result]);
-  if (Result = 0) then
-     Exit(IfThen((D < x.Distance(Self[Result + 1])), Result, (Result + 1)));
-  if (Result = H) then
-    Exit(IfThen((D < x.Distance(Self[Result - 1])), Result, (Result - 1)));
-  if (D > x.Distance(Self[Result - 1])) then
-    Dec(Result)
-  else if (D > x.Distance(Self[Result + 1])) then
-    Inc(Result);
 end;
 
 {==============================================================================]
