@@ -3,6 +3,7 @@ function BinaryDiff: MType; overload;
 function BinaryDifference(const oAscending: Boolean = True): MType; overload;
 function BinaryMedian: Double; overload;
 function BinaryMidrange: Double; overload;
+function BinaryQuantile(const aProbability: Double = 0.5): Double; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -99,5 +100,30 @@ begin
   if (H = 0) then
     Exit(Self[0]);
   Result := ((Self[0] + Self[H]) / 2.0);
+end;
+
+{==============================================================================]
+  <BinaryQuantile>
+  @action: Returns the quantile value corresponding to the specified probability
+           using linear interpolation between adjacent elements of a sorted
+           integer array.
+  @note: The array must be sorted in ascending order. If the array is empty
+         the function returns 0.0. The probability should normally be in the
+         range [0,1] (e.g. 0.5 = median).
+[==============================================================================}
+function MArrayHelper.BinaryQuantile(const aProbability: Double = 0.5): Double; overload;
+var
+  p: Double;
+  l, h: Integer;
+begin
+  if (Self.Length = 0) then
+    Exit(0.0);
+  p := (aProbability * (Self.Length - 1));
+  l := Trunc(p);
+  h := Ceil(p);
+  if (l = h) then
+    Result := Self[l]
+  else
+    Result := (Self[l] + (p - l) * (Self[h] - Self[l]));
 end;
 {$ENDIF}

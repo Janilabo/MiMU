@@ -2,7 +2,6 @@
 function BinaryFindFirst(const range: TRange; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindLast(const range: TRange; const oAscending: Boolean = True): Integer; overload;
 function BinaryLeftmost(const x: TRange; const aAscending: Boolean = True): Integer; overload;
-function BinaryNear(const target: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightmost(const x: TRange; const aAscending: Boolean = True): Integer; overload;
 function BinarySearchF(const x: TRange; const aAscending: Boolean = True): Integer; overload;
 function BinarySearchL(const x: TRange; const aAscending: Boolean = True): Integer; overload;
@@ -147,42 +146,6 @@ begin
       s.start := (M + 1);
   end;
   Result := -1;
-end;
-
-{==============================================================================]
-  <BinaryNear>
-  @action: Returns the index of the element in the sorted array whose value is
-           closest to the specified target, using binary search.
-  @note:
-    - The array must already be sorted according to oAscending.
-    - If the target exists, its index is returned.
-    - If not found, the index of the nearest value (by absolute difference)
-      is returned.
-    - If the array is empty, returns Low(Integer).
-    - If the target is outside the range, returns the nearest boundary index.
-    - In case of equal distance, the lower index is preferred.
-    - Time complexity: O(log n).
-    - Uses Int64 arithmetic to prevent overflow during difference calculation.
-[==============================================================================}
-function TIntegerArrayHelper.BinaryNear(const target: Integer; const oAscending: Boolean = True): Integer; overload;
-var
-  h, s: Integer;
-begin
-  h := High(Self);
-  if (h = -1) then
-    Exit(Low(Integer));
-  s := Self.BinarySpot(target, oAscending);
-  if (s >= 0) then
-    Exit(s);
-  s := not s;
-  if (s <= 0) then
-    Exit(0);
-  if (s > h) then
-    Exit(h);
-  if (Abs(Int64(target) - Self[s - 1]) <= Abs(Int64(target) - Self[s])) then
-    Result := (s - 1)
-  else
-    Result := s;
 end;
 
 {==============================================================================]

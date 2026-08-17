@@ -12,17 +12,16 @@ function Comparem(const target: MType): Integer; overload;
 function Comparify(const target: MType): Integer; overload;
 function Decompare(const target: MType): Integer; overload;
 
-function Compared(const target: MType; const oAscending: Boolean = True): Integer; overload;
-function CompareTo(const target: MType; const oAscending: Boolean = True): Integer; overload;
-function CompareWith(const target: MType; const oAscending: Boolean = True): Integer; overload;
-
 function Battle(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function Brawl(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Clash(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Compete(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function Contend(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Contest(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Duel(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Trial(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Versus(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function Vie(const target: MType; const oAscending: Boolean = True): Integer; overload;
 
 function Asceal(const target: MType): Boolean; overload;
 function Ascending(const target: MType): Boolean; overload;
@@ -164,48 +163,6 @@ begin
 end;
 
 {==============================================================================]
-  <Compared>
-  @action: Compares Self with target value.
-  @note: Supports ascending/descending
-[==============================================================================}
-function MTypeHelper.Compared(const target: MType; const oAscending: Boolean = True): Integer; overload;
-begin
-  Result := (Ord(Self > target) - Ord(Self < target));
-  if not oAscending then
-    Result := -Result;
-end;
-
-{==============================================================================]
-  <CompareTo>
-  @action: Compares Self with target value.
-  @note: Supports ascending/descending
-[==============================================================================}
-function MTypeHelper.CompareTo(const target: MType; const oAscending: Boolean = True): Integer; overload;
-begin
-  if (Self = target) then
-    Exit(0);
-  if oAscending then
-    Result := ((Ord(Self > target) * 2) - 1)
-  else
-    Result := ((Ord(target > Self) * 2) - 1);
-end;
-
-{==============================================================================]
-  <CompareWith>
-  @action: Compares Self with target value.
-  @note: Supports ascending/descending
-[==============================================================================}
-function MTypeHelper.CompareWith(const target: MType; const oAscending: Boolean = True): Integer; overload;
-begin
-  if (Self = target) then
-    Exit(0);
-  if oAscending then
-    Result := IfThen((Self > target), 1, -1)
-  else
-    Result := IfThen((target > Self), 1, -1);
-end;
-
-{==============================================================================]
   <Battle>
   @action: Compares Self against target, honoring sort direction.
   @note: Returns -1 if Self < target, 1 if Self > target, and 0 if equal.
@@ -219,6 +176,21 @@ begin
     Result := IfThen((Self > target), 1, -1)
   else
     Result := IfThen((Self > target), -1, 1);
+end;
+
+{==============================================================================]
+  <Brawl>
+  @action: Compares Self with target value.
+  @note: Supports ascending/descending
+[==============================================================================}
+function MTypeHelper.Brawl(const target: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  if (Self = target) then
+    Exit(0);
+  if oAscending then
+    Result := ((Ord(Self > target) * 2) - 1)
+  else
+    Result := ((Ord(target > Self) * 2) - 1);
 end;
 
 {==============================================================================]
@@ -246,6 +218,18 @@ end;
 function MTypeHelper.Compete(const target: MType; const oAscending: Boolean = True): Integer; overload;
 begin
   Result := (oAscending.Sign * Self.Compare(target));
+end;
+
+{==============================================================================]
+  <Contend>
+  @action: Compares Self with target value.
+  @note: Supports ascending/descending
+[==============================================================================}
+function MTypeHelper.Contend(const target: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := (Ord(Self > target) - Ord(Self < target));
+  if not oAscending then
+    Result := -Result;
 end;
 
 {==============================================================================]
@@ -310,6 +294,21 @@ begin
     Result := 1
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <Vie>
+  @action: Compares Self with target value.
+  @note: Supports ascending/descending
+[==============================================================================}
+function MTypeHelper.Vie(const target: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  if (Self = target) then
+    Exit(0);
+  if oAscending then
+    Result := IfThen((Self > target), 1, -1)
+  else
+    Result := IfThen((target > Self), 1, -1);
 end;
 
 {==============================================================================]

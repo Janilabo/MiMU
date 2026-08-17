@@ -1,7 +1,6 @@
 {$I ../TArray.inc}
 
 {$I @TIntegerArray/BinaryOps/Addition.inc}
-{$I @TIntegerArray/BinaryOps/Analytics.inc}
 {$I @TIntegerArray/BinaryOps/Bounds.inc}
 {$I @TIntegerArray/BinaryOps/Counting.inc}
 {$I @TIntegerArray/BinaryOps/Grouping.inc}

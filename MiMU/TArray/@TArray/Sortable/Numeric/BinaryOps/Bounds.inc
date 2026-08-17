@@ -7,6 +7,7 @@ function BinaryFindClosest(const item: MType; const oAscending: Boolean = True):
 function BinaryFindNearest(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFirst(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryLast(const x: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryNear(const target: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryNearest(const target: MType; const oAscending: Boolean = True): MType; overload;
 function BinaryPosL(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryPosR(const x: MType; const aAscending: Boolean = True): Integer; overload;
@@ -274,6 +275,45 @@ begin
       True: r.stop := (m - 1);
     end;
   end;
+end;
+
+{==============================================================================]
+  <BinaryNear>
+  @action: Returns the index of the element in the sorted array whose value is
+           closest to the specified target, using binary search.
+  @note:
+    - The array must already be sorted according to aAscending.
+    - If the target exists, its index is returned.
+    - If not found, the index of the nearest value (by absolute difference)
+      is returned.
+    - If the array is empty, returns Low(Integer).
+    - If the target is outside the range, returns the nearest boundary index.
+    - In case of equal distance, the lower index is preferred.
+    - Time complexity: O(log n).
+    - MType must be a numeric type (supports subtraction and Abs). No
+      overflow-widening is performed; narrow specializations (e.g. Byte,
+      SmallInt) are the caller's responsibility, consistent with other
+      numeric-only Binary* methods.
+[==============================================================================}
+function MArrayHelper.BinaryNear(const target: MType; const aAscending: Boolean = True): Integer; overload;
+var
+  h, s: Integer;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit(Low(Integer));
+  s := Self.BinarySpot(target, aAscending);
+  if (s >= 0) then
+    Exit(s);
+  s := not s;
+  if (s <= 0) then
+    Exit(0);
+  if (s > h) then
+    Exit(h);
+  if (Abs(target - Self[s - 1]) <= Abs(target - Self[s])) then
+    Result := (s - 1)
+  else
+    Result := s;
 end;
 
 {==============================================================================]

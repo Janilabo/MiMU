@@ -104,9 +104,9 @@ begin
     M := R.Pivot;
     case InRange(Self[M], N.start, N.stop) of
       False:
-      if (Self[M].Compared(N.stop, oAscending) > 0) then
+      if (Self[M].Contend(N.stop, oAscending) > 0) then
         R.stop := (M - 1)
-      else if (Self[M].Compared(N.start, oAscending) < 0) then
+      else if (Self[M].Contend(N.start, oAscending) < 0) then
         R.start := (M + 1);
       True:
       begin

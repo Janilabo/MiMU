@@ -183,7 +183,7 @@ begin
   while (R.start <= R.stop) do
   begin
     M := R.Pivot;
-    case Self[M].CompareTo(item, oAscending) of
+    case Self[M].Vie(item, oAscending) of
       -1: R.start := (M + 1);
       1: R.stop := (M - 1);
       0:
