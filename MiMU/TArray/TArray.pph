@@ -83,6 +83,7 @@
 {$I @TArray/Sortable/Numeric/BinaryOps/Analytics.inc}
 {$I @TArray/Sortable/Numeric/BinaryOps/Bounds.inc}
 {$I @TArray/Sortable/Numeric/BinaryOps/Deduplicate.inc}
+{$I @TArray/Sortable/Numeric/BinaryOps/Locus.inc}
 {$I @TArray/Sortable/Numeric/BinaryOps/Membership.inc}
 {$I @TArray/Sortable/Numeric/BinaryOps/Merging.inc}
 {$I @TArray/Sortable/Numeric/BinaryOps/Removal.inc}

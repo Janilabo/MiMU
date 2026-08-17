@@ -1,85 +1,8 @@
 {$IFDEF HELPERS}
-function BinaryApproximateSearch(const value: Double; const tolerance: Double; const oAscending: Boolean = True): Integer; overload;
-function BinarySearchApproximate(const value: Double; const tolerance: Double; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchSpan(const range: TRange; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <BinaryApproximateSearch>
-  @action: Performs a binary search over an ordered array (ascending or descending),
-           to locate the index of the element that exactly matches the target value,
-           or—if no exact match exists—the closest element whose absolute difference from the target does not exceed the specified tolerance.
-  @note: This implementation evaluates all candidate positions encountered during the binary-search traversal and selects the closest qualifying value.
-         It returns –1 when no element falls within the tolerance or when the array is empty or the tolerance is negative.
-[==============================================================================}
-function TDoubleArrayHelper.BinaryApproximateSearch(const value: Double; const tolerance: Double; const oAscending: Boolean = True): Integer; overload;
-var
-  H, D: Double;
-  M: Integer;
-  R: TRange;
-begin
-  Result := -1;
-  if (Self.Empty or (tolerance < 0)) then
-    Exit;
-  H := High(Integer);
-  R.Create(0, High(Self));
-  case oAscending of
-    True:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      D := Abs(Self[M] - value);
-      if (D = 0) then
-        Exit(M);
-      if ((D <= tolerance) and (D < H)) then
-      begin
-        Result := M;
-        H := D;
-      end;
-      if (Self[M] < value) then
-        R.start := (M + 1)
-      else
-        R.stop := (M - 1);
-    end;
-    False:
-    while (R.start <= R.stop) do
-    begin
-      M := R.Pivot;
-      D := Abs(Self[M] - value);
-      if (D = 0) then
-        Exit(M);
-      if ((D <= tolerance) and (D < H)) then
-      begin
-        Result := M;
-        H := D;
-      end;
-      if (Self[M] > value) then
-        R.start := (M + 1)
-      else
-        R.stop := (M - 1);
-    end;
-  end;
-end;
-
-{==============================================================================]
-  <BinarySearchApproximate>
-  @action: Retrieves the closest element to the specified value using arr.BinaryClosest,
-           and returns its index only if the element’s difference from the target value is within the specified tolerance.
-  @note: This is a higher-level wrapper around arr.BinaryClosest. It does not perform the comparison logic itself beyond tolerance validation.
-         Returns –1 when the closest element is outside tolerance, the array is empty, or no closest candidate is found.
-[==============================================================================}
-function TDoubleArrayHelper.BinarySearchApproximate(const value: Double; const tolerance: Double; const oAscending: Boolean = True): Integer; overload;
-var
-  c: Integer;
-begin
-  c := Self.BinaryClosest(value, oAscending);
-  if ((c = -1) or (Abs(Self[c] - value) > tolerance)) then
-    Result := -1
-  else
-    Result := c;
-end;
-
 {==============================================================================]
   <BinarySearchSpan>
   @action: Performs a recursive binary search within a specified sub-range [L, R] of a

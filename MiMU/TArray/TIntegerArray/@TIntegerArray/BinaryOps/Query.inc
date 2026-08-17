@@ -1,5 +1,4 @@
 {$IFDEF HELPERS}
-function BinaryLocation(const x: Integer; const aAscending: Boolean = True): TRange;
 function BinaryRange(const x: TRange; const aAscending: Boolean = True): TRange; overload;
 function BinaryRangeEx(const value: Integer; const tolerance: Integer; const oAscending: Boolean = True): TRange; overload;
 function BinaryRangeOf(const range: TRange; const oAscending: Boolean = True): TRange; overload;
@@ -10,40 +9,6 @@ function BinaryWindow(const items: TRange; const aAscending: Boolean = True): TR
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
-{==============================================================================]
-  <BinaryLocation>
-  @action: Binary Contains function for TIntegerArrays. Contains location storage variable. With Result as False it will be -1..-1.
-  @note: Works with sorted arrays! (aAscending or descending)
-[==============================================================================}
-function TIntegerArrayHelper.BinaryLocation(const x: Integer; const aAscending: Boolean = True): TRange;
-var
-  h, m, o: Integer;
-  f: Boolean;
-begin
-  f := False;
-  h := High(Self);
-  Result.Create(0, h);
-  o := aAscending.Select(1, -1);
-  while (Result.Asceal and (not f)) do
-  begin
-    m := Result.Pivot;
-    f := ((o * Self[m]) = (o * x));
-    if f then
-    begin
-      Result.Create(m, m);
-      while ((Result.start > 0) and (Self[Result.start - 1] = x)) do
-        Dec(Result.start);
-      while ((Result.stop < h) and (Self[Result.stop + 1] = x)) do
-        Inc(Result.stop);
-    end else if ((o * Self[m]) < (o * x)) then
-      Result.start := (m + 1)
-    else
-      Result.stop := (m - 1);
-  end;
-  if not f then
-    Result.Create(-1, -1);
-end;
-
 {==============================================================================]
   <BinaryRange>
   @action:  Return the index range (start..stop) of all elements whose
