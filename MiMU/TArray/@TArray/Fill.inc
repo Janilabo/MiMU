@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Implant(const source: MArray; const sAdjustment: Integer): Integer; overload;
 function Implant(const source: MArray): Integer; overload;
+function Lade(const item: MType; const sSize: Integer = 0): Integer; overload;
+function Lade(const items: MArray; const sSize: Integer = 0): Integer; overload;
 function Plant(const source: MArray; const sAdjustment: Integer): Integer; overload;
 function Plant(const source: MArray): Integer; overload;
 {$ENDIF}
@@ -33,6 +35,43 @@ function MArrayHelper.Implant(const source: MArray): Integer; overload;
 begin
   for Result := 0 to Self.Alloc(source.Length) do
     Self[Result] := source[Result];
+end;
+
+{==============================================================================]
+  <Lade>
+  @action: Resizes Self to sSize and fills every element with a single
+           repeated item, discarding any prior contents.
+  @note: Returns the resulting length (== sSize, or 0 if sSize < 0). No POD
+         restriction — plain element assignment.
+[==============================================================================}
+function MArrayHelper.Lade(const item: MType; const sSize: Integer = 0): Integer; overload;
+var
+  r: Integer;
+begin
+  Result := Self.SetSize(Max(0, sSize));
+  for r := 0 to (Result - 1) do
+    Self[r] := item;
+end;
+
+{==============================================================================]
+  <Lade>
+  @action: Resizes Self to sSize and fills it by cycling repeatedly through
+           items, discarding any prior contents. If items is shorter than
+           sSize, its contents repeat; if longer, only its first sSize
+           elements are used.
+  @note: Returns the resulting length (== sSize, or 0 if sSize < 0). If items
+         is empty, Self is resized but left at MType default values — no
+         exception is raised. No POD restriction — plain element assignment.
+[==============================================================================}
+function MArrayHelper.Lade(const items: MArray; const sSize: Integer = 0): Integer; overload;
+var
+  r, l: Integer;
+begin
+  Result := Self.SetSize(Max(0, sSize));
+  l := items.Length;
+  if (l > 0) then
+  for r := 0 to (Result - 1) do
+    Self[r] := items[r mod l];
 end;
 
 {==============================================================================]
