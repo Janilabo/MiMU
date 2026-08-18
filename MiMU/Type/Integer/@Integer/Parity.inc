@@ -1,6 +1,9 @@
 {$IFDEF HELPERS}
+function AnEven: Boolean; overload;
+function AnOdd: Boolean; overload;
 function Even: Boolean; overload;
 function Even2: Boolean; overload;
+function Evenly: Boolean; overload;
 function EvenNumber: Boolean; overload;
 function Evensy: Boolean; overload;
 function EvenValue: Boolean; overload;
@@ -8,6 +11,7 @@ function IsEven: Boolean; overload;
 function IsOdd: Boolean; overload;
 function Odd: Boolean; overload;
 function Odd2: Boolean; overload;
+function Oddly: Boolean; overload;
 function OddNumber: Boolean; overload;
 function Oddsy: Boolean; overload;
 function OddValue: Boolean; overload;
@@ -19,6 +23,26 @@ function Uneven: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AnEven>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TIntegerHelper.AnEven: Boolean; overload;
+begin
+  Result := (Self = (Self shr 1) shl 1);
+end;
+
+{==============================================================================]
+  <AnOdd>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function TIntegerHelper.AnOdd: Boolean; overload;
+begin
+  Result := not Self.AnEven;
+end;
+
 {==============================================================================]
   <Even>
   @action: Returns true if Integer value x is an even number.
@@ -37,6 +61,16 @@ end;
 function TIntegerHelper.Even2: Boolean; overload;
 begin
   Result := not System.Odd(Self);
+end;
+
+{==============================================================================]
+  <Evenly>
+  @action: Reports whether `Self` is an even integer.
+  @note: Uses `Abs` before the parity check, so negative even values (e.g. `-4`) correctly return `True`.
+[==============================================================================}
+function TIntegerHelper.Evenly: Boolean; overload;
+begin
+  Result := ((Abs(Self) and 1) = 0);
 end;
 
 {==============================================================================]
@@ -111,6 +145,16 @@ end;
 function TIntegerHelper.Odd2: Boolean; overload;
 begin
   Result := System.Odd(Self);
+end;
+
+{==============================================================================]
+  <Oddly>
+  @action: Reports whether `Self` is an odd integer.
+  @note: Defined as the negation of `Evenly`, so it inherits the same sign-safe behavior for negative values.
+[==============================================================================}
+function TIntegerHelper.Oddly: Boolean; overload;
+begin
+  Result := not Self.Evenly;
 end;
 
 {==============================================================================]
