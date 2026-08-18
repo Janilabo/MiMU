@@ -10,6 +10,7 @@ function Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2D
 function Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload;
 function Grouped: M2DArray; overload;
 function Grouped(const groups: TIntegerArray): M2DArray; overload;
+function Groupify: M2DArray; overload;
 function Groupify(const groups: TIntegerArray): M2DArray; overload;
 function Grouping: M2DArray; overload;
 function Grouping(const groups: TIntegerArray): M2DArray; overload;
@@ -418,6 +419,37 @@ begin
     end;
 	Result[c].Supply(Self[p[i]]);
   end;
+end;
+
+{==============================================================================]
+  <Groupify>
+  @action: Partitions Self into groups of consecutive equal elements via a
+           single outer pass; each group's length is found by an inner
+           look-ahead scan before allocating and bulk-copying it.
+  @note: POD-only (uses Move for group copies). Result is over-allocated to s
+         then trimmed at the end — one reallocation total on the outer array,
+         same as GroupingCounted, but without the separate counting pass.
+[==============================================================================}
+function MArrayHelper.Groupify: M2DArray; overload;
+var
+  i, s, g, j, r: Integer;
+begin
+  s := Result.SetSize(Self.Length);
+  if (s = 0) then
+    Exit;
+  g := 0;
+  i := 0;
+  while (i < s) do
+  begin
+    r := 1;
+    while (((i + r) < s) and (Self[i + r] = Self[i])) do
+      Inc(r);
+    for j := 0 to Result[g].Alloc(r) do
+      Result[g][j] := Self[i];
+    i := (i + r);
+    Inc(g);
+  end;
+  SetLength(Result, g);
 end;
 
 {==============================================================================]
