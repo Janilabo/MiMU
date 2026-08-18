@@ -7,6 +7,10 @@ function BinaryFilter(const items: MArray; const aAscending: Boolean = True): MA
 function BinaryItems(const item: MType; const aAscending: Boolean = True): MArray; overload;
 function BinarySlice(const itemMin, itemMax: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryWithout(const target: MArray; const oAscending: Boolean = True): MArray; overload;
+function BinaryExtractByMin(const limit: MType; const oAscending: Boolean = True): MArray; overload;
+function BinaryExtractByMax(const limit: MType; const oAscending: Boolean = True): MArray; overload;
+function BinaryFilterByMin(const limit: MType; const oAscending: Boolean = True): MArray; overload;
+function BinaryFilterByMax(const limit: MType; const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -350,5 +354,117 @@ begin
     else
       Inc(i);
   SetLength(Result, k);
+end;
+
+{==============================================================================]
+  <BinaryExtractByMin>
+  @action: Returns a new array containing every element of Self that is equal
+           to or greater than limit, using a binary boundary search.
+  @note: Self must be sorted according to oAscending. This is the non-mutating
+         complement of BinaryClampMin — it returns exactly the elements that
+         BinaryClampMin would retain, without modifying Self.
+         Returns an empty array if no elements meet the limit.
+[==============================================================================}
+function MArrayHelper.BinaryExtractByMin(const limit: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  i, l: Integer;
+  r: TRange;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  if oAscending then
+    r.Create(Self.BinaryBoundLower(limit, oAscending), (l - 1))
+  else
+    r.Create(0, (Self.BinaryBoundUpper(limit, oAscending) - 1));
+  if ((r.start >= l) or (r.stop < 0) or (r.start > r.stop)) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  for i := r.start to r.stop do
+    Result[i - r.start] := Self[i];
+end;
+
+{==============================================================================]
+  <BinaryExtractByMax>
+  @action: Returns a new array containing every element of Self that is equal
+           to or less than limit, using a binary boundary search.
+  @note: Self must be sorted according to oAscending. This is the non-mutating
+         complement of BinaryClampMax — it returns exactly the elements that
+         BinaryClampMax would retain, without modifying Self.
+         Returns an empty array if no elements meet the limit.
+[==============================================================================}
+function MArrayHelper.BinaryExtractByMax(const limit: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  i, l: Integer;
+  r: TRange;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  if oAscending then
+    r.Create(0, (Self.BinaryBoundUpper(limit, oAscending) - 1))
+  else
+    r.Create(Self.BinaryBoundLower(limit, oAscending), (l - 1));
+  if ((r.start >= l) or (r.stop < 0) or (r.start > r.stop)) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  for i := r.start to r.stop do
+    Result[i - r.start] := Self[i];
+end;
+
+{==============================================================================]
+  <BinaryFilterByMin>
+  @action: Returns a new array containing every element of Self that is less
+           than limit, using a binary boundary search.
+  @note: Self must be sorted according to oAscending. This is the complement
+         of BinaryExtractByMin — together they partition Self at limit without
+         mutating it. Also equivalent to the elements BinaryClampMin would discard.
+         Returns an empty array if no elements fall below the limit.
+[==============================================================================}
+function MArrayHelper.BinaryFilterByMin(const limit: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  i, l: Integer;
+  r: TRange;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  if oAscending then
+    r.Create(0, (Self.BinaryBoundLower(limit, oAscending) - 1))
+  else
+      r.Create(Self.BinaryBoundUpper(limit, oAscending), (l - 1));
+  if ((r.start >= l) or (r.stop < 0) or (r.start > r.stop)) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  for i := r.start to r.stop do
+    Result[i - r.start] := Self[i];
+end;
+
+{==============================================================================]
+  <BinaryFilterByMax>
+  @action: Returns a new array containing every element of Self that is greater
+           than limit, using a binary boundary search.
+  @note: Self must be sorted according to oAscending. This is the complement
+         of BinaryExtractByMax — together they partition Self at limit without
+         mutating it. Also equivalent to the elements BinaryClampMax would discard.
+         Returns an empty array if no elements exceed the limit.
+[==============================================================================}
+function MArrayHelper.BinaryFilterByMax(const limit: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  i, l: Integer;
+  r: TRange;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  if oAscending then
+    r.Create(Self.BinaryBoundUpper(limit, oAscending), (l - 1))
+  else
+    r.Create(0, (Self.BinaryBoundLower(limit, oAscending) - 1));
+  if ((r.start >= l) or (r.stop < 0) or (r.start > r.stop)) then
+    Exit([]);
+  SetLength(Result, r.Size);
+  for i := r.start to r.stop do
+    Result[i - r.start] := Self[i];
 end;
 {$ENDIF}
