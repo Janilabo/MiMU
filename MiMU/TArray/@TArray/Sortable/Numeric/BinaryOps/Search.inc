@@ -1,7 +1,9 @@
 {$IFDEF HELPERS}
 function BinaryApprox(const item: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
 function BinaryApproxed(const item: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
+function BinaryClosestOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryEstimate(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryFurthestOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryInterp(const target: MType; const oAscending: Boolean = True): Double; overload;
 function BinaryPinpoint(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryPosOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -78,6 +80,42 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryClosestOf>
+  @action: Performs a binary search on a sorted collection to find the index of the element closest in value to item, returning an exact match immediately if found.
+  @note: Returns -1 if the array is empty. The method assumes the collection is sorted according to oAscending (defaulting to True).
+         Standard binary search pruning can bypass the absolute nearest element if the array isn't sorted; for strictly sorted arrays,
+		 it tracks the minimum distance delta (d) across visited pivots and returns the index of the best match found during logarithmic traversal.
+[==============================================================================}
+function MArrayHelper.BinaryClosestOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  i, d: MType;
+  r: Integer;
+  s: TRange;
+begin
+  s.Create(0, High(Self));
+  if (s.stop = -1) then
+    Exit(-1);
+  Result := 0;
+  d := Abs(Self[0] - item);
+  while (s.start <= s.stop) do
+  begin
+    r := s.Pivot;
+    if (Self[r] = item) then
+      Exit(r);
+    i := Abs(Self[r] - item);
+    if (i < d) then
+    begin
+      d := i;
+      Result := r;
+    end;
+    if ((oAscending and (Self[r] < item)) or ((not oAscending) and (Self[r] > item))) then
+      s.start := (r + 1)
+    else
+      s.stop := (r - 1);
+  end;
+end;
+
+{==============================================================================]
   <BinaryEstimate>
   @action: Estimates the index of a given item in a sorted array using interpolation search.
   @note:
@@ -116,6 +154,31 @@ begin
     else
       R.stop := (p - 1);
   end;
+end;
+
+{==============================================================================]
+  <BinaryFurthestOf>
+  @action: Returns the index of the element furthest in value from item within a sorted collection using $O(1)$ boundary inspection.
+  @note: Returns -1 if the array is empty, or 0 if it contains only a single element.
+         Because the maximum difference in a sorted array always lies at an outer edge,
+		 the function only calculates and compares the absolute distances of Self[0] and Self[High(Self)].
+		 If both boundary elements are equidistant from item, the oAscending parameter acts as a tie-breaker,
+		 returning 0 when True or High(Self) when False.
+[==============================================================================}
+function MArrayHelper.BinaryFurthestOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  h: Integer;
+  a, b: MType;
+begin
+  h := High(Self);
+  if (h < 1) then
+    Exit(h);
+  a := Abs(Self[0] - item);
+  b := Abs(Self[h] - item);
+  if (a = b) then
+    Result := IfThen(oAscending, 0, h)
+  else
+    Result := IfThen((a > b), 0, h);
 end;
 
 {==============================================================================]
