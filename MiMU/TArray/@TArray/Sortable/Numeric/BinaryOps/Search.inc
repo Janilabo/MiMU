@@ -1,4 +1,6 @@
 {$IFDEF HELPERS}
+function BinaryApprox(const item: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
+function BinaryApproxed(const item: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
 function BinaryEstimate(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryInterp(const target: MType; const oAscending: Boolean = True): Double; overload;
 function BinaryPinpoint(const item: MType; const aAscending: Boolean = True): Integer; overload;
@@ -9,6 +11,72 @@ function BinaryQuest(const item: MType; const aAscending: Boolean = True): Integ
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryApprox>
+  @action: Performs an approximate binary search on a sorted array/collection using a custom absolute tolerance to locate the index of item.
+  @note: Returns -1 immediately if tolerance is negative. The method assumes the collection is sorted in the order specified by oAscending (defaulting to True).
+         If no exact or within-tolerance match is found before the search range is exhausted, it returns the index of the last evaluated pivot rather than an explicit "not found" flag (e.g., -1).
+[==============================================================================}
+function MArrayHelper.BinaryApprox(const item: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
+var
+  s: TRange;
+begin
+  if (tolerance < 0) then
+    Exit(-1);
+  s := Self.Locale;
+  while (s.start <= s.stop) do
+  begin
+    Result := s.Pivot;
+	if ((Self[Result] = item) or (Abs(Self[Result] - item) <= tolerance)) then
+	  Exit;
+	if ((oAscending and (Self[Result] < item)) or ((not oAscending) and (Self[Result] > item))) then
+	  s.start := (Result + 1)
+	else 
+	  s.stop := (Result - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryApproxed>
+  @action: Performs a binary search for item within Self, returning the index of an exact match if found,
+           or the index of the closest approximate match encountered during the search (within tolerance) otherwise.
+		   Returns -1 if no match within tolerance was found, or if tolerance is negative. Self must be sorted according to oAscending.
+  @note: Numeric-only constraint (uses Abs and subtraction). The approximate match returned is the closest value seen among pivots visited during the binary-search descent,
+         not necessarily the true nearest-neighbor in the full array, since distance-from-item is not monotonic across a sorted array.
+[==============================================================================}
+function MArrayHelper.BinaryApproxed(const item: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
+var
+  d, t: MType;
+  r: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  if (tolerance < 0) then
+    Exit;
+  s := Self.Locale;
+  {$IFDEF Double}
+    t := MaxDouble;
+  {$ELSE}
+    t := High(MType);
+  {$ENDIF}
+  while (s.start <= s.stop) do
+  begin
+    r := s.Pivot;
+    if (Self[r] = item) then
+      Exit(r);
+    d := Abs(Self[r] - item);
+    if ((d <= tolerance) and (d < t)) then
+    begin
+      t := d;
+      Result := r;
+    end;
+    if ((oAscending and (Self[r] < item)) or ((not oAscending) and (Self[r] > item))) then
+      s.start := (r + 1)
+    else
+      s.stop := (r - 1);
+  end;
+end;
+
 {==============================================================================]
   <BinaryEstimate>
   @action: Estimates the index of a given item in a sorted array using interpolation search.
