@@ -1042,7 +1042,7 @@ var
   s: TRange;
 begin
   s := Self.Locale;
-  while ((s.start <= s.stop) and (Self.Bracketed(item, s))) do
+  while ((s.start <= s.stop) and (Self.Bracketed(item, s, oAscending))) do
   begin
     Result := s.Pivot;
     case Self[Result].Contest(item, oAscending) of
