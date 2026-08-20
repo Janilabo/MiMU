@@ -29,6 +29,7 @@ function BinaryProbe(const item: MType; const probeRadius: Integer; const oAscen
 function BinaryProxy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRank(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryRanked(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryScope(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearcha(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -38,6 +39,7 @@ function BinarySearchRange(const item: MType; const rLeft, rRight: Integer; cons
 function BinarySearchSpan(const item: MType; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinarySeek(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryTrace(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUniformSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
@@ -1028,6 +1030,31 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryScope>
+  @action: Performs a binary search for item within Self, returning its index if found, or -1 otherwise. Self must be sorted according to oAscending (ascending if True, descending if False).
+  @note: Seeds the search range via Self.Locale (0..High(Self)). Each iteration, Bracketed acts as a guard: since s is index-normalized (Minimum <= Maximum) and oAscending reflects Self's actual sort direction,
+         Bracketed correctly checks whether item still falls within the value bounds of the current s regardless of search direction — once it doesn't, the loop exits and -1 is returned,
+		 even before s.start > s.stop would trigger. Contest performs the three-way, direction-aware comparison against the pivot each step. If Self is empty,
+		 Locale returns 0..-1, so the loop guard fails immediately and Result falls through to -1.
+[==============================================================================}
+function MArrayHelper.BinaryScope(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  s: TRange;
+begin
+  s := Self.Locale;
+  while ((s.start <= s.stop) and (Self.Bracketed(item, s))) do
+  begin
+    Result := s.Pivot;
+    case Self[Result].Contest(item, oAscending) of
+      0: Exit;
+      -1: s.start := (Result + 1);
+      1: s.stop := (Result - 1);
+    end;
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
   <BinarySearch>
   @action: Searches for the index of a specified item in a sorted array using binary search. Returns -1 if the item is not found.
   @note: Uses efficient XOR boolean logic (`(Self[m] < item) xor (not oAscending)`) to support both ascending and descending sorted arrays without branching or helper overhead.
@@ -1061,7 +1088,7 @@ end;
          .Contest() method. Array must be sorted consistent with .Contest()'s
          convention and oAscending. Returns the index of the matching item
          if found, or -1 if not found. .Contest() must return a value in
-         {-1, 0, 1}.
+         (-1, 0, 1).
 [==============================================================================}
 function MArrayHelper.BinarySearcha(const item: MType; const oAscending: Boolean = True): Integer; overload;
 var
@@ -1291,6 +1318,29 @@ begin
       R.stop := (M - 1);
   end;
   Result := not R.start;
+end;
+
+{==============================================================================]
+  <BinaryTrace>
+  @action: Performs a binary search for item within Self, returning its index if found, or -1 otherwise.
+  @note: Self must be sorted according to oAscending (ascending if True, descending if False).
+[==============================================================================}
+function MArrayHelper.BinaryTrace(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  s: TRange;
+begin
+  s := Self.Locale;
+  while (s.start <= s.stop) do
+  begin
+    Result := s.Pivot;
+	if (Self[Result] = item) then
+	  Exit;
+	if ((oAscending and (Self[Result] < item)) or ((not oAscending) and (Self[Result] > item))) then
+	  s.start := (Result + 1)
+	else
+	  s.stop := (Result - 1);
+  end;
+  Result := -1;
 end;
 
 {==============================================================================]

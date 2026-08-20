@@ -3,6 +3,7 @@ function Ambit: TRange; overload;
 function Demesne: TRange; overload;
 function Domain: TRange; overload;
 function Envelope: TRange; overload;
+function Locale: TRange; overload;
 function Purview: TRange; overload;
 function Scope: TRange; overload;
 {$ENDIF}
@@ -61,6 +62,20 @@ end;
 function MArrayHelper.Envelope: TRange; overload;
 begin
   Result.Create(Low(Self), High(Self));
+end;
+
+{==============================================================================]
+  <Locale>
+  @action: Returns a TRange spanning the full valid index bounds of Self, from 0 to High(Self).
+  @note: Convenience constructor for obtaining a TRange representing the entire array —
+         useful as a starting point for functions (e.g. BinaryScope) that progressively narrow an index range.
+		 If Self is empty, High(Self) is -1, so the result is <0..-1> (an inverted/empty range) rather than a valid index span —
+		 callers should account for this before using the result (e.g. checking Length(Self) = 0,
+		 or relying on consumers like BinaryScope's start <= stop guard to short-circuit correctly).
+[==============================================================================}
+function MArrayHelper.Locale: TRange; overload;
+begin
+  Result := TRange.Construct(0, High(Self));
 end;
 
 {==============================================================================]

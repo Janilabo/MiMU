@@ -4,6 +4,8 @@ function Cut(const cIndex: Integer = 0): MType; overload;
 function Del(const dIndex: Integer = 0): Integer; overload;
 function Delete(const index: Integer = 0): MArray; overload;
 function Delete(const ID: TIntegerArray): MArray; overload;
+function Deletion(const index: Integer = 0): Boolean; overload;
+function Deletion(const ID: TIntegerArray): Integer; overload;
 function Deload(var target: MArray; const clearing: Boolean = True): Integer; overload;
 function Discard(const ID: TIntegerArray): MArray; overload;
 function Drop(const item: MType; const eraseDuplicates: Boolean = True): MArray; overload;
@@ -14,6 +16,7 @@ function Erase(const item: MType; const all: Boolean): MArray; overload;
 function Erase(const items: MArray; const index: Integer = 2147483647; const all: Boolean = True): MArray; overload;
 function Erase(const items: MArray; const all: Boolean): MArray; overload;
 function Evict(const item: MType): Boolean; overload;
+function Excise(const ID: TIntegerArray; const iSorted: Boolean = True): Integer; overload;
 function Pop: MType; overload;
 function Pop(const null: MType): MType; overload;
 function Pull: MArray; overload;
@@ -123,6 +126,51 @@ begin
     else
       r := (r + 1);
   SetLength(Result, (l - r));
+end;
+
+{==============================================================================]
+  <Deletion>
+  @action: Removes the element of Self at index, shifting subsequent elements left by one and shrinking Self accordingly.
+           Returns True if the deletion occurred, False if index was out of bounds or Self was empty.
+  @note: Single-index overload; see the ID: TIntegerArray overload for batch deletion by multiple indexes.
+[==============================================================================}
+function MArrayHelper.Deletion(const index: Integer = 0): Boolean; overload;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  Result := ((h > -1) and InRange(index, 0, h));
+  if not Result then
+    Exit;
+  for i := index to (h - 1) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, (Self.Length - 1));
+end;
+
+{==============================================================================]
+  <Deletion>
+  @action: Removes the elements of Self at the indexes given in ID, compacting the remaining elements and shrinking Self accordingly. Returns the number of elements actually deleted.
+  @note: Out-of-range indexes in ID are silently ignored (per InRange guard); duplicate indexes in ID are safely idempotent. Mutates Self in place.
+[==============================================================================}
+function MArrayHelper.Deletion(const ID: TIntegerArray): Integer; overload;
+var
+  h, i: Integer;
+  d: TBooleanArray;
+begin
+  h := High(Self);
+  Result := 0;
+  if ((h = -1) or (ID.Length = 0)) then
+    Exit;
+  d.Create((h + 1), False);
+  for i := 0 to High(ID) do
+    if InRange(ID[i], 0, h) then
+	  d[ID[i]] := True;
+  for i := 0 to h do
+    if d[i] then
+	  Inc(Result)
+	else
+	  Self[i - Result] := Self[i];
+  SetLength(Self, (Self.Length - Result));
 end;
 
 {==============================================================================]
@@ -373,6 +421,40 @@ begin
   Self[p] := Self[h];
   SetLength(Self, h);
 end;
+
+{==============================================================================]
+  <Excise>
+  @action: Removes the elements of Self at the indexes given in ID, compacting the remaining elements and shrinking Self accordingly. Returns the number of distinct valid indexes actually deleted.
+  @note: Out-of-range entries in ID are silently ignored. Duplicate indexes in ID are deduplicated via d.Compress before deletion. If iSorted is False, ID is sorted first via QuickSort; if True,
+         ID is assumed to already be sorted ascending — passing an unsorted ID with iSorted = True yields undefined/incorrect results, since d.Compress relies on adjacency to detect duplicates.
+[==============================================================================}
+function MArrayHelper.Excise(const ID: TIntegerArray; const iSorted: Boolean = True): Integer; overload;
+var
+  h, s, i: Integer;
+  d: TIntegerArray;
+begin
+  h := High(Self);
+  if ((h = -1) or ID.Empty) then
+    Exit(0);
+  s := 0;
+  for i := 0 to d.Alloc(ID.Length) do
+    if InRange(ID[i], 0, h) then
+      d[s.Increase] := ID[i];
+  if (s = 0) then
+    Exit(0);
+  SetLength(d, s);
+  if not iSorted then
+    d.QuickSort;
+  d.Compress;
+  Result := d.Length;
+  s := 0;
+  for i := d[0] to h do
+    if ((s < Result) and (i = d[s])) then
+      Inc(s)
+    else
+      Self[i - s] := Self[i];
+  SetLength(Self, (Self.Length - Result));
+end;  
 
 {==============================================================================]
   <Pop>

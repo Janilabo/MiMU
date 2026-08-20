@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Aboard(const sItem: MType): Boolean; overload;
 function Ascont(const sItem: MType): Boolean; overload;
+function Bracketed(const item: MType; const sIndexes: TRange; const oAscending: Boolean = True): Boolean; overload;
 function Descont(const sItem: MType): Boolean; overload;
 {$ENDIF}
 
@@ -77,6 +78,21 @@ begin
       h := (m - 1);
   end;
   Result := False;
+end;
+
+{==============================================================================]
+  <Bracketed>
+  @action: Checks whether item lies within the bounds of the array elements at sIndexes.Minimum and sIndexes.Maximum (inclusive).
+  @note: sIndexes.Minimum/Maximum are normalized so Minimum <= Maximum as indexes into Self. oAscending describes Self's sort order,
+         not sIndexes: when Self is ascending, Self[Minimum] <= Self[Maximum] in value; when descending, Self[Minimum] >= Self[Maximum] in value.
+		 oAscending selects which comparison direction applies accordingly.
+[==============================================================================}
+function MArrayHelper.Bracketed(const item: MType; const sIndexes: TRange; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if oAscending then
+    Result := ((item >= Self[sIndexes.Minimum]) and (item <= Self[sIndexes.Maximum]))
+  else
+    Result := ((item >= Self[sIndexes.Maximum]) and (item <= Self[sIndexes.Minimum]));
 end;
 
 {==============================================================================]
