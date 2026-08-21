@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Detect(const item: MType): Integer; overload;
 function Earliest(const sItem: MType): Integer; overload;
 function Find(const ID: TRange; const item: MType): Integer; overload;
 function Find(const ID: TIntegerArray; const item: MType): Integer; overload;
@@ -25,6 +26,7 @@ function Pos(const item: MType; const index: Integer = 0): Integer; overload;
 function Pos(const items: MArray; const index: Integer = 0): Integer; overload;
 function Position(const item: MType; const index: Integer = 0): Integer; overload;
 function Position(const items: MArray; const index: Integer = 0): Integer; overload;
+function Query(const item: MType): Integer; overload;
 function Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
 function Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
 function Span: TRange; overload;
@@ -35,6 +37,27 @@ function SubarrayPosition(const pattern: MArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Detect>
+  @action: Performs a bidirectional linear search for item within Self, checking elements from both ends inward simultaneously.
+           Returns the index of the first match found (from either direction), or -1 if item is not present.
+  @note: No sort order required. Depends on Increment/Decrement returning the post-increment/post-decrement value while mutating their operand as a side effect.
+         The middle element on odd-length arrays may be compared twice (once as Self[l], once as Self[r] when l = r); harmless redundancy, not a bug.
+[==============================================================================}
+function MArrayHelper.Detect(const item: MType): Integer; overload;
+var
+  l, r: Integer;
+begin
+  l := -1;
+  r := Self.Length;
+  while (l.Increment <= r.Decrement) do
+    if (Self[l] = item) then
+      Exit(l)
+    else if (Self[r] = item) then
+      Exit(r);
+  Result := -1;
+end;
+
 {==============================================================================]
   <Earliest>
   @action: Returns the 0-based index of the earliest (lowest-indexed) 
@@ -508,6 +531,41 @@ begin
         if (Self[Result] = items[i]) then
           Exit;
   end;
+  Result := -1;
+end;
+
+{==============================================================================]
+  <Query>
+  @action: Performs a four-way linear search for item, scanning inward from both ends of each array half simultaneously.
+           Returns the index of the first match found, or -1 if item is not present.
+  @note: Self is split into two adjacent, non-overlapping halves: a/b converge within the left half, c/d converge within the right half.
+         Relies on short-circuit evaluation of the until condition — if the a/b pair has not yet converged,
+		 the c/d pair's Increment/Decrement calls do not execute that iteration,
+		 preventing one pair from advancing past unchecked territory while the other still has work remaining. No sort order required.
+[==============================================================================}
+function MArrayHelper.Query(const item: MType): Integer; overload;
+var
+  a, b, c, d, s: Integer;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit(-1);
+  a := 0;
+  c := (s div 2);
+  b := c;
+  if s.Even then
+    Dec(b);
+  d := (s - 1);
+  repeat
+    if (Self[a] = item) then
+      Exit(a);
+    if (Self[d] = item) then
+      Exit(d);
+    if (Self[b] = item) then
+      Exit(b);
+    if (Self[c] = item) then
+      Exit(c);
+  until ((a.Increment > b.Decrement) or (c.Increment > d.Decrement));
   Result := -1;
 end;
 
