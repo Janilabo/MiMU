@@ -4,7 +4,10 @@ function Disid: TIntegerArray; overload;
 function Disindex: TIntegerArray; overload;
 function Disindiced: TIntegerArray; overload;
 function Randex(const N: Integer = 1): TIntegerArray; overload;
-function Randexed: TIntegerArray; overload;
+function Randexal(const N: Integer = 1): TIntegerArray; overload;
+function Randexed(const N: Integer = 1): TIntegerArray; overload;
+function Randexify: TIntegerArray; overload;
+function Randice(const N: Integer = 1): TIntegerArray; overload;
 function Randiced: TIntegerArray; overload;
 function Randices: TIntegerArray; overload;
 function Randicing: TIntegerArray; overload;
@@ -108,13 +111,74 @@ begin
 end;
 
 {==============================================================================]
+  <Randexal>
+  @action: Returns an array of `N` unique random indices drawn from the range
+           `0..High(Self)`, without replacement, using a backward-filling
+           rejection-sampling strategy.
+  @note: Internally maintains a sorted auxiliary list (`r`) via `BinaryGrow`
+         to test each new candidate for uniqueness. Each successful insertion
+         costs O(log N) for the binary search plus O(N) for shifting elements
+         in the auxiliary list, resulting in an **overall worst‑case complexity
+         of O(N²)** — therefore, this is **only suitable for very small `N`**
+         (typically < 500). The result array is filled from the highest index
+         downward, which does not affect randomness (the final order remains a
+         uniformly random permutation of the selected subset).
+[==============================================================================}
+function MArrayHelper.Randexal(const N: Integer = 1): TIntegerArray; overload;
+var
+  i, s, l: Integer;
+  r: TIntegerArray;
+begin
+  s := Self.Length;
+  l := Result.Alloc(Min(Max(0, N), s));
+  if (l = -1) then
+    Exit;
+  repeat
+    Result[l] := Random(s);
+    if r.BinaryGrow(Result[l]) then
+      Dec(l);
+  until (l = -1);
+end;
+
+{==============================================================================]
   <Randexed>
+  @action: Selects `N` unique random indices from the array without building
+           the full index array first.
+  @note: Uses a dictionary/hash set for collision detection. Ideal when N << Length.
+         Time O(N) expected, memory O(N).
+[==============================================================================}
+function MArrayHelper.Randexed(const N: Integer = 1): TIntegerArray; overload;
+var
+  s, i: Integer;
+  u: specialize TDictionary<Integer, Boolean>;
+begin
+  if (N < 1) then
+    Exit([]);
+  s := Self.Length;
+  if (N >= s) then
+    Exit(Self.Randices);
+  u := specialize TDictionary<Integer, Boolean>.Create;
+  try
+    for i := 0 to Result.Alloc(N) do
+    begin
+      repeat
+        Result[i] := Random(s);
+      until not u.ContainsKey(Result[i]);
+      u.Add(Result[i], True);
+    end;
+  finally
+    u.Free;
+  end;
+end;
+
+{==============================================================================]
+  <Randexify>
   @action: Returns a randomly shuffled array of Self's indices (0..High(Self)), each index appearing exactly once.
   @note: Uses rejection sampling: repeatedly generates a random candidate index and retries on collision (tracked via a used-flags array) until an unused one is found.
          Unlike Disindiced's swap-based Fisher-Yates (strict O(n)), this degrades toward the classic coupon-collector bound as the array fills — expected O(n log n) comparisons,
 		 with a longer tail for large arrays. Prefer Disindiced unless this specific mechanism is needed.
 [==============================================================================}
-function MArrayHelper.Randexed: TIntegerArray; overload;
+function MArrayHelper.Randexify: TIntegerArray; overload;
 var
   s, i, r: Integer;
   u: TBooleanArray;
@@ -130,6 +194,33 @@ begin
     until not u[r];
     u[r] := True;
     Result[i] := r;
+  end;
+end;
+
+{==============================================================================]
+  <Randice>
+  @action: Generates an array of N randomly selected, unique element indices 
+           from the current array without replacement.
+  @param:  N [Integer] Number of random unique indices to select (Default = 1).
+           Clamped automatically between 0 and Self.Length.
+  @return: TIntegerArray containing the selected zero-based indices.
+  @note:   Uses a Partial Fisher-Yates (Knuth) Shuffle algorithm offering 
+           guaranteed O(N) time efficiency and deterministic random sampling.
+[==============================================================================}
+function MArrayHelper.Randice(const N: Integer = 1): TIntegerArray; overload;
+var
+  s, i: Integer;
+  r: TIntegerArray;
+begin
+  s := Self.Length;
+  if (Result.SetSize(Min(Max(0, N), s)) = 0) then
+    Exit;
+  for i := 0 to r.Alloc(s) do
+    r[i] := i;
+  for i := 0 to High(Result) do
+  begin
+    r.Switch(i, (i + Random(s - i)));
+    Result[i] := r[i];
   end;
 end;
 

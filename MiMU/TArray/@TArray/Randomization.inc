@@ -721,7 +721,7 @@ begin
   r := Result.Length;
   if (r > 1) then
   for i := 1 to IfThen((swaps < 0), (r * 10), swaps) do
-    if Randice(r, a, b) then
+    if Randraw(r, a, b) then
       Result.Exch(a, b);
 end;
 

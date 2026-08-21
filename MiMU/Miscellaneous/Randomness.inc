@@ -32,7 +32,7 @@ function R1_9: Byte; overload;
 function R1_99: Byte; overload;
 function R10_99: Byte; overload;
 function Rand(const R: Integer = 2): Integer; overload;
-function Randice(const N: Integer; var A, B: Integer): Boolean; overload;
+function Randraw(const N: Integer; var A, B: Integer): Boolean; overload;
 function RandDigit: Byte; overload;
 function Randify(const R: Integer = 2): Integer; overload;
 function RandIn(const R: Integer = 2; const N: Integer = 2): Integer; overload;
@@ -657,16 +657,16 @@ begin
 end;
 
 {==============================================================================]
-  <Randice>
+  <Randraw>
   @action: Draws two independent random integers from [0, N) into A and B;
            returns True if they differ.
   @note: A and B are always assigned regardless of the result. N follows
          Random()'s convention: the upper bound is exclusive. Logically the
-         inverse of Randouble (Randice = not Randouble for the same draw),
+         inverse of Randouble (Randraw = not Randouble for the same draw),
          kept as a separate named function rather than a negation for
          call-site readability.
 [==============================================================================}
-function Randice(const N: Integer; var A, B: Integer): Boolean; overload;
+function Randraw(const N: Integer; var A, B: Integer): Boolean; overload;
 begin
   A := Random(N);
   B := Random(N);
