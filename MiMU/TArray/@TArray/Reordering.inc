@@ -9,6 +9,7 @@ function Movements(const target: MArray): TConnectionArray; overload;
 function Reposition(const oldIndex, newIndex: Integer): Boolean; overload;
 function Svvap(var target: MArray): MArray; overload;
 function Swapped(var target: MArray): Integer; overload;
+procedure Switch(const a, b: Integer); overload;
 function Trade(var b: MArray): Integer; overload;
 {$ENDIF}
 
@@ -247,6 +248,22 @@ begin
   Self := target;
   target := t;
   Result := (Self.Size + target.Size);
+end;
+
+{==============================================================================]
+  <Switch>
+  @action: Swaps the elements of Self at indexes a and b.
+  @note: Mutates Self in place. Unsafe for efficiency: a and b are not bounds-checked;
+         callers must ensure both indexes are valid (0..High(Self)),
+		 as out-of-range values will raise a range-check error or, with range checking disabled, silently corrupt memory
+[==============================================================================}
+procedure MArrayHelper.Switch(const a, b: Integer); overload;
+var
+  s: MType;
+begin
+  s := Self[a];
+  Self[a] := Self[b];
+  Self[b] := s;
 end;
 
 {==============================================================================]

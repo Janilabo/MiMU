@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Defixed: TIntegerArray; overload;
 function Disid: TIntegerArray; overload;
 function Disindex: TIntegerArray; overload;
 function Disindiced: TIntegerArray; overload;
@@ -7,9 +8,38 @@ function Randexed: TIntegerArray; overload;
 function Randiced: TIntegerArray; overload;
 function Randices: TIntegerArray; overload;
 function Randicing: TIntegerArray; overload;
+function Refixed: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Defixed>
+  @action: Returns a randomly generated derangement of Self's indices (0..High(Self)) — a permutation in which no index appears at its own original position.
+  @note: Starts from the identity permutation and repeatedly resolves fixed points by swapping each one with a randomly chosen index, rescanning until none remain.
+         No derangement exists for a single-element array (n = 1), so that case returns the identity [0] unavoidably.
+         Not a uniform-random derangement — the resolution order and rescan-from-start approach bias the resulting distribution;
+         use Deranged (Sattolo's algorithm) instead if uniform-among-derangements matters. Less efficient than Deranged due to full rescans after each fix.
+[==============================================================================}
+function MArrayHelper.Defixed: TIntegerArray; overload;
+var
+  l, i: Integer;
+  f: Boolean;
+begin
+  Result := Self.Indexes;
+  l := Result.Length;
+  if (l > 1) then
+  repeat
+    f := False;
+    for i := 0 to (l - 1) do
+      if (Result[i] = i) then
+      begin
+        Result.Switch(i, Random(l));
+        f := True;
+        Break;
+      end;
+  until not f;
+end;
+
 {==============================================================================]
   <Disid>
   @action: Returns a randomly shuffled array of Self's indices (0..High(Self)),
@@ -140,5 +170,34 @@ begin
     k[i] := Random;
   end;
   Result.QuickSortWeighted(k);
+end;
+
+{==============================================================================]
+  <Refixed>
+  @action: Returns a randomly generated derangement of Self's indices (0..High(Self)) — a permutation in which no index appears at its own original position.
+  @note: Repeatedly generates a complete Fisher-Yates shuffle and checks whether it happens to have zero fixed points, retrying with a fresh full shuffle if any are found.
+         No derangement exists for a single-element array (n = 1), so that case returns the identity [0] unavoidably. Expected number of shuffle attempts converges to e (~2.718) for n >= ~5,
+		 per derangement probability theory. Distinct from Defixed (which repairs individual fixed points in place rather than discarding and reshuffling the whole array) and Deranged (Sattolo's algorithm,
+		 a single deterministic O(n) pass with no retries).
+[==============================================================================}
+function MArrayHelper.Refixed: TIntegerArray; overload;
+var
+  h, i: Integer;
+  o: Boolean;
+begin
+  Result := Self.Indexes;
+  h := High(Result);
+  if (h > 0) then
+  repeat
+    for i := h downto 1 do
+      Result.Switch(i, Random(i + 1));
+    o := True;
+    for i := 0 to h do
+      if (Result[i] = i) then
+      begin
+        o := False;
+        Break;
+      end;
+  until o;
 end;
 {$ENDIF}
