@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Detect(const item: MType): Integer; overload;
+function Dredge(const item: MType): Integer; overload;
 function Earliest(const sItem: MType): Integer; overload;
 function Find(const ID: TRange; const item: MType): Integer; overload;
 function Find(const ID: TIntegerArray; const item: MType): Integer; overload;
@@ -29,6 +30,7 @@ function Position(const items: MArray; const index: Integer = 0): Integer; overl
 function Query(const item: MType): Integer; overload;
 function Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
 function Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
+function Rout(const item: MType): Integer; overload;
 function Span: TRange; overload;
 function Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload;
 function Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
@@ -56,6 +58,33 @@ begin
       Exit(l)
     else if (Self[r] = item) then
       Exit(r);
+  Result := -1;
+end;
+
+{==============================================================================]
+  <Dredge>
+  @action: Searches for item within Self by probing indexes in a randomly generated order, without repeats.
+           Returns the index of item if found, or -1 if item is not present.
+  @note: Uses an incremental partial Fisher-Yates via IO: each step picks a random index r within the still-active range 0..h,
+         captures s[r]'s current value (the next index to probe) while simultaneously overwriting s[r] with s[h]'s value,
+         then shrinks the active range. Unlike a textbook full swap, s[h] itself is never restored with the old s[r] value —
+         this is safe because slot h falls outside the active range for all subsequent iterations. No sort order required.
+         Depends on Decrement mutating h and returning its post-decrement value.
+[==============================================================================}
+function MArrayHelper.Dredge(const item: MType): Integer; overload;
+var
+  h: Integer;
+  s: TIntegerArray;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit(-1);
+  s := Self.Indexes;
+  repeat
+    Result := s[Random(h + 1)].IO(s[h]);
+    if (Self[Result] = item) then
+      Exit;
+  until (h.Decrement < 0);
   Result := -1;
 end;
 
@@ -635,6 +664,26 @@ begin
       Result[l - 1].Create(i, ((i + s) - 1));
     end;
   end;
+end;
+
+{==============================================================================]
+  <Rout>
+  @action: Searches for item within Self by probing indexes in a fully randomized order, without repeats.
+           Returns the index of item if found, or -1 if item is not present.
+  @note: Generates a complete Fisher-Yates shuffle of all indices upfront via Disindex, then walks it linearly.
+         Unlike Dredge's incremental partial shuffle, this always pays the full O(n) shuffle cost regardless of how early a match is found — simpler,
+         but less efficient when an early exit is likely.
+[==============================================================================}
+function MArrayHelper.Rout(const item: MType): Integer; overload;
+var
+  i: Integer;
+  s: TIntegerArray;
+begin
+  s := Self.Disindex;
+  for i := 0 to High(s) do
+    if (Self[s[i]] = item) then
+      Exit(s[i]);
+  Result := -1;
 end;
 
 {==============================================================================]
