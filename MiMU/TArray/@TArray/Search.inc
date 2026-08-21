@@ -34,6 +34,7 @@ function Span(const subArray: MArray; const index: Integer = 2147483647): TRange
 function Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
 function SubarrayLocation(const pattern: MArray): Integer; overload;
 function SubarrayPosition(const pattern: MArray): Integer; overload;
+function WhereIs(const item: MType): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -761,6 +762,57 @@ begin
     if f then
       Exit(i);
   end;
+  Result := -1;
+end;
+
+{==============================================================================]
+  <WhereIs>
+  @action: Performs an eight-way linear search for item, splitting Self into four zones,
+           each scanned by a pair of pointers converging inward simultaneously.
+		   Returns the index of item if found, or -1 if item is not present.
+  @note: Self is divided into four contiguous, non-overlapping zones (sizes differ by at most 1 when Length is not divisible by 4).
+         Each zone's pair only checks/advances while it still has unchecked indices remaining, tracked via an independent per-zone active flag — unlike Query,
+		 no shared/chained exit condition links the zones, so there is no risk of one zone's convergence curtailing another's remaining work.
+		 Depends on Increment/Decrement returning the post-increment/post-decrement value while mutating their operand as a side effect. No sort order required.
+[==============================================================================}
+function MArrayHelper.WhereIs(const item: MType): Integer; overload;
+var
+  n, i, z, r, k, p: Integer;
+  a, b: array[0..3] of Integer;
+  u: array[0..3] of Boolean;
+  s: Boolean;
+begin
+  n := Self.Length;
+  if (n = 0) then
+    Exit(-1);
+  z := (n div 4);
+  r := (n mod 4);
+  p := 0;
+  for i := 0 to 3 do
+  begin
+    if (i < r) then
+      k := (z + 1)
+    else
+      k := z;
+    a[i] := p;
+    b[i] := (p + k - 1);
+    Inc(p, k);
+    u[i] := (a[i] <= b[i]);
+  end;
+  repeat
+    s := False;
+    for i := 0 to 3 do
+    begin
+      if not u[i] then
+        Continue;
+      s := True;
+      if (Self[a[i]] = item) then
+        Exit(a[i]);
+      if ((a[i] <> b[i]) and (Self[b[i]] = item)) then
+        Exit(b[i]);
+      u[i] := (a[i].Increment <= b[i].Decrement);
+    end;
+  until not s;
   Result := -1;
 end;
 {$ENDIF}
