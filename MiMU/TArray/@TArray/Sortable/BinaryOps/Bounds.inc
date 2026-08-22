@@ -45,8 +45,10 @@ function BinaryUpperBound(const x: MType; const aAscending: Boolean = True): Int
 function BinaryUpperBoundary(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLeftpos(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLefty(const x: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryPosLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightpos(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRighty(const x: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryPosRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1759,6 +1761,32 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryPosLeft>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function MArrayHelper.BinaryPosLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  L, R, M: Integer;
+begin
+  Result := -1;
+  L := 0;
+  R := High(Self);
+  while (L <= R) do
+  begin
+    M := ((L + R) shr 1);
+    if (Self[M] = item) then
+    begin
+      Result := M;
+      R := (M - 1);
+    end else if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      L := (M + 1)
+    else
+      R := (M - 1);
+  end;
+end;
+
+{==============================================================================]
   <BinaryRightpos>
   @action: Finds the rightmost valid index at which item currently occupies
            in a sorted array — the last index whose element does not sort
@@ -1820,5 +1848,31 @@ begin
   end;
   if ((r.start > 0) and (Self[r.start - 1] = x)) then
     Result := (r.start - 1);
+end;
+
+{==============================================================================]
+  <BinaryPosRight>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function MArrayHelper.BinaryPosRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  L, R, M: Integer;
+begin
+  Result := -1;
+  L := 0;
+  R := High(Self);
+  while (L <= R) do
+  begin
+    M := ((L + R) shr 1);
+    if (Self[M] = item) then
+    begin
+      Result := M;
+      L := (M + 1);
+    end else if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      L := (M + 1)
+    else
+      R := (M - 1);
+  end;
 end;
 {$ENDIF}

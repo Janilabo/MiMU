@@ -8,6 +8,7 @@ function BinaryCountage(const item: MType; const oAscending: Boolean = True): In
 function BinaryCounted(const x: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCounter(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCountFor(const x: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryCounting(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCountOf(const x: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryEncounter(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFrequency(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -17,6 +18,7 @@ function BinaryOccurrence(const item: MType; const oAscending: Boolean = True): 
 function BinaryOccurrences(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryOccurrency(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryQuantity(const x: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryRecur(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryTally(const x: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
@@ -345,6 +347,21 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryCounting>
+  @action: Returns the number of occurrences of `item` in a sorted array, found via binary boundary search rather than a linear scan.
+  @note: Self must already be sorted according to `oAscending`; an unsorted or mis-ordered array yields undefined results.
+         If `item` is absent, `BinaryPosLeft` returns -1, the length calculation is skipped,
+		 and the trailing `Inc` lands the result on 0 — so the "not found" case falls out naturally rather than needing an explicit branch.
+[==============================================================================}
+function MArrayHelper.BinaryCounting(const item: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := Self.BinaryPosLeft(item, oAscending);
+  if (Result > -1) then
+    Result := (Self.BinaryPosRight(item, oAscending) - Result);
+  Inc(Result);
+end;
+
+{==============================================================================]
   <BinaryCountOf>
   @action: Counts the number of occurrences of a specific integer value
            in a sorted array. Uses a single binary search to locate any
@@ -588,6 +605,30 @@ begin
     end;
   end;
   Result := ((L - F) + 1);
+end;
+
+{==============================================================================]
+  <BinaryRecur>
+  @action: Counts the total number of duplicate/matching items matching item in a sorted array using recursive binary search.
+  @note: This implementation will stack overflow or trigger an infinite loop if duplicate values are adjacent.
+[==============================================================================}
+function MArrayHelper.BinaryRecur(const item: MType; const oAscending: Boolean = True): Integer; overload;
+  function R(lo, hi: Integer): Integer;
+  var
+    m: Integer;
+  begin
+    if (lo > hi) then
+      Exit(0);
+    m := (lo + (hi - lo) div 2);
+    if (Self[m] = item) then
+      Result := (1 + R(lo, (m - 1)) + R((m + 1), hi))
+    else if (Self[m].Contest(item, oAscending) < 0) then
+      Result := R((m + 1), hi)
+    else
+      Result := R(lo, (m - 1));
+  end;
+begin
+  Result := R(0, High(Self));
 end;
 
 {==============================================================================]
