@@ -49,6 +49,9 @@ function BinaryPosLeft(const item: MType; const oAscending: Boolean = True): Int
 function BinaryRightpos(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRighty(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryPosRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
+
+function BisectLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BisectRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1762,8 +1765,15 @@ end;
 
 {==============================================================================]
   <BinaryPosLeft>
-  @action: ?
-  @note: ?
+  @action: Returns the index of the leftmost (first) occurrence of `item` in
+           a sorted array, or -1 if `item` is not present.
+  @note: - Requires the array to be sorted according to `oAscending`.
+         - On each match, records the index and keeps searching left
+           (R := M - 1) in case an earlier occurrence exists — same
+           narrow-on-hit mechanism as BinaryAmount/BinaryQuantity/BinaryTally.
+         - Unlike BisectLeft, returns -1 rather than an insertion point when
+           `item` is absent — this is a "does it exist, and where" query,
+           not an insertion-point query.
 [==============================================================================}
 function MArrayHelper.BinaryPosLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
 var
@@ -1852,8 +1862,16 @@ end;
 
 {==============================================================================]
   <BinaryPosRight>
-  @action: ?
-  @note: ?
+  @action: Returns the index of the rightmost (last) occurrence of `item` in
+           a sorted array, or -1 if `item` is not present.
+  @note: - Requires the array to be sorted according to `oAscending`.
+         - Mirror image of BinaryPosLeft: on each match, records the index
+           and keeps searching right (L := M + 1) in case a later occurrence
+           exists.
+         - Together, BinaryPosLeft/BinaryPosRight are exactly what
+           BinaryCounting wraps, and exactly what BinaryAmount/
+           BinaryQuantity/BinaryTally reimplement inline as a single fused
+           two-search body rather than delegating to these two.
 [==============================================================================}
 function MArrayHelper.BinaryPosRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
 var
@@ -1873,6 +1891,130 @@ begin
       L := (M + 1)
     else
       R := (M - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BisectLeft>
+  @action: Returns the leftmost insertion point for `item` in a sorted array —
+           the index of the first element not less than `item` (ascending)
+           or not greater than `item` (descending). Matches Python's
+           bisect_left semantics: if `item` is present, returns the index of
+           its first occurrence; if absent, returns where it would need to be
+           inserted to keep the array sorted.
+  @note: - Requires the array to be sorted according to `oAscending`.
+         - Unlike most Binary* functions in this family, never returns -1 —
+           the result is always a valid insertion index in [0, Length].
+         - Internally performs an initial binary search for any match, then
+           (if found) a second binary search restricted to [0, p] to find the
+           true left edge. If absent, degrades to a single binary search plus
+           a clamp.
+         - Result - BisectLeft difference against BisectRight gives an
+           occurrence count directly, with no -1 handling required.
+[==============================================================================}
+function MArrayHelper.BisectLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  l, h, m, p, s: Integer;
+begin
+  s := Self.Length;
+  l := 0;
+  h := (s - 1);
+  p := -1;
+  while (l <= h) do
+  begin
+    m := (l + (h - l) shr 1);
+    if (Self[m] = item) then
+    begin
+      p := m;
+      Break;
+    end else if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := (m - 1);
+  end;
+  case (p = -1) of
+    False:
+    begin
+      l := 0;
+      h := p;
+      while (l < h) do
+      begin
+        m := (l + (h - l) shr 1);
+        if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+          l := (m + 1)
+        else
+          h := m;
+      end;
+      Result := l;
+    end;
+    True:
+    if l < 0 then
+      Result := 0
+    else if (l > s) then
+      Result := s
+    else
+      Result := l;
+  end;
+end;
+
+{==============================================================================]
+  <BisectRight>
+  @action: Returns the rightmost insertion point for `item` in a sorted array —
+           the index one past the last element equal to `item`. Matches
+           Python's bisect_right semantics: if `item` is present, returns the
+           index just after its last occurrence; if absent, returns the same
+           insertion point as BisectLeft would.
+  @note: - Requires the array to be sorted according to `oAscending`.
+         - Never returns -1; result is always in [0, Length].
+         - Internally performs an initial binary search for any match, then
+           (if found) a second binary search restricted to [p, Length] using
+           <=/>= (rather than BisectLeft's strict </>)  to find the true
+           right edge.
+         - BisectRight(item) - BisectLeft(item) gives the occurrence count of
+           item with no separate counting function needed.
+[==============================================================================}
+function MArrayHelper.BisectRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  l, h, m, p, s: Integer;
+begin
+  s := Self.Length;
+  l := 0;
+  h := (s - 1);
+  p := -1;
+  while (l <= h) do
+  begin
+    m := (l + (h - l) shr 1);
+    if (Self[m] = item) then
+    begin
+      p := m;
+      Break;
+    end else if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := (m - 1);
+  end;
+  case (p = -1) of
+    False:
+    begin
+      l := p;
+      h := s;
+      while (l < h) do
+      begin
+        m := (l + (h - l) shr 1);
+        if ((oAscending and (Self[m] <= item)) or ((not oAscending) and (Self[m] >= item))) then
+          l := (m + 1)
+        else
+          h := m;
+      end;
+      Result := l;
+    end;
+    True:
+    if (l < 0) then
+      Result := 0
+    else if (l > s) then
+      Result := s
+    else
+      Result := l;
   end;
 end;
 {$ENDIF}

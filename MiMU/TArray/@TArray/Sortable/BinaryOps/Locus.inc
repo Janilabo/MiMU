@@ -8,6 +8,9 @@ function BinarySpanning(const item: MType; const oAscending: Boolean = True): TR
 function BinarySpanOf(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryWindow(const item: MType; const aAscending: Boolean = True): TRange; overload;
 function BinaryZone(const item: MType; const aAscending: Boolean = True): TRange; overload;
+
+function Bisected(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function Bisection(const item: MType; const oAscending: Boolean = True): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -370,5 +373,81 @@ begin
         R.stop := (M - 1);
     end;
   end;
+end;
+
+{==============================================================================]
+  <Bisected>
+  @action: Returns the full insertion range of `item` in a sorted array as a
+           TRange, computing both edges in one interleaved pass rather than
+           two sequential searches. start is the leftmost valid insertion
+           point (bisect_left semantics: Contest < 0 moves right); stop is
+           the rightmost valid insertion point (bisect_right semantics:
+           Contest <= 0 moves right). If `item` is absent, start = stop = the
+           single insertion point that keeps the array sorted; if present,
+           the range spans every existing occurrence.
+  @note: - Requires the array to be sorted according to `oAscending`.
+         - Never returns a -1 sentinel in either field — both bounds are
+           always valid indices in [0, Length].
+         - The two searches (a/b for the left edge, x/y for the right edge)
+           run interleaved in a single while loop rather than sequentially;
+           each converges independently and the loop continues until both
+           have finished (a < b) or (x < y)). Total comparisons are the same
+           as calling BisectLeft then BisectRight separately — this changes
+           the order of operations, not the amount of work.
+         - Result.Size (stop - start) gives the occurrence count directly.
+[==============================================================================}
+function MArrayHelper.Bisected(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  a, b, c, r, x, y, z: Integer;
+begin
+  a := 0;
+  b := Self.Length;
+  x := a;
+  y := b;
+  while ((a < b) or (x < y)) do
+  begin
+    if (a < b) then
+    begin
+      c := (a + (b - a) div 2);
+      r := Self[c].Contest(item, oAscending);
+      if (r < 0) then
+        a := (c + 1)
+      else
+        b := c;
+    end;
+    if (x < y) then
+    begin
+      z := (x + (y - x) div 2);
+      r := Self[z].Contest(item, oAscending);
+      if (r <= 0) then
+        x := (z + 1)
+      else
+        y := z;
+    end;
+  end;
+  Result := TRange.Construct(a, x);
+end;
+
+{==============================================================================]
+  <Bisection>
+  @action: Returns the full insertion range of `item` in a sorted array as a
+           TRange — start is BisectLeft (first valid insertion point), stop
+           is BisectRight (last valid insertion point). If `item` is absent,
+           start = stop = the single insertion point that keeps the array
+           sorted. If present, the range spans every existing occurrence.
+  @note: - Requires the array to be sorted according to `oAscending`.
+         - Never returns a -1 sentinel in either field — both bounds are
+           always valid indices in [0, Length], consistent with
+           BisectLeft/BisectRight's insertion-point semantics.
+         - r.Size (stop - start) gives the occurrence count directly, making
+           this a single-call replacement for pairing BisectLeft + BisectRight
+           at call sites that need both.
+         - Distinct in kind from Bisect (alias for BisectRight, one index) —
+           Bisection is the noun/aggregate form, returning the whole range
+           rather than a single edge.
+[==============================================================================}
+function MArrayHelper.Bisection(const item: MType; const oAscending: Boolean = True): TRange; overload;
+begin
+  Result := TRange.Construct(Self.BisectLeft(item, oAscending), Self.BisectRight(item, oAscending));
 end;
 {$ENDIF}
