@@ -26,6 +26,7 @@ function Stationary: Boolean; overload;
 function Symmetrical: Boolean; overload;
 function Uniform: Boolean; overload;
 function Uniform(const item: MType): Boolean; overload;
+function Unisole: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -488,6 +489,29 @@ begin
     if (Self[i] <> Self[h - i]) then
       Exit(False);
   Result := True;
+end;
+
+{==============================================================================]
+  <Unisole>
+  @action: Returns true if arr contains any duplicates in it.
+  @note: None.
+[==============================================================================}
+function MArrayHelper.Unisole: Boolean; overload;
+var
+  d: specialize TDictionary<MType, Boolean>;
+  s: MType;
+begin
+  d := specialize TDictionary<MType, Boolean>.Create;
+  try
+    for s in Self do
+      if d.ContainsKey(s) then
+        Exit(False)
+      else
+        d.Add(s, True);
+    Result := True;
+  finally
+    d.Free;
+  end;
 end;
 
 {==============================================================================]
