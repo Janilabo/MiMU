@@ -1,12 +1,48 @@
 {$IFDEF HELPERS}
+function Order: Integer; overload;
 function Orderly: Boolean; overload;
 function Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
-function Order: Integer; overload;
+function Ordering(const oAscending: Boolean = True): Boolean; overload;
+function Orderion: Boolean; overload;
 function InOrder(const aAscending: Boolean = True): Boolean; overload;
 function OnOrder: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Order>
+  @action: Returns the direction which way array goes
+  @note: -1 = DESCENDING, 0=NO ORDER OR MIXED ARRAY, 1=ASCENDING
+         [1,2,3] => 1 [1,1,1] => 1 [1,0,1] => 0 [3,2,1] => -1
+[==============================================================================}
+function MArrayHelper.Order: Integer; overload;
+var
+  i, l: Integer;
+  a, d: Boolean;
+begin
+  case Self.Length of
+    0: Exit(0);
+    1: Exit(1);
+  end;
+  a := True;
+  d := True;
+  for i := 1 to High(Self) do
+  begin
+    if (Self[i] < Self[i - 1]) then
+      a := False
+    else if (Self[i] > Self[i - 1]) then
+      d := False;
+    if not (a or d) then
+      Exit(0);
+  end;
+  if a then
+    Result := 1
+  else if d then
+    Result := -1
+  else
+    Result := 0;
+end;
+
 {==============================================================================]
   <Orderly>
   @action: Returns true if array arr is in ascending AND/OR descending order.
@@ -46,39 +82,60 @@ begin
 end;
 
 {==============================================================================]
-  <Order>
-  @action: Returns the direction which way array goes
-  @note: -1 = DESCENDING, 0=NO ORDER OR MIXED ARRAY, 1=ASCENDING
-         [1,2,3] => 1 [1,1,1] => 1 [1,0,1] => 0 [3,2,1] => -1
+  <Ordering>
+  @action: Verifies whether the entire array is sorted according to the
+           specified order (ascending or descending). Returns True if the
+           array respects that order, False otherwise.
+  @note: - Arrays of length 0 or 1 are considered trivially sorted.
+         - Equality is allowed (non‑strict monotonicity). Thus, adjacent
+           equal elements do not break the order.
+         - Complexity: O(n) – linear scan.
+         - Useful as a precondition check before calling any binary‑search
+           method (since they all assume a sorted array). Can be used in
+           debug assertions or input validation.
+         - The name "Ordering" suggests the function is checking the
+           array's order property; alternative common names for this
+           routine are `IsSorted`, `IsOrdered`, or `Sorted`.
 [==============================================================================}
-function MArrayHelper.Order: Integer; overload;
+function MArrayHelper.Ordering(const oAscending: Boolean = True): Boolean; overload;
 var
-  i, l: Integer;
-  a, d: Boolean;
+  i: Integer;
 begin
-  l := Self.Length;
-  case l of
-    0: Exit(0);
-    1: Exit(1);
-  end;
-  a := True;
-  d := True;
-  for i := 1 to (l - 1) do
+  for i := 0 to (Self.Length - 2) do
+    if ((oAscending and (Self[i] > Self[i + 1])) or ((not oAscending) and (Self[i] < Self[i + 1]))) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Orderion>
+  @action: Returns True if the array is monotonic — either entirely
+           non-decreasing or entirely non-increasing throughout. Returns
+           False as soon as both an ascending pair and a descending pair
+           have been observed, meaning the sequence changes direction.
+  @note: Ordered-only tier (relies on `<`/`>`). Equal adjacent elements
+         are neutral — they don't count toward either direction, so a
+         sequence with repeated values can still register as monotonic.
+         Single-pass, early-exits the moment direction reverses rather
+         than scanning to completion.
+[==============================================================================}
+function MArrayHelper.Orderion: Boolean; overload;
+var
+  i, a, d: Integer;
+begin
+  a := 0;
+  d := 0;
+  for i := 1 to High(Self) do
   begin
     if (Self[i] < Self[i - 1]) then
-      a := False
+      Inc(a)
     else if (Self[i] > Self[i - 1]) then
-      d := False;
-    if not (a or d) then
-      Exit(0);
+      Inc(d);
+    if ((a * d) > 0) then
+      Exit(False);
   end;
-  if a then
-    Result := 1
-  else if d then
-    Result := -1
-  else
-    Result := 0;
-end;
+  Result := True;
+end; 
 
 {==============================================================================]
   <InOrder>

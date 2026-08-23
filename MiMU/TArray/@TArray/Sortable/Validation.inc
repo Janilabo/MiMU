@@ -4,6 +4,9 @@ function Echo: Boolean; overload;
 function Injective(const isSorted: Boolean = False): Boolean; overload;
 function IsInjective(const isSorted: Boolean = False): Boolean; overload;
 function Pure(const allowed: MArray): Boolean; overload;
+function Unial: Boolean; overload;
+function Unicity: Boolean; overload;
+function Uniqular: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -149,6 +152,85 @@ begin
   a := allowed.QuickSorted;
   for i := 0 to High(Self) do
     if not a.BinaryContains(Self[i]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Unial>
+  @action: Returns True if no two elements in the array are equal to one
+         another; False if any duplicate value exists.
+  @note: Non-mutating — operates on a sorted copy, `Self` is left untouched.
+         Ordered-only tier (relies on `<` for the sort and `=` for the
+         adjacency check).
+[==============================================================================}
+function MArrayHelper.Unial: Boolean; overload;
+var
+  s: MArray;
+  i: Integer;
+begin
+  if (Self.Length > 1) then
+    s := Self.QuickSorted;
+  for i := 1 to High(Self) do
+    if (s[i - 1] = s[i]) then
+      Exit(False);
+  Result := True; 
+end;
+
+{==============================================================================]
+  <Unicity>
+  @action: Returns True if no two elements in the array are equal to one
+           another; False if any duplicate value exists.
+  @note: Ordered-only tier. In-place insertion sort on a cloned copy,
+         checking for an equal predecessor at each insertion point and
+         exiting the instant one is found — no separate sort pass or
+         post-hoc adjacency scan. O(n²) worst case, but no heap/set
+         allocation and cheap for small or near-sorted arrays.
+[==============================================================================}
+function MArrayHelper.Unicity: Boolean; overload;
+var
+  s: MArray;
+  k: MType;
+  i, j: Integer;
+begin
+  if (Self.Length > 1) then
+    s := Self.Cloned;
+  for i := 1 to High(Self) do
+  begin
+    k := s[i];
+    j := (i - 1);
+    while ((j >= 0) and (s[j] > k)) do
+    begin
+      s[j + 1] := s[j];
+      Dec(j);
+    end;
+    if ((j >= 0) and (s[j] = k)) then
+      Exit(False);
+    s[j + 1] := k;
+  end;
+  Result := True;
+end;
+
+{==============================================================================]
+  <Uniqular>
+  @action: Returns True if no two elements in the array are equal to one
+           another; False if any duplicate value exists.
+  @note: Ordered-only tier. Builds a sorted array incrementally via
+         `BinarySupply`, which binary-searches for the correct insertion
+         point and returns False if the value is already present rather
+         than inserting a duplicate. O(n log n), no separate sort pass
+         or post-hoc adjacency scan — the uniqueness check and the sort
+         happen in the same operation.
+[==============================================================================}
+function MArrayHelper.Uniqular: Boolean; overload;
+var
+  s: MArray;
+  i: Integer;
+begin
+  if (Self.Length > 1) then
+    s := [Self[0]];
+  for i := 1 to High(Self) do
+    if not s.BinarySupply(Self[i]) then
       Exit(False);
   Result := True;
 end;

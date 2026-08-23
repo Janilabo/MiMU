@@ -41,6 +41,8 @@ function BinarySeek(const item: MType; const aAscending: Boolean = True): Intege
 function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryTrace(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUniformSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+
+function BisectNth(const item: MType; const N: Integer = 1; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1382,5 +1384,21 @@ begin
   if ((R.start <= R.stop) and (Self[R.start] = item)) then
     Exit(R.start);
   Result := -1;
+end;
+
+{==============================================================================]
+  <BisectNth>
+  @action: Returns the index of the N-th occurrence (1-based) of item in a sorted array,
+           found by offsetting N - 1 places from BisectLeft's insertion point; returns -1 if N < 1,
+		   if the offset position falls outside the array, or if that position doesn't actually hold item (i.e. fewer than N occurrences exist).
+  @note: Requires Self to already be sorted consistently with oAscending, matching BisectLeft's own precondition — unenforced here.
+[==============================================================================}
+function MArrayHelper.BisectNth(const item: MType; const N: Integer = 1; const oAscending: Boolean = True): Integer; overload;
+begin
+  if (N < 1) then
+    Exit(-1);
+  Result := (Self.BisectLeft(item, oAscending) + N - 1);
+  if ((Result > High(Self)) or (Self[Result] <> item)) then
+    Result := -1;
 end;
 {$ENDIF}
