@@ -19,11 +19,14 @@ function BinaryFindRight(const item: MType; const oAscending: Boolean = True): I
 function BinaryFloor(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFloored(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryLBoundary(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLeft(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLeftBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLeftBoundary(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryLeftern(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLeftmost(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryLeftside(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryLeftum(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLowerB(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLowerBound(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryLowerBoundary(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -31,8 +34,10 @@ function BinaryPredecessor(const item: MType; const oAscending: Boolean = True):
 function BinaryRight(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightBoundary(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryRightern(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightmost(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryRightside(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryRightum(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchFirst(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinarySearchLast(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryStart(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -40,6 +45,7 @@ function BinaryStop(const item: MType; const oAscending: Boolean = True): Intege
 function BinarySuccessor(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryThreshold(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryUBoundary(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUpperB(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUpperBound(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryUpperBoundary(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -49,6 +55,14 @@ function BinaryPosLeft(const item: MType; const oAscending: Boolean = True): Int
 function BinaryRightpos(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRighty(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryPosRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
+
+function BinaryLower(const item: MTYpe; const oAscending: Boolean = True): Integer; overload;
+function BinaryUpper(const item: MType; const oAscending: Boolean = True): Integer; overload;
+
+function BinaryBoundMax(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryBoundMin(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryMaxBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryMinBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
 
 function BisectLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BisectRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -784,6 +798,37 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryLBoundary>
+  @action: Finds the leftmost index whose value equals item via a hybrid strategy: binary search lands on any matching pivot, then a linear backward scan confirms/extends the boundary,
+           exiting the instant a non-matching neighbor is found.
+  @note: Same result as BinaryLowerB (leftmost match, or -1), different mechanism and performance profile. Worst case O(n) when a long run of duplicates surrounds the landing pivot,
+         since the backward scan is unbounded within [s.start, Result-1] — but short-circuits the whole search the moment a mismatch confirms the boundary,
+         so it can beat pure binary search when duplicate runs are short.
+[==============================================================================}
+function MArrayHelper.BinaryLBoundary(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  r: Integer;
+  s: TRange;
+begin
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    Result := s.Pivot;
+    if (Self[Result] = item) then
+    for r := (Result - 1) downto s.start do
+      if (Self[r] = item) then
+        Result := r
+      else
+        Exit;
+    if ((oAscending and (Self[Result] >= item)) or ((not oAscending) and (Self[Result] <= item))) then
+      s.stop := (Result - 1)
+    else
+      s.start := (Result + 1);
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
   <BinaryLeft>
   @action: Finds the index of the first element (leftmost position) in the
            array whose value lies within the specified range.
@@ -925,6 +970,31 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryLeftern>
+  @action: Binary search over [0, High(Self)] for the leftmost index whose value equals item (sorted ascending or descending per oAscending).
+  @note: Pure O(log n) binary search — narrows toward the front on every pivot that is >= item (ascending) or <= item (descending),
+         so ties keep pushing the boundary left. Returns -1 if item is absent.
+[==============================================================================}
+function MArrayHelper.BinaryLeftern(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  m: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    m := s.Pivot;
+    if (Self[m] = item) then
+      Result := m;
+    if ((oAscending and (Self[m] >= item)) or ((not oAscending) and (Self[m] <= item))) then
+      s.stop := (m - 1)
+    else
+      s.start := (m + 1);
+  end;
+end;
+
+{==============================================================================]
   <BinaryLeftmost>
   @action: Finds the first index where the array value is greater than or equal to x
            (ascending) or less than or equal to x (descending).
@@ -998,6 +1068,45 @@ begin
     else
       R.stop := (M - 1);
   until False;
+end;
+
+{==============================================================================]
+  <BinaryLeftum>
+  @action: Binary search over Self for the leftmost index whose value equals item, given sorted ascending or descending per oAscending.
+  @note: Same result as BinaryLeftern (leftmost match, or -1) but hoists the direction check out of the loop via case oAscending of,
+         running a specialized loop per direction instead of re-evaluating a combined boolean each iteration. O(log n).
+[==============================================================================}
+function MArrayHelper.BinaryLeftum(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  m: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  s.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (s.start <= s.stop) do
+    begin
+      m := s.Pivot;
+      if (Self[m] = item) then
+        Result := m;
+      if (Self[m] < item) then
+        s.start := (m + 1)
+      else
+        s.stop := (m - 1);
+    end;
+    False:
+    while (s.start <= s.stop) do
+    begin
+      m := s.Pivot;
+      if (Self[m] = item) then
+        Result := m;
+      if (Self[m] > item) then
+        s.start := (m + 1)
+      else
+        s.stop := (m - 1);
+    end;
+  end;
 end;
 
 {==============================================================================]
@@ -1275,6 +1384,30 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryRightern>
+  @action: Binary search over [0, High(Self)] for the rightmost index whose value equals item (sorted ascending or descending per oAscending).
+  @note: Mirror of BinaryLeftern, narrowing toward the back on ties. O(log n). Returns -1 if item is absent.
+[==============================================================================}
+function MArrayHelper.BinaryRightern(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  m: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    m := s.Pivot;
+    if (Self[m] = item) then
+      Result := m;
+    if ((oAscending and (Self[m] <= item)) or ((not oAscending) and (Self[m] >= item))) then
+      s.start := (m + 1)
+    else
+      s.stop := (m - 1);
+  end;
+end;
+
+{==============================================================================]
   <BinaryRightmost>
   @action: Finds the last index where the array value is less than or equal to x
            (ascending) or greater than or equal to x (descending).
@@ -1348,6 +1481,44 @@ begin
     else
       R.stop := (M - 1);
   until False;
+end;
+
+{==============================================================================]
+  <BinaryRightum>
+  @action: Binary search over Self for the rightmost index whose value equals item, given sorted ascending or descending per oAscending.
+  @note: Mirror of BinaryLeftum; same result as BinaryRightern, same specialized-loop-per-direction mechanism. O(log n).
+[==============================================================================}
+function MArrayHelper.BinaryRightum(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  m: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  s.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (s.start <= s.stop) do
+    begin
+      m := s.Pivot;
+      if (Self[m] = item) then
+        Result := m;
+      if (Self[m] > item) then
+        s.stop := (m - 1)
+      else
+        s.start := (m + 1);
+    end;
+    False:
+    while (s.start <= s.stop) do
+    begin
+      m := s.Pivot;
+      if (Self[m] = item) then
+        Result := m;
+      if (Self[m] < item) then
+        s.stop := (m - 1)
+      else
+        s.start := (m + 1);
+    end;
+  end;
 end;
 
 {==============================================================================]
@@ -1589,6 +1760,35 @@ begin
     Result := R
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryUBoundary>
+  @action: Finds the rightmost index whose value equals item via the same hybrid strategy,
+           scanning forward from the landing pivot instead of backward.
+  @note: Same result as BinaryUpperB, same worst-case-O(n)/short-circuit trade-off as BinaryLBound, mirrored direction.
+[==============================================================================}
+function MArrayHelper.BinaryUBoundary(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  r: Integer;
+  s: TRange;
+begin
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    Result := s.Pivot;
+    if (Self[Result] = item) then
+    for r := (Result + 1) to s.stop do
+      if (Self[r] = item) then
+        Result := r
+      else
+        Exit;
+    if ((oAscending and (Self[Result] <= item)) or ((not oAscending) and (Self[Result] >= item))) then
+      s.start := (Result + 1)
+    else
+      s.stop := (Result - 1);
+  end;
+  Result := -1;
 end;
 
 {==============================================================================]
@@ -1891,6 +2091,154 @@ begin
       L := (M + 1)
     else
       R := (M - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryLower>
+  @action: Finds the index of item's occurrence that borders the smaller-value side,
+           regardless of whether Self is sorted ascending or descending —
+           this is the leftmost occurrence in an ascending array, but the rightmost occurrence in a descending one.
+@note: Delegates to BinaryLeftern/BinaryRightern based on oAscending,
+       so it's O(log n), pure binary search underneath. Returns -1 if item is absent. Value-semantic,
+       not index-semantic: unlike Leftern/Rightern,
+       this always answers the same question ("which occurrence sits toward the low end of the value range?") independent of sort direction.
+[==============================================================================}
+function MArrayHelper.BinaryLower(const item: MTYpe; const oAscending: Boolean = True): Integer; overload;
+begin
+  if oAscending then
+    Result := Self.BinaryLeftern(item, oAscending)
+  else
+    Result := Self.BinaryRightern(item, oAscending);
+end;
+
+{==============================================================================]
+  <BinaryUpper>
+  @action: Finds the index of item's occurrence that borders the larger-value side,
+           regardless of sort direction — the rightmost occurrence in an ascending array, the leftmost occurrence in a descending one.
+  @note: Mirror of BinaryLower; delegates to BinaryRightern/BinaryLeftern based on oAscending. O(log n). Returns -1 if item is absent.
+[==============================================================================}
+function MArrayHelper.BinaryUpper(const item: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  if oAscending then
+    Result := Self.BinaryRightern(item, oAscending)
+  else
+    Result := Self.BinaryLeftern(item, oAscending);
+end;
+
+{==============================================================================]
+  <BinaryBoundMax>
+  @action: Performs an upper-bound binary search to find the index of the last element in a sorted array that is less than or equal to `target` (ascending) or greater than or equal to `target` (descending). Returns -1 if no element satisfies the bound condition.
+  @note: Operates strictly in pure O(log N) logarithmic time without performing linear scans. The unused local variable `r` can be safely cleaned up in future maintenance.
+[==============================================================================}
+function MArrayHelper.BinaryBoundMax(const target: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  m, r: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    m := s.Pivot;
+    if ((oAscending and (Self[m] <= target)) or ((not oAscending) and (Self[m] >= target))) then
+      s.start := (m + 1)
+    else
+      s.stop := (m - 1);
+    if ((oAscending and (Self[m] <= target)) or ((not oAscending) and (Self[m] >= target))) then
+      Result := m;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryBoundMin>
+  @action: Performs a lower-bound binary search to find the index of the first element in a sorted array that is greater than or equal to `target` (ascending) or less than or equal to `target` (descending). Returns -1 if no element satisfies the bound condition.
+  @note: Operates strictly in pure O(log N) logarithmic time without performing linear scans. The unused local variable `r` can be safely safely cleaned up in future maintenance.
+[==============================================================================}
+function MArrayHelper.BinaryBoundMin(const target: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  m, r: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    m := s.Pivot;
+    if ((oAscending and (Self[m] >= target)) or ((not oAscending) and (Self[m] <= target))) then
+      s.stop := (m - 1)
+    else
+      s.start := (m + 1);
+    if ((oAscending and (Self[m] >= target)) or ((not oAscending) and (Self[m] <= target))) then
+      Result := m;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryMaxBound>
+  @action: Finds the index of the last occurrence of `target` in a sorted array using binary search with a linear forward scan for duplicates.
+           If `target` is not present, returns the index of the largest element strictly less than `target` (ascending) or strictly greater than `target` (descending).
+           Returns -1 if no element satisfies the criteria.
+  @note: Uses a hybrid approach combining logarithmic binary search stepping with a linear forward scan upon reaching exact matches.
+         Supports both ascending and descending arrays via `oAscending`.
+[==============================================================================}
+function MArrayHelper.BinaryMaxBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  m: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    m := s.Pivot;
+    if (Self[m] = target) then
+    begin
+      Result := m;
+      while ((Result < s.stop) and (Self[Result + 1] = target)) do
+        Inc(Result);
+      Exit;
+    end;
+    if ((oAscending and (Self[m] < target)) or ((not oAscending) and (Self[m] > target))) then
+    begin
+      Result := m;
+      s.start := (m + 1);
+    end else
+      s.stop := (m - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryMinBound>
+  @action: Finds the index of the first occurrence of `target` in a sorted array using binary search with a linear backward scan for duplicates.
+           If `target` is not present, returns the index of the smallest element strictly greater than `target` (ascending) or strictly less than `target` (descending).
+           Returns -1 if no element satisfies the criteria.
+  @note: Uses a hybrid approach combining logarithmic binary search stepping with a linear backward scan upon reaching exact matches.
+         Supports both ascending and descending arrays via `oAscending`.
+[==============================================================================}
+function MArrayHelper.BinaryMinBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  m: Integer;
+  s: TRange;
+begin
+  Result := -1;
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    m := s.Pivot;
+    if (Self[m] = target) then
+    begin
+      Result := m;
+      while ((Result > s.start) and (Self[Result - 1] = target)) do
+        Dec(Result);
+      Exit;
+    end;
+    if ((oAscending and (Self[m] > target)) or ((not oAscending) and (Self[m] < target))) then
+    begin
+      Result := m;
+      s.stop := (m - 1);
+    end else
+      s.start := (m + 1);
   end;
 end;
 

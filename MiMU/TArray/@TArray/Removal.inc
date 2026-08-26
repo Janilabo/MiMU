@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Cut(const cIndex: Integer; const nItem: MType): MType; overload;
 function Cut(const cIndex: Integer = 0): MType; overload;
+function Deindex(const ID: TIntegerArray; const iSorted: Boolean = True): Integer; overload;
+function Deindice(const ID: TIntegerArray): Integer; overload;
 function Del(const dIndex: Integer = 0): Integer; overload;
 function Delete(const index: Integer = 0): MArray; overload;
 function Delete(const ID: TIntegerArray): MArray; overload;
@@ -66,6 +68,74 @@ var
   n: MType;
 begin
   Result := Self.Cut(cIndex, n);
+end;
+
+{==============================================================================]
+  <Deindex>
+  @action: Removes elements at the specified indexes `ID` from the array in-place,
+           shifting remaining elements to close gaps and returning the count of successfully deleted items.
+  @note: Ensures indices are sorted and unique (via `Quicksorted`/`Cloned`, `InRange` bounds checking, and `Compact`),
+         then performs a single-pass in-place element shift starting at `d[0]`,
+		 achieving O(N) element movement time and minimal dynamic array resizing.
+[==============================================================================}
+function MArrayHelper.Deindex(const ID: TIntegerArray; const iSorted: Boolean = True): Integer; overload;
+var
+  h, i, r: Integer;
+  d: TIntegerArray;
+begin
+  h := High(Self);
+  if ((h = -1) or (ID.Length = 0)) then
+    Exit(0);
+  if not iSorted then
+    d := ID.Quicksorted
+  else
+    d := ID.Cloned;
+  r := 0;
+  for i := 0 to High(d) do
+    if not InRange(d[i], 0, h) then
+      r := (r + 1)
+    else
+      d[i - r] := d[i];
+  SetLength(d, (d.Length - r));
+  Result := d.Compact;
+  if (Result = 0) then
+    Exit;
+  r := 0;
+  for i := d[0] to h do
+    if ((r < Result) and (i = d[r])) then
+      Inc(r)
+    else
+      Self[i - r] := Self[i];
+  SetLength(Self, (Self.Length - Result));
+end;
+
+{==============================================================================]
+  <Deindice>
+  @action: Removes elements at the specified target indices `ID` in-place using a boolean lookup map,
+           returning the total count of successfully removed elements.
+  @note: Uses an O(N) bitmask/lookup-array approach (`d: TBooleanArray`) to track deletion targets,
+         avoiding sorting or compacting steps. Performs a single-pass shift to achieve linear O(N) total execution time.
+[==============================================================================}
+function MArrayHelper.Deindice(const ID: TIntegerArray): Integer; overload;
+var
+  h, i, s: Integer;
+  d: TBooleanArray;
+begin
+  h := High(Self);
+  if ((h = -1) or (ID.Length = 0)) then
+    Exit(0);
+  for i := 0 to d.Alloc(h + 1) do
+    d[i] := False;
+  for i := 0 to High(ID) do
+    if InRange(ID[i], 0, h) then
+      d[ID[i]] := True;
+  s := 0;
+  for i := 0 to h do
+    if d[i] then
+      Inc(s)
+    else
+      Self[i - s] := Self[i];
+  SetLength(Self, (Self.Length - s));
 end;
 
 {==============================================================================]

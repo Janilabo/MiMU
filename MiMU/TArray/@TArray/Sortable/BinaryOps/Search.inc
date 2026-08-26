@@ -42,6 +42,9 @@ function BinarySpot(const item: MType; const oAscending: Boolean = True): Intege
 function BinaryTrace(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUniformSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 
+function BinaryCertum(const aMin, aMax: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryIterum(const aMin, aMax: MType; const oAscending: Boolean = True): Integer; overload;
+
 function BisectNth(const item: MType; const N: Integer = 1; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
@@ -1383,6 +1386,70 @@ begin
   end;
   if ((R.start <= R.stop) and (Self[R.start] = item)) then
     Exit(R.start);
+  Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryCertum>
+  @action: Same contract as BinaryIterum — binary search for the index of any element whose value falls within [aMin, aMax] —
+           but resolves the search direction once upfront and runs a specialized loop for it, rather than re-checking oAscending on each iteration.
+  @note: Mechanically distinct from BinaryIterum (branch fixed once vs. checked per-iteration);
+         same O(log n), same result set — a performance-variant twin, not a different contract.
+[==============================================================================}
+function MArrayHelper.BinaryCertum(const aMin, aMax: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  s: TRange;
+begin
+  s.Create(0, High(Self));
+  case oAscending of
+    True:
+    while (s.start <= s.stop) do
+    begin
+      Result := s.Pivot;
+      if ((Self[Result] >= aMin) and (Self[Result] <= aMax)) then
+        Exit;
+      if (Self[Result] < aMin) then
+        s.start := (Result + 1)
+      else
+        s.stop := (Result - 1);
+    end;
+    False:
+    while (s.start <= s.stop) do
+    begin
+      Result := s.Pivot;
+      if ((Self[Result] >= aMin) and (Self[Result] <= aMax)) then
+        Exit;
+      if (Self[Result] > aMin) then
+        s.start := (Result + 1)
+      else
+        s.stop := (Result - 1);
+    end;
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryIterum>
+  @action: Binary search for the index of any element whose value falls within [aMin, aMax] (not necessarily first or last),
+           given Self sorted ascending or descending per oAscending.
+  @note: Re-evaluates the oAscending branch on every loop iteration. O(log n).
+         Returns -1 if no element in range is found.
+[==============================================================================}
+function MArrayHelper.BinaryIterum(const aMin, aMax: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  s: TRange;
+begin
+  s.Create(0, High(Self));
+  while (s.start <= s.stop) do
+  begin
+    Result := s.Pivot;
+    if ((Self[Result] >= aMin) and (Self[Result] <= aMax)) then
+      Exit;
+    if ((oAscending and (Self[Result] < aMin)) or ((not oAscending) and (Self[Result] > aMin))) then
+      s.start := (Result + 1)
+    else
+      s.stop := (Result - 1);
+  end;
   Result := -1;
 end;
 

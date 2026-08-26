@@ -4,7 +4,9 @@ function Orderly: Boolean; overload;
 function Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
 function Ordering(const oAscending: Boolean = True): Boolean; overload;
 function Orderion: Boolean; overload;
+function Orderious(const oAscending: Boolean = True): Boolean; overload;
 function InOrder(const aAscending: Boolean = True): Boolean; overload;
+function IsOrder(const oAscending: Boolean = True): Boolean; overload;
 function OnOrder: Boolean; overload;
 {$ENDIF}
 
@@ -135,7 +137,38 @@ begin
       Exit(False);
   end;
   Result := True;
-end; 
+end;
+
+{==============================================================================]
+  <Orderious>
+  @action: Checks whether the array is sorted in ascending (True) or descending (False) order using a recursive divide-and-conquer approach.
+  @note: Returns True if sorted, False otherwise.
+[==============================================================================}
+function MArrayHelper.Orderious(const oAscending: Boolean = True): Boolean; overload;
+  function A(const aLow, aHigh: Integer): Boolean;
+  var
+    m: Integer;
+  begin
+    if (aLow >= aHigh) then
+      Exit(True);
+    m := (aLow + (aHigh - aLow) div 2);
+    Result := ((Self[m] <= Self[m + 1]) and A(aLow, m) and A((m + 1), aHigh));
+  end;
+  function D(const aLow, aHigh: Integer): Boolean;
+  var
+    m: Integer;
+  begin
+    if (aLow >= aHigh) then
+      Exit(True);
+    m := (aLow + (aHigh - aLow) div 2);
+    Result := ((Self[m] >= Self[m + 1]) and D(aLow, m) and D((m + 1), aHigh));
+  end;
+begin
+  if oAscending then
+    Result := A(0, High(Self))
+  else
+    Result := D(0, High(Self));
+end;
 
 {==============================================================================]
   <InOrder>
@@ -160,6 +193,33 @@ begin
       if ((Self[i] < Self[i + 1]) or (Self[l - 1] < Self[l])) then
         Exit(False);
   end;
+end;
+
+{==============================================================================]
+  <IsOrder>
+  @action: Checks whether the array is sorted in ascending or descending order based on the oAscending parameter.
+           Returns True if sorted, False otherwise.
+  @note: The loop uses a strided index pattern (i * 2) + j that checks adjacent elements in two separate passes (even and odd starting pairs).
+[==============================================================================}
+function MArrayHelper.IsOrder(const oAscending: Boolean = True): Boolean; overload;
+var
+  h, i, j: Integer;
+begin
+  h := High(Self);
+  if (h > 0) then
+  case oAscending of
+    True:
+    for j := 0 to 1 do
+      for i := 0 to (((h + (1 - j)) div 2) - 1) do
+        if (Self[(i * 2) + j] > Self[(i * 2) + (1 + j)]) then
+          Exit(False);
+    False:
+    for j := 0 to 1 do
+      for i := 0 to (((h + (1 - j)) div 2) - 1) do
+        if (Self[(i * 2) + j] < Self[(i * 2) + (1 + j)]) then
+          Exit(False);
+  end;
+  Result := True;
 end;
 
 {==============================================================================]

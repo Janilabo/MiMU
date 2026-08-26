@@ -11,6 +11,13 @@ function BinaryExtractByMin(const limit: MType; const oAscending: Boolean = True
 function BinaryExtractByMax(const limit: MType; const oAscending: Boolean = True): MArray; overload;
 function BinaryFilterByMin(const limit: MType; const oAscending: Boolean = True): MArray; overload;
 function BinaryFilterByMax(const limit: MType; const oAscending: Boolean = True): MArray; overload;
+
+function BinaryExtractify(const aMin, aMax: MType; const oAscending: Boolean = True): MArray; overload;
+function BinaryExtractifyMax(const target: MType; const oAscending: Boolean = True): MArray; overload;
+function BinaryExtractifyMin(const target: MType; const oAscending: Boolean = True): MArray; overload;
+function BinaryFilterify(const aMin, aMax: MType; const oAscending: Boolean = True): MArray; overload;
+function BinaryFilterifyMax(const target: MType; const oAscending: Boolean = True): MArray; overload;
+function BinaryFilterifyMin(const target: MType; const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -466,5 +473,157 @@ begin
   SetLength(Result, r.Size);
   for i := r.start to r.stop do
     Result[i - r.start] := Self[i];
+end;
+
+{==============================================================================]
+  <BinaryExtractify>
+  @action: Uses binary search to extract all elements falling within the inclusive range [`aMin`, `aMax`] from a sorted array into a new array.
+  @note: Achieves O(log N) boundary lookup time using `BinaryMinBound` and `BinaryMaxBound` to locate the contiguous target slice before copying it to `Result`.
+         Supports both ascending and descending sorted arrays via `oAscending`.
+[==============================================================================}
+function MArrayHelper.BinaryExtractify(const aMin, aMax: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  i: Integer;
+  r: TRange;
+begin
+  if oAscending then
+  begin
+    r.start := Self.BinaryMinBound(aMin, oAscending);
+    if (r.start = -1) then
+      Exit([]);
+    r.stop := Self.BinaryMaxBound(aMax, oAscending);
+  end else
+  begin
+    r.start := Self.BinaryMinBound(aMax, oAscending);
+    if (r.start = -1) then
+      Exit([]);
+    r.stop := Self.BinaryMaxBound(aMin, oAscending);
+  end;
+  for i := 0 to Result.Alloc(r.Size) do
+    Result[i] := Self[i + r.start];
+end;
+
+{==============================================================================]
+  <BinaryExtractifyMax>
+  @action: Uses binary search to extract all elements less than or equal to `target` (ascending) or greater than or equal to `target` (descending) from a sorted array into a new array.
+  @note: Leverages binary search bounds to locate the threshold pivot in O(log N) time, extracting the prefix slice for ascending arrays or the suffix slice for descending arrays.
+[==============================================================================}
+function MArrayHelper.BinaryExtractifyMax(const target: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  i, p: Integer;
+begin
+  SetLength(Result, 0);
+  if oAscending then
+  begin
+    p := Self.BinaryMaxBound(target, oAscending);
+    if (p > -1) then
+    for i := 0 to Result.Alloc(p + 1) do
+      Result[i] := Self[i];
+  end else
+  begin
+    p := Self.BinaryMinBound(target, oAscending);
+    if (p > -1) then
+    for i := 0 to Result.Alloc(Self.Length - p) do
+      Result[i] := Self[p + i];
+  end;
+end;
+
+{==============================================================================]
+  <BinaryExtractifyMin>
+  @action: Uses binary search to extract all elements greater than or equal to `target` (ascending) or less than or equal to `target` (descending) from a sorted array into a new array.
+  @note: Leverages binary search bounds to locate the threshold pivot in O(log N) time, extracting the suffix slice for ascending arrays or the prefix slice for descending arrays.
+[==============================================================================}
+function MArrayHelper.BinaryExtractifyMin(const target: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  i, p: Integer;
+begin
+  SetLength(Result, 0);
+  if oAscending then
+  begin
+    p := Self.BinaryMinBound(target, oAscending);
+    if (p > -1) then
+    for i := 0 to Result.Alloc(Self.Length - p) do
+      Result[i] := Self[p + i];
+  end else
+  begin
+    p := Self.BinaryMaxBound(target, oAscending);
+    if (p > -1) then
+    for i := 0 to Result.Alloc(p + 1) do
+      Result[i] := Self[i];
+  end;
+end;
+
+{==============================================================================]
+  <BinaryFilterify>
+  @action: Uses binary search to identify elements falling within [`aMin`, `aMax`] in a sorted array, returning a new array with those elements excluded.
+  @note: Leverages binary search bounds to locate the target sub-range in O(log N) time and copies the remaining outer segments.
+         Returns a full clone of `Self` if no elements fall within the range.
+[==============================================================================}
+function MArrayHelper.BinaryFilterify(const aMin, aMax: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  r: TRange;
+  l, i, s: Integer;
+begin
+  if oAscending then
+    r.Create(Self.BinaryMinBound(aMin, oAscending), Self.BinaryMaxBound(aMax, oAscending))
+  else
+    r.Create(Self.BinaryMinBound(aMax, oAscending), Self.BinaryMaxBound(aMin, oAscending));
+  if ((r.start = -1) or (r.stop = -1) or (r.start > r.stop)) then
+    Exit(Self.Clone);
+  s := Result.SetSize(Self.Length - r.Size);
+  for i := High(Self) downto (r.stop + 1) do
+    Result[s.Decrement] := Self[i];
+  for i := (r.start - 1) downto 0 do
+    Result[s.Decrement] := Self[i];
+end;
+
+{==============================================================================]
+  <BinaryFilterifyMax>
+  @action: Uses binary search to filter out elements up to `target`, returning a new array with elements strictly greater than `target` (ascending) or strictly less than `target` (descending).
+  @note: Uses binary search to locate the cutoff index in O(log N) time, returning the remaining slice. Returns an empty array if no boundary element satisfies the condition.
+[==============================================================================}
+function MArrayHelper.BinaryFilterifyMax(const target: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  i, p: Integer;
+begin
+  SetLength(Result, 0);
+  if oAscending then
+  begin
+    p := Self.BinaryMinBound(target, oAscending);
+    if (p > -1) then
+    for i := 0 to Result.Alloc(p) do
+      Result[i] := Self[i];
+  end else
+  begin
+    p := Self.BinaryMaxBound(target, oAscending);
+    if (p > -1) then
+    for i := 0 to Result.Alloc(Self.Length - (p + 1)) do
+      Result[i] := Self[p + i + 1];
+  end;
+end;
+
+{==============================================================================]
+  <BinaryFilterifyMin>
+  @action: Uses binary search to filter out elements down to `target`, returning a new array with elements strictly less than `target` (ascending) or strictly greater than `target` (descending).
+  @note: Uses binary search to locate the cutoff index in O(log N) time, returning the remaining slice. Returns an empty array if no boundary element satisfies the condition.
+[==============================================================================}
+function MArrayHelper.BinaryFilterifyMin(const target: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  i, p: Integer;
+begin
+  SetLength(Result, 0);
+  if oAscending then
+  begin
+    p := Self.BinaryMaxBound(target, oAscending);
+    if (p > -1) then
+    for i := 0 to Result.Alloc(Self.Length - (p + 1)) do
+      Result[i] := Self[p + i + 1];
+  end else
+  begin
+    p := Self.BinaryMaxBound(target, oAscending);
+    if (p > -1) then
+    for i := 0 to Result.Alloc(p + 1) do
+      Result[i] := Self[i];
+  end;
 end;
 {$ENDIF}

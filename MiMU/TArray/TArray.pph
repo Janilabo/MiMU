@@ -61,6 +61,7 @@
 {$I @TArray/Sortable/Order.inc}
 {$I @TArray/Sortable/Scanning.inc}
 {$I @TArray/Sortable/Search.inc}
+{$I @TArray/Sortable/Selection.inc}
 {$I @TArray/Sortable/Sorted.inc}
 {$I @TArray/Sortable/Ternary.inc}
 {$I @TArray/Sortable/Trajectory.inc}

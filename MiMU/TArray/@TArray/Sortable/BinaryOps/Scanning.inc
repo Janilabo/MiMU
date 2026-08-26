@@ -4,6 +4,7 @@ function BinaryHits(const items: MArray; const oAscending: Boolean = True): TInt
 function BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryIndices(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryInterval(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryRadar(const aMin, aMax: MType; const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -158,5 +159,23 @@ begin
   l := Self.Length;
   while ((Result.stop < l) and (Self[Result.stop + 1] = item)) do
     Inc(Result.stop);
+end;
+
+{==============================================================================]
+  <BinaryRadar>
+  @action: Uses binary search to locate all elements falling within the inclusive range [`aMin`, `aMax`] in a sorted array and returns an array containing their index positions.
+  @note: Invokes `BinaryBracket` to determine boundary indices in O(log N) time, then generates a contiguous sequence of index offsets from `r.start` to `r.stop`.
+         Returns an empty array if no elements match the range.
+[==============================================================================}
+function MArrayHelper.BinaryRadar(const aMin, aMax: MType; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i: Integer;
+  r: TRange;
+begin
+  r := Self.BinaryBracket(aMin, aMax, oAscending);
+  if ((r.start = -1) or (r.stop = -1)) then
+    Exit([]);
+  for i := 0 to Result.Alloc(r.Size) do
+    Result[i] := (i + r.start);
 end;
 {$ENDIF}

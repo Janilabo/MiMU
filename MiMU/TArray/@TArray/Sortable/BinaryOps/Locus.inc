@@ -9,6 +9,8 @@ function BinarySpanOf(const item: MType; const oAscending: Boolean = True): TRan
 function BinaryWindow(const item: MType; const aAscending: Boolean = True): TRange; overload;
 function BinaryZone(const item: MType; const aAscending: Boolean = True): TRange; overload;
 
+function BinaryBracket(const aMin, aMax: MType; const oAscending: Boolean = True): TRange; overload;
+
 function Bisected(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function Bisection(const item: MType; const oAscending: Boolean = True): TRange; overload;
 {$ENDIF}
@@ -371,6 +373,38 @@ begin
         R.start := (M + 1)
       else
         R.stop := (M - 1);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryBracket>
+  @action: Uses binary search to locate the inclusive index bounds [`start`, `stop`] of all elements falling within the range [`aMin`, `aMax`] in a sorted array, returning them as a `TRange`.
+  @note: Executes in O(log N) time using `BinaryBoundMin` and `BinaryBoundMax`. Handles both ascending and descending sorted arrays via `oAscending`,
+         invalidating the range (`Result.start := -1; Result.stop := -1`) if either boundary is not found or out of bounds.
+[==============================================================================}
+function MArrayHelper.BinaryBracket(const aMin, aMax: MType; const oAscending: Boolean = True): TRange; overload;
+begin
+  case oAscending of
+    True:
+    begin
+      Result.start := Self.BinaryBoundMin(aMin, oAscending);
+      if (Result.start = -1) then
+        Result.stop := -1
+      else
+        Result.stop := Self.BinaryBoundMax(aMax, oAscending);
+      if (Result.stop = -1) then
+        Result.start := -1;
+    end;
+    False:
+    begin
+      Result.start := Self.BinaryBoundMin(aMax, oAscending);
+      if (Result.start = -1) then
+        Result.stop := -1
+      else
+        Result.stop := Self.BinaryBoundMax(aMin, oAscending);
+      if (Result.stop = -1) then
+        Result.start := -1;
     end;
   end;
 end;

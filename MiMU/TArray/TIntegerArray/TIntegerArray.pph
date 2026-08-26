@@ -16,6 +16,7 @@
 {$I @TIntegerArray/Bounding.inc}
 {$I @TIntegerArray/Clustering.inc}
 {$I @TIntegerArray/Combine.inc}
+{$I @TIntegerArray/Containment.inc}
 {$I @TIntegerArray/Conversion.inc}
 {$I @TIntegerArray/Deduplicate.inc}
 {$I @TIntegerArray/Disjoint.inc}
