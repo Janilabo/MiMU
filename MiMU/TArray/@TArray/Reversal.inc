@@ -21,6 +21,7 @@ function Opposite: MArray; overload;
 function Overturn: Boolean; overload;
 function Rebel: MArray; overload;
 function Reflex(const rIndex: Integer): MType; overload;
+function Reflux: Integer; overload;
 function Regress: MArray; overload;
 function Relist: MArray; overload;
 function Reverc: Boolean; overload;
@@ -522,6 +523,25 @@ end;
 function MArrayHelper.Reflex(const rIndex: Integer): MType; overload;
 begin
   Result := Self[High(Self) - rIndex];
+end;
+
+{==============================================================================]
+  <Reflux>
+  @action: Reverses the array in place by swapping mirrored index pairs
+           (0↔last, 1↔second-last, ...) working inward toward the center.
+  @note: Mutating (bare-verb). Returns the number of swaps performed
+         (Length div 2), following the mutate-and-return-count contract.
+         For odd-length arrays, the middle element is untouched (correctly
+         excluded, since it has no mirror partner).
+[==============================================================================}
+function MArrayHelper.Reflux: Integer; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Length;
+  Result := (s div 2);
+  for i := 1 to Result do
+    Self.Switch((i - 1), (s - i));
 end;
 
 {==============================================================================]

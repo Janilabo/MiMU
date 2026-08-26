@@ -2,6 +2,7 @@
 function BinaryApprox(const item: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
 function BinaryApproxed(const item: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
 function BinaryClosestOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryClosestTo(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryEstimate(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFurthestOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryInterp(const target: MType; const oAscending: Boolean = True): Double; overload;
@@ -103,6 +104,46 @@ begin
     if (Self[r] = item) then
       Exit(r);
     i := Abs(Self[r] - item);
+    if (i < d) then
+    begin
+      d := i;
+      Result := r;
+    end;
+    if ((oAscending and (Self[r] < item)) or ((not oAscending) and (Self[r] > item))) then
+      s.start := (r + 1)
+    else
+      s.stop := (r - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryClosestTo>
+  @action: Binary search for the array element with minimum Distance to item,
+           per the array's MType.Distance metric. Returns immediately on an
+           exact match; otherwise narrows via standard ascending/descending
+           binary search while tracking the best (minimum-distance) candidate
+           seen so far.
+  @note: Non-mutating. Distance returns MType (not a fixed Integer), so
+         precision/range matches the element type itself. Generalizes
+         BinaryClosest across any MType that implements Distance.
+[==============================================================================}
+function MArrayHelper.BinaryClosestTo(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  d, i: MType;
+  r: Integer;
+  s: TRange;
+begin
+  s.Create(0, High(Self));
+  if (s.stop = -1) then
+    Exit(-1);
+  Result := 0;
+  d := Self[0].Distance(item);
+  while (s.start <= s.stop) do
+  begin
+    r := s.Pivot;
+    if (Self[r] = item) then
+      Exit(r);
+    i := Self[r].Distance(item);
     if (i < d) then
     begin
       d := i;
