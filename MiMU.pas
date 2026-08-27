@@ -106,6 +106,13 @@ function MiMU_Version: Double;
 
 type
   generic TCompare<T> = function(const A, B: T): Integer;
+  generic TInterval<T> = record
+    lower, upper: T;
+    constructor Create(const a, b: T);
+	function Contains(const c: T): Boolean; overload;
+	function Overlaps(const other: TInterval): Boolean; overload;
+	function Consolidate(const other: TInterval): TInterval; overload;
+  end;
 
 {$I MiMU/MiMU.inc}
 
@@ -142,6 +149,67 @@ implementation
 function MiMU_Version: Double;
 begin
   Result := MiMU_VERSION_NUMBER;
+end;
+
+{==============================================================================]
+  <Create>
+  @action: Constructs a TInterval from two values in either order, normalizing them so `lower` always holds the smaller and `upper` always holds the larger.
+  @note: Enforces the interval invariant (lower <= upper) unconditionally — there is no way to construct an out-of-order TInterval, so no caller-side validation is needed downstream.
+[==============================================================================}
+constructor TInterval.Create(const a, b: T);
+begin
+  if (a <= b) then
+  begin
+    Self.lower := a;
+    Self.upper := b;
+  end else
+  begin
+    Self.lower := b;
+    Self.upper := a;
+  end;
+end;
+
+{==============================================================================]
+  <Contains>
+  @action: Checks whether a value lies within the interval, inclusive of both endpoints.
+  @note: Bounds are inclusive on both ends (`>= lower` and `<= upper`); since `TInterval`'s invariant guarantees `lower <= upper`.
+[==============================================================================}
+function TInterval.Contains(const c: T): Boolean; overload;
+begin
+  Result := ((c >= Self.lower) and (c <= Self.upper));
+end;
+
+{==============================================================================]
+  <Overlaps>
+  @action: Checks whether this interval shares any values with another interval.
+  @note: Standard closed-interval overlap test: two intervals overlap iff each one's lower bound is not past the other's upper bound.
+         Relies on TInterval's invariant (lower <= upper) holding for both operands.
+[==============================================================================}
+function TInterval.Overlaps(const other: TInterval): Boolean; overload;
+begin
+  Result := ((Self.lower <= other.upper) and (other.lower <= Self.upper));
+end;
+
+{==============================================================================]
+  <Consolidate>
+  @action: Returns the smallest TInterval that fully encloses both this interval and another.
+  @note: This is a bounding operation, not a set union — if the two intervals don't overlap,
+         the result still spans the gap between them (e.g. [1,3] and [8,10] consolidate to [1,10],
+		 not two separate pieces). Relies on TInterval's invariant holding for both operands.
+[==============================================================================}
+function TInterval.Consolidate(const other: TInterval): TInterval; overload;
+var
+  l, u: T;
+begin
+  if (Self.lower <= other.lower) then
+    l := Self.lower
+  else
+    l := other.lower;
+  if (Self.upper >= other.upper) then
+    u := Self.upper
+  else
+    u := other.upper;
+  Result := TInterval.Create(l, u);
 end;
 
 {==============================================================================]
