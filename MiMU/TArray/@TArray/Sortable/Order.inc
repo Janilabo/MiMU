@@ -1,9 +1,11 @@
 {$IFDEF HELPERS}
+function AtOrder(const oAscending: Boolean = True): Boolean; overload;
 function Order: Integer; overload;
 function Orderly: Boolean; overload;
 function Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
 function Ordering(const oAscending: Boolean = True): Boolean; overload;
 function Orderion: Boolean; overload;
+function Orderion(out sDirection: Integer): Boolean; overload;
 function Orderious(const oAscending: Boolean = True): Boolean; overload;
 function InOrder(const aAscending: Boolean = True): Boolean; overload;
 function IsOrder(const oAscending: Boolean = True): Boolean; overload;
@@ -11,6 +13,27 @@ function OnOrder: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AtOrder>
+  @action: Verifies whether Self is already sorted in the given direction —
+           non-decreasing if `oAscending`, non-increasing otherwise — using
+           the three-way `Compare` comparator on each adjacent pair, with
+           early exit on the first violation.
+  @note: Non-strict: equal adjacent elements never trigger a violation in
+         either direction, so this checks "sorted" in the monotonic sense,
+         not strictly increasing/decreasing. Trivially returns True for
+         length 0 or 1 (loop body never runs).
+[==============================================================================}
+function MArrayHelper.AtOrder(const oAscending: Boolean = True): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to (High(Self) - 1) do
+    if ((oAscending and (Self[i].Compare(Self[i + 1]) > 0)) or (not oAscending and (Self[i].Compare(Self[i + 1]) < 0))) then
+      Exit(False);
+  Result := True;
+end;
+
 {==============================================================================]
   <Order>
   @action: Returns the direction which way array goes
@@ -136,6 +159,45 @@ begin
     if ((a * d) > 0) then
       Exit(False);
   end;
+  Result := True;
+end;
+
+{==============================================================================]
+  <Orderion>
+  @action: Determines whether Self is monotonic (non-decreasing or
+           non-increasing) in a single effective pass, and reports the
+           direction found via the `sDirection` out parameter (+1 ascending,
+           -1 descending, 0 if no strict direction exists — length < 2 or all
+           elements equal). Returns False on the first reversal encountered
+           after a direction has been established.
+  @note: Relies on the FPC-specific (non-portable-Pascal) guarantee that a
+         `for` loop's counter retains its value after `Break` — the second
+         loop resumes scanning from where the first loop broke off rather
+         than re-checking the pair that established the direction.
+[==============================================================================}
+function MArrayHelper.Orderion(out sDirection: Integer): Boolean; overload;
+var
+  i, s: Integer;
+begin
+  sDirection := 0;
+  if (Self.Length < 2) then
+    Exit(True);
+  for i := 0 to (High(Self) - 1) do
+  begin
+    if (Self[i] < Self[i + 1]) then
+      sDirection := 1
+    else if (Self[i] > Self[i + 1]) then
+      sDirection := -1;
+    if (sDirection <> 0) then
+      Break;
+  end;
+  if (sDirection = 0) then
+    Exit(True);
+  for i := (i + 1) to (High(Self) - 1) do
+    if ((sDirection = 1) and (Self[i] > Self[i + 1])) then
+      Exit(False)
+    else if ((sDirection = -1) and (Self[i] < Self[i + 1])) then
+      Exit(False);
   Result := True;
 end;
 

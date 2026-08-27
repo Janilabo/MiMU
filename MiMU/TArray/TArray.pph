@@ -78,6 +78,7 @@
 {$I @TArray/Sortable/Numeric/Extrema.inc}
 {$I @TArray/Sortable/Numeric/Insertion.inc}
 {$I @TArray/Sortable/Numeric/Monotone.inc}
+{$I @TArray/Sortable/Numeric/Order.inc}
 {$I @TArray/Sortable/Numeric/Sorted.inc}
 {$I @TArray/Sortable/Numeric/Validation.inc}
 

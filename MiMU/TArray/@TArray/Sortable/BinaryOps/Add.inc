@@ -10,6 +10,7 @@ function BinaryInsert(const x: MType; const aAscending: Boolean = True): Integer
 function BinaryInserta(const item: MType; const allowDuplicates: Boolean = True; const oAscending: Boolean = True): Integer; overload;
 function BinaryInsertion(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySupply(const item: MType; const aAscending: Boolean = True): Boolean; overload;
+function BinarySupply(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -338,5 +339,55 @@ begin
   for i := High(Self) downto (r.start + 1) do
     Self[i] := Self[i - 1];
   Self[r.start] := item;
+end;
+
+{==============================================================================]
+  <BinarySupply>
+  @action: Merges the sorted, deduplicated complement of `items` — the values
+           not already present in Self — into Self in place, preserving sort
+           order (`oAscending`). Returns the count of values actually added.
+           Empty `items` is a no-op; an empty Self is simply replaced by the
+           sorted, deduplicated `items`.
+  @note: Assumes Self is already sorted per `oAscending` in the general path;
+         `BinaryFind` correctness depends on this and it is never checked.
+[==============================================================================}
+function MArrayHelper.BinarySupply(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  a, b, i, s, l, z: Integer;
+  c, t: MArray;
+begin
+  if items.Empty then
+    Exit(0);
+  if Self.Empty then
+  begin
+    Self := items.QuickSorted(oAscending).Compacted;
+    Exit(Self.Length);
+  end;
+  c := items.QuickSorted(oAscending);
+  a := 0;
+  for i := 1 to High(c) do
+    if (c[i] <> c[a]) then
+      c[a.Increment] := c[i];
+  Result := 0;
+  for i := 0 to c.Alloc(a + 1) do
+    if (Self.BinaryFind(c[i], oAscending) = -1) then
+      c[Result.Increase] := c[i];
+  SetLength(c, Result);
+  t := Self.Clone;
+  l := c.Length;
+  s := t.Length;
+  SetLength(Self, (s + l));
+  a := 0;
+  b := 0;
+  z := 0;
+  while ((a < s) and (b < l)) do
+    if ((oAscending and (t[a] < c[b])) or ((not oAscending) and (t[a] > c[b]))) then
+      Self[z.Increase] := t[a.Increase]
+    else
+      Self[z.Increase] := c[b.Increase];
+  for i := a to High(t) do
+    Self[z.Increase] := t[i];
+  for i := b to High(c) do
+    Self[z.Increase] := c[i];
 end;
 {$ENDIF}
