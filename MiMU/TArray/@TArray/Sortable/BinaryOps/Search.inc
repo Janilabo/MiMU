@@ -8,6 +8,7 @@ function BinaryFind(const item: mType; const scan: TRange; const ascending: Bool
 function BinaryFindID(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFindIndex(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryGallopingSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryHunt(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryHybridSearch(const item: MType; const oAscending: Boolean = True; const threshold: Integer = 8): Integer; overload;
 function BinaryHybridSearch(const item: MType; const threshold: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryID(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -39,6 +40,7 @@ function BinarySearchRange(const item: MType; const rLeft, rRight: Integer; cons
 function BinarySearchSpan(const item: MType; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinarySeek(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryTrack(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryTrace(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUniformSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 
@@ -373,6 +375,33 @@ begin
     end;
   end;
   Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryHunt>
+  @action: Binary searches a sorted array for an exact value, returning its index or -1 if not found.
+  @note: Standard binary search using a lower-bound-converging bracketing pattern (Result/H converge to a single index,
+         rather than the usual L/H/M three-variable scheme). Supports both ascending and descending sorted arrays via oAscending.
+		 Empty array returns -1 immediately.
+[==============================================================================}
+function MArrayHelper.BinaryHunt(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  H, M: Integer;
+begin
+  H := High(Self);
+  if (H = -1) then
+    Exit(-1);
+  Result := 0;
+  while (Result < H) do
+  begin
+    M := (Result + ((H - Result) shr 1));
+    if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      Result := (M + 1)
+    else
+      H := M;
+  end;
+  if not (Self[Result] = item) then
+    Result := -1;
 end;
 
 {==============================================================================]
@@ -1323,6 +1352,41 @@ begin
       R.stop := (M - 1);
   end;
   Result := not R.start;
+end;
+
+{==============================================================================]
+  <BinaryTrack>
+  @action: Binary searches a sorted array for an exact value, returning its index or -1 if not found.
+  @note: Standard L/R/M binary search, but bound updates use branchless arithmetic (Ord(C > 0)/Ord(C < 0) as 0/1 multipliers) instead of if/else,
+         based on a three-way comparison against the pivot. Supports both ascending and descending sorted arrays via oAscending.
+		 Empty array returns -1 immediately (loop condition fails when High(Self) = -1).
+[==============================================================================}
+function MArrayHelper.BinaryTrack(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  L, R, M, C: Integer;
+begin
+  L := 0;
+  R := High(Self);
+  while (L <= R) do
+  begin
+    M := (L + ((R - L) shr 1));
+    if (Self[M] < item) then
+      C := 1
+    else if (Self[M] > item) then
+      C := -1
+    else
+      Exit(M);
+    if oAscending then
+    begin
+      L := (L + ((M - L) + 1) * Ord(C > 0));
+      R := (R - ((R - M) + 1) * Ord(C < 0));
+    end else
+    begin
+      L := (L + ((M - L) + 1) * Ord(C < 0));
+      R := (R - ((R - M) + 1) * Ord(C > 0));
+    end;
+  end;
+  Result := -1;
 end;
 
 {==============================================================================]

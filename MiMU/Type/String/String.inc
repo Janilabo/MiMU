@@ -1,6 +1,7 @@
 {$DEFINE string}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
+TStringInterval = specialize TInterval<string>;
 TStringCompare = specialize TCompare<string>;
 TStringArray = array of string;
 T2DStringArray = array of TStringArray;

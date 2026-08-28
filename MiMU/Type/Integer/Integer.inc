@@ -1,6 +1,7 @@
 {$DEFINE Integer}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
+TIntegerInterval = specialize TInterval<Integer>;
 TIntegerCompare = specialize TCompare<Integer>;
 TIntegerArray = array of Integer;
 T2DIntegerArray = array of TIntegerArray;

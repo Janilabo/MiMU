@@ -127,6 +127,8 @@ type
 
 {$I MiMU/MiMU.inc}
 
+generic function Interval<T>(const a, b: T): specialize TInterval<T>; overload;
+
 generic function IncEx<T>(var values: array of T; const N: T = 1): Integer; overload;
 generic function DecEx<T>(var values: array of T; const N: T = 1): Integer; overload;
 generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
@@ -152,6 +154,7 @@ generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integ
 generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function Trade<T>(var A, B: T): Boolean; overload;
 generic function QuickSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
+generic function QSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
 
 implementation
 
@@ -347,6 +350,18 @@ end;
 function TInterval.Succeeds(const other: TInterval): Boolean; overload;
 begin
   Result := (Self.lower > other.upper);
+end;
+
+{==============================================================================]
+  <Interval>
+  @action: Constructs a TInterval<T> from two values in either order, without requiring the caller to write out the full `specialize TInterval<T>.Create(...)` syntax.
+  @note: A thin convenience wrapper — normalization (lower <= upper) is entirely handled by TInterval.Create itself.
+         T is inferred from the argument types at the call site in most cases, so callers can typically write Interval(1, 10) rather than specialize Interval<Integer>(1, 10).
+		 Requires T to support <=, same ordered-only constraint as TInterval itself.
+[==============================================================================}
+generic function Interval<T>(const a, b: T): specialize TInterval<T>; overload;
+begin
+  Result := specialize TInterval<T>.Create(a, b);
 end;
 
 {==============================================================================]
@@ -760,6 +775,55 @@ generic function QuickSort<T>(var arr: array of T; const comp: specialize TCompa
 	  Sorting(L, J);
     if (I < R) then
       Sorting(I, R);
+  end;
+begin
+  Result := Length(arr);
+  if (Result > 1) then
+    Sorting(0, High(arr));
+end;
+
+{==============================================================================]
+  <QSort>
+  @action: Sorts a dynamic array in place using QuickSort with Hoare partitioning, ordered by a caller-supplied three-way comparer.
+  @note: Recurses into the smaller partition and loops into the larger one, bounding worst-case stack depth to O(log n) regardless of input order.
+         Pivot is the middle element (overflow-safe index calculation), so adversarial/already-sorted input doesn't force worst-case behavior the way first/last-element pivoting would.
+		 Works for any T, including types with no native ordering, since ordering comes entirely from comp. Returns Length(arr) for convenience.
+[==============================================================================}
+generic function QSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
+  procedure Sorting(L, R: Integer);
+  var
+    I, J: Integer;
+    P: T;
+  begin
+    while (L < R) do
+    begin
+      I := L;
+      J := R;
+      P := arr[L + ((R - L) div 2)];
+      repeat
+        while (comp(arr[I], P) < 0) do
+          Inc(I);
+        while (comp(arr[J], P) > 0) do
+          Dec(J);
+        if (I <= J) then
+        begin
+          specialize Swap<T>(arr[I], arr[J]);
+          Inc(I);
+          Dec(J);
+        end;
+      until (I > J);
+      if ((J - L) < (R - I)) then
+      begin
+        if (L < J) then
+		  Sorting(L, J);
+        L := I;
+      end else
+      begin
+        if (I < R) then
+		  Sorting(I, R);
+        R := J;
+      end;
+    end;
   end;
 begin
   Result := Length(arr);

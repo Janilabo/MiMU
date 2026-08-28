@@ -1,6 +1,7 @@
 {$DEFINE Double}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
+TDoubleInterval = specialize TInterval<Double>;
 TDoubleCompare = specialize TCompare<Double>;
 TDoubleArray = array of Double;
 T2DDoubleArray = array of TDoubleArray;

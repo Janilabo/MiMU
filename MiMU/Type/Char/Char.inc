@@ -1,6 +1,7 @@
 {$DEFINE Char}{$I ../Defines.inc}
 
 {$IFDEF TYPES}
+TCharInterval = specialize TInterval<Char>;
 TCharCompare = specialize TCompare<Char>;
 TCharArray = array of Char;
 T2DCharArray = array of TCharArray;
