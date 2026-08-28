@@ -24,6 +24,8 @@ function Grow(const item: MType; const allowDuplicates: Boolean = False): Intege
 function Infuse(const item: MType): Integer; overload;
 function Infuse(const items: MArray): Integer; overload;
 function Inject(const items: MArray; const index: Integer = 2147483647): Integer; overload;
+function Insert2(const item: MType; const index: Integer = 0): MArray; overload;
+function Insert2(const items: MArray; const index: Integer = 0): MArray; overload;
 function Prepend(const items: MArray; const index: Integer = 0): Integer; overload;
 function Push(const item: MType): MArray; overload;
 function Push(const items: MArray): MArray; overload;
@@ -430,6 +432,50 @@ begin
     Self[i + l] := Self[i];
   for i := 0 to (l - 1) do
     Self[p + i] := items[i];
+end;
+
+{==============================================================================]
+  <Insert2>
+  @action: Inserts a single item into the array at the specified index and returns the result as a new array without modifying the original.
+  @note: Clamps the insertion index to valid bounds [0, Length]. Automatically defaults to index 0 (prepend).
+[==============================================================================}
+function MArrayHelper.Insert2(const item: MType; const index: Integer = 0): MArray; overload;
+var
+  s, i, p: Integer;
+begin
+  s := Self.Length;
+  p := Max(0, Min(index, s));
+  SetLength(Result, (s + 1));
+  for i := 0 to (p - 1) do
+    Result[i] := Self[i];
+  Result[p] := item;
+  for i := p to (s - 1) do
+    Result[i + 1] := Self[i];
+end;
+
+{==============================================================================]
+  <Insert2>
+  @action: Inserts an array of items into the array at the specified index and returns the result as a new array without me-modifying the original.
+  @note: Handles empty source or insertion arrays safely via deep copies. Clamps index to valid bounds [0, Length].
+[==============================================================================}
+function MArrayHelper.Insert2(const items: MArray; const index: Integer = 0): MArray; overload;
+var
+  s, i, p, l: Integer;
+begin
+  l := items.Length;
+  if (l = 0) then
+    Exit(Self.Copy);
+  s := Self.Length;
+  if (s = 0) then
+    Exit(items.Copy);
+  p := Max(0, Min(index, s));
+  SetLength(Result, (s + l));
+  for i := 0 to (p - 1) do
+    Result[i] := Self[i];
+  for i := 0 to (l - 1) do
+    Result[p + i] := items[i];
+  for i := p to (s - 1) do
+    Result[i + l] := Self[i];
 end;
 
 {==============================================================================]
