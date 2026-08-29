@@ -129,6 +129,7 @@ type
 
 generic function Interval<T>(const a, b: T): specialize TInterval<T>; overload;
 
+generic function BinarySearch<T>(const arr: array of T; const target: T; const ascending: Boolean = True): Integer; overload;
 generic function IncEx<T>(var values: array of T; const N: T = 1): Integer; overload;
 generic function DecEx<T>(var values: array of T; const N: T = 1): Integer; overload;
 generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
@@ -362,6 +363,33 @@ end;
 generic function Interval<T>(const a, b: T): specialize TInterval<T>; overload;
 begin
   Result := specialize TInterval<T>.Create(a, b);
+end;
+
+{==============================================================================]
+  <BinarySearch>
+  @action: Performs a binary search on a sorted array of generic type T.
+  @note: Supports both ascending and descending sorted order via the 
+         'ascending' parameter. Returns the zero-based index of the target 
+         if found; otherwise returns -1. Array elements must support standard 
+         relational comparison operators (=, <, >).
+[==============================================================================}
+generic function BinarySearch<T>(const arr: array of T; const target: T; const ascending: Boolean = True): Integer; overload;
+var
+  L, H: Integer;
+begin
+  L := Low(Arr);
+  H := High(Arr);
+  while (L <= H) do
+  begin
+    Result := (L + (H - L) div 2);
+    if (arr[Result] = target) then
+      Exit
+    else if ((ascending and (arr[Result] < target)) or ((not ascending) and (arr[Result] > target))) then
+      L := (Result + 1)
+    else
+      H := (Result - 1);
+  end;
+  Result := -1;
 end;
 
 {==============================================================================]

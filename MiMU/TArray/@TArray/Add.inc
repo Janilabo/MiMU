@@ -26,6 +26,8 @@ function Infuse(const items: MArray): Integer; overload;
 function Inject(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 function Insert2(const item: MType; const index: Integer = 0): MArray; overload;
 function Insert2(const items: MArray; const index: Integer = 0): MArray; overload;
+function Inserted(const item: MType; const index: Integer = 0): MArray; overload;
+function Inserted(const items: MArray; const index: Integer = 0): MArray; overload;
 function Prepend(const items: MArray; const index: Integer = 0): Integer; overload;
 function Push(const item: MType): MArray; overload;
 function Push(const items: MArray): MArray; overload;
@@ -476,6 +478,31 @@ begin
     Result[p + i] := items[i];
   for i := p to (s - 1) do
     Result[i + l] := Self[i];
+end;
+
+{==============================================================================]
+  <Inserted>
+  @action: Returns a new array with `item` inserted at `index`.
+  @note: Non-mutating — clones `Self` first, so the original array is left untouched.
+         `index` follows `System.Insert` semantics (0-based; existing elements at and after `index` are shifted right).
+[==============================================================================}
+function MArrayHelper.Inserted(const item: MType; const index: Integer = 0): MArray; overload;
+begin
+  Result := Self.Cloned;
+  System.Insert(item, Result, index);
+end;
+
+{==============================================================================]
+  <Inserted>
+  @action: Returns a new array with `items` inserted at `index`.
+  @note: Non-mutating — clones `Self` first, so the original array is left untouched.
+         Equivalent to the single-item overload applied per element,
+		 but performed as one bulk `System.Insert` call. Same 0-based `index` semantics.
+[==============================================================================}
+function MArrayHelper.Inserted(const items: MArray; const index: Integer = 0): MArray; overload;
+begin
+  Result := Self.Cloned;
+  System.Insert(items, Result, index);
 end;
 
 {==============================================================================]
