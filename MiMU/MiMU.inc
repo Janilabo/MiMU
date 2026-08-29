@@ -4,6 +4,7 @@
     TByteSet = set of Byte;
     TVariantArray = array of Variant;
     TConstArray = array of TVarRec;
+  {$I Generic/Generic.inc}
   {$I Type/Type+.inc}
   {$I TArray/TArray+.inc}
   {$i T2DArray/T2DArray+.inc}
@@ -21,6 +22,7 @@
   {$UNDEF HELPERS}
 
   {$DEFINE FUNCTIONS}
+  {$I Generic/Generic.inc}
   {$I Type/Type+.inc}
   {$I TArray/TArray+.inc}
   {$i T2DArray/T2DArray+.inc}
@@ -55,6 +57,7 @@
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+  {$I Generic/Generic.inc}
   {$I Type/Type+.inc}
   {$I TArray/TArray+.inc}
   {$i T2DArray/T2DArray+.inc}

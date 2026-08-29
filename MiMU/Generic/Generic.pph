@@ -1,0 +1,11 @@
+{$I @Generic/BinaryOps.inc}
+{$I @Generic/Bounds.inc}
+{$I @Generic/Conditional.inc}
+{$I @Generic/Indexing.inc}
+{$I @Generic/Membership.inc}
+{$I @Generic/Search.inc}
+{$I @Generic/Size.inc}
+{$I @Generic/Sort.inc}
+{$I @Generic/Transaction.inc}
+
+{$I @Generic/Types/TInterval.inc}

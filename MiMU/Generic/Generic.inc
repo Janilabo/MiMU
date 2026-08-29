@@ -1,0 +1,7 @@
+{$IFDEF TYPES}
+generic TCompare<T> = function(const A, B: T): Integer;
+{$ENDIF}
+
+{$IF DEFINED(CLASSES) OR DEFINED(FUNCTIONS) OR DEFINED(IMPLEMENTATION) OR DEFINED(TYPES)}
+{$I Generic.pph}
+{$ENDIF}
