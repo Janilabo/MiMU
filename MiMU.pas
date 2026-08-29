@@ -130,32 +130,43 @@ type
 generic function Interval<T>(const a, b: T): specialize TInterval<T>; overload;
 
 generic function BinarySearch<T>(const arr: array of T; const target: T; const ascending: Boolean = True): Integer; overload;
-generic function IncEx<T>(var values: array of T; const N: T = 1): Integer; overload;
-generic function DecEx<T>(var values: array of T; const N: T = 1): Integer; overload;
+generic function BinaryFind<T>(const arr: array of T; const target: T; const ascending: Boolean = True): Integer; overload;
+
 generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
+
+generic function QuickSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
+generic function QSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
+
+generic function IncEx<T>(var values: array of T; const N: T = 1): Integer; overload;
+generic function DecEx<T>(var values: array of T; const N: T = 1): Integer; overload;
+
 generic function Swappify<T>(var current: T; var target: T): T; overload;
 generic function Swap<T>(var A, B: T): Boolean; overload;
 generic function Swop<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Swop<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Arrange<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
 generic function Arrange<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
+generic function Trade<T>(var A, B: T): Boolean; overload;
+
 generic function Contains<T>(const arr: array of T; const item: T): Boolean; overload;
 generic function Includes<T>(const arr: array of T; const item: T): Boolean; overload;
+
 generic function Position<T>(const arr: array of T; const item: T): Integer; overload;
 generic function Location<T>(const arr: array of T; const item: T): Integer; overload;
+
 generic function Indexes<T>(const arr: array of T): TIntegerArray; overload;
 generic function Indices<T>(const arr: array of T): TIntegerArray; overload;
 generic function IDs<T>(const arr: array of T): TIntegerArray; overload;
+
 generic function GetArrayBounds<T>(const arr: array of T; out L, H: Integer): Integer; overload;
+
 generic function IfThenElse<T>(const aBool, bBool: Boolean; const aResult, bResult, cResult: T): T; overload;
 generic function Iff<T>(bState: Boolean; const bTrue, bFalse: T): T; overload;
+
 generic function SetSize<T>(var A, B: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function SetSize<T>(var A, B, C: specialize TArray<T>; const size: Integer = 1): Integer; overload;
 generic function SetSize<T>(var A, B, C, D: specialize TArray<T>; const size: Integer = 1): Integer; overload;
-generic function Trade<T>(var A, B: T): Boolean; overload;
-generic function QuickSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
-generic function QSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
 
 implementation
 
@@ -393,6 +404,159 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryFind>
+  @action: Performs binary search using a direction multiplier for branch efficiency.
+  @note: Evaluates sort direction outside the loop body for better performance.
+[==============================================================================}
+generic function BinaryFind<T>(const arr: array of T; const target: T; const ascending: Boolean = True): Integer; overload;
+var
+  L, H, D: Integer;
+begin
+  L := Low(arr);
+  H := High(arr);
+  if ascending then
+    D := 1
+  else
+    D := -1;
+  while (L <= H) do
+  begin
+    Result := (L + (H - L) div 2);
+    if (arr[Result] = target) then
+      Exit;
+    if (D * (2 * Ord(Boolean(arr[Result] < target)) - 1) = 1) then
+      L := (Result + 1)
+    else
+      H := (Result - 1);
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
+  <Sort>
+  @action: Ensures that two values are ordered according to the ascending flag, performing a swap if necessary.
+  @note: Returns True if a swap occurred, False otherwise. Calls generic Swap<T> internally.
+[==============================================================================}
+generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
+  if Result then
+    specialize Swap<T>(A, B);
+end;
+
+{==============================================================================]
+  <Sort>
+  @action: Ensures that three values A, B, C are ordered according to the ascending flag, performing swaps if necessary.
+  @note: Returns True if any swaps occurred, False otherwise. Does not fully sort arrays, only these three values.
+[==============================================================================}
+generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
+  function DoSwap(var X, Y: T): Boolean;
+  var
+    Z: T;
+  begin
+    Z := X;
+    X := Y;
+    Y := Z;
+    Result := True;
+  end;
+begin
+  Result := False;
+  if ((oAscending and (A > B)) or ((not oAscending) and (A < B))) then
+    Result := DoSwap(A, B);
+  if ((oAscending and (A > C)) or ((not oAscending) and (A < C))) then
+    Result := DoSwap(A, C);
+  if ((oAscending and (B > C)) or ((not oAscending) and (B < C))) then
+    Result := DoSwap(B, C);
+end;
+
+{==============================================================================]
+  <QuickSort>
+  @action: Performs an in-place QuickSort on a dynamic array of any type T.
+           Uses a provided comparer function to determine ordering.
+  @note: Returns the length of the array (optional). The array is modified directly.
+         Pivot selection is safe against integer overflow. Uses generic Swap<T> internally.
+[==============================================================================}
+generic function QuickSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
+  procedure Sorting(L, R: Integer);
+  var
+    P: T;
+    I, J: Integer;
+  begin
+    I := L;
+    J := R;
+    P := arr[L + ((R - L) div 2)];
+    repeat
+      while (comp(arr[I], P) < 0) do
+        Inc(I);
+      while (comp(arr[J], P) > 0) do
+        Dec(J);
+      if (I <= J) then
+      begin
+        specialize Swap<T>(arr[I], arr[J]);
+        Inc(I);
+        Dec(J);
+      end;
+    until (I > J);
+    if (L < J) then
+	  Sorting(L, J);
+    if (I < R) then
+      Sorting(I, R);
+  end;
+begin
+  Result := Length(arr);
+  if (Result > 1) then
+    Sorting(0, High(arr));
+end;
+
+{==============================================================================]
+  <QSort>
+  @action: Sorts a dynamic array in place using QuickSort with Hoare partitioning, ordered by a caller-supplied three-way comparer.
+  @note: Recurses into the smaller partition and loops into the larger one, bounding worst-case stack depth to O(log n) regardless of input order.
+         Pivot is the middle element (overflow-safe index calculation), so adversarial/already-sorted input doesn't force worst-case behavior the way first/last-element pivoting would.
+		 Works for any T, including types with no native ordering, since ordering comes entirely from comp. Returns Length(arr) for convenience.
+[==============================================================================}
+generic function QSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
+  procedure Sorting(L, R: Integer);
+  var
+    I, J: Integer;
+    P: T;
+  begin
+    while (L < R) do
+    begin
+      I := L;
+      J := R;
+      P := arr[L + ((R - L) div 2)];
+      repeat
+        while (comp(arr[I], P) < 0) do
+          Inc(I);
+        while (comp(arr[J], P) > 0) do
+          Dec(J);
+        if (I <= J) then
+        begin
+          specialize Swap<T>(arr[I], arr[J]);
+          Inc(I);
+          Dec(J);
+        end;
+      until (I > J);
+      if ((J - L) < (R - I)) then
+      begin
+        if (L < J) then
+		  Sorting(L, J);
+        L := I;
+      end else
+      begin
+        if (I < R) then
+		  Sorting(I, R);
+        R := J;
+      end;
+    end;
+  end;
+begin
+  Result := Length(arr);
+  if (Result > 1) then
+    Sorting(0, High(arr));
+end;
+
+{==============================================================================]
   <IncEx>
   @action: Increments every element in an open array by a specified value.
   @note: Operates directly on the passed array (var). Defaults to adding 1.
@@ -496,43 +660,6 @@ begin
 end;
 
 {==============================================================================]
-  <Sort>
-  @action: Ensures that two values are ordered according to the ascending flag, performing a swap if necessary.
-  @note: Returns True if a swap occurred, False otherwise. Calls generic Swap<T> internally.
-[==============================================================================}
-generic function Sort<T>(var A, B: T; const oAscending: Boolean = True): Boolean; overload;
-begin
-  Result := ((oAscending and (A > B)) or ((not oAscending) and (A < B)));
-  if Result then
-    specialize Swap<T>(A, B);
-end;
-
-{==============================================================================]
-  <Sort>
-  @action: Ensures that three values A, B, C are ordered according to the ascending flag, performing swaps if necessary.
-  @note: Returns True if any swaps occurred, False otherwise. Does not fully sort arrays, only these three values.
-[==============================================================================}
-generic function Sort<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
-  function DoSwap(var X, Y: T): Boolean;
-  var
-    Z: T;
-  begin
-    Z := X;
-    X := Y;
-    Y := Z;
-    Result := True;
-  end;
-begin
-  Result := False;
-  if ((oAscending and (A > B)) or ((not oAscending) and (A < B))) then
-    Result := DoSwap(A, B);
-  if ((oAscending and (A > C)) or ((not oAscending) and (A < C))) then
-    Result := DoSwap(A, C);
-  if ((oAscending and (B > C)) or ((not oAscending) and (B < C))) then
-    Result := DoSwap(B, C);
-end;
-
-{==============================================================================]
   <Arrange>
   @action: Ensures that the two items A and B are in the specified order (ascending or descending).
            Performs a swap if necessary.
@@ -558,6 +685,24 @@ end;
 generic function Arrange<T>(var A, B, C: T; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := (specialize Arrange<T>(A, B) or specialize Arrange<T>(A, C) or specialize Arrange<T>(B, C));
+end;
+
+{==============================================================================]
+  <Trade>
+  @action: Swaps two variables if their memory addresses are different.
+  @note: Returns True if a swap occurred, False otherwise.
+[==============================================================================}
+generic function Trade<T>(var A, B: T): Boolean; overload;
+var
+  C: T;
+begin
+  Result := (@A <> @B);
+  if Result then
+  begin
+    C := A;
+    A := B;
+    B := C;
+  end;
 end;
 
 {==============================================================================]
@@ -751,112 +896,6 @@ begin
   SetLength(B, Result);
   SetLength(C, Result);
   SetLength(D, Result);
-end;
-
-{==============================================================================]
-  <Trade>
-  @action: Swaps two variables if their memory addresses are different.
-  @note: Returns True if a swap occurred, False otherwise.
-[==============================================================================}
-generic function Trade<T>(var A, B: T): Boolean; overload;
-var
-  C: T;
-begin
-  Result := (@A <> @B);
-  if Result then
-  begin
-    C := A;
-    A := B;
-    B := C;
-  end;
-end;
-
-{==============================================================================]
-  <QuickSort>
-  @action: Performs an in-place QuickSort on a dynamic array of any type T.
-           Uses a provided comparer function to determine ordering.
-  @note: Returns the length of the array (optional). The array is modified directly.
-         Pivot selection is safe against integer overflow. Uses generic Swap<T> internally.
-[==============================================================================}
-generic function QuickSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
-  procedure Sorting(L, R: Integer);
-  var
-    P: T;
-    I, J: Integer;
-  begin
-    I := L;
-    J := R;
-    P := arr[L + ((R - L) div 2)];
-    repeat
-      while (comp(arr[I], P) < 0) do
-        Inc(I);
-      while (comp(arr[J], P) > 0) do
-        Dec(J);
-      if (I <= J) then
-      begin
-        specialize Swap<T>(arr[I], arr[J]);
-        Inc(I);
-        Dec(J);
-      end;
-    until (I > J);
-    if (L < J) then
-	  Sorting(L, J);
-    if (I < R) then
-      Sorting(I, R);
-  end;
-begin
-  Result := Length(arr);
-  if (Result > 1) then
-    Sorting(0, High(arr));
-end;
-
-{==============================================================================]
-  <QSort>
-  @action: Sorts a dynamic array in place using QuickSort with Hoare partitioning, ordered by a caller-supplied three-way comparer.
-  @note: Recurses into the smaller partition and loops into the larger one, bounding worst-case stack depth to O(log n) regardless of input order.
-         Pivot is the middle element (overflow-safe index calculation), so adversarial/already-sorted input doesn't force worst-case behavior the way first/last-element pivoting would.
-		 Works for any T, including types with no native ordering, since ordering comes entirely from comp. Returns Length(arr) for convenience.
-[==============================================================================}
-generic function QSort<T>(var arr: array of T; const comp: specialize TCompare<T>): Integer; overload;
-  procedure Sorting(L, R: Integer);
-  var
-    I, J: Integer;
-    P: T;
-  begin
-    while (L < R) do
-    begin
-      I := L;
-      J := R;
-      P := arr[L + ((R - L) div 2)];
-      repeat
-        while (comp(arr[I], P) < 0) do
-          Inc(I);
-        while (comp(arr[J], P) > 0) do
-          Dec(J);
-        if (I <= J) then
-        begin
-          specialize Swap<T>(arr[I], arr[J]);
-          Inc(I);
-          Dec(J);
-        end;
-      until (I > J);
-      if ((J - L) < (R - I)) then
-      begin
-        if (L < J) then
-		  Sorting(L, J);
-        L := I;
-      end else
-      begin
-        if (I < R) then
-		  Sorting(I, R);
-        R := J;
-      end;
-    end;
-  end;
-begin
-  Result := Length(arr);
-  if (Result > 1) then
-    Sorting(0, High(arr));
 end;
 
 {$I MiMU/MiMU.inc}
