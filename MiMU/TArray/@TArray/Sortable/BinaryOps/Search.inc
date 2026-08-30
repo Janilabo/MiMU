@@ -37,6 +37,7 @@ function BinarySearchBy(const item: MType; const oAscending: Boolean = True): In
 function BinarySearchEx(const item: MType; const ignore: MType; const aAscending: Boolean = True): Integer; overload;
 function BinarySearchNth(const item: MType; const N: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchRange(const item: MType; const rLeft, rRight: Integer; const aAscending: Boolean = True): Integer; overload;
+function BinarySearchRotated(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchSpan(const item: MType; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinarySeek(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -1274,6 +1275,42 @@ begin
     else
       R.stop := (M - 1);
   end;
+end;
+
+{==============================================================================]
+  <BinarySearchRotated>
+  @action: Searches for a target value within a rotated sorted array using binary search.
+  @note: Uses BinaryPivot to identify the sorted sub-interval before performing an O(log N) search.
+         Returns the 0-based index of the target item, or -1 if not found.
+[==============================================================================}
+function MArrayHelper.BinarySearchRotated(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  H, P, L, R: Integer;
+begin
+  H := High(Self);
+  if (H = -1) then
+    Exit(-1);
+  P := Self.BinaryPivot(oAscending);
+  if ((oAscending and ((item >= Self[0]) and (P > 0) and (item <= Self[P - 1]))) or ((not oAscending) and ((item <= Self[0]) and (P > 0) and (item >= Self[P - 1])))) then
+  begin
+    L := 0;
+    R := (P - 1);
+  end else
+  begin
+    L := P;
+    R := H;
+  end;
+  while (L <= R) do
+  begin
+    Result := (L + ((R - L) shr 1));
+    if (Self[Result] = item) then
+      Exit;
+    if ((Self[Result] < item) = oAscending) then
+      L := (Result + 1)
+    else
+      R := (Result - 1);
+  end;
+  Result := -1;
 end;
 
 {==============================================================================]

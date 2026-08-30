@@ -4,6 +4,7 @@ function BinaryMode: MType; overload;
 function BinaryNeighbors(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryPercented(const item: MType; const oAscending: Boolean = True): Double; overload;
 function BinaryPercentile(const item: MType; const oAscending: Boolean = True): Double; overload;
+function BinaryPivot(const oAscending: Boolean = True): Integer; overload;
 function BinaryPopular(const oAscending: Boolean = True): MType; overload;
 function BinaryRanking(const item: MType; const oAscending: Boolean = True): Double; overload;
 {$ENDIF}
@@ -156,6 +157,39 @@ begin
       R.stop := (M - 1);
   end;
   Result := (R.start / H);
+end;
+
+{==============================================================================]
+  <BinaryPivot>
+  @action: Finds the pivot index (rotation point) of a rotated sorted array using binary search.
+  @note: Returns the 0-based index of the minimum element (if ascending) or maximum element (if descending). Time complexity is O(log N).
+[==============================================================================}
+function MArrayHelper.BinaryPivot(const oAscending: Boolean = True): Integer; overload;
+var
+  R, M: Integer;
+begin
+  Result := 0;
+  R := High(Self);
+  case oAscending of
+    True:
+    while (Result < R) do
+    begin
+      M := (Result + ((R - Result) shr 1));
+      if (Self[M] > Self[R]) then
+        Result := (M + 1)
+      else
+        R := M;
+    end;
+    False:
+    while (Result < R) do
+    begin
+      M := (Result + ((R - Result) shr 1));
+      if (Self[M] < Self[R]) then
+        Result := (M + 1)
+      else
+        R := M;
+    end;
+  end;
 end;
 
 {==============================================================================]
