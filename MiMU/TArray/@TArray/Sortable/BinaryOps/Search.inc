@@ -48,6 +48,9 @@ function BinaryUniformSearch(const item: MType; const oAscending: Boolean = True
 function BinaryCertum(const aMin, aMax: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryIterum(const aMin, aMax: MType; const oAscending: Boolean = True): Integer; overload;
 
+function BinaryFirst(const item: MType; const lIndex, hIndex: Integer; const oAscending: Boolean = True): Integer; overload;
+function BinaryLast(const item: MType; const lIndex, hIndex: Integer; const oAscending: Boolean = True): Integer; overload;
+
 function BisectNth(const item: MType; const N: Integer = 1; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
@@ -1552,6 +1555,60 @@ begin
       s.stop := (Result - 1);
   end;
   Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryFirst>
+  @action: Finds the first index of a target element within a bounded range of a sorted array.
+  @note: Performs an O(log N) binary search restricted between lIndex and hIndex (inclusive).
+         Array must be sorted according to oAscending. Returns -1 if not found.
+[==============================================================================}
+function MArrayHelper.BinaryFirst(const item: MType; const lIndex, hIndex: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(lIndex, hIndex);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      Result := M;
+      R.stop := (M - 1);
+    end else if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryLast>
+  @action: Finds the last index of a target element within a bounded range of a sorted array.
+  @note: Performs an O(log N) binary search restricted between lIndex and hIndex (inclusive).
+         Array must be sorted according to oAscending. Returns -1 if not found.
+[==============================================================================}
+function MArrayHelper.BinaryLast(const item: MType; const lIndex, hIndex: Integer; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  Result := -1;
+  R.Create(lIndex, hIndex);
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      Result := M;
+      R.start := (M + 1);
+    end else if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
 end;
 
 {==============================================================================]

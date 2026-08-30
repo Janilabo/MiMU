@@ -1,11 +1,11 @@
 {$IFDEF HELPERS}
-function BinaryGrouped(const aAscending: Boolean = True): T2DIntegerArray; overload;
+function BinaryGroupment(const aAscending: Boolean = True): T2DIntegerArray; overload;
 function BinaryGroups(const aAscending: Boolean = True): T2DIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <BinaryGrouped>
+  <BinaryGroupment>
   @action: Groups the elements of the array into subarrays of identical values.
            Works efficiently on arrays that are already sorted (ascending).
            Uses binary search to locate all occurrences of each value.
@@ -15,7 +15,7 @@ function BinaryGroups(const aAscending: Boolean = True): T2DIntegerArray; overlo
       using TArray_QuickSorted and then reverses the resulting groups.
     - Complexity is O(n + (max-min) * log n) where max-min is the integer range.
 [==============================================================================}
-function TIntegerArrayHelper.BinaryGrouped(const aAscending: Boolean = True): T2DIntegerArray; overload;
+function TIntegerArrayHelper.BinaryGroupment(const aAscending: Boolean = True): T2DIntegerArray; overload;
 var
   h, i, r, l, m, v: Integer;
   s: TRange;
@@ -29,7 +29,7 @@ begin
   case aAscending of
     True:
     begin
-	  h := High(Self);
+      h := High(Self);
       r := 0;
       for v := Self[0] to Self[h] do
       begin
@@ -61,7 +61,7 @@ begin
     False:
     begin
       Result := Self.QuickSorted.BinaryGrouped(True);
-	  i := 0;
+      i := 0;
       l := High(Result);
       while (i < l) do
       begin
@@ -71,7 +71,7 @@ begin
         Inc(i);
         Dec(l);
       end;
-	end;
+    end;
   end;
 end;
 

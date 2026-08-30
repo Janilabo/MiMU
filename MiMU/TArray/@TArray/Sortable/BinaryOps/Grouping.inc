@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function BinaryGroup(const aAscending: Boolean = True): M2DArray; overload;
+function BinaryGrouped(const oAscending: Boolean = True): M2DArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -56,5 +57,30 @@ begin
     end;
     Result[p].Supply(Self[i]);
   end;
+end;
+
+{==============================================================================]
+  <BinaryGrouped>
+  @action: Groups contiguous identical elements from a sorted array into a 2D array.
+  @note: Uses BinaryLast bounded to remaining elements [i..s-1] in O(log N) time per distinct value.
+         Requires the input array to be sorted according to oAscending (ascending or descending).
+[==============================================================================}
+function MArrayHelper.BinaryGrouped(const oAscending: Boolean = True): M2DArray; overload;
+var
+  l, r, i, s: Integer;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  SetLength(Result, s);
+  i := 0;
+  l := 0;
+  while (i < s) do
+  begin
+    for r := 0 to Result[l].Alloc((Self.BinaryLast(Self[i], i, (s - 1), oAscending) - i) + 1) do
+      Result[l][r] := Self[i];
+    Inc(i, Result[l.Increase].Length);
+  end;
+  SetLength(Result, l);
 end;
 {$ENDIF}
