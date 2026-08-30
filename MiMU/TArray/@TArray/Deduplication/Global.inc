@@ -7,7 +7,9 @@ function Uncluttered: MArray; overload;
 function Unified(const dAscending: Boolean = True): MArray; overload;
 function Unify(const dAscending: Boolean = True): Integer; overload;
 function Unduplicated: MArray; overload;
+function Uniqual: MArray; overload;
 function Uniqued: MArray; overload;
+function Uniqular: MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -289,6 +291,38 @@ begin
 end;
 
 {==============================================================================]
+  <Uniqual>
+  @action: Removes duplicate elements from the array while preserving original relative order.
+  @note: Uses nested linear iteration (O(N^2)) to return a new array containing only the first occurrence of each unique item.
+[==============================================================================}
+function MArrayHelper.Uniqual: MArray; overload;
+var
+  h, i, j, s: Integer;
+  r: TIntegerArray;
+  f: Boolean;
+begin
+  s := Self.Length;
+  if (s < 2) then
+    Exit(Self.Cloned);
+  SetLength(r, s);
+  h := 0;
+  r[0] := 0;
+  for i := 1 to (s - 1) do
+  begin
+    for j := 0 to h do
+    begin
+      f := (Self[r[j]] = Self[i]);
+      if f then
+        Break;
+    end;
+    if not f then
+      r[h.Increment] := i;
+  end;
+  for i := 0 to Result.Alloc(h + 1) do
+    Result[i] := Self[r[i]];
+end;
+
+{==============================================================================]
   <Uniqued>
   @action: Removes all duplicates from arr.
   @note: Returns the unique version of arr.
@@ -316,5 +350,37 @@ begin
     end;
     SetLength(Result, c);
   end;
+end;
+
+{==============================================================================]
+  <Uniqular>
+  @action: Returns a new array containing only unique elements with duplicates removed.
+  @note: Preserves original relative order by checking for duplicates in reverse (O(N^2) time) and allocating the exact result size.
+[==============================================================================}
+function MArrayHelper.Uniqular: MArray; overload;
+var
+  h, i, j, s: Integer;
+  r: TIntegerArray;
+  f: Boolean;
+begin
+  s := Self.Length;
+  if (s < 2) then
+    Exit(Self.Cloned);
+  SetLength(r, s);
+  h := 0;
+  r[0] := 0;
+  for i := 1 to (s - 1) do
+  begin
+    for j := h downto 0 do
+    begin
+      f := (Self[r[j]] = Self[i]);
+      if f then
+        Break;
+    end;
+    if not f then
+      r[h.Increment] := i;
+  end;
+  for i := 0 to Result.Alloc(h + 1) do
+    Result[i] := Self[r[i]];
 end;
 {$ENDIF}
