@@ -59,6 +59,7 @@
 {$I @TArray/Sortable/Metric.inc}
 {$I @TArray/Sortable/Monotonic.inc}
 {$I @TArray/Sortable/Order.inc}
+{$I @TArray/Sortable/Partition.inc}
 {$I @TArray/Sortable/Scanning.inc}
 {$I @TArray/Sortable/Search.inc}
 {$I @TArray/Sortable/Selection.inc}
