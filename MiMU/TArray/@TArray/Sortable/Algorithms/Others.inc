@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function BinaryTreeSort(const oAscending: Boolean = True): Integer; overload;
+function BrickSort(const oAscending: Boolean = True): Integer; overload;
 function CoctailSort(const aAscending: Boolean = True): Integer; overload;
 function CoctailSort2(const aAscending: Boolean = True): Integer; overload;
 function CombSort(const aAscending: Boolean = True): Integer; overload;
@@ -88,6 +89,47 @@ begin
     InsertNode(Self[i], r);
   p := 0;
   TreeOrder(r, Self, p);
+end;
+
+{==============================================================================]
+  <BrickSort>
+  @action: Sorts the array elements in ascending or descending order using an optimized multi-pass swap recording approach (Brick / Odd-Even Sort variant).
+           Returns the total count of swap operations performed.
+  @note: Allocates a temporary index buffer `s` to record out-of-order adjacent pairs in a single pass before batch-swapping them in reverse order.
+         Operates with a time complexity of O(n) in the best case and O(n²) in the worst case.
+[==============================================================================}
+function MArrayHelper.BrickSort(const oAscending: Boolean = True): Integer; overload;
+var
+  h, i, c, l: Integer;
+  s: TIntegerArray;
+begin
+  Result := 0;
+  l := Self.Length;
+  if (l < 2) then
+    Exit;
+  h := s.Alloc(l - 1);
+  case oAscending of
+    True:
+    repeat
+      c := 0;
+      for i := 0 to h do
+        if (Self[i] > Self[i + 1]) then
+          s[c.Increase] := i;
+      for i := (c - 1) downto 0 do
+        Self.Switch(s[i], (s[i] + 1));
+      Inc(Result, c);
+    until (c = 0);
+    False:
+    repeat
+      c := 0;
+      for i := 0 to h do
+        if (Self[i] < Self[i + 1]) then
+          s[c.Increase] := i;
+      for i := (c - 1) downto 0 do
+        Self.Switch(s[i], (s[i] + 1));
+      Inc(Result, c);
+    until (c = 0);
+  end;
 end;
 
 {==============================================================================]
