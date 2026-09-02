@@ -4,6 +4,7 @@ function BrickSort(const oAscending: Boolean = True): Integer; overload;
 function CoctailSort(const aAscending: Boolean = True): Integer; overload;
 function CoctailSort2(const aAscending: Boolean = True): Integer; overload;
 function CombSort(const aAscending: Boolean = True): Integer; overload;
+function ExchangeSort(const oAscending: Boolean = True): Integer; overload;
 function GnomeSort(const aAscending: Boolean = True): Integer; overload;
 function GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
 function HeapifySort(const oAscending: Boolean = True): Integer; overload;
@@ -235,6 +236,74 @@ begin
           s := True;
         end;
     end;
+  end;
+end;
+
+{==============================================================================]
+  <ExchangeSort>
+  @action: Sorts Self in place (ascending or descending) using adjacent-pair
+           comparison; each pass buckets out-of-order pairs into `a` (the
+           element that moved backward) and in-order elements into `b`, then
+           reassembles Self as a+b via C(). Repeats until a pass makes no
+           swaps (l = 0).
+  @note: Ordered-only tier (uses <, > only — no arithmetic, so it generalizes
+         to any comparable T). Allocates two full-length scratch arrays and
+         does a full a+b reconstruction every pass, so it's O(n) extra space
+         and heavier per-pass data movement than a true in-place exchange
+         sort — no shrinking-bound optimization is applied (each pass rescans
+         the full array). Correct for all inputs including length 0/1
+         (early-exits before allocating).
+[==============================================================================}
+function MArrayHelper.ExchangeSort(const oAscending: Boolean = True): Integer; overload;
+var
+  i, l, r: Integer;
+  a, b: MArray;
+  procedure C(const left, right: Integer);
+  var
+    j: Integer;
+  begin
+    for j := 0 to (left - 1) do
+      Self[j] := a[j];
+    for j := 0 to (right - 1) do
+      Self[j + left] := b[j];
+  end;
+begin
+  Result := Self.Length;
+  if (Result < 2) then
+    Exit;
+  SetLength(a, Result);
+  SetLength(b, Result);
+  case oAscending of
+    True:
+    repeat
+      i := 0;
+      l := 0;
+      r := 0;
+      while (i < Result) do
+        if ((i < (Result - 1)) and (Self[i] > Self[i + 1])) then
+        begin
+          b[r.Increase] := Self[i];
+          a[l.Increase] := Self[i + 1];
+          Inc(i, 2);
+        end else
+          b[r.Increase] := Self[i.Increase];
+      C(l, r);
+    until (l = 0);
+    False:
+    repeat
+      i := 0;
+      l := 0;
+      r := 0;
+      while (i < Result) do
+        if ((i < (Result - 1)) and (Self[i] < Self[i + 1])) then
+        begin
+          b[r.Increase] := Self[i];
+          a[l.Increase] := Self[i + 1];
+          Inc(i, 2);
+        end else
+          b[r.Increase] := Self[i.Increase];
+      C(l, r);
+    until (l = 0);
   end;
 end;
 
