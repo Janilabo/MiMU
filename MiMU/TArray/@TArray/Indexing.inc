@@ -3,6 +3,7 @@ function AsIDs(const aAscending: Boolean = True): TIntegerArray; overload;
 function AsIndexes(const aAscending: Boolean = True): TIntegerArray; overload;
 function AsIndices(const aAscending: Boolean = True): TIntegerArray; overload;
 function GetIDs: TIntegerArray; overload;
+function GetIDs(const ID: TIntegerArray): MArray; overload;
 function ID(const aAscending: Boolean = True): TIntegerArray; overload;
 function IDs(const aAscending: Boolean = True): TIntegerArray; overload;
 function IDs(const ID: TIntegerArray): MArray; overload;
@@ -176,6 +177,20 @@ begin
   end;
   for i := i to (l - 1) do
     Result[i] := i;
+end;
+
+{==============================================================================]
+  <GetIDs>
+  @action: Returns a new array containing Self's elements at each index given in ID (gather-by-index).
+  @note: Result.Alloc(ID.Length) returns High(Self) per the established Alloc contract; loop runs downto 0,
+         a reverse-order mechanical variant of the forward-loop pattern (order doesn't affect correctness here since each write is independent).
+[==============================================================================}
+function MArrayHelper.GetIDs(const ID: TIntegerArray): MArray; overload;
+var
+  r: Integer;
+begin
+  for r := Result.Alloc(ID.Length) downto 0 do
+    Result[r] := Self[ID[r]];
 end;
 
 {==============================================================================]

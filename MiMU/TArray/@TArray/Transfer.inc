@@ -17,6 +17,7 @@ function Place(var target: MArray; const aIndex: Integer = 0): MType; overload;
 function Place(var target: MArray; const aIndexes: TIntegerArray): MArray; overload;
 function Receive(const source: MArray; const aIndex: Integer = 0): Boolean; overload;
 function Receive(const source: MArray; const aIndexes: TIntegerArray): Integer; overload;
+function Siphon(var output: MArray; const start: Integer = 0): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -310,5 +311,23 @@ begin
       Self[aIndexes[i]] := source[aIndexes[i]]
     else
       Dec(Result);
+end;
+
+{==============================================================================]
+  <Siphon>
+  @action: Copies output.Length elements from Self, starting at index start,
+           into output — a windowed read from a source array into a caller-sized destination.
+		   Returns the count copied.
+  @note: output must be var, not out — its incoming Length is read (Result := output.Length) before any writes occur,
+         determining how much of Self gets copied; an out parameter would be finalized/zeroed on entry and break this.
+		 No bounds checking against Self's length — caller must ensure start + output.Length does not exceed Self's range.
+[==============================================================================}
+function MArrayHelper.Siphon(var output: MArray; const start: Integer = 0): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := output.Length;
+  for i := start to ((start + Result) - 1) do
+    output[i - start] := Self[i];
 end;
 {$ENDIF}

@@ -12,6 +12,7 @@ function HeapSort(const aAscending: Boolean = True): Integer; overload;
 function InsertionSort(const aAscending: Boolean = True): Integer; overload;
 function PancakeSort(const aAscending: Boolean = True): Integer; overload;
 function PartitionSort(const aAscending: Boolean = True): Integer; overload;
+function ShakerSort(const oAscending: Boolean = True): Integer; overload;
 function ShellSort(const aAscending: Boolean = True): Integer; overload;
 function TreeSort(const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -577,6 +578,40 @@ begin
   Result := Self.Size;
   if (Result > 1) then
     PS(Self, 0, (Result - 1));
+end;
+
+{==============================================================================]
+  <ShakerSort>
+  @action: Sorts the elements of the array in-place in ascending or descending order using a custom bidirectional boundary-exchange algorithm.
+@note: Uses mutating helper methods (Increment/Decrement) to contract left and right pointers
+       while performing a single forward sweep per pass that swaps out-of-bounds elements with the active boundaries (l and r).
+	   Returns the total count of elements in the array.
+[==============================================================================}
+function MArrayHelper.ShakerSort(const oAscending: Boolean = True): Integer; overload;
+var
+  i, l, r: Integer;
+begin
+  Result := Self.Length;
+  if (Result < 2) then
+    Exit;
+  r := Result;
+  l := -1;
+  case oAscending of
+    True:
+    while (l.Increment < r.Decrement) do
+      for i := l to (r - 1) do
+        if (Self[i] < Self[l]) then
+          Self.Switch(i, l)
+        else if (Self[i] > Self[r]) then
+          Self.Switch(i, r);
+    False:
+    while (l.Increment < r.Decrement) do
+      for i := l to (r - 1) do
+        if (Self[i] > Self[l]) then
+          Self.Switch(i, l)
+        else if (Self[i] < Self[r]) then
+          Self.Switch(i, r);
+  end;
 end;
 
 {==============================================================================]
