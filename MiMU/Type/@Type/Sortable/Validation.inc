@@ -7,6 +7,7 @@ function Majority3(const A, B, C: MType): Boolean; overload;
 
 {$IFDEF HELPERS}
 function Amid(const A, B: MType): Boolean; overload;
+function Betwixt(const A, B: MType): Boolean; overload;
 function Held(const A, B: MType): Boolean; overload;
 function IsAbove(const target: MType): Boolean; overload;
 function IsAtLeast(const target: MType): Boolean; overload;
@@ -22,6 +23,7 @@ function Above(const target: MType): Boolean; overload;
 function Below(const limit: MType): Boolean; overload;
 function Over(const target: MType): Boolean; overload;
 function Under(const limit: MType): Boolean; overload;
+function Unmoored(const A, B: MType): Boolean; overload;
 function Between(const aMin, aMax: MType): Boolean; overload;
 function Betweenish(const aMin, aMax: MType): Boolean; overload;
 function BoundedBy(const aMin, aMax: MType): Boolean; overload;
@@ -72,6 +74,16 @@ end;
 function AnyEqual3(const A, B, C: MType): Boolean; overload;
 begin
   Result := ((A = B) or (B = C) or (A = C));
+end;
+
+{==============================================================================]
+  <Betwixt>
+  @action: Returns True if Self lies between A and B, inclusive, regardless of which is smaller.
+  @note: Order-independent — works whether A < B or A > B. Equivalent to A <= Self <= B or B <= Self <= A.
+[==============================================================================}
+function MTypeHelper.Betwixt(const A, B: MType): Boolean; overload;
+begin
+  Result := not (((Self > A) and (Self > B)) or ((Self < A) and (Self < B)));
 end;
 
 {==============================================================================]
@@ -258,6 +270,16 @@ end;
 function MTypeHelper.Under(const limit: MType): Boolean; overload;
 begin
   Result := not (Self >= limit);
+end;
+
+{==============================================================================]
+  <Unmoored>
+  @action: Returns True if Self lies strictly outside the range bounded by A and B (exclusive), regardless of which is smaller.
+  @note: Order-independent — Strict > / < only, so Self exactly equal to A or B returns False.
+[==============================================================================}
+function MTypeHelper.Unmoored(const A, B: MType): Boolean; overload;
+begin
+  Result := (((Self > A) and (Self > B)) or ((Self < A) and (Self < B)));
 end;
 
 {==============================================================================]

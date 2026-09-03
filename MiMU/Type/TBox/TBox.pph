@@ -12,6 +12,7 @@
 {$I @TBox/Comparison.inc}
 {$I @TBox/Construction.inc}
 {$I @TBox/Containment.inc}
+{$I @TBox/Conversion.inc}
 {$I @TBox/Dimensions.inc}
 {$I @TBox/Extension.inc}
 {$I @TBox/Frame.inc}
