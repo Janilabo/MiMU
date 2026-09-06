@@ -1,9 +1,61 @@
 {$IFDEF HELPERS}
+function Fathom(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function Spanning(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function FibonacciSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Fathom>
+  @action: Searches a sorted array (ascending or descending, per `oAscending`) for `item`,
+           returning its index, or -1 if absent.
+  @note: Not a true binary search — no midpoint bisection, no discarding of half the search
+         space. Uses a linear scan of `i` combined with a lookahead window that doubles in
+         size each iteration; once the window reaches the array's end (within O(log n)
+         iterations), the remainder is scanned in one pass. Degrades to O(n) overall.
+         Relies on `Increment` mutating and returning the post-mutation value (prefix-style);
+         `i.Increment < s` and the loop body stay in lockstep only under that contract.
+[==============================================================================}
+function MArrayHelper.Fathom(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  i, d, s, m, r: Integer;
+begin
+  s := Self.Length;
+  i := -1;
+  d := 1;
+  case oAscending of
+    True:
+    while (i.Increment < s) do
+    begin
+      if (Self[i] = item) then
+        Exit(i);
+      m := Min((i + d), (s - 1));
+      if ((item > Self[i]) and (item <= Self[m])) then
+      for r := (i + 1) to m do
+        if (Self[r] = item) then
+          Exit(r)
+        else if (Self[r] > item) then
+          Exit(-1);
+      d := (d * 2);
+    end;
+    False:
+    while (i.Increment < s) do
+    begin
+      if (Self[i] = item) then
+        Exit(i);
+      m := Min((i + d), (s - 1));
+      if ((item < Self[i]) and (item >= Self[m])) then
+      for r := (i + 1) to m do
+        if (Self[r] = item) then
+          Exit(r)
+        else if (Self[r] < item) then
+          Exit(-1);
+      d := (d * 2);
+    end;
+  end;
+  Result := -1;
+end;
+
 {==============================================================================]
   <Spanning>
   @action: Searches the array for the specified `item` and returns a TRange

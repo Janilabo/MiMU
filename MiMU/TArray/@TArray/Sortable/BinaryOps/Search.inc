@@ -31,6 +31,7 @@ function BinaryProxy(const item: MType; const oAscending: Boolean = True): Integ
 function BinaryRank(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryRanked(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryScope(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryScout(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearcha(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -41,6 +42,7 @@ function BinarySearchRotated(const item: MType; const oAscending: Boolean = True
 function BinarySearchSpan(const item: MType; const L, R: Integer; const aAscending: Boolean = True): Integer; overload;
 function BinarySeek(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinarySpot(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinarySurvey(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryTrack(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryTrace(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUniformSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -1093,6 +1095,49 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryScout>
+  @action: Binary searches a sorted array (ascending or descending, per `oAscending`) for
+           `item`, returning its index, or -1 if absent.
+  @note: True bisection via `s.Pivot`, halving the search space each iteration. The loop
+         guard re-validates `item` against the current bracket's value range every
+         iteration (not just index bounds), so an out-of-range `item` exits immediately
+         via the trailing `Result := -1` rather than needing a separate bounds check.
+         Bare-verb name is an exception to the mutating/non-mutating naming convention —
+         this function does not mutate `Self`.
+[==============================================================================}
+function MArrayHelper.BinaryScout(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  s: TRange;
+begin
+  s.Create(0, High(Self));
+  case oAscending of
+    True:
+    while ((s.start <= s.stop) and ((item >= Self[s.start]) and (item <= Self[s.stop]))) do
+    begin
+      Result := s.Pivot;
+      if (Self[Result] = item) then
+        Exit;
+      if ((oAscending and (Self[Result] < item)) or ((not oAscending) and (Self[Result] > item))) then
+        s.start := (Result + 1)
+      else
+        s.stop := (Result - 1);
+    end;
+    False:
+    while ((s.start <= s.stop) and ((item <= Self[s.start]) and (item >= Self[s.stop]))) do
+    begin
+      Result := s.Pivot;
+      if (Self[Result] = item) then
+        Exit;
+      if ((oAscending and (Self[Result] < item)) or ((not oAscending) and (Self[Result] > item))) then
+        s.start := (Result + 1)
+      else
+        s.stop := (Result - 1);
+    end;
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
   <BinarySearch>
   @action: Searches for the index of a specified item in a sorted array using binary search. Returns -1 if the item is not found.
   @note: Uses efficient XOR boolean logic (`(Self[m] < item) xor (not oAscending)`) to support both ascending and descending sorted arrays without branching or helper overhead.
@@ -1392,6 +1437,66 @@ begin
       R.stop := (M - 1);
   end;
   Result := not R.start;
+end;
+
+{==============================================================================]
+  <BinarySurvey>
+  @action: Binary searches a sorted array (ascending or descending, per `oAscending`) for
+           `item`, returning its index, or -1 if absent.
+  @note: True bisection via `s.Pivot`. Unlike `BinaryScout`, does not re-validate the full
+         value range every iteration — after narrowing `s.start` or `s.stop`, checks only
+         the boundary that just moved, exiting immediately if it's already proven `item`
+         can't be in the remaining range. Same result as `BinaryScout`, fewer comparisons
+         per iteration. Bare-verb name is an exception to the mutating/non-mutating naming
+         convention, consistent with its sibling `BinaryScout` — neither mutates `Self`.
+[==============================================================================}
+function MArrayHelper.BinarySurvey(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  s: TRange;
+begin
+  s.Create(0, High(Self));
+  if (s.stop > -1) then
+  case oAscending of
+    True:
+    if ((item >= Self[s.start]) and (item <= Self[s.stop])) then
+    while (s.start <= s.stop) do
+    begin
+      Result := s.Pivot;
+      if (Self[Result] = item) then
+        Exit;
+      if ((oAscending and (Self[Result] < item)) or ((not oAscending) and (Self[Result] > item))) then
+      begin
+        s.start := (Result + 1);
+        if (item < Self[s.start]) then
+          Exit(-1);
+      end else
+      begin
+        s.stop := (Result - 1);
+        if (item > Self[s.stop]) then
+          Exit(-1);
+      end;
+    end;
+    False:
+    if ((item <= Self[s.start]) and (item >= Self[s.stop])) then
+    while (s.start <= s.stop) do
+    begin
+      Result := s.Pivot;
+      if (Self[Result] = item) then
+        Exit;
+      if ((oAscending and (Self[Result] < item)) or ((not oAscending) and (Self[Result] > item))) then
+      begin
+        s.start := (Result + 1);
+        if (item > Self[s.start]) then
+          Exit(-1);
+      end else
+      begin
+        s.stop := (Result - 1);
+        if (item < Self[s.stop]) then
+          Exit(-1);
+      end;
+    end;
+  end;
+  Result := -1;
 end;
 
 {==============================================================================]
