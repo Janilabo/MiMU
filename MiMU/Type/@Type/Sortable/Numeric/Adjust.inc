@@ -70,7 +70,7 @@ function X10(var val: MType; const N: MType = 1): MType; overload;
 function MTypeHelper.Cut(const N: MType = 1): MType; overload;
 begin
   Result := (Self - N);
-  Self := Result
+  Self := Result;
 end;
 
 {==============================================================================]
@@ -399,7 +399,7 @@ end;
 function MTypeHelper.Put(const N: MType = 1): MType; overload;
 begin
   Result := (Self + N);
-  Self := Result
+  Self := Result;
 end;
 
 {==============================================================================]

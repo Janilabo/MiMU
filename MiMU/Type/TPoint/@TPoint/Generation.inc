@@ -7,6 +7,7 @@ function Spiral(const radius: UInt32 = 0): TPointArray; overload;
 function Unring(const index: UInt32 = 0): TPoint; overload;
 function Unscanline(const index: UInt32; const radius: UInt32 = 0): TPoint; overload;
 function Unspiral(const index: UInt32 = 0): TPoint; overload;
+function Unspiral(const target: TPoint): UInt32; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -168,11 +169,6 @@ function TPointHelper.Unring(const index: UInt32 = 0): TPoint; overload;
 var
   r, l, i, d, s: Integer;
   p: TPoint;
-procedure A(const x, y: Integer);
-begin
-  Result.X := (Result.X + x);
-  Result.Y := (Result.Y + y);
-end;
 begin
   if (index = 0) then
     Exit(Self);
@@ -183,10 +179,10 @@ begin
   s := (i mod l);
   Result := Self;
   case d of
-    0: A((-r + s), -r);
-    1: A(r, (-r + s));
-    2: A((r - s), r);
-    3: A(-r, (r - s));
+    0: Result.Increase((-r + s), -r);
+    1: Result.Increase(r, (-r + s));
+    2: Result.Increase((r - s), r);
+    3: Result.Increase(-r, (r - s));
   end;
 end;
 
@@ -226,12 +222,11 @@ const
   w: array[0..3] of Integer = (0, 1, 0, -1);
   h: array[0..3] of Integer = (-1, 0, 1, 0);
 var
-  x, y, r, d, l, t, s: Integer;
+  r, d, l, t, s: Integer;
 begin
+  Result := Self;
   if (index = 0) then
-    Exit(Self);
-  x := Self.X;
-  y := Self.Y;
+    Exit;
   r := Integer(index);
   t := 0;
   while (r > 0) do
@@ -241,11 +236,53 @@ begin
     s := l;
     if (s > r) then
       s := r;
-    Inc(x, (w[d] * s));
-    Inc(y, (h[d] * s));
+    Result.Increase((w[d] * s), (h[d] * s));
     Dec(r, s);
     Inc(t);
   end;
-  Result := Point(x, y);
+end;
+
+{==============================================================================]
+  <Unspiral>
+  @action: Given a `target` point, returns its index in the continuous square (Ulam) spiral
+           walk centered on `Self` — the inverse of `Unspiral(index): TPoint`.
+  @note: Walks leg-by-leg (up, right, down, left; lengths 1,1,2,2,3,3,...) rather than
+         cell-by-cell, checking each leg's value-range bracket in O(1) before advancing —
+         O(distance) iterations overall, the same complexity class as the index-to-point
+         overload's O(sqrt(index)), since index scales with distance squared. `Self` itself
+         returns 0 via an explicit short-circuit before the loop.
+[==============================================================================}
+function TPointHelper.Unspiral(const target: TPoint): UInt32; overload;
+const
+  w: array[0..3] of Integer = (0, 1, 0, -1);
+  h: array[0..3] of Integer = (-1, 0, 1, 0);
+var
+  t, m, l, a: Integer;
+  r, d: TPoint;
+begin
+  d := Point((target.X - Self.X), (target.Y - Self.Y));
+  if ((d.X = 0) and (d.Y = 0)) then
+    Exit(0);
+  r := Point(0, 0);
+  t := 0;
+  a := 0;
+  while True do
+  begin
+    m := (t mod 4);
+    l := ((t div 2) + 1);
+    case m of
+      0: if ((d.X = r.X) and (d.Y <= r.Y) and (d.Y >= (r.Y - l))) then
+           Exit(a + (r.Y - d.Y));
+      1: if ((d.Y = r.Y) and (d.X >= r.X) and (d.X <= (r.X + l))) then
+           Exit(a + (d.X - r.X));
+      2: if ((d.X = r.X) and (d.Y >= r.Y) and (d.Y <= (r.Y + l))) then
+           Exit(a + (d.Y - r.Y));
+      3: if ((d.Y = r.Y) and (d.X <= r.X) and (d.X >= (r.X - l))) then
+           Exit(a + (r.X - d.X));
+    end;
+    r.Increase((w[m] * l), (h[m] * l));
+    Inc(a, l);
+    Inc(t);
+  end;
 end;
 {$ENDIF}

@@ -1,6 +1,7 @@
 {$I ../Type.inc}
 
 {$I @TPoint/Adjacency.inc}
+{$I @TPoint/Adjust.inc}
 {$I @TPoint/Comparison.inc}
 {$I @TPoint/Construction.inc}
 {$I @TPoint/Containment.inc}
