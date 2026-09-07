@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Fathom(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function Sift(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function Spanning(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function FibonacciSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -52,6 +53,72 @@ begin
           Exit(-1);
       d := (d * 2);
     end;
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
+  <Sift>
+  @action: Searches a sorted array (ascending or descending, per `oAscending`) for `item`,
+           returning its index, or -1 if absent.
+  @note: Exponential/galloping search — unlike `Fathom`, the probe position itself advances
+         exponentially (`Result := m + 1`, where `m` was already `Result + r`), reaching
+         the array's tail in O(log n) outer iterations rather than relying on the lookahead
+         window alone. `Break`s out to the sorted-order overshoot fallback the instant
+         `Self[Result]` passes `item`. Uses a plain local (`i`) as the inner scan counter
+         rather than reusing `Result`, so the return value only ever comes from an explicit
+         `Exit`.
+[==============================================================================}
+function MArrayHelper.Sift(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  i, l, r, m: Integer;
+begin
+  Result := 0;
+  l := Self.Length;
+  r := 1;
+  case oAscending of
+    True:
+    while (Result < l) do
+      if (Self[Result] = item) then
+        Exit
+      else if (Self[Result] > item) then
+        Break
+      else
+      begin
+        m := Min((Result + r), (l - 1));
+        if ((Self[Result] < item) and (item <= Self[m])) then
+        begin
+          for i := Result to m do
+            if (Self[i] = item) then
+              Exit(i);
+          Exit(-1);
+        end else
+        begin
+          Result := (m + 1);
+          r := (r * 2);
+        end;
+      end;
+    False:
+    while (Result < l) do
+      if (Self[Result] = item) then
+        Exit
+      else if (Self[Result] < item) then
+        Break
+      else
+      begin
+        m := Min((Result + r), (l - 1));
+        if ((Self[Result] > item) and (item >= Self[m])) then
+        begin
+          for i := Result to m do
+            if (Self[i] = item) then
+              Exit(i);
+          Exit(-1);
+        end else
+        begin
+          Result := (m + 1);
+          r := (r * 2);
+        end;
+      end;
   end;
   Result := -1;
 end;

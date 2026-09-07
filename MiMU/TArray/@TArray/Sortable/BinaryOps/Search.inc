@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function BinaryAddress(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryConverge(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryDiscover(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryEntry(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryExpSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryFind(const item: mType; const aAscending: Boolean): Integer; overload;
@@ -19,6 +20,7 @@ function BinaryInsertPosition(const item: MType; const oAscending: Boolean = Tru
 function BinaryLocalize(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryLookup(const item: MType): Integer; overload;
 function BinaryMetaSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryObserve(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryPlace(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryPoint(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryPos(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -132,6 +134,56 @@ begin
       R.stop := (M - 1);
   end;
 end;
+
+{==============================================================================]
+  <BinaryDiscover>
+  @action: Binary searches a sorted array (ascending or descending, per `oAscending`) for
+           `item`, returning its index, or -1 if absent.
+  @note: Plainest form in the family — overflow-safe midpoint, three-way `<`/`=`/`>`
+         comparison against the pivot, no value-bracket checks.
+		 The trailing `else Exit(-1)` in each branch
+         is dead code for ordered integer types but a live safety net for float `MType`:
+         if `item` is NaN, all three comparisons are false and the loop would otherwise
+         never terminate. Bare-verb name is an exception to the mutating/non-mutating
+         naming convention, consistent with `BinaryScout`/`BinaryStalk` — does not mutate
+         `Self`.
+[==============================================================================}
+function MArrayHelper.BinaryDiscover(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  l, h: Integer;
+begin
+  l := 0;
+  h := High(Self);
+  case oAscending of
+    True:
+    while (l <= h) do
+    begin
+      Result := (l + (h - l) div 2);
+      if (item = Self[Result]) then
+        Exit
+      else if (item < Self[Result]) then
+        h := (Result - 1)
+      else if (item > Self[Result]) then
+        l := (Result + 1)
+      else
+        Exit(-1);
+    end;
+    False:
+    while (l <= h) do
+    begin
+      Result := (l + (h - l) div 2);
+      if (item = Self[Result]) then
+        Exit
+      else if (item > Self[Result]) then
+        h := (Result - 1)
+      else if (item < Self[Result]) then
+        l := (Result + 1)
+      else
+        Exit(-1);
+    end;
+  end;
+  Result := -1;
+end; 
 
 {==============================================================================]
   <BinaryEntry>
@@ -711,6 +763,56 @@ begin
     Result := p
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryObserve>
+  @action: Binary searches a sorted array (ascending or descending, per `oAscending`) for
+           `item`, returning its index, or -1 if absent.
+  @note: Tests explicit value brackets on both sides of the pivot before choosing a
+         direction — `item` in `[Self[l], Self[Result]]` narrows left (`h := Result`),
+         `item` in `[Self[Result+1], Self[h]]` narrows right (`l := Result + 1`), and
+         neither bracket matching exits `-1` immediately rather than continuing to narrow.
+         No `TRange`/`Pivot`, raw `l`/`h` integers.
+         `h := Result` (not `Result - 1`) still provably shrinks the range each iteration,
+         since the pivot itself was already ruled out by the equality check above it.
+         Bare-verb name is an exception to the mutating/non-mutating naming convention, does not mutate.
+[==============================================================================}
+function MArrayHelper.BinaryObserve(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  l, h: Integer;
+begin
+  l := 0;
+  h := High(Self);
+  case oAscending of
+    True:
+    while (l <= h) do
+    begin
+      Result := (l + (h - l) div 2);
+      if (Self[Result] = item) then
+        Exit(Result);
+      if ((item >= Self[l]) and (item <= Self[Result])) then
+        h := Result
+      else if ((Result < h) and (item >= Self[Result + 1]) and (item <= Self[h])) then
+        l := (Result + 1)
+      else
+        Exit(-1);
+    end;
+    False:
+    while (l <= h) do
+    begin
+      Result := (l + (h - l) div 2);
+      if (Self[Result] = item) then
+        Exit(Result);
+      if ((item <= Self[l]) and (item >= Self[Result])) then
+        h := Result
+      else if ((Result < h) and (item <= Self[Result + 1]) and (item >= Self[h])) then
+        l := (Result + 1)
+      else
+        Exit(-1);
+    end;
+  end;
+  Result := -1;
 end;
 
 {==============================================================================]
