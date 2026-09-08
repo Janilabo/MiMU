@@ -4,6 +4,7 @@ function Ring(const radius: UInt32 = 0): TPointArray; overload;
 function Scanline(const radius: UInt32 = 0): TPointArray; overload;
 function Scanline(const pt: TPoint; const radius: UInt32 = 0): UInt32; overload;
 function Spiral(const radius: UInt32 = 0): TPointArray; overload;
+function Spiralize(const radius: UInt32 = 0): TPointArray; overload;
 function Unring(const index: UInt32 = 0): TPoint; overload;
 function Unscanline(const index: UInt32; const radius: UInt32 = 0): TPoint; overload;
 function Unspiral(const index: UInt32 = 0): TPoint; overload;
@@ -157,6 +158,54 @@ begin
     Inc(t);
   end;
 end;
+
+{==============================================================================]
+  <Spiralize>
+  @action: Generates a 2D grid array of points spiraling outward from the current point up to a specified radial distance.
+  @note: The generated path starts at the origin point and spirals clockwise in expanding square shells (Up, Right, Down, Left).
+         Resulting array contains (2 * radius + 1)^2 points.
+[==============================================================================}
+function TPointHelper.Spiralize(const radius: UInt32 = 0): TPointArray; overload;
+var
+  s, r, n, i: Integer;
+  p: TPoint;
+begin
+  s := Result.SetSize(Sqr((Int64(radius) * 2) + 1));
+  Result[0] := Self;
+  p := Self;
+  r := 1;
+  n := 0;
+  while (r < s) do
+  begin
+    for i := 1 to ((2 * n) + 1) do
+      if (r >= s) then
+        Break
+	  else
+        Result[r.Increase] := p.YDecrement;
+    if (r >= s) then
+      Break;
+    for i := 1 to ((2 * n) + 1) do
+      if (r >= s) then
+        Break
+	  else
+        Result[r.Increase] := p.XIncrement;
+    if (r >= s) then
+      Break;
+    for i := 1 to ((2 * n) + 2) do
+      if (r >= s) then
+        Break
+	  else
+        Result[r.Increase] := p.YIncrement;
+    if (r >= s) then
+      Break;
+    for i := 1 to ((2 * n) + 2) do
+      if (r >= s) then
+        Break
+      else
+        Result[r.Increase] := p.XDecrement;
+    Inc(n);
+  end;
+end; 
 
 {==============================================================================]
   <Unringed>
