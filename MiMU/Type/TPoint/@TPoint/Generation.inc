@@ -1,4 +1,6 @@
 {$IFDEF HELPERS}
+function Line(const target: TPoint): TPointArray; overload;
+function Linely(const target: TPoint): TPointArray; overload;
 function LineTo(const target: TPoint): TPointArray; overload;
 function Ring(const radius: UInt32 = 0): TPointArray; overload;
 function Scanline(const radius: UInt32 = 0): TPointArray; overload;
@@ -13,11 +15,88 @@ function Unspiral(const target: TPoint): UInt32; overload;
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
+  <Line>
+  @action: Generates a continuous grid line of points from Self to target (inclusive)
+           using an axis-swapped, single-error-term variant of Bresenham's Line
+           Algorithm — a single accumulator walked along the major axis, rather
+           than the two-condition scheme LineTo uses.
+  @note: Result[0] is always Self. The total number of points returned is
+         Max(Abs(target.X - Self.X), Abs(target.Y - Self.Y)) + 1.
+[==============================================================================}
+function TPointHelper.Line(const target: TPoint): TPointArray; overload;
+var
+  i, e: Integer;
+  z: Boolean;
+  p, s, d: TPoint;
+begin
+  if (Self = target) then
+    Exit([Self]);
+  d := Point(Abs(target.X - Self.X), Abs(target.Y - Self.Y));
+  z := (d.Y > d.X);
+  SetLength(Result, (IfThen(z, d.Y, d.X) + 1));
+  p := Self;
+  s := Point(IfThen((Self.X < target.X), 1, -1), IfThen((Self.Y < target.Y), 1, -1));
+  e := (IfThen(z, d.Y, d.X) div 2);
+  case z of
+    True:
+    for i := 0 to High(Result) do
+    begin
+      Result[i] := p;
+      Inc(p.Y, s.Y);
+      if (e.Decrement(d.X) < 0) then
+      begin
+        Inc(p.X, s.X);
+        Inc(e, d.Y);
+      end;
+    end;
+    False:
+    for i := 0 to High(Result) do
+    begin
+      Result[i] := p;
+      Inc(p.X, s.X);
+      if (e.Decrement(d.Y) < 0) then
+      begin
+        Inc(p.Y, s.Y);
+        Inc(e, d.X);
+      end;
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <Linely>
+  @action: Generates a continuous grid line of points from Self to target (inclusive)
+           using a floating-point DDA (Digital Differential Analyzer): steps a fixed
+           number of times along the parametric line, incrementing X/Y by a constant
+           float delta each step and rounding to the nearest grid cell.
+  @note: Result[0] is always Self. The total number of points returned is
+         Max(Abs(target.X - Self.X), Abs(target.Y - Self.Y)) + 1.
+         Uses float accumulation rather than an integer error term (unlike LineTo
+         and Line), so at exact .5 boundaries the rounding can disagree with
+         Bresenham's error-driven choice of which cell to step into.
+[==============================================================================}
+function TPointHelper.Linely(const target: TPoint): TPointArray; overload;
+var
+  s, i: Integer;
+  a, b, x, y: Double;
+begin
+  if (Self = target) then
+    Exit([Self]);
+  s := Max(Abs(target.X - Self.X), Abs(target.Y - Self.Y));
+  x := ((target.X - Self.X) / s);
+  y := ((target.Y - Self.Y) / s);
+  a := Self.X;
+  b := Self.Y;
+  for i := 0 to Result.Alloc(s + 1) do
+    Result[i] := Point(Round(a.Increase(x)), Round(b.Increase(y)));
+end;
+
+{==============================================================================]
   <LineTo>
   @action: Generates a continuous grid line of points from Self to pt (inclusive)
            using Bresenham's Line Algorithm.
-  @note:   Result[0] is always Self. The total number of points returned is
-           Max(Abs(pt.X - Self.X), Abs(pt.Y - Self.Y)) + 1.
+  @note: Result[0] is always Self. The total number of points returned is
+         Max(Abs(pt.X - Self.X), Abs(pt.Y - Self.Y)) + 1.
 [==============================================================================}
 function TPointHelper.LineTo(const target: TPoint): TPointArray; overload;
 var

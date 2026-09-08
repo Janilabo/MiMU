@@ -10,3 +10,4 @@
 
 {$I @Generic/Types/TInterval.inc}
 {$I @Generic/Types/TIndexed.inc}
+{$I @Generic/Types/TPair.inc}
