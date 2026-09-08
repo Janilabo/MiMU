@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function MergeSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
 function MergeSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
+function QuickSortByIndex(const ID: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
 function QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
 function QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
 function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): MArray; overload;
@@ -138,6 +139,80 @@ begin
   Result := Self.Size;
   if (Result > 1) then
     MSW(Self, weight, 0, (Result - 1));
+end;
+
+{==============================================================================]
+  <QuickSortByIndex>
+  @action: Reorders elements in the array based on a parallel array of 32-bit 
+           integer keys.
+  @note: Requires ID length to match or exceed Self.Length. Uses TIndexed<T> 
+         to temporarily pair items with keys during QuickSort.
+[==============================================================================}
+function MArrayHelper.QuickSortByIndex(const ID: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+type
+  TElementIndex = specialize TIndexed<MType>;
+var
+  s, i: Integer;
+  k: array of TElementIndex;
+  procedure O(var n, m: Integer);
+  var
+    e: TElementIndex;
+  begin
+    e := k[n];
+    k[n] := k[m];
+    k[m] := e;
+    Inc(n);
+    Dec(m);
+  end;
+  procedure Q(L, R: Integer);
+  var
+    a, b: Integer;
+    P: UInt32;
+  begin
+    a := L;
+    b := R;
+    P := k[(L + R) div 2].index;
+    case oAscending of
+      True:
+      repeat
+        while (k[a].index < P) do
+	      Inc(a);
+        while (k[b].index > P) do
+	      Dec(b);
+        if (a <= b) then
+          O(a, b);
+      until (a > b);
+      False:
+      repeat
+        while (k[a].index > P) do
+		  Inc(a);
+        while (k[b].index < P) do
+		  Dec(b);
+        if (a <= b) then
+		  O(a, b);
+      until (a > b);
+    end;
+    if (L < b) then
+	  Q(L, b);
+    if (a < R) then
+	  Q(a, R);
+  end;
+begin
+  s := Self.Length;
+  if (System.Length(ID) <> s) then
+    Exit(0);
+  Result := s;
+  if (s <= 1) then
+    Exit;
+  SetLength(k, s);
+  for i := 0 to (s - 1) do
+  begin
+    k[i].item := Self[i];
+    k[i].index := ID[i];
+  end;
+  Q(0, (s - 1));
+  for i := 0 to (s - 1) do
+    Self[i] := k[i].item;
 end;
 
 {==============================================================================]
