@@ -1,5 +1,7 @@
 {$IFDEF HELPERS}
+function AnOrder(const oAscending: Boolean = True): Boolean; overload;
 function AtOrder(const oAscending: Boolean = True): Boolean; overload;
+function Orda(const oAscending: Boolean = True): Boolean; overload;
 function Order: Integer; overload;
 function Orderal(const oAscending: Boolean = True): Boolean; overload;
 function Orderly: Boolean; overload;
@@ -8,12 +10,40 @@ function Ordering(const oAscending: Boolean = True): Boolean; overload;
 function Orderion: Boolean; overload;
 function Orderion(out sDirection: Integer): Boolean; overload;
 function Orderious(const oAscending: Boolean = True): Boolean; overload;
+function Ordo(const oAscending: Boolean = True): Boolean; overload;
 function InOrder(const aAscending: Boolean = True): Boolean; overload;
 function IsOrder(const oAscending: Boolean = True): Boolean; overload;
 function OnOrder: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AnOrder>
+  @action: Determines whether the array elements maintain a monotonic order 
+           according to the specified direction (ascending or descending).
+  @note: Uses a dual-pointer inward convergence loop with local adjacent 
+         and cross-boundary invariant checks for early termination.
+[==============================================================================}
+function MArrayHelper.AnOrder(const oAscending: Boolean = True): Boolean; overload;
+var
+  L, R: Integer;
+begin
+  L := -1;
+  R := Self.Length;
+  if (R > 1) then
+  case oAscending of
+    True:
+    while (L.Increment < R.Decrement) do
+      if ((Self[L] > Self[L + 1]) or (Self[R - 1] > Self[R]) or (Self[L] > Self[R])) then
+        Exit(False);
+    False:
+    while (L.Increment < R.Decrement) do
+      if ((Self[L] < Self[L + 1]) or (Self[R - 1] < Self[R]) or (Self[L] < Self[R])) then
+        Exit(False);
+  end;
+  Result := True;
+end;
+
 {==============================================================================]
   <AtOrder>
   @action: Verifies whether Self is already sorted in the given direction —
@@ -32,6 +62,45 @@ begin
   for i := 0 to (High(Self) - 1) do
     if ((oAscending and (Self[i].Compare(Self[i + 1]) > 0)) or (not oAscending and (Self[i].Compare(Self[i + 1]) < 0))) then
       Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <Orda>
+  @action: Validates whether the array elements are sorted in the specified 
+           directional order using a diminishing ShellSort gap sequence.
+  @note: Performs multi-pass gap checks (Knuth sequence: h = 3h + 1) down to 
+         h = 1 to detect distant non-monotonicity early. Exits immediately on 
+         the first detected inversion across any gap stride.
+[==============================================================================}
+function MArrayHelper.Orda(const oAscending: Boolean = True): Boolean; overload;
+var
+  l, i, h: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(True);
+  h := 1;
+  while (h < (l div 3)) do
+    h := ((3 * h) + 1);
+  case oAscending of
+    True:
+    while (h >= 1) do
+    begin
+      for i := 0 to (l - 1 - h) do
+        if (Self[i] > Self[i + h]) then
+          Exit(False);
+      h := (h div 3);
+    end;
+    False:
+    while (h >= 1) do
+    begin
+      for i := 0 to (l - 1 - h) do
+        if (Self[i] < Self[i + h]) then
+          Exit(False);
+      h := (h div 3);
+    end;
+  end;
   Result := True;
 end;
 
@@ -262,6 +331,57 @@ begin
     Result := A(0, High(Self))
   else
     Result := D(0, High(Self));
+end;
+
+{==============================================================================]
+  <Ordo>
+  @action: Validates array order using a divide-and-conquer QuickSort partitioning
+           strategy to detect global and regional inversions early.
+  @note:   Selects a median pivot per sub-range and verifies partition boundary
+           invariants before recursively validating left and right partitions.
+[==============================================================================}
+function MArrayHelper.Ordo(const oAscending: Boolean = True): Boolean; overload;
+  function A(aLow, aHigh: Integer): Boolean;
+  var
+    p: MType;
+    m, i: Integer;
+  begin
+    if ((aHigh - aLow) < 1) then
+      Exit(True);
+    m := (aLow + (aHigh - aLow) div 2);
+    p := Self[m];
+    for i := aLow to (m - 1) do
+      if (Self[i] > p) then
+        Exit(False);
+    for i := (m + 1) to aHigh do
+      if (Self[i] < p) then
+        Exit(False);
+    Result := (A(aLow, (m - 1)) and A((m + 1), aHigh));
+  end;
+  function D(aLow, aHigh: Integer): Boolean;
+  var
+    p: MType;
+    m, i: Integer;
+  begin
+    if ((aHigh - aLow) < 1) then
+      Exit(True);
+    m := (aLow + (aHigh - aLow) div 2);
+    p := Self[m];
+    for i := aLow to (m - 1) do
+      if (Self[i] < p) then
+        Exit(False);
+    for i := (m + 1) to aHigh do
+      if (Self[i] > p) then
+        Exit(False);
+    Result := (D(aLow, (m - 1)) and D((m + 1), aHigh));
+  end;
+begin
+  if (Self.Length < 2) then
+    Exit(True);
+  if oAscending then
+    Result := A(0, (Self.Length - 1))
+  else
+    Result := D(0, (Self.Length - 1));
 end;
 
 {==============================================================================]
