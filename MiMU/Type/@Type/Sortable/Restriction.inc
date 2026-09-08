@@ -23,6 +23,12 @@ function Maximate(const target: MType): Boolean; overload;
 function Minate(const item: MType): Boolean; overload;
 function Minify(const item: MType): Boolean; overload;
 function Minimate(const target: MType): Boolean; overload;
+
+function Maximize(const item: MType): MType; overload;
+function Minimize(const item: MType): MType; overload;
+
+function MaxWith(const item: MType): Boolean; overload;
+function MinWith(const item: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -342,5 +348,51 @@ begin
   s := Self;
   Self := Min(Self, target);
   Result := (Self <> s);
+end;
+
+{==============================================================================]
+  <Maximize>
+  @action: Maximizes the current instance against the provided item.
+  @note: Updates Self to Max(Self, item) in-place and returns the updated value.
+[==============================================================================}
+function MTypeHelper.Maximize(const item: MType): MType; overload;
+begin
+  Self := Max(Self, item);
+  Result := Self;
+end;
+
+{==============================================================================]
+  <Minimize>
+  @action: Minimizes the current instance against the provided item.
+  @note: Updates Self to Min(Self, item) in-place and returns the updated value.
+[==============================================================================}
+function MTypeHelper.Minimize(const item: MType): MType; overload;
+begin
+  Self := Min(Self, item);
+  Result := Self;
+end;
+
+{==============================================================================]
+  <MaxWith>
+  @action: Unconditionally assigns item to Self and indicates whether the new 
+           value strictly increased the instance.
+  @note: Sets Self := item in-place. Returns True if item > OldSelf.
+[==============================================================================}
+function MTypeHelper.MaxWith(const item: MType): Boolean; overload;
+begin
+  Result := (item > Self);
+  Self := item;
+end;
+
+{==============================================================================]
+  <MinWith>
+  @action: Unconditionally assigns item to Self and indicates whether the new 
+           value strictly decreased the instance.
+  @note: Sets Self := item in-place. Returns True if item < OldSelf.
+[==============================================================================}
+function MTypeHelper.MinWith(const item: MType): Boolean; overload;
+begin
+  Result := (item < Self);
+  Self := item;
 end;
 {$ENDIF}

@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function AtOrder(const oAscending: Boolean = True): Boolean; overload;
 function Order: Integer; overload;
+function Orderal(const oAscending: Boolean = True): Boolean; overload;
 function Orderly: Boolean; overload;
 function Ordered(const aAscending: Boolean = True; const index: Integer = 0): Boolean; overload;
 function Ordering(const oAscending: Boolean = True): Boolean; overload;
@@ -66,6 +67,37 @@ begin
     Result := -1
   else
     Result := 0;
+end;
+
+{==============================================================================]
+  <Orderal>
+  @action: Verifies whether the array elements are strictly sorted in the 
+           specified directional order (ascending or descending).
+  @note: Uses a dual-ended inward scan with rolling min/max bounds tracking 
+         to perform an efficient single-pass order validation.
+[==============================================================================}
+function MArrayHelper.Orderal(const oAscending: Boolean = True): Boolean; overload;
+var
+  l, h: MType;
+  s: TRange;
+begin
+  s.Create(-1, Self.Length);
+  if (s.stop > 1) then
+  begin
+    l := Self[s.start + 1];
+    h := Self[s.stop - 1];
+    case oAscending of
+      True:
+      while (s.start.Increment <= s.stop.Decrement) do
+        if (l.MinWith(Self[s.start]) or h.MaxWith(Self[s.stop]) or (Self[s.start] > Self[s.stop])) then
+          Exit(False);
+      False:
+      while (s.start.Increment <= s.stop.Decrement) do
+        if (l.MaxWith(Self[s.start]) or h.MinWith(Self[s.stop]) or (Self[s.start] < Self[s.stop])) then
+          Exit(False);
+    end;
+  end;
+  Result := True;
 end;
 
 {==============================================================================]
