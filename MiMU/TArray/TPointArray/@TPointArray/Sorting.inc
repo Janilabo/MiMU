@@ -9,6 +9,8 @@ function SortByIndex(const aAscending: Boolean = True): Integer; overload;
 function SortByRow(const aAscending: Boolean = True): Integer; overload;
 function SortByScanline(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
 function SortByScanline(const aAscending: Boolean = True): Integer; overload;
+function SortBySpiral(const origin: TPoint; const oAscending: Boolean = True): Integer; overload;
+function SortedBySpiral(const origin: TPoint; const oAscending: Boolean = True): TPointArray; overload;
 function SortedByIndex(const aAscending: Boolean = True): TPointArray; overload;
 {$ENDIF}
 
@@ -343,6 +345,81 @@ end;
 function TPointArrayHelper.SortByScanline(const aAscending: Boolean = True): Integer; overload;
 begin
   Result := Self.SortByScanline(Self.Bounds, aAscending);
+end;
+
+{==============================================================================]
+  <SortBySpiral>
+  @action: Sorts the points in the array based on their spatial spiral distance 
+           relative to a given origin point.
+  @note: Uses TIndexed<TPoint> to temporarily pair each point with its calculated 
+         Unspiral index before sorting in-place using QuickSort. Returns the 
+         total number of elements in the array.
+[==============================================================================}
+function TPointArrayHelper.SortBySpiral(const origin: TPoint; const oAscending: Boolean = True): Integer; overload;
+var
+  s, i: Integer;
+  k: array of specialize TIndexed<TPoint>;
+  procedure O(var n, m: Integer);
+  begin
+    k[s] := k[n];
+    k[n] := k[m];
+    k[m] := k[s];
+    Inc(n);
+    Dec(m);
+  end;
+  procedure Q(L, R: Integer);
+  var
+    a, b: Integer;
+    P: UInt32;
+  begin
+    a := L;
+    b := R;
+    P := k[(L + R) div 2].index;
+    case oAscending of
+      True:
+      repeat
+        while (k[a].index < P) do
+          Inc(a);
+        while (k[b].index > P) do
+          Dec(b);
+        if (a <= b) then
+          O(a, b);
+      until (a > b);
+      False:
+      repeat
+        while (k[a].index > P) do
+          Inc(a);
+        while (k[b].index < P) do
+          Dec(b);
+        if (a <= b) then
+          O(a, b);
+      until (a > b);
+    end;
+    if (L < b) then
+      Q(L, b);
+    if (a < R) then
+      Q(a, R);
+  end;
+begin
+  s := Self.Length;
+  Result := s;
+  if (s <= 1) then
+    Exit;
+  SetLength(k, (s + s));
+  for i := 0 to (s - 1) do
+  begin
+    k[i].item := Self[i];
+    k[i].index := origin.Unspiral(Self[i]);
+  end;
+  Q(0, (s - 1));
+  for i := 0 to (s - 1) do
+    Self[i] := k[i].item;
+end;
+
+function TPointArrayHelper.SortedBySpiral(const origin: TPoint; const oAscending: Boolean = True): TPointArray; overload;
+begin
+  Result := Self.Cloned;
+  Result.SortBySpiral(origin, oAscending);
 end;
 
 {==============================================================================]

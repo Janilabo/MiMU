@@ -9,3 +9,4 @@
 {$I @Generic/Transaction.inc}
 
 {$I @Generic/Types/TInterval.inc}
+{$I @Generic/Types/TIndexed.inc}
