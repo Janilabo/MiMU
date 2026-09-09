@@ -76,6 +76,7 @@
 {$I @TArray/Sortable/Numeric/Bounding.inc}
 {$I @TArray/Sortable/Numeric/Cloning.inc}
 {$I @TArray/Sortable/Numeric/Counting.inc}
+{$I @TArray/Sortable/Numeric/Deduplication.inc}
 {$I @TArray/Sortable/Numeric/Extrema.inc}
 {$I @TArray/Sortable/Numeric/Insertion.inc}
 {$I @TArray/Sortable/Numeric/Monotone.inc}
