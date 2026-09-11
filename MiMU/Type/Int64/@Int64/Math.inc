@@ -1,9 +1,35 @@
 {$IFDEF HELPERS}
+function Disquared: Int64; overload;
 function IsPowerOf2: Boolean; overload;
 function IsPowOf2: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <?>
+  @action: Returns floor(sqrt(Self)) using binary search over [0, Self],
+           testing candidates via `M <= Self div M` rather than `M * M <= Self`
+           to avoid overflow for the full Int64 range.
+  @note: Self <= 0 returns 0 (loop body never runs since Result(0) < S is
+         false). M is guaranteed >= 1 whenever the loop body executes, so the
+         `Self div M` division is always safe.
+[==============================================================================}
+function TInt64Helper.Disquared: Int64; overload;
+var
+  S, M: Int64;
+begin
+  Result := 0;
+  S := Self;
+  while (Result < S) do
+  begin
+    M := (Result + ((S - Result) + 1) div 2);
+    if (M <= (Self div M)) then
+      Result := M
+    else
+      S := (M - 1);
+  end;
+end;
+
 {==============================================================================]
   <IsPowerOf2>
   @action: Returns True if the integer is a positive power of 2 (e.g., 1, 2, 4, 8, 16...), and False otherwise.

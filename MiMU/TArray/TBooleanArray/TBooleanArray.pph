@@ -1,6 +1,7 @@
 {$I ../TArray.inc}
 
 {$I @TBooleanArray/Binary.inc}
+{$I @TBooleanArray/BinaryOps.inc}
 {$I @TBooleanArray/Bitwise.inc}
 {$I @TBooleanArray/Construction.inc}
 {$I @TBooleanArray/Conversion.inc}

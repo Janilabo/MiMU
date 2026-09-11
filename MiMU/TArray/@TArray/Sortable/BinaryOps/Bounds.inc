@@ -30,6 +30,7 @@ function BinaryLeftum(const item: MType; const oAscending: Boolean = True): Inte
 function BinaryLowerB(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLowerBound(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryLowerBoundary(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryPred(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryPredecessor(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRight(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
@@ -42,6 +43,7 @@ function BinarySearchFirst(const item: MType; const aAscending: Boolean = True):
 function BinarySearchLast(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryStart(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryStop(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinarySucc(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySuccessor(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryThreshold(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryUBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
@@ -55,6 +57,15 @@ function BinaryPosLeft(const item: MType; const oAscending: Boolean = True): Int
 function BinaryRightpos(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRighty(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryPosRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
+
+function Binary1st(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryLst(const item: MType; const oAscending: Boolean = True): Integer; overload;
+
+function BinaryAhead(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryBehind(const item: MType; const oAscending: Boolean = True): Integer; overload;
+
+function BinaryNext(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryPrev(const item: MType; const oAscending: Boolean = True): Integer; overload;
 
 function BinaryLower(const item: MTYpe; const oAscending: Boolean = True): Integer; overload;
 function BinaryUpper(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -1219,6 +1230,37 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryPred>
+  @action: Returns the index of the largest element less than or equal to item.
+  @note: Requires sorted array.
+         oAscending = True  -> ascending order
+         oAscending = False -> descending order
+         Returns:
+           index of predecessor
+           -1 if no predecessor exists
+[==============================================================================}
+function MArrayHelper.BinaryPred(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  R.Create(0, High(Self));
+  Result := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((oAscending and (Self[M] <= item)) or ((not oAscending) and (Self[M] >= item))) then
+    begin
+      Result := M;
+      R.start := (M + 1);
+    end else
+      R.stop := (M - 1);
+  end;
+end;
+
+{==============================================================================]
   <BinaryPredecessor>
   @action: Returns the index of the largest element strictly less than item.
   @note: Requires sorted array.
@@ -1660,6 +1702,37 @@ begin
 end;
 
 {==============================================================================]
+  <BinarySucc>
+  @action: Returns the index of the smallest element greater than or equal to item.
+  @note: Requires sorted array.
+         oAscending = True  -> ascending order
+         oAscending = False -> descending order
+         Returns:
+           index of successor
+           -1 if no successor exists
+[==============================================================================}
+function MArrayHelper.BinarySucc(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  R.Create(0, High(Self));
+  Result := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((oAscending and (Self[M] >= item)) or ((not oAscending) and (Self[M] <= item))) then
+    begin
+      Result := M;
+      R.stop := (M - 1);
+    end else
+      R.start := (M + 1);
+  end;
+end;
+
+{==============================================================================]
   <BinarySuccessor>
   @action: Returns the index of the smallest element strictly greater than item.
   @note: Requires sorted array.
@@ -2091,6 +2164,175 @@ begin
       L := (M + 1)
     else
       R := (M - 1);
+  end;
+end;
+
+{==============================================================================|
+  Binary1st
+  @action: Searches for item using binary search. Returns the VERY FIRST index
+           where item occurs when duplicates exist.
+  @note: Returns -1 if item is not found.
+[==============================================================================}
+function MArrayHelper.Binary1st(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  L, R, M: Integer;
+begin
+  L := 0;
+  R := High(Self);
+  Result := -1;
+  while (L <= R) do
+  begin
+    M := (L + (R - L) div 2);
+    if (Self[M] = item) then
+    begin
+      Result := M;
+      R := (M - 1);
+    end else if ((Self[M] < item) = oAscending) then
+      L := (M + 1)
+    else
+      R := (M - 1);
+  end;
+end;
+
+{==============================================================================|
+  BinaryEnd
+  @action: Searches for item using binary search. Returns the VERY LAST index
+           where item occurs when duplicates exist.
+  @note: Returns -1 if item is not found.
+[==============================================================================}
+function MArrayHelper.BinaryLst(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  L, R, M: Integer;
+begin
+  L := 0;
+  R := High(Self);
+  Result := -1;
+  while (L <= R) do
+  begin
+    M := (L + (R - L) div 2);
+    if (Self[M] = item) then
+    begin
+      Result := M;
+      L := (M + 1);
+    end else if ((Self[M] < item) = oAscending) then
+      L := (M + 1)
+    else
+      R := (M - 1);
+  end;
+end;
+
+{==============================================================================|
+  BinaryAhead
+  @action: Searches for item using binary search. Returns the index of the first
+           element strictly following item in sort order (larger when oAscending = True,
+           smaller when oAscending = False). Strictly skips exact matches and duplicates.
+  @note: Returns Self.Length if no element strictly follows item in the sorted array.
+[==============================================================================}
+function MArrayHelper.BinaryAhead(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  L, R, M: Integer;
+begin
+  L := 0;
+  R := High(Self);
+  Result := Self.Length;
+  while (L <= R) do
+  begin
+    M := (L + (R - L) div 2);
+    if not ((Self[M] = item) or ((Self[M] < item) = oAscending)) then
+    begin
+      Result := M;
+      R := (M - 1);
+    end else
+      L := (M + 1);
+  end;
+end;
+
+{==============================================================================|
+  BinaryBehind
+  @action: Searches for item using binary search. Returns the index of the first
+           element strictly preceding item in sort order (smaller when oAscending = True,
+           larger when oAscending = False). Strictly skips exact matches and duplicates.
+  @note: Returns -1 if no element strictly precedes item in the sorted array.
+[==============================================================================}
+function MArrayHelper.BinaryBehind(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  L, R, M: Integer;
+begin
+  L := 0;
+  R := High(Self);
+  Result := -1;
+  while (L <= R) do
+  begin
+    M := (L + (R - L) div 2);
+    if not ((Self[M] = item) or ((Self[M] > item) = oAscending)) then
+    begin
+      Result := M;
+      L := (M + 1);
+    end else
+      R := (M - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryNext>
+  @action: Returns the index of the smallest element strictly greater than item.
+  @note: Requires sorted array.
+         oAscending = True  -> ascending order
+         oAscending = False -> descending order
+         Returns:
+           index of successor
+           -1 if no successor exists
+[==============================================================================}
+function MArrayHelper.BinaryNext(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  R.Create(0, High(Self));
+  Result := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((oAscending and (Self[M] > item)) or ((not oAscending) and (Self[M] < item))) then
+    begin
+      Result := M;
+      R.stop := (M - 1);
+    end else
+      R.start := (M + 1);
+  end;
+end;
+
+
+{==============================================================================]
+  <BinaryPrev>
+  @action: Returns the index of the largest element strictly less than item.
+  @note: Requires sorted array.
+         oAscending = True  -> ascending order
+         oAscending = False -> descending order
+         Returns:
+           index of predecessor
+           -1 if no predecessor exists
+[==============================================================================}
+function MArrayHelper.BinaryPrev(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  M: Integer;
+  R: TRange;
+begin
+  if Self.Empty then
+    Exit(-1);
+  R.Create(0, High(Self));
+  Result := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+    begin
+      Result := M;
+      R.start := (M + 1);
+    end else
+      R.stop := (M - 1);
   end;
 end;
 

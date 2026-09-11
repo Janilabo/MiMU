@@ -11,6 +11,7 @@ function ExtractifyMin(const target: MType): MArray; overload;
 function Filterify(const aMin, aMax: MType): MArray; overload;
 function FilterifyMax(const target: MType): MArray; overload;
 function FilterifyMin(const target: MType): MArray; overload;
+function Superlatives: MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -236,5 +237,37 @@ begin
       Result[l.Increase] := Self[i];
   if (l < Result.Length) then
     SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <Superlatives>
+  @action: Returns a new MArray containing only the elements that strictly
+           exceed the current running extreme, walked left to right. Direction
+           (ascending/descending) is inferred once from Self[0] vs Self[High] and
+           fixed for the whole pass — the array itself need not be monotonic.
+  @note: Ties at the endpoints (Self[0] = Self[High]) resolve to the
+         ascending branch. Comparisons are strict, so plateaus never add a
+         second record at the same value. Ordered-only tier (uses </>).
+[==============================================================================}
+function MArrayHelper.Superlatives: MArray; overload;
+var
+  h, i, r: Integer;
+begin
+  h := High(Self);
+  if (Result.SetSize(h + 1) = 0) then
+    Exit;
+  Result[0] := Self[0];
+  r := 0;
+  case (Self[0] > Self[h]) of
+    False:
+    for i := 1 to h do
+      if (Self[i] > Result[r]) then
+        Result[r.Increment] := Self[i];
+    True:
+    for i := 1 to h do
+      if (Self[i] < Result[r]) then
+        Result[r.Increment] := Self[i];
+  end;
+  SetLength(Result, (r + 1));
 end;
 {$ENDIF}
