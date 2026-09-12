@@ -5,6 +5,7 @@ function AllSame: Boolean; overload;
 function AllUnique: Boolean; overload;
 function Equalized(const rIndex: Integer = 0): Boolean; overload;
 function Excessive: Boolean; overload;
+function Extremal(const item: MType): Boolean; overload;
 function Fits(const maxValue: Integer): Boolean; overload;
 function Fits(const target: TRange): Boolean; overload;
 function Heterogeneous: Boolean; overload;
@@ -146,6 +147,16 @@ begin
     d.Free;
   end;
   Result := False;
+end;
+
+{==============================================================================|
+  <Extremal>
+  @action: Checks if 'item' exists at either extreme end of the array (index 0 or High).
+  @note: Executes in O(1) constant time by testing boundary elements only.
+[==============================================================================}
+function MArrayHelper.Extremal(const item: MType): Boolean; overload;
+begin
+  Result := ((Self.Length > 0) and ((Self[0] = item) or (Self[High(Self)] = item)));
 end;
 
 {==============================================================================]
