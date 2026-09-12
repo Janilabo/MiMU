@@ -2,6 +2,7 @@
 function BinaryScan(const item: Boolean; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryScanned(const item: Boolean; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryScanner(const item: Boolean; const oAscending: Boolean = True): TIntegerArray; overload;
+function BinaryScanning(const item: Boolean; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryScanOf(const item: Boolean; const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
@@ -113,6 +114,69 @@ begin
   if ((Self[0] = item) and (Self[h] = item)) then
     Exit(TRange.Construct(0, h).ToArray);
   Result := TRange.Construct(A(0, h), B(0, h)).ToArray;
+end;
+
+{==============================================================================|
+  <BinaryScanning>
+  @action: Uses exponential/galloping search followed by binary search to locate all indices matching 'item' in a sorted boolean array.
+  @note: O(log K) complexity where K is the run-length of target values. Returns an array of contiguous indices, or [] if 'item' is absent.
+[==============================================================================}
+function TBooleanArrayHelper.BinaryScanning(const item: Boolean; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  h, b, L, R, M, t: Integer;
+  s: TRange;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit([]);
+  case (item = oAscending) of
+    True:
+    begin
+      if (Self[h] <> item) then
+        Exit([]);
+      b := 1;
+      while ((b <= h) and (Self[h - b] = item)) do
+        b := (b * 2);
+      s := TRange.Construct((h - Min(b, h)), (h - (b div 2)));
+      L := s.start;
+      R := s.stop;
+      t := s.stop;
+      while (L <= R) do
+      begin
+        M := (L + (R - L) div 2);
+        if (Self[M] = item) then
+        begin
+          t := M;
+          R := (M - 1);
+        end else
+          L := (M + 1);
+      end;
+      Result := TRange.Construct(t, h).ToArray;
+    end;
+    False:
+    begin
+      if (Self[0] <> item) then
+        Exit([]);
+      b := 1;
+      while ((b <= h) and (Self[b] = item)) do
+        b := (b * 2);
+      s := TRange.Construct((b div 2), Min(b, h));
+      L := s.start;
+      R := s.stop;
+      t := s.start;
+      while (L <= R) do
+      begin
+        M := (L + (R - L) div 2);
+        if (Self[M] = item) then
+        begin
+          t := M;
+          L := (M + 1);
+        end else
+          R := (M - 1);
+      end;
+      Result := TRange.Construct(0, t).ToArray;
+    end;
+  end;
 end;
 
 {==============================================================================|
