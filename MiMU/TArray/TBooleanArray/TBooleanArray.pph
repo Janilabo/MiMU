@@ -1,7 +1,6 @@
 {$I ../TArray.inc}
 
 {$I @TBooleanArray/Binary.inc}
-{$I @TBooleanArray/BinaryOps.inc}
 {$I @TBooleanArray/Bitwise.inc}
 {$I @TBooleanArray/Construction.inc}
 {$I @TBooleanArray/Conversion.inc}
@@ -12,3 +11,9 @@
 {$I @TBooleanArray/Search.inc}
 {$I @TBooleanArray/Selection.inc}
 {$I @TBooleanArray/Transform.inc}
+
+{$I @TBooleanArray/BinaryOps/Bounds.inc}
+{$I @TBooleanArray/BinaryOps/Counting.inc}
+{$I @TBooleanArray/BinaryOps/Miscellaneous.inc}
+{$I @TBooleanArray/BinaryOps/Scanning.inc}
+{$I @TBooleanArray/BinaryOps/Search.inc}
