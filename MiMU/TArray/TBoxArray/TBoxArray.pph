@@ -3,3 +3,4 @@
 {$I @TBoxArray/Bounds.inc}
 {$I @TBoxArray/Components.inc}
 {$I @TBoxArray/Extraction.inc}
+{$I @TBoxArray/Materialization.inc}
