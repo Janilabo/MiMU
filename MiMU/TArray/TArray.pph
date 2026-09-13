@@ -50,10 +50,12 @@
 
 {$IFDEF Sortable}
 {$I @TArray/Sortable/Bounds.inc}
+{$I @TArray/Sortable/Comparators.inc}
 {$I @TArray/Sortable/Containment.inc}
 {$I @TArray/Sortable/Counting.inc}
 {$I @TArray/Sortable/Deduplication.inc}
 {$I @TArray/Sortable/Directionality.inc}
+{$I @TArray/Sortable/Execution.inc}
 {$I @TArray/Sortable/Extrema.inc}
 {$I @TArray/Sortable/Manipulation.inc}
 {$I @TArray/Sortable/Merge.inc}
@@ -100,6 +102,7 @@
 {$ENDIF}
 
 {$I @TArray/Sortable/Algorithms/BubbleSort.inc}
+{$I @TArray/Sortable/Algorithms/HeapSort.inc}
 {$I @TArray/Sortable/Algorithms/HybridSort.inc}
 {$I @TArray/Sortable/Algorithms/MergeSort.inc}
 {$I @TArray/Sortable/Algorithms/Others.inc}

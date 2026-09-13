@@ -1,17 +1,64 @@
 {$IFDEF HELPERS}
-function Orderify(const oAscending: Boolean = True): TIntegerArray; overload;
-function Orderium(const oAscending: Boolean = True): TIntegerArray; overload;
-function Orderize(const oAscending: Boolean = True): TIntegerArray; overload;
-function Orderwise(const oAscending: Boolean = True): TIntegerArray; overload;
+function BinarySortition(const oAscending: Boolean = True): TIntegerArray; overload;
+function HeapSortition(const oAscending: Boolean = True): TIntegerArray; overload;
+function MergeSortition(const oAscending: Boolean = True): TIntegerArray; overload;
+function QuickSortition(const oAscending: Boolean = True): TIntegerArray; overload;
+
+function Standing(const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
-  <Orderify>
+  <BinarySortition>
+  @action: Returns an array of element indexes sorted stably using binary insertion sort.
+  @note: Uses binary search to pinpoint insertion locations; preserves original index 
+         order for equal values. Ideal for small to medium-sized arrays.
+[==============================================================================}
+function MArrayHelper.BinarySortition(const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  s, i, j, l, h, m, r: Integer;
+  function C(const indexA, indexB: Integer): Boolean;
+  begin
+    if (Self[indexA] = Self[indexB]) then
+      Result := (indexA < indexB)
+    else if oAscending then
+      Result := (Self[indexA] < Self[indexB])
+    else
+      Result := (Self[indexA] > Self[indexB]);
+  end;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  if (s = 1) then
+    Exit([0]);
+  for i := 0 to Result.Alloc(s) do
+    Result[i] := i;
+  for i := 1 to (s - 1) do
+  begin
+    r := Result[i];
+    l := 0;
+    h := i;
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if C(Result[m], r) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    for j := i downto (l + 1) do
+      Result[j] := Result[j - 1];
+    Result[l] := r;
+  end;
+end;
+
+{==============================================================================]
+  <MergeSortition>
   @action: Returns an array of element indexes sorted stably by their values.
   @note: Preserves the original relative order of equal elements (O(N log N) time).
 [==============================================================================}
-function MArrayHelper.Orderify(const oAscending: Boolean = True): TIntegerArray; overload;
+function MArrayHelper.MergeSortition(const oAscending: Boolean = True): TIntegerArray; overload;
 var
   a, b, s, w, l, m, r, i, j, k: Integer;
   t: TIntegerArray;
@@ -66,103 +113,7 @@ begin
 end;
 
 {==============================================================================]
-  <Orderium>
-  @action: Returns an array of element indexes sorted stably using binary insertion sort.
-  @note: Uses binary search to pinpoint insertion locations; preserves original index 
-         order for equal values. Ideal for small to medium-sized arrays.
-[==============================================================================}
-function MArrayHelper.Orderium(const oAscending: Boolean = True): TIntegerArray; overload;
-var
-  s, i, j, l, h, m, r: Integer;
-  function C(const indexA, indexB: Integer): Boolean;
-  begin
-    if (Self[indexA] = Self[indexB]) then
-      Result := (indexA < indexB)
-    else if oAscending then
-      Result := (Self[indexA] < Self[indexB])
-    else
-      Result := (Self[indexA] > Self[indexB]);
-  end;
-begin
-  s := Self.Length;
-  if (s = 0) then
-    Exit([]);
-  if (s = 1) then
-    Exit([0]);
-  for i := 0 to Result.Alloc(s) do
-    Result[i] := i;
-  for i := 1 to (s - 1) do
-  begin
-    r := Result[i];
-    l := 0;
-    h := i;
-    while (l < h) do
-    begin
-      m := ((l + h) shr 1);
-      if C(Result[m], r) then
-        l := (m + 1)
-      else
-        h := m;
-    end;
-    for j := i downto (l + 1) do
-      Result[j] := Result[j - 1];
-    Result[l] := r;
-  end;
-end;
-
-{==============================================================================]
-  <Orderize>
-  @action: Quicksort on indexes using Hoare partitioning.
-  @note: Average O(N log N), no allocation, in-place. Worst case O(N^2) on
-         adversarial input; stability is a side effect of C()'s index
-         tiebreak, not an algorithmic guarantee.
-[==============================================================================}
-function MArrayHelper.Orderize(const oAscending: Boolean = True): TIntegerArray; overload;
-var
-  s, i: Integer;
-  function C(const indexA, indexB: Integer): Boolean;
-  begin
-    if (Self[indexA] = Self[indexB]) then
-      Result := (indexA < indexB)
-    else if oAscending then
-      Result := (Self[indexA] < Self[indexB])
-    else
-      Result := (Self[indexA] > Self[indexB]);
-  end;
-  procedure Q(const iLow, iHigh: Integer);
-  var
-    l, r, p: Integer;
-  begin
-    if (iLow >= iHigh) then
-      Exit;
-    l := iLow;
-    r := iHigh;
-    p := Result[(iLow + iHigh) shr 1];
-    while (l <= r) do
-    begin
-      while C(Result[l], p) do
-        Inc(l);
-      while C(p, Result[r]) do
-        Dec(r);
-      if (l <= r) then
-        Result.Switch(l.Increase, r.Decrease);
-    end;
-    Q(iLow, r);
-    Q(l, iHigh);
-  end;
-begin
-  s := Self.Length;
-  if (s = 0) then
-    Exit([]);
-  if (s = 1) then
-    Exit([0]);
-  for i := 0 to Result.Alloc(s) do
-    Result[i] := i;
-  Q(0, (s - 1));
-end;
-
-{==============================================================================]
-  <Orderwise>
+  <HeapSortition>
   @action: Heapsort on indexes.
   @note: O(N log N) worst case, O(1) extra space, no allocation. Not
          algorithmically stable, but produces stable output here because
@@ -170,7 +121,7 @@ end;
          in documentation since "stable" describes the outcome, not the
          mechanism.
 [==============================================================================}
-function MArrayHelper.Orderwise(const oAscending: Boolean = True): TIntegerArray; overload;
+function MArrayHelper.HeapSortition(const oAscending: Boolean = True): TIntegerArray; overload;
 var
   s, i, e: Integer;
   function C(const indexA, indexB: Integer): Boolean;
@@ -216,5 +167,77 @@ begin
     Result.Switch(0, e);
     SiftDown(0, e.Decrease);
   end;
+end;
+
+{==============================================================================]
+  <QuickSortition>
+  @action: Quicksort on indexes using Hoare partitioning.
+  @note: Average O(N log N), no allocation, in-place. Worst case O(N^2) on
+         adversarial input; stability is a side effect of C()'s index
+         tiebreak, not an algorithmic guarantee.
+[==============================================================================}
+function MArrayHelper.QuickSortition(const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  s, i: Integer;
+  function C(const indexA, indexB: Integer): Boolean;
+  begin
+    if (Self[indexA] = Self[indexB]) then
+      Result := (indexA < indexB)
+    else if oAscending then
+      Result := (Self[indexA] < Self[indexB])
+    else
+      Result := (Self[indexA] > Self[indexB]);
+  end;
+  procedure Q(const iLow, iHigh: Integer);
+  var
+    l, r, p: Integer;
+  begin
+    if (iLow >= iHigh) then
+      Exit;
+    l := iLow;
+    r := iHigh;
+    p := Result[(iLow + iHigh) shr 1];
+    while (l <= r) do
+    begin
+      while C(Result[l], p) do
+        Inc(l);
+      while C(p, Result[r]) do
+        Dec(r);
+      if (l <= r) then
+        Result.Switch(l.Increase, r.Decrease);
+    end;
+    Q(iLow, r);
+    Q(l, iHigh);
+  end;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  if (s = 1) then
+    Exit([0]);
+  for i := 0 to Result.Alloc(s) do
+    Result[i] := i;
+  Q(0, (s - 1));
+end;
+
+{==============================================================================]
+  <Standing>
+  @action: Returns each element's rank — the position it would occupy if
+           Self were sorted — without mutating Self.
+  @note: Noun, non-mutating — consistent with the project's naming
+         convention. Result[i] gives the same value Sortie would have
+         returned for index i, but Self is left untouched. Implemented as
+         an O(N) inversion of Sortition's output rather than a separate
+         sort mechanism, since the two are the same permutation viewed from
+         opposite directions — no reason to duplicate sort logic here.
+[==============================================================================}
+function MArrayHelper.Standing(const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  p: TIntegerArray;
+  i: Integer;
+begin
+  p := Self.MergeSortition(oAscending);
+  for i := 0 to Result.Alloc(p.Length) do
+    Result[p[i]] := i;
 end;
 {$ENDIF}

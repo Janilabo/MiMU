@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function QuickSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
 function QuickSortSwapped(const aAscending: Boolean = True): TConnectionArray; overload;
+function QuickSortie(const oAscending: Boolean = True): TIntegerArray; overload;
 function QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
 function QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload;
 function QuickSorted(const aAscending: Boolean = True): MArray; overload;
@@ -119,6 +120,91 @@ begin
   SetLength(Result, 0);
   if (Self.Size > 1) then
     QuickSortRec(0, High(Self), Result);
+end;
+
+{==============================================================================]
+  <QuickSortie>
+  @action: Quicksorts Self in place and returns the index map needed to
+           restore Self's original order.
+  @note: Result[i] is where the element originally at index i now sits in
+         the sorted Self, i.e. SelfSorted[Result[i]] = SelfOriginal[i].
+         Uses Hoare partitioning; average O(N log N), no allocation beyond
+         the tracked-origin array; worst case O(N^2) on adversarial input.
+         Equal values keep their original relative order (a side effect of
+         the origin-index tiebreak, not an algorithmic guarantee).
+[==============================================================================}
+function MArrayHelper.QuickSortie(const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  s, i: Integer;
+  o: TIntegerArray;
+  procedure Q(const iLow, iHigh: Integer);
+  var
+    l, r, m, t, p: Integer;
+    v: MType;
+    function C(const indexA: Integer): Integer;
+    begin
+      if (Self[indexA] = v) then
+      begin
+        if (o[indexA] = p) then
+          Result := 0
+        else if (o[indexA] < p) then
+          Result := -1
+        else
+          Result := 1;
+      end
+      else if oAscending then
+      begin
+        if (Self[indexA] < v) then
+          Result := -1
+        else
+          Result := 1;
+      end
+      else
+      begin
+        if (Self[indexA] > v) then
+          Result := -1
+        else
+          Result := 1;
+      end;
+    end;
+  begin
+    if (iLow >= iHigh) then
+      Exit;
+    l := iLow;
+    r := iHigh;
+    m := ((iLow + iHigh) shr 1);
+    v := Self[m];
+    p := o[m];
+    while (l <= r) do
+    begin
+      while (C(l) < 0) do
+        Inc(l);
+      while (C(r) > 0) do
+        Dec(r);
+      if (l <= r) then
+      begin
+        Self.Switch(l, r);
+        t := o[l];
+        o[l] := o[r];
+        o[r] := t;
+        Inc(l);
+        Dec(r);
+      end;
+    end;
+    Q(iLow, r);
+    Q(l, iHigh);
+  end;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  if (s = 1) then
+    Exit([0]);
+  for i := 0 to o.Alloc(s) do
+    o[i] := i;
+  Q(0, (s - 1));
+  for i := 0 to Result.Alloc(s) do
+    Result[o[i]] := i;
 end;
 
 {==============================================================================]

@@ -12,6 +12,8 @@ function Filterify(const aMin, aMax: MType): MArray; overload;
 function FilterifyMax(const target: MType): MArray; overload;
 function FilterifyMin(const target: MType): MArray; overload;
 function Superlatives: MArray; overload;
+
+function QuickElect(const K: Integer; const oAscending: Boolean = True): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -269,5 +271,76 @@ begin
         Result[r.Increment] := Self[i];
   end;
   SetLength(Result, (r + 1));
+end;
+
+{==============================================================================]
+  <QuickElect>
+  @action: Returns the element that would occupy position K if Self were
+           sorted, without fully sorting Self.
+  @note: Bare verb, mutating — Self's element order is partially rearranged
+         as a side effect (unspecified beyond "aK-th position holds the
+         correct value"), the same contract as C++'s nth_element. Iterative
+         Hoare-partition quickselect; average O(N), worst case O(N^2) on
+         adversarial input, no allocation. K is 0-based; caller must
+         ensure 0 <= K < Self.Length.
+[==============================================================================}
+function MArrayHelper.QuickElect(const K: Integer; const oAscending: Boolean = True): MType; overload;
+var
+  s, l, h, i, j, m: Integer;
+  v: MType;
+begin
+  s := Self.Length;
+  l := 0;
+  h := (s - 1);
+  case oAscending of
+    True:
+    repeat
+      if (l = h) then
+        Exit(Self[l]);
+      m := ((l + h) shr 1);
+      v := Self[m];
+      i := l;
+      j := h;
+      while (i <= j) do
+      begin
+        while (Self[i] < v) do
+          Inc(i);
+        while (Self[j] > v) do
+          Dec(j);
+        if (i <= j) then
+          Self.Switch(i.Increase, j.Decrease);
+      end;
+      if (K <= j) then
+        h := j
+      else if (K >= i) then
+        l := i
+      else
+        Exit(Self[K]);
+    until False;
+    False:
+    repeat
+      if (l = h) then
+        Exit(Self[l]);
+      m := ((l + h) shr 1);
+      v := Self[m];
+      i := l;
+      j := h;
+      while (i <= j) do
+      begin
+        while (Self[i] > v) do
+          Inc(i);
+        while (Self[j] < v) do
+          Dec(j);
+        if (i <= j) then
+          Self.Switch(i.Increase, j.Decrease);
+      end;
+      if (K <= j) then
+        h := j
+      else if (K >= i) then
+        l := i
+      else
+        Exit(Self[K]);
+    until False;
+  end;
 end;
 {$ENDIF}

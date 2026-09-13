@@ -1,11 +1,184 @@
 {$IFDEF HELPERS}
-function MergeSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
-function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
 function MergeSort(const aAscending: Boolean = True): Integer; overload;
 function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
+function MergeSortie(const oAscending: Boolean = True): TIntegerArray; overload;
+function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
+function MergeSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <MergeSort>
+  @action: MergeSort algorithm.
+  @note: Returns High(arr).
+[==============================================================================}
+function MArrayHelper.MergeSort(const aAscending: Boolean = True): Integer; overload;
+  procedure M2(var arr, tmp: MArray; const Lo, Hi: Integer; const aAscending: Boolean = True);
+  var
+    l, r, i, m, o: Integer;
+  begin
+    if (Lo >= Hi) then
+      Exit;
+    o := aAscending.Select(-1, 1);
+    m := (Lo + ((Hi - Lo) div 2));
+    M2(arr, tmp, Lo, m, aAscending);
+    M2(arr, tmp, (m + 1), Hi, aAscending);
+    l := Lo;
+    r := (m + 1);
+    for i := Lo to Hi do
+      tmp[i] := arr[i];
+    for i := Lo to Hi do
+      if (L > m) then
+        arr[i] := tmp[r.Increase]
+      else if (R > Hi) then
+        arr[i] := tmp[l.Increase]
+      else if (Sign(tmp[r].Compare(tmp[l])) = o) then
+        arr[i] := tmp[r.Increase]
+      else
+        arr[i] := tmp[l.Increase];
+  end;
+var
+  t: MArray;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+  begin
+    SetLength(t, (Result + 1));
+    M2(Self, t, 0, Result, aAscending);
+  end;
+end;
+
+{==============================================================================]
+  <MergeSortBU>
+  @action: Bottom-up MergeSort algorithm.
+  @note: Returns High(arr).
+[==============================================================================}
+function MArrayHelper.MergeSortBU(const aAscending: Boolean = True): Integer; overload;
+var
+  t: MArray;
+  w, i, s: Integer;
+  l, r: TRange;
+begin
+  Result := High(Self);
+  if (Result > 0) then
+  begin
+    w := 1;
+	SetLength(t, (Result + 1));
+    while (w <= Result) do
+    begin
+      i := 0;
+      while (i <= Result) do
+      begin
+        l.Create(i, Min((i + (w - 1)), Result));
+        r.Create((l.stop + 1), Min((l.start + (2 * w) - 1), Result));
+        for s := l.start to r.stop do
+          t[s] := Self[s];
+        s := i;
+        while (l.Asceal and r.Asceal) do
+          if ((aAscending and (t[l.start] <= t[r.start])) or (not aAscending and (t[l.start] >= t[r.start]))) then
+            Self[s.Increase] := t[l.start.Increase]
+          else
+            Self[s.Increase] := t[r.start.Increase];
+        while l.Asceal do
+          Self[s.Increase] := t[l.start.Increase];
+        while r.Asceal do
+          Self[s.Increase] := t[r.start.Increase];
+        i.Increase(2 * w);
+      end;
+      w := (w * 2);
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <MergeSortie>
+  @action: Merge sorts Self in place and returns the index map needed to
+           restore Self's original order.
+  @note: Result[i] is where the element originally at index i now sits in
+         the sorted Self, i.e. SelfSorted[Result[i]] = SelfOriginal[i].
+         Bottom-up, stable, O(N log N) time, O(N) auxiliary space for both
+         the value buffer and the tracked-origin array.
+[==============================================================================}
+function MArrayHelper.MergeSortie(const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  a, b, s, w, l, m, r, i, k: Integer;
+  o, p: TIntegerArray;
+  v: MArray;
+  function C(const indexA, indexB: Integer): Boolean;
+  begin
+    if (Self[indexA] = Self[indexB]) then
+      Result := (o[indexA] < o[indexB])
+    else if oAscending then
+      Result := (Self[indexA] < Self[indexB])
+    else
+      Result := (Self[indexA] > Self[indexB]);
+  end;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  if (s = 1) then
+    Exit([0]);
+  SetLength(p, s);
+  SetLength(v, s);
+  for i := 0 to o.Alloc(s) do
+    o[i] := i;
+  w := 1;
+  while (w < s) do
+  begin
+    l := 0;
+    while (l < s) do
+    begin
+      m := (l + w);
+      if (m >= s) then
+        m := s;
+      r := (l + (w * 2));
+      if (r >= s) then
+        r := s;
+      a := l;
+      b := m;
+      k := l;
+      while ((a < m) and (b < r)) do
+        if C(a, b) then
+        begin
+          v[k] := Self[a];
+          p[k] := o[a];
+          Inc(k);
+          Inc(a);
+        end else
+        begin
+          v[k] := Self[b];
+          p[k] := o[b];
+          Inc(k);
+          Inc(b);
+        end;
+      while (a < m) do
+      begin
+        v[k] := Self[a];
+        p[k] := o[a];
+        Inc(k);
+        Inc(a);
+      end;
+      while (b < r) do
+      begin
+        v[k] := Self[b];
+        p[k] := o[b];
+        Inc(k);
+        Inc(b);
+      end;
+      Inc(l, (w * 2));
+    end;
+    for i := 0 to (s - 1) do
+    begin
+      Self[i] := v[i];
+      o[i] := p[i];
+    end;
+    w := (w * 2);
+  end;
+  for i := 0 to Result.Alloc(s) do
+    Result[o[i]] := i;
+end;
+
 {==============================================================================]
   <MergeSortIndexed>
   @action: Sorts the current integer array (Self) using merge sort while
@@ -148,88 +321,5 @@ begin
   Result := Self.Size;
   if (Result > 1) then
     MSP(Self, partner, 0, (Result - 1));
-end;
-
-{==============================================================================]
-  <MergeSort>
-  @action: MergeSort algorithm.
-  @note: Returns High(arr).
-[==============================================================================}
-function MArrayHelper.MergeSort(const aAscending: Boolean = True): Integer; overload;
-  procedure M2(var arr, tmp: MArray; const Lo, Hi: Integer; const aAscending: Boolean = True);
-  var
-    l, r, i, m, o: Integer;
-  begin
-    if (Lo >= Hi) then
-      Exit;
-    o := aAscending.Select(-1, 1);
-    m := (Lo + ((Hi - Lo) div 2));
-    M2(arr, tmp, Lo, m, aAscending);
-    M2(arr, tmp, (m + 1), Hi, aAscending);
-    l := Lo;
-    r := (m + 1);
-    for i := Lo to Hi do
-      tmp[i] := arr[i];
-    for i := Lo to Hi do
-      if (L > m) then
-        arr[i] := tmp[r.Increase]
-      else if (R > Hi) then
-        arr[i] := tmp[l.Increase]
-      else if (Sign(tmp[r].Compare(tmp[l])) = o) then
-        arr[i] := tmp[r.Increase]
-      else
-        arr[i] := tmp[l.Increase];
-  end;
-var
-  t: MArray;
-begin
-  Result := High(Self);
-  if (Result > 0) then
-  begin
-    SetLength(t, (Result + 1));
-    M2(Self, t, 0, Result, aAscending);
-  end;
-end;
-
-{==============================================================================]
-  <MergeSortBU>
-  @action: Bottom-up MergeSort algorithm.
-  @note: Returns High(arr).
-[==============================================================================}
-function MArrayHelper.MergeSortBU(const aAscending: Boolean = True): Integer; overload;
-var
-  t: MArray;
-  w, i, s: Integer;
-  l, r: TRange;
-begin
-  Result := High(Self);
-  if (Result > 0) then
-  begin
-    w := 1;
-	SetLength(t, (Result + 1));
-    while (w <= Result) do
-    begin
-      i := 0;
-      while (i <= Result) do
-      begin
-        l.Create(i, Min((i + (w - 1)), Result));
-        r.Create((l.stop + 1), Min((l.start + (2 * w) - 1), Result));
-        for s := l.start to r.stop do
-          t[s] := Self[s];
-        s := i;
-        while (l.Asceal and r.Asceal) do
-          if ((aAscending and (t[l.start] <= t[r.start])) or (not aAscending and (t[l.start] >= t[r.start]))) then
-            Self[s.Increase] := t[l.start.Increase]
-          else
-            Self[s.Increase] := t[r.start.Increase];
-        while l.Asceal do
-          Self[s.Increase] := t[l.start.Increase];
-        while r.Asceal do
-          Self[s.Increase] := t[r.start.Increase];
-        i.Increase(2 * w);
-      end;
-      w := (w * 2);
-    end;
-  end;
 end;
 {$ENDIF}

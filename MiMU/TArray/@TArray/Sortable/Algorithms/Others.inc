@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function BinaryTreeSort(const oAscending: Boolean = True): Integer; overload;
+function BinarySortie(const oAscending: Boolean = True): TIntegerArray; overload;
 function BrickSort(const oAscending: Boolean = True): Integer; overload;
 function CoctailSort(const aAscending: Boolean = True): Integer; overload;
 function CoctailSort2(const aAscending: Boolean = True): Integer; overload;
@@ -7,8 +8,6 @@ function CombSort(const aAscending: Boolean = True): Integer; overload;
 function ExchangeSort(const oAscending: Boolean = True): Integer; overload;
 function GnomeSort(const aAscending: Boolean = True): Integer; overload;
 function GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
-function HeapifySort(const oAscending: Boolean = True): Integer; overload;
-function HeapSort(const aAscending: Boolean = True): Integer; overload;
 function InsertionSort(const aAscending: Boolean = True): Integer; overload;
 function PancakeSort(const aAscending: Boolean = True): Integer; overload;
 function PartitionSort(const aAscending: Boolean = True): Integer; overload;
@@ -91,6 +90,64 @@ begin
     InsertNode(Self[i], r);
   p := 0;
   TreeOrder(r, Self, p);
+end;
+
+{==============================================================================]
+  <BinarySortie>
+  @action: Sorts Self in place via binary insertion sort and returns the
+           index map needed to restore Self's original order.
+  @note: Result[i] is where the element originally at index i now sits in
+         the sorted Self, i.e. SelfSorted[Result[i]] = SelfOriginal[i].
+         Uses binary search to pinpoint insertion locations; preserves
+         original relative order for equal values. Ideal for small to
+         medium-sized arrays.
+[==============================================================================}
+function MArrayHelper.BinarySortie(const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  s, i, j, l, h, m, p: Integer;
+  o: TIntegerArray;
+  v: MType;
+  function C(const indexA: Integer): Boolean;
+  begin
+    if (Self[indexA] = v) then
+      Result := (o[indexA] < p)
+    else if oAscending then
+      Result := (Self[indexA] < v)
+    else
+      Result := (Self[indexA] > v);
+  end;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  if (s = 1) then
+    Exit([0]);
+  for i := 0 to o.Alloc(s) do
+    o[i] := i;
+  for i := 1 to (s - 1) do
+  begin
+    v := Self[i];
+    p := o[i];
+    l := 0;
+    h := i;
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if C(m) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    for j := i downto (l + 1) do
+    begin
+      Self[j] := Self[j - 1];
+      o[j] := o[j - 1];
+    end;
+    Self[l] := v;
+    o[l] := p;
+  end;
+  for i := 0 to Result.Alloc(s) do
+    Result[o[i]] := i;
 end;
 
 {==============================================================================]
@@ -367,107 +424,6 @@ begin
           l := 0;
         end else
           Inc(p);
-  end;
-end;
-
-{==============================================================================]
-  <HeapifySort>
-  @action: Performs an in-place sort of the array using a binary heap structure.
-  @note: Guarantees O(n log n) time complexity. Memory efficient with O(1) 
-         space. Uses an iterative "sinking" method to prevent stack overflow.
-[==============================================================================}
-function MArrayHelper.HeapifySort(const oAscending: Boolean = True): Integer; overload;
-procedure MaxHeapify(var arr: MArray; index, heap: Integer);
-var
-  m, l, r: Integer;
-begin
-  while True do
-  begin
-    l := ((2 * index) + 1);
-    r := ((2 * index) + 2);
-    m := index;
-    if ((l < heap) and (oAscending = (arr[l] > arr[m]))) then
-      m := l;
-    if ((r < heap) and (oAscending = (arr[r] > arr[m]))) then
-      m := r;
-    if (m = index) then
-      Break;
-    Swap(arr[index], arr[m]);
-    index := m;
-  end;
-end;
-procedure BuildMaxHeap(var arr: MArray);
-var
-  i, l: Integer;
-begin
-  l := arr.Length;
-  for i := ((l div 2) - 1) downto 0 do
-    MaxHeapify(arr, i, l);
-end;
-var
-  i: Integer;
-begin
-  Result := High(Self);
-  if (Result < 1) then
-    Exit;
-  BuildMaxHeap(Self);
-  for i := Result downto 1 do
-  begin
-    Swap(Self[0], Self[i]);
-    MaxHeapify(Self, 0, i);
-  end;
-end;
-
-{==============================================================================]
-  <HeapSort>
-  @action: HeapSort algorithm.
-  @note: Returns High(arr).
-[==============================================================================}
-function MArrayHelper.HeapSort(const aAscending: Boolean = True): Integer; overload;
-var
-  a, b, r, c, o: Integer;
-begin
-  Result := High(Self);
-  if (Result > 0) then
-  begin
-    o := aAscending.Select(-1, 1);
-    a := (Result div 2);
-    b := Result;
-    while (a >= 0) do
-    begin
-      r := a;
-      while (((r * 2) + 1) <= Result) do
-      begin
-        c := ((r * 2) + 1);
-        if ((c < Result) and (Sign(Self[c].Compare(Self[c + 1])) = o)) then
-          c := (c + 1);
-        if (Sign(Self[r].Compare(Self[c])) = o) then
-        begin
-          Exchange(r, c);
-          r := c;
-        end else
-          Break;
-      end;
-      a := (a - 1);
-    end;
-    while (b > 0) do
-    begin
-      Exchange(0, b);
-      b := (b - 1);
-      r := 0;
-      while (((r * 2) + 1) <= b) do
-      begin
-        c := ((r * 2) + 1);
-        if ((c < b) and (Sign(Self[c].Compare(Self[c + 1])) = o)) then
-          c := (c + 1);
-        if (Sign(Self[r].Compare(Self[c])) = o) then
-        begin
-          Exchange(r, c);
-          r := c;
-        end else
-          Break;
-      end;
-    end;
   end;
 end;
 
