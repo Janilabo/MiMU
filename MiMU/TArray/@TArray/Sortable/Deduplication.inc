@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Cleaned(const oAscending: Boolean = True): MArray; overload;
 function Monotonized(const oAscending: Boolean = True): MArray; overload;
+function Sortique(const rAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -51,5 +52,25 @@ begin
         Result[r.Increment] := Self[i];
   end;
   SetLength(Result, (r + 1));
+end;
+
+{==============================================================================]
+  <Sortique>
+  @action: Returns a sorted array containing only distinct elements, applying QuickSort followed by an adjacent deduplication pass.
+  @note:  Faster than Uniquify for larger arrays due to single-pass adjacent comparison after sorting, but alters original element order.
+          Operates in O(n log n) average time complexity.
+[==============================================================================}
+function MArrayHelper.Sortique(const rAscending: Boolean = True): MArray; overload;
+var
+  i, r: Integer;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Cloned);
+  Result := Self.QuickSorted(rAscending);
+  r := 1;
+  for i := 1 to High(Result) do
+    if (Result[i] <> Result[r - 1]) then
+      Result[r.Increase] := Result[i];
+  SetLength(Result, r);
 end;
 {$ENDIF}
