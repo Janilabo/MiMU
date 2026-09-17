@@ -7,6 +7,7 @@ function BinaryInsertSort(const oAscending: Boolean = True): Integer; overload;
 function BinaryInsertSorted(const oAscending: Boolean = True): MArray; overload;
 function BinarySort(const aAscending: Boolean = True): Integer; overload;
 function BinarySorted(const aAscending: Boolean = True): MArray; overload;
+function BisectionSort(const oAscending: Boolean = True): Integer; overload;
 function BSort(const aAscending: Boolean = True): Integer; overload;
 function BSorted(const aAscending: Boolean = True): MArray; Overload;
 {$ENDIF}
@@ -354,6 +355,45 @@ begin
         Result[i] := Result[i - 1];
       Result[r.start] := s;
     end;
+  end;
+end;
+
+{==============================================================================]
+  <BisectionSort>
+  @action: Sorts the array in place along the given direction using binary
+           insertion sort; each element's insertion point is located via
+           bisection (O(log i) comparisons) rather than linear scan.
+  @note: The search uses Anterior (inclusive) rather than Leads, so equal
+         elements are inserted after existing equal elements — the sort is
+         stable. Comparison count is O(n log n), but element shifting
+         remains O(n) per insertion, so overall complexity is still O(n^2),
+         same as plain insertion sort — the bisection only reduces
+         comparisons, not shifts. Direction is controlled by oAscending
+         (default True).
+[==============================================================================}
+function MArrayHelper.BisectionSort(const oAscending: Boolean = True): Integer; overload;
+var
+  L, R, M, i: Integer;
+  s: MType;
+begin
+  Result := Self.Length;
+  for i := 1 to (Result - 1) do
+  begin
+    s := Self[i];
+    L := 0;
+    R := i;
+    while (L < R) do
+    begin
+      M := (L + (R - L) div 2);
+      if Self[m].Anterior(s, oAscending) then
+        L := (M + 1)
+      else
+        R := M;
+    end;
+    M := (i + 1);
+    while (M.Decrement > L) do
+      Self[M] := Self[M - 1];
+    Self[L] := s;
   end;
 end;
 

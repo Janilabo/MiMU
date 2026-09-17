@@ -5,10 +5,12 @@ function BrickSort(const oAscending: Boolean = True): Integer; overload;
 function CoctailSort(const aAscending: Boolean = True): Integer; overload;
 function CoctailSort2(const aAscending: Boolean = True): Integer; overload;
 function CombSort(const aAscending: Boolean = True): Integer; overload;
+function CycleSort(const oAscending: Boolean = True): Integer; overload;
 function ExchangeSort(const oAscending: Boolean = True): Integer; overload;
 function GnomeSort(const aAscending: Boolean = True): Integer; overload;
 function GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
 function InsertionSort(const aAscending: Boolean = True): Integer; overload;
+function OddEvenSort(const oAscending: Boolean = True): Integer; overload;
 function PancakeSort(const aAscending: Boolean = True): Integer; overload;
 function PancakeSort2(const oAscending: Boolean = True): Integer; overload;
 function PartitionSort(const aAscending: Boolean = True): Integer; overload;
@@ -298,6 +300,51 @@ begin
 end;
 
 {==============================================================================]
+  <CycleSort>
+  @action: Sorts the array in place along the given direction, using the
+           minimum possible number of element writes; returns the number
+           of writes performed.
+  @note: Classic cycle-sort algorithm. Each cycle is resolved by counting,
+         for the current pivot value, how many elements strictly precede it
+         (via Leads) to determine its final position, then repeating until
+         the cycle closes. Duplicate values are skipped past via the
+         s = Self[p] check to avoid infinite cycles. Direction is controlled
+         by oAscending (default True).
+[==============================================================================}
+function MArrayHelper.CycleSort(const oAscending: Boolean = True): Integer; overload;
+var
+  c, p, i, t: Integer;
+  s: MType;
+begin
+  Result := Self.Length;
+  for c := 0 to (Result - 2) do
+  begin
+    s := Self[c];
+    p := c;
+    for i := (c + 1) to (Result - 1) do
+      if Self[i].Leads(s, oAscending) then
+        Inc(p);
+    if (p = c) then
+      Continue;
+    while ((p < Result) and (s = Self[p])) do
+      Inc(p);
+    if (p < Result) then
+      Swap(Self[p], s);
+    while (p <> c) do
+    begin
+      p := c;
+      for i := (c + 1) to (Result - 1) do
+        if Self[i].Leads(s, oAscending) then
+          Inc(p);
+      while ((p < Result) and (s = Self[p])) do
+        Inc(p);
+      if (p < Result) then
+        Swap(Self[p], s);
+    end;
+  end;
+end;
+
+{==============================================================================]
   <ExchangeSort>
   @action: Sorts Self in place (ascending or descending) using adjacent-pair
            comparison; each pass buckets out-of-order pairs into `a` (the
@@ -447,6 +494,42 @@ begin
 	else
           Break;
   end;
+end;
+
+{==============================================================================]
+  <OddEvenSort>
+  @action: Sorts the array in place along the given direction using
+           odd-even transposition sort; returns length of Self.
+  @note: Alternates odd-indexed (i=1,3,5,...) and even-indexed (i=0,2,4,...)
+         adjacent-pair passes each iteration, comparing via Leads so the
+         direction is controlled by oAscending (default True). Terminates
+         when a full odd+even pass performs zero swaps. Parallelizes
+         trivially (each pass's comparisons are independent), which is the
+         algorithm's usual selling point over plain bubble sort despite
+         matching its O(n^2) worst case.
+[==============================================================================}
+function MArrayHelper.OddEvenSort(const oAscending: Boolean = True): Integer; overload;
+var
+  s: Boolean;
+  i, l: Integer;
+begin
+  Result := Self.Length;
+  repeat
+    s := True;
+    for l := 1 downto 0 do
+    begin
+      i := l;
+      while (i < (Result - 1)) do
+      begin
+        if Self[i + 1].Leads(Self[i], oAscending) then
+        begin
+          Swap(Self[i], Self[i + 1]);
+          s := False;
+        end;
+        Inc(i, 2);
+      end;
+    end;
+  until s;
 end;
 
 {==============================================================================]

@@ -33,6 +33,12 @@ function Succeed(const target: MType; const oAscending: Boolean = True): Boolean
 
 function Wins(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 function Loses(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+
+function Leads(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+function Trails(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+
+function Anterior(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+function Posterior(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -386,6 +392,7 @@ function MTypeHelper.Wins(const target: MType; const oAscending: Boolean = True)
 begin
   Result := ((oAscending and (Self > target)) or ((not oAscending) and (Self < target)));
 end;
+
 {==============================================================================]
   <Loses>
   @action: Returns True if Self is outranked by target under the given sort
@@ -399,5 +406,62 @@ end;
 function MTypeHelper.Loses(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := ((oAscending and (Self < target)) or ((not oAscending) and (Self > target)));
+end;
+
+{==============================================================================]
+  <Leads>
+  @action: Returns True if Self is strictly before target along the given direction.
+  @note: Direction is controlled by oAscending (default True). When ascending,
+         "before" means Self < target; when descending, the comparison flips,
+         so "before" means Self > target. Equality always returns False —
+         use a *OrEqual variant if Self = target should also qualify.
+[==============================================================================}
+function MTypeHelper.Leads(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if oAscending then
+    Result := (Self < target)
+  else
+    Result := (Self > target);
+end;
+
+{==============================================================================]
+  <Trails>
+  @action: Returns True if Self is strictly after target along the given direction.
+  @note: Mirror of Leads: direction is controlled by oAscending (default True).
+         When ascending, "after" means Self > target; when descending, the
+         comparison flips, so "after" means Self < target. Equality always
+         returns False — use a *OrEqual variant if Self = target should also
+         qualify.
+[==============================================================================}
+function MTypeHelper.Trails(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if oAscending then
+    Result := (Self > target)
+  else
+    Result := (Self < target);
+end;
+
+{==============================================================================]
+  <Anterior>
+  @action: Returns True if Self is at or before target along the given direction.
+  @note: Direction is controlled by oAscending (default True). Inclusive
+         counterpart to Leads — equality with target always
+         returns True regardless of direction.
+[==============================================================================}
+function MTypeHelper.Anterior(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((Self = target) or ((Self < target) = oAscending));
+end;
+
+{==============================================================================]
+  <Posterior>
+  @action: Returns True if Self is at or after target along the given direction.
+  @note: Direction is controlled by oAscending (default True). Inclusive
+         counterpart to Trails — equality with target always
+         returns True regardless of direction.
+[==============================================================================}
+function MTypeHelper.Posterior(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := ((Self = target) or ((Self > target) = oAscending));
 end;
 {$ENDIF}
