@@ -108,6 +108,7 @@
 {$I @TArray/Sortable/Algorithms/Others.inc}
 {$I @TArray/Sortable/Algorithms/QuickSort.inc}
 {$I @TArray/Sortable/Algorithms/SelectionSort.inc}
+{$I @TArray/Sortable/Algorithms/ShellSort.inc}
 
 {$I @TArray/Sortable/BinaryOps/Add.inc}
 {$I @TArray/Sortable/BinaryOps/Bounds.inc}

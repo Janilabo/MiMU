@@ -1,10 +1,77 @@
 {$IFDEF HELPERS}
+function SelectedSort(const oAscending: Boolean = True): MArray; overload;
 function SelectionSort(const aAscending: Boolean = True): Integer; overload;
 function SelectionSortBidirectional(const aAscending: Boolean = True): Integer; overload;
 function SelectionSortBidirectional2(const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <SelectedSort>
+  @action: Returns a new allocated array containing the sorted elements using a
+           hybrid pre-filtering phase followed by Selection Sort.
+  @note: - Allocates memory for the target result array using `Result.Alloc`.
+         - Phase 1: Uses a two-pointer pass (`l`, `r`) and helper `S` to copy
+           pairs from outer edges into the `Result` array in preliminary
+           min/max relative order.
+         - Phase 2: Performs standard Selection Sort on the `Result` array
+           by repeatedly scanning for the extremum (minimum for ascending,
+           maximum for descending) and placing it via `Result.Switch`.
+         - Complexity: O(N²) time complexity dominated by the Selection Sort
+           loops; O(N) auxiliary space for the allocated result array.
+[==============================================================================}
+function MArrayHelper.SelectedSort(const oAscending: Boolean = True): MArray; overload;
+var
+  h, i, l, r, k, j: Integer;
+procedure S(const left, right: MType);
+begin
+  Result[l.Increase] := left;
+  Result[r.Decrease] := right;
+end;
+begin
+  h := Result.Alloc(Self.Length);
+  if (h = -1) then
+    Exit;
+  r := h;
+  l := 0;
+  case oAscending of
+    True:
+    begin
+      while (l <= r) do
+        if (Self[l] > Self[r]) then
+          S(Self[r], Self[l])
+        else
+          S(Self[l], Self[r]);
+      for i := 0 to (h - 1) do
+      begin
+        k := i;
+        for j := (i + 1) to h do
+          if (Result[j] < Result[k]) then
+            k := j;
+        if (k <> i) then
+          Result.Switch(i, k);
+      end;
+    end;
+    False:
+    begin
+      while (l <= r) do
+        if (Self[l] < Self[r]) then
+          S(Self[r], Self[l])
+        else
+          S(Self[l], Self[r]);
+      for i := 0 to (h - 1) do
+      begin
+        k := i;
+        for j := (i + 1) to h do
+          if (Result[j] > Result[k]) then
+            k := j;
+        if (k <> i) then
+          Result.Switch(i, k);
+      end;
+    end;
+  end;
+end;
+
 {==============================================================================]
   <SelectionSort>
   @action: SelectionSort algorithm.

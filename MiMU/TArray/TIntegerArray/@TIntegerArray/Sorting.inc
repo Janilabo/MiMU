@@ -1,10 +1,70 @@
 {$IFDEF HELPERS}
+function BeadSort(const oAscending: Boolean = True): Integer; overload;
 function CountingSort(const aAscending: Boolean = True): Integer;
 function RadixSort(const aAscending: Boolean = True): Integer;
 function SegmentedCountingSort(const aAscending: Boolean = True; const bucketSize: Integer = 1024): Integer;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BeadSort>
+  @action: Sorts the array using the Bead Sort (Gravity Sort) algorithm and
+           returns the total length of the array (Self.Length).
+  @note: - Maps elements to a 2D boolean grid (`b`) representing beads on rods,
+           normalizing values via offset `o = m.start`.
+         - Simulates gravity by counting set bits per column and dropping them
+           to the bottom rows (`Result - c` to `Result - 1`).
+         - Reconstructs sorted values by summing beads per row, then reverses
+           the array if `oAscending` is False.
+         - Complexity: O(N * S) time and O(N * S) auxiliary space, where N is
+           `Self.Length` and S is the value range (`m.stop - m.start + 1`).
+         - Limitations: Restricted to integer/discrete types due to grid-based
+           bead representation; memory usage scales directly with data range.
+[==============================================================================}
+function TIntegerArrayHelper.BeadSort(const oAscending: Boolean = True): Integer; overload;
+var
+  i, j, k, o, c: Integer;
+  m: TRange;
+  b: T2DBooleanArray;
+begin
+  Result := Self.Length;
+  if (Result < 2) then
+    Exit;
+  m.Create(Self[0], Self[0]);
+  for i := 1 to (Result - 1) do
+    if (Self[i] < m.start) then
+      m.start := Self[i]
+    else if (Self[i] > m.stop) then
+      m.stop := Self[i];
+  o := m.start;
+  SetLength(b, Result, m.Size);
+  for i := 0 to (Result - 1) do
+    for j := 0 to (Self[i] - o) do
+      b[i][j] := True;
+  for j := 0 to (m.stop - m.start) do
+  begin
+    c := 0;
+    for i := 0 to (Result - 1) do
+      if b[i][j] then
+      begin
+        Inc(c);
+        b[i][j] := False;
+      end;
+    for i := (Result - c) to (Result - 1) do
+      b[i][j] := True;
+  end;
+  for i := 0 to (Result - 1) do
+  begin
+    c := 0;
+    for j := 0 to (m.stop - m.start) do
+      if b[i][j] then
+        Inc(c);
+    Self[i] := (o + c - 1);
+  end;
+  if not oAscending then
+    Self.Reverse;
+end;
+
 {==============================================================================]
   <CountingSort>
   @action: Sorts the integer array using the classical counting sort algorithm.

@@ -10,9 +10,9 @@ function GnomeSort(const aAscending: Boolean = True): Integer; overload;
 function GnomeSortOptimized(const aAscending: Boolean = True): Integer; overload;
 function InsertionSort(const aAscending: Boolean = True): Integer; overload;
 function PancakeSort(const aAscending: Boolean = True): Integer; overload;
+function PancakeSort2(const oAscending: Boolean = True): Integer; overload;
 function PartitionSort(const aAscending: Boolean = True): Integer; overload;
 function ShakerSort(const oAscending: Boolean = True): Integer; overload;
-function ShellSort(const aAscending: Boolean = True): Integer; overload;
 function TreeSort(const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
@@ -481,6 +481,52 @@ begin
 end;
 
 {==============================================================================]
+  <PancakeSort2>
+  @action: Sorts the array in-place using the Pancake Sort algorithm and
+           returns the total length of the array (Self.Length).
+  @note: - Uses helper F(N) to reverse the sub-array from index 0 to N-1 (flip).
+         - Uses helper B(X,Y) to select the maximum (ascending) or minimum
+           (descending) element in the remaining unsorted section.
+         - Complexity: O(n²) time complexity with up to 2n - 3 total flips;
+           O(1) auxiliary space.
+[==============================================================================}
+function MArrayHelper.PancakeSort2(const oAscending: Boolean = True): Integer; overload;
+procedure F(N: Integer);
+var
+  L, R: Integer;
+begin
+  L := 0;
+  R := (N - 1);
+  while (L < R) do
+    Self.Switch(L.Increase, R.Decrease);
+end;
+function B(X, Y: MType): Boolean;
+begin
+  if oAscending then
+    Result := (X > Y)
+  else
+    Result := (X < Y);
+end;
+var
+  i, j, m, t: Integer;
+begin
+  Result := Self.Length;
+  for i := (Result - 1) downto 1 do
+  begin
+    m := 0;
+    for j := 1 to i do
+      if B(Self[j], Self[m]) then
+        m := j;
+    if (m <> i) then
+    begin
+      if (m <> 0) then
+        F(m + 1);
+      F(i + 1);
+    end;
+  end;
+end;
+
+{==============================================================================]
   <PartitionSort>
   @action: Sorts the array (Self) in ascending or descending order using a
            stable partition-based recursive sorting algorithm.
@@ -567,47 +613,6 @@ begin
           Self.Switch(i, l)
         else if (Self[i] < Self[r]) then
           Self.Switch(i, r);
-  end;
-end;
-
-{==============================================================================]
-  <ShellSort>
-  @action: ShellSort algorithm.
-  @note: Returns High(arr).
-[==============================================================================}
-function MArrayHelper.ShellSort(const aAscending: Boolean = True): Integer; overload;
-var
-  x, a, b, l, o: Integer;
-begin
-  Result := High(Self);
-  if (Result > 0) then
-  begin
-    o := aAscending.Select(-1, 1);
-    case (Result > 1) of
-      True:
-      begin
-        l := Self.Length;
-        x := 0;
-        while (x < (l div 3)) do
-          x := ((x * 3) + 1);
-        while (x >= 1) do
-        begin
-          for a := x to (l - 1) do
-          begin
-            b := a;
-            while ((b >= x) and (Sign(Self[b].Compare(Self[b - x])) = o)) do
-	    begin
-              Exchange(b, (b - x));
-	      b.Decrease(x);
-	    end;
-          end;
-          x := (x div 3);
-        end;
-      end;
-      False:
-      if (Sign(Self[1].Compare(Self[0])) = o) then
-        Exchange(0, 1);
-    end;
   end;
 end;
 
