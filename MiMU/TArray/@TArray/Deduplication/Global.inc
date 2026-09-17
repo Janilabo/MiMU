@@ -9,6 +9,7 @@ function Unified(const dAscending: Boolean = True): MArray; overload;
 function Unify(const dAscending: Boolean = True): Integer; overload;
 function Unik: MArray; overload;
 function Uniqalize: Integer; overload;
+function Uniqed: MArray; overload;
 function Uniqly: MArray; overload;
 function Uniqual: MArray; overload;
 function Uniqued: MArray; overload;
@@ -350,6 +351,21 @@ begin
   end;
   SetLength(Self, Result);
 end;
+
+{==============================================================================]
+  <Uniqed>
+  @action: Removes all duplicates from arr, keeping the last occurrence of
+           each value rather than the first.
+  @note: Returns the deduplicated version of arr, order-preserving relative
+         to the retained (last) occurrences. Compare Uniqued (first-occurrence).
+[==============================================================================}
+function MArrayHelper.Uniqed: MArray; overload;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Cloned);
+  Result := Self.Reversed.Uniqued;
+  Result.Reverse;
+end; 
 
 {==============================================================================]
   <Uniqly>
