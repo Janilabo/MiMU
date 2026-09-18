@@ -6,6 +6,8 @@ function Mapique(const minVal, maxVal: Integer): TIntegerArray; overload;
 function Undupe: TIntegerArray; overload;
 function Unduped: TIntegerArray; overload;
 function Unduplicate: Integer; overload;
+function Unital(const aMin, aMax: Integer): TIntegerArray; overload;
+function Unital(const N: UInt32 = 999): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -182,5 +184,63 @@ begin
     Result := ((y + 1) - z);
   end else
     Result := 0;
+end;
+
+{==============================================================================]
+  <Unital>
+  @action: Removes duplicates from arr in O(n) via pigeonhole indexing —
+           values used directly as offsets into a seen-buffer, no
+           comparisons. aMin/aMax bound the value range and must be known
+           by the caller; memory cost is (aMax - aMin + 1) Booleans.
+  @note: Returns the unique version of arr, first-occurrence order
+         preserved. TIntegerArray-only.
+		 Values outside [aMin, aMax] are out of bounds.
+[==============================================================================}
+function TIntegerArrayHelper.Unital(const aMin, aMax: Integer): TIntegerArray; overload;
+var
+  m: TBooleanArray;
+  l, i, c, s: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(Self.Cloned);
+  for i := 0 to m.Alloc((aMax - aMin) + 1) do
+    m[i] := False;
+  c := 0;
+  for i := 0 to Result.Alloc(l) do
+    if not m[Self[i] - aMin] then
+    begin
+      m[Self[i] - aMin] := True;
+      Result[c.Increase] := Self[i];
+    end;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
+  <Unital>
+  @action: Convenience overload of Unital for values symmetric around zero —
+           equivalent to Unital(-N, N) without the caller computing the pair.
+  @note: Returns the unique version of arr, first-occurrence order
+         preserved. Default N = 999 covers [-999, 999]; values outside
+         [-N, N] are out of bounds.
+[==============================================================================}
+function TIntegerArrayHelper.Unital(const N: UInt32 = 999): TIntegerArray; overload;
+var
+  m: TBooleanArray;
+  l, i, c, s: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(Self.Cloned);
+  for i := 0 to m.Alloc((N * 2) + 1) do
+    m[i] := False;
+  c := 0;
+  for i := 0 to Result.Alloc(l) do
+    if not m[Self[i] + N] then
+    begin
+      m[Self[i] + N] := True;
+      Result[c.Increase] := Self[i];
+    end;
+  SetLength(Result, c);
 end;
 {$ENDIF}
