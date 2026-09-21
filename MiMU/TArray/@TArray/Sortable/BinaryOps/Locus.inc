@@ -1,4 +1,10 @@
 {$IFDEF HELPERS}
+function BinaryBand(const target: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryExtended(const target: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryExtent(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryExtenta(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryExtentFor(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryExtentOf(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryLocate(const x: MType; const aAscending: Boolean = True): TRange; overload;
 function BinaryNest(const item: MType; const aAscending: Boolean = True): TRange; overload;
 function BinaryPocket(const item: MType; const oAscending: Boolean = True): TRange; overload;
@@ -8,8 +14,10 @@ function BinarySpanning(const item: MType; const oAscending: Boolean = True): TR
 function BinarySpanOf(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryWindow(const item: MType; const aAscending: Boolean = True): TRange; overload;
 function BinaryZone(const item: MType; const aAscending: Boolean = True): TRange; overload;
+function BinaryZoneOf(const target: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryPincer(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryRelay(const target: MType; const oAscending: Boolean = True): TRange; overload;
+function BinarySector(const target: MType; const oAscending: Boolean = True): TRange; overload;
 
 function BinaryBracket(const aMin, aMax: MType; const oAscending: Boolean = True): TRange; overload;
 
@@ -18,6 +26,330 @@ function Bisection(const item: MType; const oAscending: Boolean = True): TRange;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryBand>
+  @action: Uses a three-phase hybrid strategy—combining binary search with galloping (exponential) expansion
+           to isolate the contiguous index range (band) of elements matching target in a sorted array.
+  @note: Phase 1 locates an initial matching element via standard binary search in O(log N) time.
+         Phases 2 and 3 perform exponential stepping (doubling stride s) outward from index m to rapidly bound the duplicate cluster,
+		 followed by a binary search within the bounded window to determine the precise lower and upper indices.
+		 Optimized for small-to-medium clusters of identical values, returning a TRange of inclusive indices, or (-1, -1) if target is missing.
+[==============================================================================}
+function MArrayHelper.BinaryBand(const target: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  l, r, m, c, s, a, z, x, h: Integer;
+begin
+  h := High(Self);
+  l := 0;
+  r := h;
+  while (l <= r) do
+  begin
+    m := (l + ((r - l) div 2));
+    if (Self[m] = target) then
+      Break;
+    if (oAscending = (Self[m] < target)) then
+      l := (m + 1)
+    else
+      r := (m - 1);
+  end;
+  if (l > r) then
+    Exit(TRange.Construct(-1, -1));
+  a := m;
+  s := 1;
+  while (((a - s) >= 0) and (Self[a - s] = target)) do
+  begin
+    a := (a - s);
+    s := (s * 2);
+  end;
+  x := (a - s);
+  if (x < -1) then
+    x := -1;
+  while ((a - x) > 1) do
+  begin
+    c := (x + ((a - x) div 2));
+    if (Self[c] = target) then
+      a := c
+    else
+      x := c;
+  end;
+  Result.start := a;
+  z := m;
+  s := 1;
+  while (((z + s) <= h) and (Self[z + s] = target)) do
+  begin
+    z := (z + s);
+    s := (s * 2);
+  end;
+  x := (z + s);
+  if (x > (h + 1)) then
+    x := (h + 1);
+  while ((x - z) > 1) do
+  begin
+    c := (z + ((x - z) div 2));
+    if (Self[c] = target) then
+      z := c
+    else
+      x := c;
+  end;
+  Result.stop := z;
+end;
+
+{==============================================================================]
+  <BinaryExtended>
+  @action: Finds the contiguous index range of elements matching target in a sorted generic array using a decoupled dual-pass binary search (STL equal_range style).
+  @note: Phase 1 performs a lower-bound binary search to locate the first matching element, exiting in O(log N) time if absent.
+         Phase 2 reuses the lower-bound index as its left boundary to run an upper-bound binary search.
+		 Operates in O(log N) total time complexity across MType generics and returns TRange(start, stop), or (-1, -1) if target is missing.
+[==============================================================================}
+function MArrayHelper.BinaryExtended(const target: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  l, r, m, h: Integer;
+begin
+  h := High(Self);
+  l := 0;
+  r := (h + 1);
+  while (l < r) do
+  begin
+    m := (l + ((r - l) div 2));
+    if ((oAscending and (Self[m] < target)) or ((not oAscending) and (Self[m] > target))) then
+      l := (m + 1)
+    else
+      r := m;
+  end;
+  if ((l > h) or (Self[l] <> target)) then
+    Exit(TRange.Construct(-1, -1));
+  Result.start := l;
+  r := (h + 1);
+  while (l < r) do
+  begin
+    m := (l + ((r - l) div 2));
+    if ((oAscending and (Self[m] <= target)) or ((not oAscending) and (Self[m] >= target))) then
+      l := (m + 1)
+    else
+      r := m;
+  end;
+  Result.stop := (l - 1);
+end;
+
+{==============================================================================]
+  <BinaryExtent>
+  @action: Performs a dual binary search on a sorted array to locate the start and end indices of all contiguous elements equal to the specified item.
+  @note: Requires the array to be pre-sorted according to the oAscending flag.
+         Executes in O(log N) time and returns a TRange containing the inclusive index bounds (Start, Stop), or (-1, -1) if the item is not found.
+[==============================================================================}
+function MArrayHelper.BinaryExtent(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  L, R: TRange;
+  M: Integer;
+begin
+  L := TRange.Construct(0, Self.Length);
+  R := TRange.Construct(0, Self.Length);
+  while ((L.start < L.stop) or (R.start < R.stop)) do
+  begin
+    if (L.start < L.stop) then
+    begin
+      m := (L.start + (L.stop - L.start) shr 1);
+      if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+        L.start := (m + 1)
+      else
+        L.stop := m;
+    end;
+    if (R.start < R.stop) then
+    begin
+      m := (R.start + (R.stop - R.start) shr 1);
+      if ((oAscending and (Self[m] > item)) or ((not oAscending) and (Self[m] < item))) then
+        R.stop := m
+      else
+        R.start := (m + 1);
+    end;
+  end;
+  if (L.start < R.start) then
+    Result.Create(L.start, (R.start - 1))
+  else
+    Result.Create(-1, -1);
+end;
+
+{==============================================================================]
+  <BinaryExtenta>
+  @action: Performs a dual binary search to find the continuous index range [start, stop] of all elements matching `item` in a sorted array.
+  @note: Operates in O(log N) time. Once a match is found, splits into concurrent lower-bound and upper-bound searches to locate the exact extent in a single pass.
+[==============================================================================}
+function MArrayHelper.BinaryExtenta(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  L, R: TRange;
+  M, C: Integer;
+begin
+  L := TRange.Construct(0, Self.Length);
+  R := L;
+  while ((L.start < L.stop) or (R.start < R.stop)) do
+  case ((L.start = R.start) and (L.stop = R.stop)) of
+    True:
+    begin
+      M := (L.start + ((L.stop - L.start) shr 1));
+      C := Self[M].Bout(item, oAscending);
+      if (C < 0) then
+      begin
+        L.start := (M + 1);
+        R.start := L.start;
+      end else if (C > 0) then
+      begin
+        L.stop := M;
+        R.stop := L.stop;
+      end else
+      begin
+        L.stop := M;
+        R.start := (M + 1);
+      end;
+    end;
+    False:
+    begin
+      if (L.start < L.stop) then
+      begin
+        M := (L.start + ((L.stop - L.start) shr 1));
+        if (Self[M].Bout(item, oAscending) < 0) then
+          L.start := (M + 1)
+        else
+          L.stop := M;
+      end;
+      if (R.start < R.stop) then
+      begin
+        M := (R.start + ((R.stop - R.start) shr 1));
+        if (Self[M].Bout(item, oAscending) <= 0) then
+          R.start := (M + 1)
+        else
+          R.stop := M;
+      end;
+    end;
+  end;
+  if (L.start < R.start) then
+    Result.Create(L.start, (R.start - 1))
+  else
+    Result.Create(-1, -1);
+end;
+
+{==============================================================================]
+  <BinaryExtentFor>
+  @action: Performs a state-driven single-loop binary search to determine the lower and upper index bounds of all contiguous matching items in a sorted array.
+  @note: Requires the array to be pre-sorted according to oAscending.
+         Uses a boolean flag (S) inside a case statement to transition from a single search window to non-overlapping dual searches upon finding the first match.
+         Operates in O(log N) time and returns a TRange of inclusive indices, or (-1, -1) if the item does not exist.
+[==============================================================================}
+function MArrayHelper.BinaryExtentFor(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  L, R: TRange;
+  M, A, B: Integer;
+  S: Boolean;
+begin
+  L := TRange.Construct(0, Self.Length);
+  R := L;
+  S := False;
+  while ((L.start < L.stop) or (R.start < R.stop)) do
+  case S of
+    False:
+    begin
+      M := (L.start + ((L.stop - L.start) shr 1));
+      if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      begin
+        L.start := (M + 1);
+        R.start := L.start;
+      end else if ((oAscending and (Self[M] > item)) or ((not oAscending) and (Self[M] < item))) then
+      begin
+        L.stop := M;
+        R.stop := L.stop;
+      end else
+      begin
+        S := True;
+        L.stop := M;
+        R.start := (M + 1);
+      end;
+    end;
+    True:
+    begin
+      if (L.start < L.stop) then
+      begin
+        A := (L.start + ((L.stop - L.start) shr 1));
+        if ((oAscending and (Self[A] < item)) or ((not oAscending) and (Self[A] > item))) then
+          L.start := (A + 1)
+        else
+          L.stop := A;
+      end;
+      if (R.start < R.stop) then
+      begin
+        B := (R.start + ((R.stop - R.start) shr 1));
+        if ((oAscending and (Self[B] <= item)) or ((not oAscending) and (Self[B] >= item))) then
+          R.start := (B + 1)
+        else
+          R.stop := B;
+      end;
+    end;
+  end;
+  if (L.start < R.start) then
+    Result.Create(L.start, (R.start - 1))
+  else
+    Result.Create(-1, -1);
+end;
+
+{==============================================================================]
+  <BinaryExtentOf>
+  @action: Performs a single-loop binary search on a sorted array to identify the index range (extent) occupied by all contiguous elements equal to the specified item.
+  @note: Requires the array to be pre-sorted according to oAscending. Starts as a single binary search window until a match is encountered,
+         after which it splits into non-overlapping left and right bounds searches.
+         Executes in O(log N) time and returns a TRange of inclusive indices, or (-1, -1) if the item is not found.
+[==============================================================================}
+function MArrayHelper.BinaryExtentOf(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  L, R: TRange;
+  A, D: Integer;
+  B, S: Boolean;
+begin
+  L := TRange.Construct(0, Self.Length);
+  R := TRange.Construct(0, Self.Length);
+  while ((L.start < L.stop) or (R.start < R.stop)) do
+  begin
+    if ((L.start = R.start) and (L.stop = R.stop)) then
+    begin
+      A := (L.start + ((L.stop - L.start) shr 1));
+      S := ((oAscending and (Self[A] < item)) or ((not oAscending) and (Self[A] > item)));
+      B := ((oAscending and (Self[A] > item)) or ((not oAscending) and (Self[A] < item)));
+      if S then
+      begin
+        L.start := (A + 1);
+        R.start := L.start;
+      end else if B then
+      begin
+        L.stop := A;
+        R.stop := L.stop;
+      end else
+      begin
+        L.stop := A;
+        R.start := (A + 1);
+      end;
+    end else
+    begin
+      if (L.start < L.stop) then
+      begin
+        A := (L.start + ((L.stop - L.start) shr 1));
+        if ((oAscending and (Self[A] < item)) or ((not oAscending) and (Self[A] > item))) then
+          L.start := (A + 1)
+        else
+          L.stop := A;
+      end;
+      if (R.start < R.stop) then
+      begin
+        D := (R.start + ((R.stop - R.start) shr 1));
+        if ((oAscending and (Self[D] <= item)) or ((not oAscending) and (Self[D] >= item))) then
+          R.start := (D + 1)
+        else
+          R.stop := D;
+      end;
+    end;
+  end;
+  if (L.start < R.start) then
+    Result.Create(L.start, (R.start - 1))
+  else
+    Result.Create(-1, -1);
+end;
+
 {==============================================================================]
   <BinaryLocate>
   @action: Returns Binary Search left and right index as TRange based on x value.
@@ -380,6 +712,56 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryZoneOf>
+  @action: Performs a three-phase binary search (pivot-and-split) on a sorted array to locate the inclusive index bounds of all contiguous elements matching target.
+  @note: Phase 1 locates an initial matching element in O(log N) time;
+         if found, Phases 2 and 3 perform independent, non-overlapping binary searches on [0..m] and [m..High] to isolate the exact lower and upper boundaries.
+         Operates in O(log N) total time complexity and returns a TRange containing the index bounds, or (-1, -1) if target is missing.
+[==============================================================================}
+function MArrayHelper.BinaryZoneOf(const target: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  l, r, m, c, h: Integer;
+begin
+  h := High(Self);
+  l := 0;
+  r := h;
+  while (l <= r) do
+  begin
+    m := (l + ((r - l) div 2));
+    if (Self[m] = target) then
+      Break;
+    if (oAscending = (Self[m] < target)) then
+      l := (m + 1)
+    else
+      r := (m - 1);
+  end;
+  if (l > r) then
+    Exit(TRange.Construct(-1, -1));
+  l := 0;
+  r := m;
+  while (l < r) do
+  begin
+    c := (l + ((r - l) div 2));
+    if (Self[c] = target) then
+      r := c
+    else
+      l := (c + 1);
+  end;
+  Result.start := l;
+  l := m;
+  r := h;
+  while (l < r) do
+  begin
+    c := (l + ((r - l + 1) div 2));
+    if (Self[c] = target) then
+      l := c
+    else
+      r := (c - 1);
+  end;
+  Result.stop := l;
+end;
+
+{==============================================================================]
   <BinaryPincer>
   @action: Finds the index range (first and last occurrence) of `item` in a sorted array by running two interleaved binary searches in a single loop pass.
   @note: Dual-tracks left (`L`) and right (`R`) bounds simultaneously to find both `Result.start` and `Result.stop` in $O(\log N)$ time.
@@ -496,6 +878,65 @@ begin
     else
       r := (m - 1);
   end;
+end;
+
+{==============================================================================]
+  <BinarySector>
+  @action: Locates the contiguous index sector of elements matching target in a sorted array by combining unbounded forward galloping with binary refinement.
+  @note: Bypasses initial midpoint binary search by galloping exponentially from index 0 to bound the lower boundary window before executing binary refinement.
+         Once the lower bound is established, it gallops forward from that index to bound and refine the upper boundary.
+		 Operates in O(log K) time where K is the target's position/cluster offset, returning a TRange of inclusive indices, or (-1, -1) if target is missing.
+[==============================================================================}
+function MArrayHelper.BinarySector(const target: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  s, l, h, j: Integer;
+begin
+  s := High(Self);
+  if (s < 0) then
+    Exit(TRange.Construct(-1, -1));
+  l := 0;
+  j := 1;
+  while ((l <= s) and ((oAscending and (Self[l] < target)) or ((not oAscending) and (Self[l] > target)))) do
+  begin
+    l := (l + j);
+    j := (j * 2);
+  end;
+  h := l;
+  if (h > s) then
+    h := s;
+  l := (l - (j div 2));
+  if (l < 0) then
+    l := 0;
+  while (l < h) do
+  begin
+    j := (l + ((h - l) div 2));
+    if ((oAscending and (Self[j] < target)) or ((not oAscending) and (Self[j] > target))) then
+      l := (j + 1)
+    else
+      h := j;
+  end;
+  if ((l > s) or (Self[l] <> target)) then
+    Exit(TRange.Construct(-1, -1));
+  Result.start := l;
+  h := l;
+  j := 1;
+  while ((h <= s) and (Self[h] = target)) do
+  begin
+    h := (h + j);
+    j := (j * 2);
+  end;
+  l := (h - (j div 2));
+  if (h > (s + 1)) then
+    h := (s + 1);
+  while (l < h) do
+  begin
+    j := (l + ((h - l) div 2));
+    if (Self[j] = target) then
+      l := (j + 1)
+    else
+      h := j;
+  end;
+  Result.stop := (l - 1);
 end;
 
 {==============================================================================]

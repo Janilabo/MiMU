@@ -13,6 +13,7 @@ function Comparify(const target: MType): Integer; overload;
 function Decompare(const target: MType): Integer; overload;
 
 function Battle(const target: MType; const oAscending: Boolean = True): Integer; overload;
+function Bout(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Brawl(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Clash(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function Compete(const target: MType; const oAscending: Boolean = True): Integer; overload;
@@ -182,6 +183,24 @@ begin
     Result := IfThen((Self > target), 1, -1)
   else
     Result := IfThen((Self > target), -1, 1);
+end;
+
+{==============================================================================]
+  <Bout>
+  @action: Compares the current value against a target value and returns a directional sign indicator (-1, 0, or 1) accounting for sort orientation.
+  @note: Returns -1 if Self precedes target, 1 if Self succeeds target, and 0 if equal.
+         The sign is negated when oAscending is set to False to facilitate descending-order sorting and searching logic.
+[==============================================================================}
+function MTypeHelper.Bout(const target: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  if (Self < target) then
+	Result := -1
+  else if (Self > target) then
+	Result := 1
+  else
+	Result := 0;
+  if not oAscending then
+	Result := -Result;
 end;
 
 {==============================================================================]
