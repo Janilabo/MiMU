@@ -7,6 +7,9 @@ function OutsideBounds(const item: MType; const oAscending: Boolean = True): Boo
 function OutOfBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function Rejects(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function WithinBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+
+function Insider(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function Outsider(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -135,5 +138,43 @@ begin
     Result := not (Self.Empty or (item < Self[0]) or (item > Self[High(Self)]))
   else
     Result := not (Self.Empty or (item > Self[0]) or (item < Self[High(Self)]));
+end;
+
+{==============================================================================]
+  <Insider>
+  @action: Determines whether `item` falls within or directly on the inclusive range bounded by the first and last elements of a sorted array.
+  @note: Operates in O(1) constant time by testing if `item` is bounded between `Self[0]` and `Self[High(Self)]`. Returns `False` if the array is empty.
+         Functionally equivalent to `not Outsider(item, oAscending)`. Supports both ascending and descending order via `oAscending`.
+[==============================================================================}
+function MArrayHelper.Insider(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  h: Integer;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit(False);
+  if oAscending then
+    Result := ((item >= Self[0]) and (item <= Self[h]))
+  else
+    Result := ((item <= Self[0]) and (item >= Self[h]));
+end;
+
+{==============================================================================]
+  <Outsider>
+  @action: Determines whether `item` falls strictly outside the range bounded by the first and last elements of a sorted array.
+  @note: Operates in O(1) constant time by evaluating boundary conditions against `Self[0]` and `Self[High(Self)]`. Returns `True` if the array is empty.
+         Functionally equivalent to `not Insider(item, oAscending)`. Supports both ascending and descending order via `oAscending`.
+[==============================================================================}
+function MArrayHelper.Outsider(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  h: Integer;
+begin
+  h := High(Self);
+  if (h = -1) then
+    Exit(True);
+  if oAscending then
+    Result := ((item < Self[0]) or (item > Self[h]))
+  else
+    Result := ((item > Self[0]) or (item < Self[h]));
 end;
 {$ENDIF}

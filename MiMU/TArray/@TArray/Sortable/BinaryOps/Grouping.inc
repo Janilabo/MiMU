@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function BinaryGroup(const aAscending: Boolean = True): M2DArray; overload;
 function BinaryGrouped(const oAscending: Boolean = True): M2DArray; overload;
+function BinaryGroupify(const oAscending: Boolean = True): M2DArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -82,5 +83,32 @@ begin
     Inc(i, Result[l.Increase].Length);
   end;
   SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <BinaryGroupify>
+  @action: Splits a sorted array into runs of equal values, returning one
+           sub-array per distinct value, in the order set by oAscending.
+  @note:
+    - Requires Self to already be sorted in the direction given by oAscending;
+      it does not sort.
+    - Finds the end of each run with BinaryRightern, so the cost is
+      O(g log n) for g distinct values, which beats a linear sweep when runs
+      are long.
+    - Returns an empty array for an empty input.
+[==============================================================================}
+function MArrayHelper.BinaryGroupify(const oAscending: Boolean = True): M2DArray; overload;
+var
+  s, r, i: Integer;
+begin
+  s := Self.Length;
+  SetLength(Result, s);
+  if (s = 0) then
+    Exit;
+  r := -1;
+  i := 0;
+  while ((r = -1) or (i.Increment(Result[r].Length) < s)) do
+    Result[r.Increment] := Self[i].TArray((Self.BinaryRightern(Self[i], oAscending) - i) + 1);
+  SetLength(Result, (r + 1));
 end;
 {$ENDIF}

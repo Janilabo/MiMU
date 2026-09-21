@@ -8,6 +8,8 @@ function BinarySpanning(const item: MType; const oAscending: Boolean = True): TR
 function BinarySpanOf(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryWindow(const item: MType; const aAscending: Boolean = True): TRange; overload;
 function BinaryZone(const item: MType; const aAscending: Boolean = True): TRange; overload;
+function BinaryPincer(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryRelay(const target: MType; const oAscending: Boolean = True): TRange; overload;
 
 function BinaryBracket(const aMin, aMax: MType; const oAscending: Boolean = True): TRange; overload;
 
@@ -374,6 +376,125 @@ begin
       else
         R.stop := (M - 1);
     end;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryPincer>
+  @action: Finds the index range (first and last occurrence) of `item` in a sorted array by running two interleaved binary searches in a single loop pass.
+  @note: Dual-tracks left (`L`) and right (`R`) bounds simultaneously to find both `Result.start` and `Result.stop` in $O(\log N)$ time.
+         Returns `(start: -1, stop: -1)` if `item` is not present or if the array is empty. Supports both ascending and descending order via `oAscending`.
+[==============================================================================}
+function MArrayHelper.BinaryPincer(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  L, R: TRange;
+  h, A, B: Integer;
+begin
+  Result.start := -1;
+  Result.stop := -1;
+  h := High(Self);
+  if (h = -1) then
+    Exit;
+  L.Create(0, h);
+  R.Create(0, h);
+  while ((L.start <= L.stop) or (R.start <= r.stop)) do
+  begin
+    if (L.start <= L.stop) then
+    begin
+      A := (L.start + ((L.stop - L.start) div 2));
+      case oAscending of
+        True:
+        if (Self[A] < item) then
+          L.start := (A + 1)
+        else
+        begin
+          if (Self[A] = item) then
+            Result.start := A;
+          L.stop := (A - 1);
+        end;
+        False:
+        if (Self[A] > item) then
+          L.start := (A + 1)
+        else
+        begin
+          if (Self[A] = item) then
+            Result.start := A;
+          L.stop := (A - 1);
+        end;
+      end;
+    end;
+    if (R.start <= R.stop) then
+    begin
+      B := (R.start + ((R.stop - R.start) div 2));
+      case oAscending of
+        True:
+        if (Self[B] > item) then
+          R.stop := (B - 1)
+        else
+        begin
+          if (Self[B] = item) then
+            Result.stop := B;
+          R.start := (B + 1);
+        end;
+        False:
+        if (Self[B] < item) then
+          R.stop := (B - 1)
+        else
+        begin
+          if (Self[B] = item) then
+            Result.stop := B;
+          R.start := (B + 1);
+        end;
+      end;
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryRelay>
+  @action: Finds the index range (first and last occurrence) of `target` in a sorted array using two sequential binary searches.
+  @note: Executes in deterministic O(log N) time. Returns `(start: -1, stop: -1)` if `target` is not found or if the array is empty.
+         Supports both ascending and descending order via `oAscending`.
+[==============================================================================}
+function MArrayHelper.BinaryRelay(const target: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  h, l, r, m: Integer;
+  a: TRange;
+begin
+  h := High(Self);
+  Result.start := -1;
+  Result.stop := -1;
+  if (h = -1) then
+    Exit;
+  l := 0;
+  r := h;
+  while (l <= r) do
+  begin
+    m := (l + ((r - l) div 2));
+    if (Self[m] = target) then
+    begin
+      Result.start := m;
+      r := (m - 1);
+    end else if ((oAscending and (Self[m] < target)) or ((not oAscending) and (Self[m] > target))) then
+      l := (m + 1)
+    else
+      r := (m - 1);
+  end;
+  if (Result.start = -1) then
+    Exit;
+  l := Result.start;
+  r := h;
+  while (l <= r) do
+  begin
+    m := (l + ((r - l) div 2));
+    if (Self[m] = target) then
+    begin
+      Result.stop := m;
+      l := (m + 1);
+    end else if ((oAscending and (Self[m] < target)) or ((not oAscending) and (Self[m] > target))) then
+      l := (m + 1)
+    else
+      r := (m - 1);
   end;
 end;
 
