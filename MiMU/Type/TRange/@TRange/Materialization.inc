@@ -161,6 +161,7 @@ function ToArray: TIntegerArray; overload;
 class function ToArray(const AStart, AStop: Integer): TIntegerArray; overload; static;
 function ToIntegers: TIntegerArray; overload;
 function ToTIntegerArray: TIntegerArray; overload;
+function ToSeq: TIntegerArray; overload;
 function ToValues: TIntegerArray; overload;
 function Traverse: TIntegerArray; overload;
 function Traversed: TIntegerArray; overload;
@@ -4502,6 +4503,25 @@ begin
   end;
   while (i < s) do
     Result[i.Increase] := v.Increase(d);
+end;
+
+{==============================================================================]
+  <ToSeq>
+  @action: Converts the TRange bounds into a sequential dynamic integer array.
+  @note: Allocates a new array in memory containing all numbers from start to stop.
+[==============================================================================}
+function TRange.ToSeq: TIntegerArray; overload;
+var
+  i, s, r: Integer;
+begin
+  Result := [];
+  s := IfThen(Self.Ascending, 1, -1);
+  r := Self.start;
+  i := 0;
+  repeat
+    SetLength(Result, (i + 1));
+    Result[i.Increase] := r;
+  until (r.Increase(s) = Self.stop);
 end;
 
 {==============================================================================]

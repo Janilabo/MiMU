@@ -25,6 +25,7 @@ function Reflux: Integer; overload;
 function Regress: MArray; overload;
 function Relist: MArray; overload;
 function Reverc: Boolean; overload;
+function Revers: Integer; overload;
 function Reversal: MArray; overload;
 function Reversally: MArray; overload;
 function Reverse: Boolean; overload;
@@ -47,6 +48,7 @@ function Reverted: MArray; overload;
 function Reverto: MArray; overload;
 function RReverse: MArray; overload;
 function Snapshot: MArray; overload;
+function Turn: Integer; overload;
 function Upend: Integer; overload;
 {$ENDIF}
 
@@ -622,6 +624,30 @@ begin
 end;
 
 {==============================================================================]
+  <Revers>
+  @action: Reverses Self's element order in place; returns the number of swapped pairs (0 if Self.Length < 2, with no mutation).
+  @note: Copies the front half out to a separate staging array (via `Alloc`, not appended onto Self) before overwriting;
+         mechanically the same staging-then-swap.
+[==============================================================================}
+function MArrayHelper.Revers: Integer; overload;
+var
+  i, s: Integer;
+  r: MArray;
+begin
+  s := Self.Length;
+  Result := (s div 2);
+  if (Result = 0) then
+    Exit;
+  for i := 0 to r.Alloc(Result) do
+    r[i] := Self[i];
+  for i := 0 to (Result - 1) do
+  begin
+    Self[i] := Self[(s - 1) - i];
+    Self[(s - 1) - i] := r[i];
+  end;
+end;
+
+{==============================================================================]
   <Reversal>
   @action: Returns array with items in reversed order.
   @note: None.
@@ -1098,6 +1124,31 @@ begin
   end;
   if (l = r) then
     Result[l] := Self[l];
+end;
+
+{==============================================================================]
+  <Turn>
+  @action: Reverses Self's element order in place; returns the number of swapped pairs (0 if Self.Length < 2, with no mutation).
+  @note: Evicts the front half into a temporary buffer appended to Self's own tail, overwrites the front half with the mirrored back half,
+         then deposits the evicted values into the mirrored back positions — no swap variable used.
+[==============================================================================}
+function MArrayHelper.Turn: Integer; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Length;
+  Result := (s div 2);
+  if (Result = 0) then
+    Exit;
+  SetLength(Self, (s + Result));
+  for i := 0 to (Result - 1) do
+  begin
+    Self[s + i] := Self[i];
+    Self[i] := Self[(s - i) - 1];
+  end;
+  for i := 0 to (Result - 1) do
+    Self[(s - i) - 1] := Self[s + i];
+  SetLength(Self, s);
 end;
 
 {==============================================================================]
