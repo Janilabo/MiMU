@@ -107,6 +107,7 @@
 {$I @TArray/Sortable/Algorithms/HeapSort.inc}
 {$I @TArray/Sortable/Algorithms/HybridSort.inc}
 {$I @TArray/Sortable/Algorithms/MergeSort.inc}
+{$I @TArray/Sortable/Algorithms/PatienceSort.inc}
 {$I @TArray/Sortable/Algorithms/Others.inc}
 {$I @TArray/Sortable/Algorithms/QuickSort.inc}
 {$I @TArray/Sortable/Algorithms/SelectionSort.inc}

@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Antipodean: MArray; overload;
+function Backflip: Integer; overload;
 function Backwardize: MArray; overload;
 function Backwards: MArray; overload;
 function Converse: MArray; overload;
@@ -24,6 +25,7 @@ function Reflex(const rIndex: Integer): MType; overload;
 function Reflux: Integer; overload;
 function Regress: MArray; overload;
 function Relist: MArray; overload;
+function Restack: Integer; overload;
 function Reverc: Boolean; overload;
 function Revers: Integer; overload;
 function Reversal: MArray; overload;
@@ -69,6 +71,26 @@ begin
   r := 0;
   for i := Result.Alloc(Self.Length) downto 0 do
     Result[r.Increase] := Self[i];
+end;
+
+{==============================================================================]
+  <Backflip>
+  @action: Reverses the elements of the array in-place using a temporary array buffer.
+  @note: Returns the midpoint count (length div 2). Reallocates target array reference 
+         with reversed contents; returns 0 immediately for arrays with fewer than 2 elements.
+[==============================================================================}
+function MArrayHelper.Backflip: Integer; overload;
+var
+  i, s: Integer;
+  r: MArray;
+begin
+  s := Self.Length;
+  Result := (s div 2);
+  if (Result = 0) then
+    Exit;
+  for i := 0 to r.Alloc(s) do
+    r[i] := Self[(s - 1) - i];
+  Self := r;
 end;
 
 {==============================================================================]
@@ -598,6 +620,33 @@ begin
       Result[i] := l[i];
   finally
     l.Free;
+  end;
+end;
+
+{==============================================================================]
+  <Restack>
+  @action: Reverses the sequence of array elements by populating and draining a dynamic stack buffer.
+  @note: Returns the array midpoint index/pair count (length div 2); returns 0 for arrays with fewer than 2 elements.
+[==============================================================================}
+function MArrayHelper.Restack: Integer; overload;
+var
+  i, l: Integer;
+  s: MArray;
+begin
+  l := Self.Length;
+  Result := (l div 2);
+  if (Result = 0) then
+    Exit;
+  SetLength(s, 0);
+  for i := 0 to (l - 1) do
+  begin
+    SetLength(s, (s.Length + 1));
+    s[High(s)] := Self[i];
+  end;
+  for i := 0 to (l - 1) do
+  begin
+    Self[i] := s[High(s)];
+    SetLength(s, (s.Length - 1));
   end;
 end;
 
