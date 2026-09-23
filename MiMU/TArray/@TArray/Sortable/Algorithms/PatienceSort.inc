@@ -2,6 +2,8 @@
 function PatienceSorted(const oAscending: Boolean = True): MArray; overload;
 function PatiencySorted(const oAscending: Boolean = True): MArray; overload;
 function PatientSorted(const oAscending: Boolean = True): MArray; overload;
+
+function PatienceSortition(const oAscending: Boolean = True): T2DIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -130,5 +132,37 @@ begin
     Result[i] := Self[s[b][0]];
     System.Delete(s[b], 0, 1);
   end;
+end;
+
+{==============================================================================]
+  <PatienceSortition>
+  @action: Partitions the array element indices into sorted piles based on patience sorting rules.
+  @note: Returns a 2D array of integer indices (T2DIntegerArray) matching each pile's elements. Operates in O(n * k) time via sequential pile scanning.
+[==============================================================================}
+function MArrayHelper.PatienceSortition(const oAscending: Boolean = True): T2DIntegerArray; overload;
+var
+  i, j, l, g: Integer;
+  f: Boolean;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit([[0]]);
+  SetLength(Result, l);
+  Result[0] := [0];
+  g := 0;
+  for i := 1 to (l - 1) do
+  begin
+    f := False;
+    for j := 0 to g do
+      if ((oAscending and (Self[i] >= Self[Result[j][High(Result[j])]])) or ((not oAscending) and (Self[i] <= Self[Result[j][High(Result[j])]]))) then
+      begin
+        f := True;
+        Result[j].Supply(i);
+        Break;
+      end;
+    if not f then
+      Result[g.Increment] := [i];
+  end;
+  SetLength(Result, (g + 1));
 end;
 {$ENDIF}
