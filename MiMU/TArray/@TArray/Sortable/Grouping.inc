@@ -1,9 +1,42 @@
 {$IFDEF HELPERS}
+function AsPiles(const oAscending: Boolean = True): M2DArray; overload;
 function Piles(const oAscending: Boolean = True): M2DArray; overload;
 function ToPiles(const oAscending: Boolean = True): M2DArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsPiles>
+  @action: Splits the array into a 2D array (piles) of ordered subsequences, greedily grouped into non-decreasing or non-increasing order.
+  @note: In each pass, it forms a pile by scanning left-to-right and extracting elements that maintain the chosen sorting order (based on oAscending).
+         Skipped elements are pushed to the next pass. The worst-case time complexity is O(N^2) if the array is perfectly reversed relative to the desired order.
+[==============================================================================}
+function MArrayHelper.AsPiles(const oAscending: Boolean = True): M2DArray; overload;
+var
+  h, i, j, l, g, r, k: Integer;
+  s: TIntegerArray;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit([Self.Cloned]);
+  SetLength(Result, l);
+  s := Self.Indexes;
+  r := 0;
+  while (l > 0) do
+  begin
+    SetLength(Result[r], l);
+    l := 0;
+    h := -1;
+    for i := 0 to High(Result[r]) do
+      if ((h = -1) or ((oAscending and (Self[s[i]] >= Result[r][h])) or ((not oAscending) and (Self[s[i]] <= Result[r][h])))) then
+        Result[r][h.Increment] := Self[s[i]]
+      else
+        s[l.Increase] := s[i];
+    SetLength(Result[r.Increase], (h + 1));
+  end;
+  SetLength(Result, r);
+end;
+
 {==============================================================================]
   <Piles>
   @action: Partitions the array into non-decreasing (or non-increasing) 2D element piles based on Patience Sorting distribution logic.

@@ -1,8 +1,39 @@
 {$IFDEF HELPERS}
+function Melt(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function Weld(const A, B: MArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Melt>
+  @action: Merges an external sorted array into Self in-place, maintaining sorted order.
+  @note: 
+  - Expands Self and uses a back-to-front two-pointer selection loop to perform 
+    the merge in O(N + M) time without allocating additional heap memory for buffers.
+  - Requires both Self and items to already be pre-sorted according to oAscending.
+  - Copies any remaining items prefix if Self is exhausted first.
+  - Returns the new total length of Self.
+[==============================================================================}
+function MArrayHelper.Melt(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  a, b, s, i, r: Integer;
+begin
+  s := High(Self);
+  i := High(items);
+  Result := ((s + i) + 2);
+  SetLength(Self, Result);
+  if (Result = 0) then
+    Exit;
+  r := Result;
+  while ((s > -1) and (i > -1)) do
+    if ((oAscending and (items[i] > Self[s])) or ((not oAscending) and (items[i] < Self[s]))) then
+      Self[r.Decrement] := items[i.Decrease]
+    else
+      Self[r.Decrement] := Self[s.Decrease];
+  for r := 0 to i do
+    Self[r] := items[r];
+end;
+
 {==============================================================================]
   <Weld>
   @action: Merges two pre-sorted arrays A and B into Self as a single sorted
