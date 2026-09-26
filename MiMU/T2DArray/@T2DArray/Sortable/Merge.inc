@@ -3,12 +3,14 @@ function Collated(const oAscending: Boolean = True): MArray; overload;
 function Conjoined(const oAscending: Boolean = True): MArray; overload;
 function Flattify(const oAscending: Boolean = True): MArray; overload;
 function Flatty(const oAscending: Boolean = True): MArray; overload;
+function Kerge(const oAscending: Boolean = True): MArray; overload;
 function KMerge(const oAscending: Boolean = True): MArray; overload;
 function Marshal(const oAscending: Boolean = True; const method: UInt32 = 0): MArray; overload;
 function Marshal(const method: UInt32): MArray; overload;
 function Meld(const oAscending: Boolean = True): MArray; overload;
 function Meltify(const oAscending: Boolean = True): MArray; overload;
 function MergeK(const oAscending: Boolean = True): MArray; overload;
+function Mergo(const oAscending: Boolean = True): MArray; overload;
 function Serge(const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
@@ -274,6 +276,84 @@ begin
 end;
 
 {==============================================================================]
+  <Kerge>
+  @action: Merges any number of sorted arrays of sorted arrays (Self) into a single
+           sorted MArray, via linear tournament selection — each round scans all live
+           array heads and picks the extremal one, appending it and advancing that
+           array's head. Delegates to Collated once the live-array count exceeds
+           LINEAR_LIMIT (8), where per-round linear scan cost stops paying off.
+  @note: Assumes each sub-array in Self is already sorted according to
+         oAscending; behavior is undefined otherwise. Empty sub-arrays are skipped
+         entirely. A single non-empty sub-array is returned as a copy with no merge
+         work performed.
+[==============================================================================}
+function M2DArrayHelper.Kerge(const oAscending: Boolean = True): MArray; overload;
+const
+  LINEAR_LIMIT = 8;
+var
+  h, l: TIntegerArray;
+  n, k, i, j, t: Integer;
+begin
+  k := 0;
+  n := 0;
+  for i := 0 to High(Self) do
+    if (Self[i].Length > 0) then
+    begin
+      Inc(k);
+      Inc(n, Self[i].Length);
+    end;
+  if (n = 0) then
+    Exit([]);
+  if (k = 1) then
+    Exit(Self[0].Copy);
+  if (k > LINEAR_LIMIT) then
+    Exit(Self.Collated(oAscending));
+  SetLength(Result, n);
+  SetLength(h, k);
+  SetLength(l, k);
+  k := 0;
+  for i := 0 to High(Self) do
+    if (Self[i].Length > 0) then
+    begin
+      l[k] := i;
+      h[k] := 0;
+      Inc(k);
+    end;
+  case oAscending of
+    True:
+    for j := 0 to (n - 1) do
+    begin
+      t := 0;
+      for i := 1 to (k - 1) do
+        if (Self[l[i]][h[i]] < Self[l[t]][h[t]]) then
+          t := i;
+      Result[j] := Self[l[t]][h[t]];
+      if (h[t].Increment >= Self[l[t]].Length) then
+      begin
+        Dec(k);
+        l[t] := l[k];
+        h[t] := h[k];
+      end;
+    end;
+    False:
+    for j := 0 to (n - 1) do
+    begin
+      t := 0;
+      for i := 1 to (k - 1) do
+        if (Self[l[i]][h[i]] > Self[l[t]][h[t]]) then
+          t := i;
+      Result[j] := Self[l[t]][h[t]];
+      if (h[t].Increment >= Self[l[t]].Length) then
+      begin
+        Dec(k);
+        l[t] := l[k];
+        h[t] := h[k];
+      end;
+    end;
+  end;
+end;
+
+{==============================================================================]
   <KMerge>
   @action: Performs a k-way merge across all rows of a 2D array, each assumed to
            be individually sorted, producing a single flat, fully sorted array. Order is
@@ -494,6 +574,85 @@ begin
       l[t] := l[p - 1];
       Dec(p);
     end;
+  end;
+end;
+
+{==============================================================================]
+  <Mergo>
+  @action: Merges all pre-sorted rows of a 2D array into a single sorted 1D array.
+  @note: Uses a Tournament Tree (Loser Tree) algorithm for optimal K-way merging performance.
+[==============================================================================}
+function M2DArrayHelper.Mergo(const oAscending: Boolean = True): MArray; overload;
+var
+  h, z, t, p, q: TIntegerArray;
+  m, s, n, i, j, k, d, a, b, w, l, o, c: Integer;
+  function F(x, y: Integer): Boolean;
+  begin
+    if ((x >= m) or (h[x] >= z[x])) then
+      Exit(False);
+    if ((y >= m) or (h[y] >= z[y])) then
+      Exit(True);
+    if oAscending then
+      Result := (Self[x][h[x]] <= Self[y][h[y]])
+    else
+      Result := (Self[x][h[x]] >= Self[y][h[y]]);
+  end;
+begin
+  m := Self.Length;
+  n := 0;
+  for i := 0 to z.Alloc(m) do
+  begin
+    z[i] := Self[i].Length;
+    Inc(n, z[i]);
+  end;
+  if (n = 0) then
+    Exit([]);
+  for i := 0 to h.Alloc(m) do
+    h[i] := 0;
+  s := 1;
+  while (s < m) do
+    s := (s * 2);
+  if (s < 2) then
+    s := 2;
+  SetLength(t, s);
+  for i := 0 to p.Alloc(s) do
+    p[i] := i;
+  k := s;
+  while (k > 1) do
+  begin
+    d := (k div 2);
+    for i := 0 to q.Alloc(d) do
+    begin
+      a := p[2 * i];
+      b := p[(2 * i) + 1];
+      if F(a, b) then
+      begin
+        w := a;
+        l := b;
+      end else
+      begin
+        w := b;
+        l := a;
+      end;
+      t[d + i] := l;
+      q[i] := w;
+    end;
+    p := q;
+    k := d;
+  end;
+  t[0] := p[0];
+  for j := 0 to Result.Alloc(n) do
+  begin
+    c := t[0];
+    Result[j] := Self[c][h[c].Increase];
+    o := ((s + c) div 2);
+    while (o >= 1) do
+    begin
+      if not F(c, t[o]) then
+        Swap(c, t[o]);
+      o := (o div 2);
+    end;
+    t[0] := c;
   end;
 end;
 

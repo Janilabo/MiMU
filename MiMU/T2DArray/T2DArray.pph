@@ -12,4 +12,6 @@
 
 {$IFDEF Sortable}
 {$I @T2DArray/Sortable/Merge.inc}
+
+{$I @T2DArray/Sortable/BinaryOps/Merge.inc}
 {$ENDIF}
