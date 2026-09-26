@@ -1,4 +1,6 @@
 {$IFDEF HELPERS}
+function Collated(const oAscending: Boolean = True): MArray; overload;
+function Conjoined(const oAscending: Boolean = True): MArray; overload;
 function Flattify(const oAscending: Boolean = True): MArray; overload;
 function Flatty(const oAscending: Boolean = True): MArray; overload;
 function KMerge(const oAscending: Boolean = True): MArray; overload;
@@ -11,6 +13,141 @@ function Serge(const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Collated>
+  @action: Merges multiple pre-sorted 1D sub-arrays into a single sorted 1D array.
+  @note: Uses a k-way min/max heap (O(N log K) complexity).
+         Assumes all sub-arrays are already sorted according to `oAscending` order.
+[==============================================================================}
+function M2DArrayHelper.Collated(const oAscending: Boolean = True): MArray; overload;
+var
+  h, p: TIntegerArray;
+  n, k, i, j: Integer;
+  procedure D(idx, cnt: Integer);
+  var
+    l, r, b: Integer;
+  begin
+    repeat
+      l := ((2 * idx) + 1);
+      r := (l + 1);
+      b := idx;
+      if (l < cnt) then
+      case oAscending of
+        True:
+        if (Self[h[l]][p[h[l]]] < Self[h[b]][p[h[b]]]) then
+          b := l;
+        False:
+        if (Self[h[l]][p[h[l]]] > Self[h[b]][p[h[b]]]) then
+          b := l;
+      end;
+      if (r < cnt) then
+      case oAscending of
+        True:
+        if (Self[h[r]][p[h[r]]] < Self[h[b]][p[h[b]]]) then
+          b := r;
+        False:
+        if (Self[h[r]][p[h[r]]] > Self[h[b]][p[h[b]]]) then
+          b := r;
+      end;
+      if (b = idx) then
+        Break;
+      h.Switch(idx, b);
+      idx := b;
+    until False;
+  end;
+begin
+  n := 0;
+  k := 0;
+  for i := 0 to High(Self) do
+    if (Self[i].Length > 0) then
+    begin
+      Inc(k);
+      Inc(n, Self[i].Length);
+    end;
+  if (n = 0) then
+    Exit([]);
+  SetLength(Result, n);
+  SetLength(h, k);
+  SetLength(p, Self.Length);
+  k := 0;
+  for i := 0 to High(Self) do
+    if (Self[i].Length > 0) then
+      h[k.Increase] := i;
+  for i := ((k shr 1) - 1) downto 0 do
+    D(i, k);
+  j := 0;
+  while (k > 0) do
+  begin
+    Result[j.Increase] := Self[h[0]][p[h[0]]];
+    if (p[h[0]].Increment >= Self[h[0]].Length) then
+      h[0] := h[k.Decrement];
+    if (k > 0) then
+      D(0, k);
+  end;
+end;
+
+{==============================================================================]
+  <Conjoined>
+  @action: Merges multiple pre-sorted 1D sub-arrays into a single sorted 1D array.
+  @note: Uses a bottom-up pairwise divide-and-conquer merge strategy (O(N log K) complexity).
+         Assumes all sub-arrays are already sorted according to `oAscending`.
+		 Creates temporary intermediate arrays during reduction.
+[==============================================================================}
+function M2DArrayHelper.Conjoined(const oAscending: Boolean = True): MArray; overload;
+var
+  r: M2DArray;
+  l, i, j: Integer;
+  function C(const a, b: MArray): MArray;
+  var
+    x, y, z: Integer;
+  begin
+    SetLength(Result, (a.Length + b.Length));
+    x := 0;
+    y := 0;
+    z := 0;
+    while ((x < a.Length) and (y < b.Length)) do
+    case oAscending of
+      True:
+      if (a[x] <= b[y]) then
+        Result[z.Increase] := a[x.Increase]
+      else
+        Result[z.Increase] := b[y.Increase];
+      False:
+      if (a[x] >= b[y]) then
+        Result[z.Increase] := a[x.Increase]
+      else
+        Result[z.Increase] := b[y.Increase];
+    end;
+    while (x < a.Length) do
+      Result[z.Increase] := a[x.Increase];
+    while (y < b.Length) do
+      Result[z.Increase] := b[y.Increase];
+  end;
+begin
+  l := 0;
+  for i := 0 to High(Self) do
+    if (Self[i].Length > 0) then
+      Inc(l);
+  if (l = 0) then
+    Exit([]);
+  SetLength(r, l);
+  j := 0;
+  for i := 0 to High(Self) do
+    if Self[i].Length > 0 then
+      r[j.Increase] := Self[i].Cloned;
+  while (l > 1) do
+  begin
+    j := 0;
+    i := -2;
+    while ((i.Increment(2) + 1) < l) do
+      r[j.Increase] := C(r[i], r[i + 1]);
+    if (i < l) then
+      r[j.Increase] := r[i];
+    l := j;
+  end;
+  Result := r[0];
+end;
+
 {==============================================================================]
   <Flattify>
   @action: Flattens a 2D array into a sorted 1D array result.
