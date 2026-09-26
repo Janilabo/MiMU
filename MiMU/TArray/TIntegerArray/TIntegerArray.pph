@@ -21,6 +21,7 @@
 {$I @TIntegerArray/Deduplicate.inc}
 {$I @TIntegerArray/Disjoint.inc}
 {$I @TIntegerArray/Equality.inc}
+{$I @TIntegerArray/Grouping.inc}
 {$I @TIntegerArray/Inequality.inc}
 {$I @TIntegerArray/Merging.inc}
 {$I @TIntegerArray/Navigation.inc}

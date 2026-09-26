@@ -8,6 +8,7 @@ function Classify(const weight: TDoubleArray): M2DArray; overload;
 function Group: M2DArray; overload;
 function Group(const weight: TIntegerArray; const wSorted: Boolean = False): M2DArray; overload;
 function Group(const weight: TDoubleArray; const wSorted: Boolean = False): M2DArray; overload;
+function Group2: M2DArray; overload;
 function Grouped: M2DArray; overload;
 function Grouped(const groups: TIntegerArray): M2DArray; overload;
 function Groupify: M2DArray; overload;
@@ -263,6 +264,47 @@ begin
   Result.Recreate(w.Size);
   for i := 0 to High(Self) do
     Result[w.BinarySearch(weight[i])].Supply(Self[i]);
+end;
+
+{==============================================================================]
+  <Group2>
+  @action: Groups identical elements into 2D sub-arrays using a order-preserving, 
+          linear insertion scan.
+  @note: 
+  - Stable / First-seen ordering: Maintains the relative original order of unique 
+    value encounters (the first row in Result corresponds to the first unique 
+    value found in Self).
+  - Unconditional linear scan: Compares each incoming element against the representative 
+    head element of each active group.
+  - Appends matching values using Supply and spawns new group rows dynamically 
+    when an element encounters an unseen value (`f = False`).
+  - Does not sort or reorder unique keys.
+[==============================================================================}
+function MArrayHelper.Group2: M2DArray; overload;
+var
+  s, i, j, g: Integer;
+  f: Boolean;
+begin
+  s := Self.Length;
+  SetLength(Result, s);
+  if (s = 0) then
+    Exit;
+  Result[0] := [Self[0]];
+  g := 0;
+  for i := 1 to (s - 1) do
+  begin
+    f := False;
+    for j := 0 to g do
+      if (Self[i] = Result[j][0]) then
+      begin
+        f := True;
+        Result[j].Supply(Self[i]);
+        Break;
+      end;
+    if not f then
+      Result[g.Increment] := [Self[i]];
+  end;
+  SetLength(Result, (g + 1));
 end;
 
 {==============================================================================]

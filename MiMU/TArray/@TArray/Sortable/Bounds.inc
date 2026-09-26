@@ -1,5 +1,7 @@
 {$IFDEF HELPERS}
 function Accepts(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function Boundate(var aMin, aMax: MType): Boolean; overload;
+function Boundify(var aMin, aMax: MType): Integer; overload;
 function GetBounds(var AMin, AMax: MType): Boolean; overload;
 function InBounds(const x: MType; const oAscending: Boolean = True): Boolean; overload;
 function InsideBounds(const item: MType; const oAscending: Boolean = True): Boolean; overload;
@@ -25,6 +27,64 @@ function Outsider(const item: MType; const oAscending: Boolean = True): Boolean;
 function MArrayHelper.Accepts(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := ((Self.Length > 0) and ((oAscending and ((item >= Self[0]) and (item <= Self[High(Self)]))) or ((not oAscending) and ((item <= Self[0]) and (item >= Self[High(Self)])))));
+end;
+
+{==============================================================================]
+  <Boundate>
+  @action: Computes the minimum and maximum bounds of an array in a single
+          linear pass using High(Self) loop limits, returning True if the
+          array is non-empty.
+  @note:
+  - Array validation: Sets Result := (Self.Length > 0). If empty, exits immediately
+    returning False without mutating `aMin` or `aMax`.
+  - Zero-offset iteration: Seeds `aMin` and `aMax` with `Self[0]`, then scans
+    from index 1 through `High(Self)`.
+  - Selective comparison: Utilizes `if not aMin.Minate(Self[i]) then aMax.Maxate(Self[i])`
+    to bypass checking `Maxate` whenever a new minimum is found, optimizing
+    evaluation passes on descending patterns.
+  - Sibling relationship: Provides the Boolean status alternative to `Boundify`
+    (which returns the total `Integer` element count).
+[==============================================================================}
+function MArrayHelper.Boundate(var aMin, aMax: MType): Boolean; overload;
+var
+  i: Integer;
+begin
+  Result := (Self.Length > 0);
+  if not Result then
+    Exit;
+  aMin := Self[0];
+  aMax := Self[0];
+  for i := 1 to High(Self) do
+    if not aMin.Minate(Self[i]) then
+      aMax.Maxate(Self[i]);
+end;
+
+{==============================================================================]
+  <Boundify>
+  @action: Scans an array in a single linear pass to find its minimum and 
+          maximum values while returning the total element count.
+  @note: 
+  - Initializes both `aMin` and `aMax` with the first element (`Self[0]`), then 
+    evaluates remaining elements in a single `O(N)` loop.
+  - Uses conditional branching (`else if`) to avoid redundant maximum checks 
+    when a new minimum value is encountered.
+  - Returns `0` immediately without modifying `aMin` or `aMax` if the array is 
+    empty (`Result = 0`).
+[==============================================================================}
+function MArrayHelper.Boundify(var aMin, aMax: MType): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  if (Result = 0) then
+    Exit;
+  aMin := Self[0];
+  aMax := Self[0];
+  for i := 1 to (Result - 1) do
+    if (aMin > Self[i]) then
+      aMin := Self[i]
+    else if (aMax < Self[i]) then
+      aMax := Self[i];
 end;
 
 {==============================================================================]

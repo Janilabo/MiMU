@@ -8,6 +8,7 @@ function Decrement(const N: MType = 1): MType; overload;
 function Decrement(const B: Boolean; const N: MType = 1): MType; overload;
 function Decret(const N: MType = 1): MType; overload;
 function DecTo(const AMin: MType; const N: MType = 1): Boolean; overload;
+function Decline(const target: MType): MType; overload;
 function Pre(const N: MType = 1): MType; overload;
 function Retdec(const N: MType = 1): MType; overload;
 function Take(const N: MType = 1): MType; overload;
@@ -24,6 +25,7 @@ function Increment(const N: MType = 1): MType; overload;
 function Increment(const B: Boolean; const N: MType = 1): MType; overload;
 function Incret(const N: MType = 1): MType; overload;
 function IncTo(const AMax: MType; const N: MType = 1): Boolean; overload;
+function Incline(const target: MType): MType; overload;
 function Post(const N: MType = 1): MType; overload;
 function Put(const N: MType = 1): MType; overload;
 function Retinc(const N: MType = 1): MType; overload;
@@ -177,6 +179,23 @@ function MTypeHelper.DecTo(const AMin: MType; const N: MType = 1): Boolean; over
 begin
   Self := Max((Self - N), AMin);
   Result := (Self = AMin);
+end;
+
+{==============================================================================]
+  <Decline>
+  @action: Slopes Self downward to target if Self exceeds target, returning the 
+          positive downward delta (difference).
+  @note: 
+    - Computes delta := (Self - target).
+    - If delta > 0 (Self strictly exceeds target), mutates Self := target and 
+      returns the positive magnitude of the drop.
+    - If Self <= target, leaves Self unchanged and returns delta <= 0.
+[==============================================================================}
+function MTypeHelper.Decline(const target: MType): MType; overload;
+begin
+  Result := (Self - target);
+  if (Result > 0) then
+    Self := target;
 end;
 
 {==============================================================================]
@@ -375,6 +394,23 @@ function MTypeHelper.IncTo(const AMax: MType; const N: MType = 1): Boolean; over
 begin
   Self := Min((Self + N), AMax);
   Result := (Self = AMax);
+end;
+
+{==============================================================================]
+  <Incline>
+  @action: Slopes Self upward to target if Self falls short of target, returning 
+          the positive upward delta (difference).
+  @note: 
+    - Computes delta := (target - Self).
+    - If delta > 0 (Self falls short of target), mutates Self := target and 
+      returns the positive magnitude of the rise.
+    - If Self >= target, leaves Self unchanged and returns delta <= 0.
+[==============================================================================}
+function MTypeHelper.Incline(const target: MType): MType; overload;
+begin
+  Result := (target - Self);
+  if (Result > 0) then
+    Self := target;
 end;
 
 {==============================================================================]

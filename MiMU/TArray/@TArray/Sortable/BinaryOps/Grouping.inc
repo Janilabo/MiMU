@@ -1,10 +1,70 @@
 {$IFDEF HELPERS}
+function BinaryCongress(const oAscending: Boolean = True): M2DArray; overload;
 function BinaryGroup(const aAscending: Boolean = True): M2DArray; overload;
 function BinaryGrouped(const oAscending: Boolean = True): M2DArray; overload;
 function BinaryGroupify(const oAscending: Boolean = True): M2DArray; overload;
+function BinaryGrouping(const rAscending: Boolean = True): M2DArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryCongress>
+  @action: Groups duplicate values into ordered 2D sub-arrays by performing a 
+          binary search insertion into a dynamically sorted key index (`r`).
+  @note: 
+  - Standard Binary Search Loop: Performs a classic binary lookup ($O(\log U)$) 
+    against unique sorted key registry `r`, correctly defaulting insertion index 
+    `p := l` upon search exhaustion (`l > h`).
+  - Sorted key maintenance: Respects `oAscending` during comparisons to insert new 
+    keys into `r` in strict sorted order without requiring a global array pre-sort.
+  - Mirrored array expansion: When encountering a new key (`f = False`), extends 
+    and right-shifts elements in both `r` and `Result` starting at index `p` to 
+    preserve row-to-key alignment.
+  - Match append: Appends matching values using `Result[p].Supply(Self[i])` once 
+    the target row index `p` is resolved.
+[==============================================================================}
+function MArrayHelper.BinaryCongress(const oAscending: Boolean = True): M2DArray; overload;
+var
+  s, i, l, h, m, p, g: Integer;
+  r: MArray;
+  f: Boolean;
+begin
+  s := Self.Length;
+  for i := 0 to (s - 1) do
+  begin
+    l := 0;
+    h := High(r);
+    f := False;
+    while (l <= h) do
+    begin
+      m := (l + ((h - l) div 2));
+      if (Self[i] = r[m]) then
+      begin
+        f := True;
+        p := m;
+        Break;
+      end else if ((oAscending and (Self[i] < r[m])) or ((not oAscending) and (Self[i] > r[m]))) then
+        h := (m - 1)
+      else
+        l := (m + 1);
+    end;
+    if not f then
+      p := l;
+    if not f then
+    begin
+      SetLength(r, (r.Length + 1));
+      for g := High(r) downto (p + 1) do
+        r[g] := r[g - 1];
+      SetLength(Result, (Result.Length + 1));
+      for g := High(Result) downto (p + 1) do
+        Result[g] := Result[g - 1];
+      r[p] := Self[i];
+      Result[p] := [Self[i]];
+    end else
+      Result[p].Supply(Self[i]);
+  end;
+end;
+
 {==============================================================================]
   <BinaryGroup>
   @action: Groups the elements of the array into subarrays of identical values,
@@ -110,5 +170,46 @@ begin
   while ((r = -1) or (i.Increment(Result[r].Length) < s)) do
     Result[r.Increment] := Self[i].TArray((Self.BinaryRightern(Self[i], oAscending) - i) + 1);
   SetLength(Result, (r + 1));
+end;
+
+{==============================================================================]
+  <BinaryGrouping>
+  @action: Groups duplicate values into pre-sorted 2D sub-arrays using binary 
+          tree/search insertion.
+  @note: 
+    - Unique value extraction: Uses `BinaryGrow` in Pass 1 to build a uniquely sorted 
+      reference array containing one instance of each distinct element.
+    - Histogram counting: Uses BinarySearch in Pass 2 to tally occurrence frequencies 
+      for each unique value into array.
+    - Matrix allocation & population: Allocates row capacities according to occurrence 
+      counts and fills each row `Result[i]` with repeated 
+      instances of r[i].
+    - Result structure: Produces a 2D array where each sub-array contains all identical 
+      duplicates of a single value, ordered monotonically by row according to rAscending.
+[==============================================================================}
+function MArrayHelper.BinaryGrouping(const rAscending: Boolean = True): M2DArray; overload;
+var
+  i, j, s: Integer;
+  r: MArray;
+  c: TIntegerArray;
+begin
+  s := Self.Length;
+  SetLength(Result, s);
+  if (s = 0) then
+    Exit;
+  Result[0] := [Self[0]];
+  if (s > 1) then
+  begin
+    r := [Self[0]];
+    for i := 1 to (s - 1) do
+      r.BinarySupply(Self[i], rAscending);
+    SetLength(c, r.Length);
+    for i := 0 to (s - 1) do
+      Inc(c[r.BinarySearch(Self[i], rAscending)]);
+    SetLength(Result, r.Length);
+    for i := 0 to High(Result) do
+      for j := 0 to Result[i].Alloc(c[i]) do
+        Result[i][j] := r[i];
+  end;
 end;
 {$ENDIF}
