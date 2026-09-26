@@ -3,7 +3,50 @@ function Melt(const items: MArray; const oAscending: Boolean = True): Integer; o
 function Weld(const A, B: MArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
+{$IFDEF FUNCTIONS}
+function Merge2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Merge2>
+  @action: Merges two sorted arrays (A and B) into a single sorted array, via
+           a standard two-pointer linear merge. Whichever array is exhausted first has
+           its remainder skipped; the other's leftover tail is copied over as-is.
+  @note: Assumes both A and B are already sorted according to oAscending;
+         behavior is undefined otherwise (see Kerge's precondition for the same
+         contract).
+[==============================================================================}
+function Merge2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  l, r, i, j, t: Integer;
+begin
+  l := A.Length;
+  r := B.Length;
+  SetLength(Result, (l + r));
+  i := 0;
+  j := 0;
+  t := 0;
+  case oAscending of
+    True:
+    while ((i < l) and (j < r)) do
+      if (A[i] <= B[j]) then
+        Result[t.Increase] := A[i.Increase]
+      else
+        Result[t.Increase] := B[j.Increase];
+    False:
+    while ((i < l) and (j < r)) do
+      if (A[i] >= B[j]) then
+        Result[t.Increase] := A[i.Increase]
+      else
+        Result[t.Increase] := B[j.Increase];
+  end;
+  while (i < l) do
+    Result[t.Increase] := A[i.Increase];
+  while (j < r) do
+    Result[t.Increase] := B[j.Increase];
+end;
+
 {==============================================================================]
   <Melt>
   @action: Merges an external sorted array into Self in-place, maintaining sorted order.

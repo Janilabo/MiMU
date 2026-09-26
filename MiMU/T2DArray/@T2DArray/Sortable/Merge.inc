@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Collated(const oAscending: Boolean = True): MArray; overload;
+function Conjoin(const oAscending: Boolean = True): MArray; overload;
 function Conjoined(const oAscending: Boolean = True): MArray; overload;
+function Corporate(const oAscending: Boolean = True): MArray; overload;
 function Flattify(const oAscending: Boolean = True): MArray; overload;
 function Flatty(const oAscending: Boolean = True): MArray; overload;
 function Kerge(const oAscending: Boolean = True): MArray; overload;
@@ -89,6 +91,34 @@ begin
 end;
 
 {==============================================================================]
+  <Conjoin>
+  @action: Merges any number of sorted arrays of sorted arrays (Self) into a
+           single sorted array, via pairwise divide-and-conquer — recursively splits
+           the array range in half, merges each half, then combines the two sorted
+           halves with Merge2. O(n log k) merge-comparisons overall.
+  @note: Assumes each sub-array in Self is already sorted according to
+         oAscending; behavior is undefined otherwise. Empty sub-arrays are not
+         skipped explicitly but are handled correctly by Merge2 (an empty array
+         contributes no comparisons). A single sub-array is returned as a clone
+         with no merge work performed.
+[==============================================================================}
+function M2DArrayHelper.Conjoin(const oAscending: Boolean = True): MArray; overload;
+  function M(lo, hi: Integer): MArray;
+  var
+    r: Integer;
+  begin
+    if (lo > hi) then
+      Exit([]);
+    if (lo = hi) then
+      Exit(Self[lo].Cloned);
+    r := (lo + ((hi - lo) div 2));
+    Result := Merge2(M(lo, r), M((r + 1), hi), oAscending);
+  end;
+begin
+  Result := M(0, High(Self));
+end;
+
+{==============================================================================]
   <Conjoined>
   @action: Merges multiple pre-sorted 1D sub-arrays into a single sorted 1D array.
   @note: Uses a bottom-up pairwise divide-and-conquer merge strategy (O(N log K) complexity).
@@ -146,6 +176,52 @@ begin
     if (i < l) then
       r[j.Increase] := r[i];
     l := j;
+  end;
+  Result := r[0];
+end;
+
+{==============================================================================]
+  <Corporate>
+  @action: Merges any number of sorted arrays of sorted arrays (Self) into a
+           single sorted MArray, via an optimal-merge-pattern (Huffman-style) strategy
+            — repeatedly finds the two currently-shortest live arrays and merges them
+              with Merge2, replacing them with the combined result, until one array
+              remains. Minimizes total element-comparisons when sub-array lengths are
+              uneven; degenerates to ordinary pairwise merging when lengths are similar.
+  @note: Assumes each sub-array in Self is already sorted according to
+         oAscending; behavior is undefined otherwise. Empty sub-arrays are dropped
+         before merging begins. A single non-empty sub-array is returned as a clone
+         with no merge work performed.
+[==============================================================================}
+function M2DArrayHelper.Corporate(const oAscending: Boolean = True): MArray; overload;
+var
+  r: M2DArray;
+  c, i, a, b: Integer;
+begin
+  c := 0;
+  SetLength(r, Self.Length);
+  for i := 0 to High(Self) do
+    if (Self[i].Length > 0) then
+      r[c.Increase] := Self[i].Cloned;
+  if (c = 0) then
+    Exit([]);
+  if (c = 1) then
+    Exit(r[0]);
+  while (c > 1) do
+  begin
+    a := 0;
+    for i := 1 to (c - 1) do
+      if (r[i].Length < r[a].Length) then
+        a := i;
+    b := -1;
+    for i := 0 to (c - 1) do
+      if (i <> a) then
+        if (b = -1) then
+          b := i
+        else if (r[i].Length < r[b].Length) then
+          b := i;
+    r[a] := Merge2(r[a], r[b], oAscending);
+    r[b] := r[c.Decrement];
   end;
   Result := r[0];
 end;
