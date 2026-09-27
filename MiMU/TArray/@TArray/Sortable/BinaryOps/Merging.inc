@@ -6,7 +6,31 @@ function BinaryMerge(const items: MArray; const aAscending: Boolean = True): MAr
 function BinaryMerged(const items: MArray; const aAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
+{$IFDEF FUNCTIONS}
+function BinaryJoin(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryJoin>
+  @action: Merges two sorted arrays via binary-search placement instead of a
+           linear scan. A's elements use B.BinaryLowerBound, B's use A.BinaryUpperBound,
+           keeping duplicates stable.
+  @note: Assumes A and B are already sorted per oAscending. O(la*log(lb) +
+         lb*log(la)) — more total work than Merge2 for balanced sizes, but each
+         placement is independent (useful for very uneven sizes or parallelizing).
+[==============================================================================}
+function BinaryJoin(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, (A.Length + B.Length));
+  for i := 0 to High(A) do
+    Result[i + B.BinaryLowerBound(A[i], oAscending)] := A[i];
+  for i := 0 to High(B) do
+    Result[i + A.BinaryUpperBound(B[i], oAscending)] := B[i];
+end;
+
 {==============================================================================]
   <BinaryCombine>
   @action: Merges two sorted arrays (Self and items) into a new sorted array based on the specified order by aAscending.

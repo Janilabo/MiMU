@@ -5,7 +5,44 @@ function SwapMerged(var target: MArray): MArray; overload;
 function SwappedMerge(var target: MArray): MArray; overload;
 {$ENDIF}
 
+{$IFDEF FUNCTIONS}
+function Integrate(const A, B: MArray): MArray; overload;
+function Join(const A, B: MArray): MArray; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Integrate>
+  @action: Concatenates two dynamic arrays into a single array.
+  @note: Allocates a new array via cloning to ensure the original input array A remains unmodified.
+[==============================================================================}
+function Integrate(const A, B: MArray): MArray; overload;
+begin
+  Result := A.Cloned;
+  Insert(B, Result, Result.Length);
+end;
+
+{==============================================================================]
+  <Join>
+  @action: Concatenates two MArrays (A and B) into one, preserving each
+    array's existing element order. No sorting, no comparisons, no ordering
+    assumption about the inputs — purely positional concatenation.
+  @note: Distinct from the Merge* family (Merge2, Kerge, Conjoin, Corporate),
+    which all assume sorted input and combine by value comparison. Join makes
+    no such assumption and performs no comparisons at all.
+[==============================================================================}
+function Join(const A, B: MArray): MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := A.Length;
+  SetLength(Result, (l + B.Length));
+  for i := 0 to (l - 1) do
+    Result[i] := A[i];
+  for i := 0 to High(B) do
+    Result[l + i] := B[i];
+end;   
+
 {==============================================================================]
   <Blend>
   @action: Blends items with array, cleverly.

@@ -8,7 +8,15 @@ class function Create(const item: MType; const aSize: Integer = 1): MArray; over
 {$ENDIF}
 
 {$IF DEFINED(TBS) AND DEFINED(Sortable)}
+class function Find(const arr: MArray; const indices: TRange; const item: MType; const ascending: Boolean = True): Integer; overload;
+class function Find(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
+class function Search(const arr: MArray; const indices: TRange; const item: MType; const ascending: Boolean = True): Integer; overload;
 class function Search(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
+
+class function LowerBound(const arr: MArray; const indices: TRange; const item: MType; const ascending: Boolean = True): Integer; overload;
+class function LowerBound(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
+class function UpperBound(const arr: MArray; const indices: TRange; const item: MType; const ascending: Boolean = True): Integer; overload;
+class function UpperBound(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
 {$ENDIF}
 {$ENDIF}
 
@@ -16,23 +24,132 @@ class function Search(const arr: MArray; const item: MType; const ascending: Boo
 {$I TArray.pph}
 
 {$IFDEF Sortable}
-class function TBinarySearch.Search(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
+class function TBinarySearch.Find(const arr: MArray; const indices: TRange; const item: MType; const ascending: Boolean = True): Integer; overload;
 var
-  L, R, M: Integer;
+  L, R: Integer;
 begin
-  Result := -1;
-  L := 0;
-  R := High(arr);
+  L := Min(Max(0, Min(indices.start, indices.stop)), (High(arr) + 1));
+  R := Min(Max(indices.start, indices.stop), High(arr));
   while (L <= R) do
   begin
-    M := (L + ((R - L) shr 1));
-    if (arr[M] = item) then
-      Exit(M);
-    if ((ascending and (arr[M] < item)) or ((not ascending) and (arr[M] > item))) then
-      L := (M + 1)
+    Result := (L + ((R - L) shr 1));
+    if (arr[Result] = item) then
+      Exit;
+    if ((ascending and (arr[Result] < item)) or ((not ascending) and (arr[Result] > item))) then
+      L := (Result + 1)
     else
-      R := (M - 1);
+      R := (Result - 1);
   end;
+  Result := -1;
+end;
+
+class function TBinarySearch.Find(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
+begin
+  Result := TBinarySearch.Find(arr, arr.Locale, item, ascending);
+end;
+
+class function TBinarySearch.Search(const arr: MArray; const indices: TRange; const item: MType; const ascending: Boolean = True): Integer; overload;
+var
+  l, h: Integer;
+begin
+  l := Min(Max(0, Min(indices.start, indices.stop)), arr.Length);
+  h := Max(l, Min((Max(indices.start, indices.stop) + 1), arr.Length));
+  case ascending of
+    True:
+    while (l < h) do
+    begin
+      Result := (l + ((h - l) div 2));
+      if (arr[Result] = item) then
+        Exit
+      else if (arr[Result] < item) then
+        l := (Result + 1)
+      else
+        h := Result;
+    end;
+    False:
+    while (l < h) do
+    begin
+      Result := (l + ((h - l) div 2));
+      if (arr[Result] = item) then
+        Exit
+      else if (arr[Result] > item) then
+        l := (Result + 1)
+      else
+        h := Result;
+    end;
+  end;
+  Result := -1;
+end;
+
+class function TBinarySearch.Search(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
+begin
+  Result := TBinarySearch.Search(arr, arr.Locale, item, ascending);
+end;
+
+class function TBinarySearch.LowerBound(const arr: MArray; const indices: TRange; const item: MType; const ascending: Boolean = True): Integer; overload;
+var
+  h, m: Integer;
+begin
+  Result := Min(Max(0, Min(indices.start, indices.stop)), arr.Length);
+  h := Max(Result, Min((Max(indices.start, indices.stop) + 1), arr.Length));
+  case ascending of
+    True:
+    while (Result < h) do
+    begin
+      m := (Result + ((h - Result) div 2));
+      if (arr[m] < item) then
+        Result := (m + 1)
+      else
+        h := m;
+    end;
+    False:
+    while (Result < h) do
+    begin
+      m := (Result + ((h - Result) div 2));
+      if (arr[m] > item) then
+        Result := (m + 1)
+      else
+        h := m;
+    end;
+  end;
+end;
+
+class function TBinarySearch.LowerBound(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
+begin
+  Result := TBinarySearch.LowerBound(arr, arr.Locale, item, ascending);
+end;
+
+class function TBinarySearch.UpperBound(const arr: MArray; const indices: TRange; const item: MType; const ascending: Boolean = True): Integer; overload;
+var
+  h, m: Integer;
+begin
+  Result := Min(Max(0, Min(indices.start, indices.stop)), arr.Length);
+  h := Max(Result, Min((Max(indices.start, indices.stop) + 1), arr.Length));
+  case ascending of
+    True:
+    while (Result < h) do
+    begin
+      m := (Result + ((h - Result) div 2));
+      if (arr[m] <= item) then
+        Result := (m + 1)
+      else
+        h := m;
+    end;
+    False:
+    while (Result < h) do
+    begin
+      m := (Result + ((h - Result) div 2));
+      if (arr[m] >= item) then
+        Result := (m + 1)
+      else
+        h := m;
+    end;
+  end;
+end;
+
+class function TBinarySearch.UpperBound(const arr: MArray; const item: MType; const ascending: Boolean = True): Integer; overload;
+begin
+  Result := TBinarySearch.UpperBound(arr, arr.Locale, item, ascending);
 end;
 {$ENDIF}
 
