@@ -1,13 +1,39 @@
 {$IFDEF HELPERS}
+function House(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+function Intermerge(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function Melt(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function Weld(const A, B: MArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
+function Combine2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
 function Merge2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Combine2>
+  @action: Concatenates two MArrays (A and B) — sorted or not — into one array,
+    then fully sorts the result via MergeSort. O((n) log(n)) overall, since it
+    pays for a full sort rather than exploiting any existing order in A or B.
+  @note: Unlike Merge2, this makes no assumption that A or B are pre-sorted —
+    that's the entire reason it exists as a separate function rather than a
+    Merge2 variant. If both inputs are already sorted, Merge2 does the same
+    job in O(n) and should be preferred.
+[==============================================================================}
+function Combine2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  i, l: Integer;
+begin
+  l := A.Length;
+  SetLength(Result, (A.Length + B.Length));
+  for i := 0 to (l - 1) do
+    Result[i] := A[i];
+  for i := 0 to High(B) do
+    Result[l + i] := B[i];
+  Result.MergeSort(oAscending);
+end;
+
 {==============================================================================]
   <Merge2>
   @action: Merges two sorted arrays (A and B) into a single sorted array, via
@@ -45,6 +71,58 @@ begin
     Result[t.Increase] := A[i.Increase];
   while (j < r) do
     Result[t.Increase] := B[j.Increase];
+end;
+
+{==============================================================================]
+  <House>
+  @action: Sorts the items array and merges it into Self via Merge2.
+  @note: Returns the new length of Self.
+[==============================================================================}
+function MArrayHelper.House(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+begin
+  if (items.Length > 0) then
+    Self := Merge2(Self, items.QuickSorted(oAscending), oAscending);
+  Result := Self.Length;
+end;
+
+{==============================================================================]
+  <Intermerge>
+  @action: Merges a sorted copy of items in-place into an already sorted Self.
+  @note: Performs a right-to-left merge to prevent element overwrites. Returns the total length.
+[==============================================================================}
+function MArrayHelper.Intermerge(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  o: MArray;
+  s, a, i, j, k: Integer;
+begin
+  s := Self.Length;
+  a := items.Length;
+  Result := (s + a);
+  if (a = 0) then
+    Exit;
+  o := items.QuickSorted(oAscending);
+  SetLength(Self, Result);
+  i := (s - 1);
+  j := (a - 1);
+  k := (Result - 1);
+  case oAscending of
+    True:
+    while (j >= 0) do
+      if (i < 0) then
+        Self[k.Decrease] := o[j.Decrease]
+      else if (Self[i] > o[j]) then
+        Self[k.Decrease] := Self[i.Decrease]
+      else
+        Self[k.Decrease] := o[j.Decrease];
+    False:
+    while (j >= 0) do
+      if (i < 0) then
+        Self[k.Decrease] := o[j.Decrease]
+      else if (Self[i] < o[j]) then
+        Self[k.Decrease] := Self[i.Decrease]
+      else
+        Self[k.Decrease] := o[j.Decrease];
+  end;
 end;
 
 {==============================================================================]
