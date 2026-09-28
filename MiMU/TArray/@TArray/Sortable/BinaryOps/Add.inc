@@ -3,6 +3,7 @@ function BinaryAdd(const item: MType; const aAscending: Boolean = True): MArray;
 function BinaryAddendum(const item: MType; const allowDuplicates: Boolean = True; const oAscending: Boolean = True): Integer; overload;
 function BinaryAnnex(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryAppend(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryAttach(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function BinaryFeed(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryGive(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryInclude(const item: MType; const oAscending: Boolean = True): Boolean; overload;
@@ -123,6 +124,48 @@ begin
   for i := (High(Self) - 1) downto Result do
     Self[i + 1] := Self[i];
   Self[Result] := item;
+end;
+
+{==============================================================================]
+  <BinaryAttach>
+  @action: Inserts items (unsorted) into Self (sorted per oAscending) in one
+           batched pass: sorts items, finds each insertion position with
+           TBinarySearch.UpperBound (each search starts at the previous result), then
+           shifts and places everything backward so each slot is written once.
+           Returns the new length.
+  @note: Self must already be sorted per oAscending; behavior is undefined
+         otherwise. Equal values from items land after existing equal elements.
+         O(m log m + m log n + n + m) versus O(n*m) for repeated single inserts.
+[==============================================================================}
+function MArrayHelper.BinaryAttach(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  o: MArray;
+  p: TIntegerArray;
+  s, a, i, j, k: Integer;
+begin
+  s := Self.Length;
+  a := items.Length;
+  Result := (s + a);
+  if (a = 0) then
+    Exit;
+  o := items.QuickSorted(oAscending);
+  SetLength(p, a);
+  p[0] := 0;
+  for j := 0 to (a - 1) do
+  begin
+    if (j > 0) then
+      p[j] := p[j - 1];
+    p[j] := TBinarySearch.UpperBound(Self, TRange.Construct(p[j], (s - 1)), o[j], oAscending);
+  end;
+  SetLength(Self, Result);
+  i := (s - 1);
+  j := (a - 1);
+  k := (Result - 1);
+  while (j >= 0) do
+    if (i >= p[j]) then
+      Self[k.Decrease] := Self[i.Decrease]
+    else
+      Self[k.Decrease] := o[j.Decrease];
 end;
 
 {==============================================================================]
