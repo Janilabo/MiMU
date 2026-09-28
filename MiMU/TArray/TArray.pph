@@ -135,6 +135,9 @@
 {$I @TArray/Sortable/BinaryOps/Sort.inc}
 {$I @TArray/Sortable/BinaryOps/Validation.inc}
 {$I @TArray/Sortable/BinaryOps/Verify.inc}
+
+{$I @TArray/Sortable/BinaryOps/TBinarySearch/Bounds.inc}
+{$I @TArray/Sortable/BinaryOps/TBinarySearch/Search.inc}
 {$ENDIF}
 
 {$I @TArray/Deduplication/Cardinality.inc}
