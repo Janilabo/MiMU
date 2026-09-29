@@ -5,6 +5,7 @@ function BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TI
 function BinaryIndices(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryInterval(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryRadar(const aMin, aMax: MType; const oAscending: Boolean = True): TIntegerArray; overload;
+function BinaryScan(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -178,4 +179,40 @@ begin
   for i := 0 to Result.Alloc(r.Size) do
     Result[i] := (i + r.start);
 end;
+
+{==============================================================================]
+  <BinaryScan>
+  @action: Searches Self for matching items using binary search and collects all target index positions.
+  @note: Requires Self to be sorted. Handles duplicates and dynamically expands the Result array.
+[==============================================================================}
+function MArrayHelper.BinaryScan(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, l, h, m, s, r: Integer;
+  v: MType;
+begin
+  s := Self.Length;
+  r := 0;
+  SetLength(Result, 0);
+  for i := 0 to High(items) do
+  begin
+    v := items[i];
+    l := 0;
+    h := s;
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if ((oAscending and (Self[m] < v)) or ((not oAscending) and (Self[m] > v))) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    while ((l < s) and (Self[l] = v)) do
+    begin
+      if (r = Result.Length) then
+        SetLength(Result, Max((r * 2), 16));
+      Result[r.Increase] := l.Increase;
+    end;
+  end;
+  SetLength(Result, r);
+end; 
 {$ENDIF}

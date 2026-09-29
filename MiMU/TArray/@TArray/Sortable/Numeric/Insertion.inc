@@ -1,12 +1,34 @@
 {$IFDEF HELPERS}
+function Assimilate(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+
 function Attach(const items: MArray): Integer; overload;
 function Embed(const items: MArray; const index: Integer = 2147483647): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
+  <Assimilate>
+  @action: Appends items to Self and sorts the entire merged array in-place.
+  @note: Uses direct memory copying via Move and in-place QuickSort for efficiency. Returns total length.
+[==============================================================================}
+function MArrayHelper.Assimilate(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  s, i: Integer;
+begin
+  i := items.Length;
+  if (i > 0) then
+  begin
+    s := Self.Length;
+    SetLength(Self, (s + i));
+	Move(items[0], Self[s], (i * SizeOf(items[0])));
+	Self.QuickSort(oAscending);
+  end;
+  Result := Self.Length;
+end;
+
+{==============================================================================]
   <Attach>
-  @action: ppends all elements from the given array to the end of Self.
+  @action: Appends all elements from the given array to the end of Self.
            Returns the new total length of the array after appending.
   @note: Uses Move() for efficiency.
          If the input array is empty, the function returns the current length

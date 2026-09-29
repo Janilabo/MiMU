@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function House(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function Intermerge(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+function Intermerged(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function Melt(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function Weld(const A, B: MArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -122,6 +123,42 @@ begin
         Self[k.Decrease] := Self[i.Decrease]
       else
         Self[k.Decrease] := o[j.Decrease];
+  end;
+end;
+
+{==============================================================================]
+  <Intermerged>
+  @action: Merges a sorted copy of items in-place into Self from right to left.
+  @note: Uses a single loop with conditional direction check to reduce duplicate code.
+[==============================================================================}
+function MArrayHelper.Intermerged(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  o: MArray;
+  s, a, i, j, k: Integer;
+  b: Boolean;
+begin
+  s := Self.Length;
+  a := items.Length;
+  Result := (s + a);
+  if (a = 0) then
+    Exit;
+  o := items.QuickSorted(oAscending);
+  SetLength(Self, Result);
+  i := (s - 1);
+  j := (a - 1);
+  k := (Result - 1);
+  while (j >= 0) do
+  begin
+    if (i < 0) then
+      b := False
+    else if oAscending then
+      b := (Self[i] > o[j])
+    else
+      b := (Self[i] < o[j]);
+    if b then
+      Self[k.Decrease] := Self[i.Decrease]
+    else
+      Self[k.Decrease] := o[j.Decrease];
   end;
 end;
 
