@@ -48,6 +48,7 @@ function Pick(const items: MArray; const index: Integer = 0): MArray; overload;
 function Reject(const items: MArray; const index: Integer = 2147483647): MArray; overload;
 function Resift(const reference: MType): MType; overload;
 function Rest: MArray; overload;
+function Sieve(const items: MArray): MArray; overload;
 function Sift(const reference: MType): MType; overload;
 function Trim(const tCount: Integer = 1): MArray; overload;
 function Truncate(const tRate: Double = 10): MArray; overload;
@@ -1414,6 +1415,36 @@ var
 begin
   for i := 0 to Result.Alloc(Max(0, (Self.Length - 1))) do
     Result[i] := Self[i + 1];
+end;
+
+{==============================================================================]
+  <Sieve>
+  @action: Filters items to keep only elements present in Self using a linear scan.
+  @note: Operates on unsorted arrays with O(N * M) time complexity.
+         Preserves the original relative order and duplicate occurrences of items.
+[==============================================================================}
+function MArrayHelper.Sieve(const items: MArray): MArray; overload;
+var
+  s, i, j, r: Integer;
+  f: Boolean;
+begin
+  s := High(Self);
+  if (Result.SetSize(Min((s + 1), items.Length)) = 0) then
+    Exit;
+  r := 0;
+  for i := 0 to High(items) do
+  begin
+    f := False;
+    for j := 0 to s do
+      if (items[i] = Self[j]) then
+      begin
+        f := True;
+        Break;
+      end;
+    if f then
+      Result[r.Increase] := items[i];
+  end;
+  SetLength(Result, r);
 end;
 
 {==============================================================================]

@@ -5,6 +5,8 @@ function BinaryCommon(const items: MArray; const oAscending: Boolean = True): MA
 function BinaryExcept(const target: MArray; const oAscending: Boolean = True): MArray; overload;
 function BinaryExtract(const items: MArray; const aAscending: Boolean = True): MArray; overload;
 function BinaryFilter(const items: MArray; const aAscending: Boolean = True): MArray; overload;
+function BinaryIntersect(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function BinaryIntersection(const items: MArray; const oAscending: Boolean = True): MArray; overload;
 function BinaryItems(const item: MType; const aAscending: Boolean = True): MArray; overload;
 function BinarySlice(const itemMin, itemMax: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryWithout(const target: MArray; const oAscending: Boolean = True): MArray; overload;
@@ -283,6 +285,62 @@ begin
     if not items.BinaryContains(Self[i], aAscending) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <BinaryIntersect>
+  @action: Returns the unique set intersection of items with Self.
+  @note: Requires Self to be pre-sorted according to oAscending. Skips adjacent 
+         duplicate matches in items to ensure no repeated elements in Result.
+[==============================================================================}
+function MArrayHelper.BinaryIntersect(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  m, t: Integer;
+  o: TRange;
+begin
+  if ((Self.Length = 0) or (items.Length = 0)) then
+    Exit([]);
+  o.Create(0, High(Self));
+  t := 0;
+  for m := 0 to Result.Alloc(items.Length) do
+    if ((t > 0) and (items[m] = Result[t - 1])) then
+      Continue
+    else if (Self.BinarySearch(items[m], o, oAscending) > -1) then
+      Result[t.Increase] := items[m];
+  SetLength(Result, t);
+end;
+
+{==============================================================================]
+  <BinaryIntersection>
+  @action: Returns the set intersection of two arrays.
+  @note: Requires Self to be pre-sorted according to oAscending. Uses binary
+         search lookup to filter items, preserving its original order and duplicate count.
+[==============================================================================}
+function MArrayHelper.BinaryIntersection(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  i, s, m, t: Integer;
+  l, h: MType;
+  o: TRange;
+begin
+  s := Self.Length;
+  i := High(items);
+  if ((s = 0) or (i = -1)) then
+    Exit([]);
+  if oAscending then
+  begin
+    l := Self[0];
+    h := Self[s - 1];
+  end else
+  begin
+    l := Self[s - 1];
+    h := Self[0];
+  end;
+  o.Create(0, (s - 1));
+  t := 0;
+  for m := 0 to Result.Alloc(i + 1) do
+    if ((items[m] >= l) and (items[m] <= h) and (Self.BinarySearch(items[m], o, oAscending) > -1)) then
+      Result[t.Increase] := items[m];
+  SetLength(Result, t);
 end;
 
 {==============================================================================]

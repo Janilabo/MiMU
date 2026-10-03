@@ -3,6 +3,8 @@ function Ascend: MArray; overload;
 function Canonical(const oAscending: Boolean = True): MArray; overload;
 function Descend: MArray; overload;
 function Intersect(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function Intersectify(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function Intersection(const items: MArray; const oAscending: Boolean = True): MArray; overload;
 function Subtract(const items: MArray; const oAscending: Boolean = True): MArray; overload;
 function Unionize(const items: MArray; const oAscending: Boolean = True): MArray; overload;
 function Uniq(const sSorted: Boolean = False): MArray; overload;
@@ -133,6 +135,73 @@ begin
       Inc(j);
   end;
   SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <Intersectify>
+  @action: Computes the set intersection of two pre-sorted arrays in a single pass.
+  @note: Requires both Self and items to be pre-sorted according to oAscending.
+         Advances both array pointers on match, executing in O(N + M) time.
+[==============================================================================}
+function MArrayHelper.Intersectify(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  a, b, t, i, s: Integer;
+begin
+  i := items.Length;
+  s := Self.Length;
+  if (Result.SetSize(Min(s, i)) = 0) then
+    Exit;
+  a := 0;
+  b := 0;
+  t := 0;
+  while ((a < s) and (b < i)) do
+  begin
+    if (Self[a] = items[b]) then
+    begin
+      Result[t.Increase] := items[b];
+      Inc(a);
+      Inc(b);
+    end else if ((oAscending and (Self[a] < items[b])) or ((not oAscending) and (Self[a] > items[b]))) then
+      Inc(a)
+    else
+      Inc(b);
+  end;
+  SetLength(Result, t);
+end;
+
+{==============================================================================]
+  <Intersection>
+  @action: Returns the set intersection of two arrays.
+  @note: Requires Self to be pre-sorted according to oAscending. Preserves the
+         original relative order of items while filtering out elements not present in Self.
+[==============================================================================}
+function MArrayHelper.Intersection(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  s: TIntegerArray;
+  m: TBooleanArray;
+  h, l, a, b, i, t: Integer;
+begin
+  l := Self.Length;
+  h := High(items);
+  if ((l = 0) or (h = -1)) then
+    Exit([]);
+  s := items.QuickSortition(oAscending);
+  for i := 0 to m.Alloc(h + 1) do
+    m[i] := False;
+  a := 0;
+  b := 0;
+  while ((a < l) and (b <= h)) do
+    if (Self[a] = items[s[b]]) then
+      m[s[b.Increase]] := True
+    else if ((oAscending and (Self[a] < items[s[b]])) or ((not oAscending) and (Self[a] > items[s[b]]))) then
+      Inc(a)
+    else
+      Inc(b);
+  t := 0;
+  for i := 0 to Result.Alloc(h + 1) do
+    if m[i] then
+      Result[t.Increase] := items[i];
+  SetLength(Result, t);
 end;
 
 {==============================================================================]
