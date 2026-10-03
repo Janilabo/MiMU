@@ -1,6 +1,11 @@
 {$IFDEF HELPERS}
 function BinaryApprox(const item: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
 function BinaryApproxed(const item: MType; const tolerance: MType = 0; const oAscending: Boolean = True): Integer; overload;
+function BinaryApproximate(const item: MType; const sIndices: TRange; const oAscending: Boolean = True): Integer; overload;
+function BinaryApproximate(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryApproximated(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryClosestFor(const item: MType; const sIndices: TRange; const oAscending: Boolean = True): Integer; overload;
+function BinaryClosestFor(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClosestOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClosestTo(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryEstimate(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -78,6 +83,113 @@ begin
     else
       s.stop := (r - 1);
   end;
+end;
+
+{==============================================================================]
+  <BinaryApproximate>
+  @action: Returns the index of item in a pre-sorted range, or the index of the 
+           closest element if an exact match is absent.
+  @note: Requires Self to be pre-sorted according to oAscending. Normalizes input 
+         indices, operates in O(log N) time via binary search, and tracks the 
+         minimum absolute distance as a fallback.
+[==============================================================================}
+function MArrayHelper.BinaryApproximate(const item: MType; const sIndices: TRange; const oAscending: Boolean = True): Integer; overload;
+var
+  s: TRange;
+  d: MType;
+  r: Integer;
+begin
+  s := sIndices.Normalized;
+  Result := -1;
+  while (s.start <= s.stop) do
+  begin
+    r := s.Pivot;
+    if (Self[r] = item) then
+      Exit(r);
+    if ((oAscending and (Self[r] < item)) or ((not oAscending) and (Self[r] > item))) then
+      s.start := (r + 1)
+    else
+      s.stop := (r - 1);
+    if ((Result = -1) or (Abs(Self[r] - item) <  d)) then
+    begin
+      Result := r;
+      d := Abs(Self[r] - item);
+    end;
+  end;
+end;
+
+function MArrayHelper.BinaryApproximate(const item: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := Self.BinaryApproximate(item, TRange.Construct(0, High(Self)), oAscending);
+end;
+
+{==============================================================================]
+  <BinaryApproximated>
+  @action: Finds the index of the nearest element to a target item in a sorted array using binary search.
+  @note: Requires the array to be sorted according to oAscending. Locates the lower and upper bounding neighbors using binary search,
+         then returns the index of whichever value is numerically closest to item.
+		 Handles boundary conditions at array edges or when target falls outside array limits.
+[==============================================================================}
+function MArrayHelper.BinaryApproximated(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  a, b: Integer;
+begin
+  a := Self.BinaryRightInfra(item, oAscending);
+  b := Self.BinaryLeftSupra(item, oAscending);
+  if (a >= b) then
+    Exit(b);
+  if (a < 0) then
+  begin
+    if (b < Self.Length) then
+      Result := b
+    else
+      Result := -1;
+    Exit;
+  end;
+  if (b >= Self.Length) then
+    Exit(a);
+  if ((oAscending and ((item - Self[a]) <= (Self[b] - item))) or ((not oAscending) and ((Self[a] - item) <= (item - Self[b])))) then
+    Result := a
+  else
+    Result := b;
+end;
+
+{==============================================================================]
+  <BinaryClosestFor>
+  @action: Finds the index of the element closest to a target item within a specified sub-range of a sorted array using binary search.
+  @note: Requires the array to be sorted according to oAscending. Normalizes the input range sIndices, performs a binary search restricted to that window,
+         and compares the closest neighbors (at and before the insertion point) to determine which value is numerically closest to item.
+		 Returns a clamped index within the given bounds.
+[==============================================================================}
+function MArrayHelper.BinaryClosestFor(const item: MType; const sIndices: TRange; const oAscending: Boolean = True): Integer; overload;
+var
+  s: TRange;
+  l, h, m: Integer;
+begin
+  s := sIndices.Normalized;
+  l := s.start;
+  h := (s.stop + 1);
+  while (l < h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  if (l > s.stop) then
+    Exit(s.stop);
+  if ((l = s.start) or (Self[l] = item)) then
+    Exit(l);
+  if ((oAscending and ((item - Self[l - 1]) <= (Self[l] - item))) or ((not oAscending) and ((Self[l - 1] - item) <= (item - Self[l])))) then
+    Result := (l - 1)
+  else
+    Result := l;
+end;
+
+function MArrayHelper.BinaryClosestFor(const item: MType; const oAscending: Boolean = True): Integer; overload;
+begin
+  Result := Self.BinaryClosestFor(item, TRange.Construct(0, High(Self)), oAscending);
 end;
 
 {==============================================================================]

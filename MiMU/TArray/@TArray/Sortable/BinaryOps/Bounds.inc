@@ -1,13 +1,16 @@
 {$IFDEF HELPERS}
 function BinaryBoundaries(const item: MType; const oAscending: Boolean = True): TRange; overload;
+function BinaryBoundarify(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryBoundary(const threshold: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBoundaryL(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBoundaryU(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryBoundify(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryBoundLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBoundLower(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBoundRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryBounds(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryBoundUpper(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryBoundz(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryBracket(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryCeil(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCeiled(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -32,6 +35,7 @@ function BinaryLowerBound(const x: MType; const aAscending: Boolean = True): Int
 function BinaryLowerBoundary(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryPred(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryPredecessor(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryRangify(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryRight(const startItem, stopItem: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightBoundary(const target: MType; const oAscending: Boolean = True): Integer; overload;
@@ -130,6 +134,32 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryBoundarify>
+  @action: Finds the index bounds of all occurrences of a target item in a sorted array using branch-free bitwise binary search.
+  @note: Returns a TRange [start, stop] containing the 0-based inclusive index range of matching items, or an invalid range if not found.
+         Requires the array to be sorted according to oAscending.
+[==============================================================================}
+function MArrayHelper.BinaryBoundarify(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  l, s: Integer;
+begin
+  l := Self.Length;
+  s := 1;
+  while ((s shl 1) <= l) do
+    s := (s shl 1);
+  Result.Create(-1);
+  while (s > 0) do
+  begin
+    if (((Result.start + s) < l) and ((oAscending and (Self[Result.start + s] < item)) or ((not oAscending) and (Self[Result.start + s] > item)))) then
+      Result.start := (Result.start + s);
+    if (((Result.stop + s) < l) and ((oAscending and (Self[Result.stop + s] <= item)) or ((not oAscending) and (Self[Result.stop + s] >= item)))) then
+      Result.stop := (Result.stop + s);
+    s := (s shr 1);
+  end;
+  Inc(Result.start);
+end;
+
+{==============================================================================]
   <BinaryBoundary>
   @action: Finds the index of the first element that meets or exceeds a threshold
            in a sorted array, respecting ascending or descending order.
@@ -178,8 +208,10 @@ end;
 
 {==============================================================================]
   <BinaryBoundaryU>
-  @action: Finds the rightmost index at which item occurs in Self, or -1 if item is not present. Self must be sorted according to oAscending (ascending if True, descending if False).
-  @note: Standard binary upper-bound search — records the pivot as a candidate match each time it equals item, then keeps narrowing toward the upper end. O(log n) regardless of how many duplicate occurrences of item exist.
+  @action: Finds the rightmost index at which item occurs in Self, or -1 if item is not present.
+           Self must be sorted according to oAscending (ascending if True, descending if False).
+  @note: Standard binary upper-bound search — records the pivot as a candidate match each time it equals item,
+         then keeps narrowing toward the upper end. O(log n) regardless of how many duplicate occurrences of item exist.
 [==============================================================================}
 function MArrayHelper.BinaryBoundaryU(const item: MType; const oAscending: Boolean = True): Integer; overload;
 var
@@ -198,6 +230,64 @@ begin
     else
       s.stop := (m - 1);	
   end;
+end;
+
+{==============================================================================]
+  <BinaryBoundify>
+  @action: Finds the index range of all elements matching item using binary search.
+  @note: Requires Self to be pre-sorted according to oAscending. Computes both 
+         lower and upper bounds simultaneously to return the matching TRange span.
+[==============================================================================}
+function MArrayHelper.BinaryBoundify(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  r: TRange;
+  m: Integer;
+  s: MType;
+  a, b: Boolean;
+begin
+  Result.Create(0);
+  r.Create(Self.Length);
+  while ((Result.start < r.start) or (Result.stop < r.stop)) do
+  case ((Result.start = Result.stop) and (r.start = r.stop)) of
+    True:
+    begin
+      m := (Result.start + ((r.start - Result.start) div 2));
+      s := Self[m];
+      b := ((oAscending and (s < item)) or ((not oAscending) and (s > item)));
+      a := ((oAscending and (s > item)) or ((not oAscending) and (s < item)));
+      if b then
+        Result.Create(m + 1)
+      else if a then
+        r.Create(m)
+      else
+      begin
+        r.start := m;
+        Result.stop := (m + 1);
+      end;
+    end;
+    False:
+    begin
+      if (Result.start < r.start) then
+      begin
+        m := (Result.start + ((r.start - Result.start) div 2));
+        s := Self[m];
+        if ((oAscending and (s < item)) or ((not oAscending) and (s > item))) then
+          Result.start := (m + 1)
+        else
+          r.start := m;
+      end;
+      if (Result.stop < r.stop) then
+      begin
+        m := (Result.stop + ((r.stop - Result.stop) div 2));
+        s := Self[m];
+        if ((oAscending and (s > item)) or ((not oAscending) and (s < item))) then
+          r.stop := m
+        else
+          Result.stop := (m + 1);
+      end;
+    end;
+  end;
+  Dec(Result.stop);
 end;
 
 {==============================================================================]
@@ -404,6 +494,17 @@ begin
     end else
       R.start := (M + 1);
   until False;
+end;
+
+{==============================================================================]
+  <BinaryBoundz>
+  @action: ?
+  @note: ?
+[==============================================================================}
+function MArrayHelper.BinaryBoundz(const item: MType; const oAscending: Boolean = True): TRange; overload;
+begin
+  Result.start := Self.BinaryLeftSupra(item, oAscending);
+  Result.stop := Self.BinaryRightInfra(item, oAscending);
 end;
 
 {==============================================================================]
@@ -2072,6 +2173,53 @@ begin
     else
       R := (M - 1);
   end;
+end;
+
+{==============================================================================]
+  <BinaryRangify>
+  @action: Finds the index bounds of all occurrences of a target item in a sorted array using standard binary search combined with exponential stepping.
+  @note: Requires the array to be sorted according to oAscending. Locates the lower bound via binary search, gallops forward to enclose the upper bound,
+         and refines the right edge. Returns an inclusive TRange [start, stop], or an invalid range (stop < start) if the item is not found.
+[==============================================================================}
+function MArrayHelper.BinaryRangify(const item: MType; const oAscending: Boolean = True): TRange; overload;
+var
+  s, l, h, m, p, j: Integer;
+begin
+  s := Self.Length;
+  l := 0;
+  h := s;
+  while (l < h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result.start := l;
+  Result.stop := (l - 1);
+  if ((l >= s) or (Self[l] <> item)) then
+    Exit;
+  p := l;
+  j := 1;
+  while (((p + j) < s) and (Self[p + j] = item)) do
+  begin
+    p := (p + j);
+    j := (j shl 1);
+  end;
+  l := p;
+  h := (p + j);
+  if (h > s) then
+    h := s;
+  while ((l + 1) < h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if (Self[m] = item) then
+      l := m
+    else
+      h := m;
+  end;
+  Result.stop := l;
 end;
 
 {==============================================================================]
