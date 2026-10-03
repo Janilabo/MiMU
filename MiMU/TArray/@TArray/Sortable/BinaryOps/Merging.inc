@@ -2,6 +2,8 @@
 function BinaryCombine(const items: MArray; const aAscending: Boolean = True): MArray; overload;
 function BinaryCombined(const items: MArray; const aAscending: Boolean = True): MArray; overload;
 function BinaryCompound(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function BinaryInterposal(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+function BinaryInterposed(const items: MArray; const oAscending: Boolean = True): MArray; overload;
 function BinaryMerge(const items: MArray; const aAscending: Boolean = True): MArray; overload;
 function BinaryMerged(const items: MArray; const aAscending: Boolean = True): MArray; overload;
 {$ENDIF}
@@ -121,6 +123,87 @@ begin
     Result[k.Increase] := Self[i.Increase];
   while (j < o) do
     Result[k.Increase] := items[j.Increase];
+end;
+
+{==============================================================================]
+  <BinaryInterposal>
+  @action: Merges an array of elements into a pre-sorted array in reverse order using binary search,
+           returning a new sorted combined array.
+  @note: Requires both Self and items to be sorted according to oAscending.
+         Iterates backwards through items, constraining each binary search upper bound to previous insertion points,
+		 and immediately places elements into the result buffer from right to left in a single memory-efficient pass.
+[==============================================================================}
+function MArrayHelper.BinaryInterposal(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  n, m, k, s, l, h, q, c: Integer;
+begin
+  n := Self.Length;
+  m := items.Length;
+  if (Result.SetSize(n + m) = 0) then
+    Exit;
+  s := n;
+  c := (n + m);
+  for k := (m - 1) downto 0 do
+  begin
+    l := 0;
+    h := s;
+    while (l < h) do
+    begin
+      q := (l + ((h - l) div 2));
+      if ((oAscending and (Self[q] <= items[k])) or ((not oAscending) and (Self[q] >= items[k]))) then
+        l := (q + 1)
+      else
+        h := q;
+    end;
+    while (s > l) do
+      Result[c.Decrement] := Self[s.Decrement];
+    Result[c.Decrement] := items[k];
+  end;
+  while (s > 0) do
+    Result[c.Decrement] := Self[s.Decrement];
+end;
+
+{==============================================================================]
+  <BinaryInterposed>
+  @action: Merges an array of elements into a pre-sorted array by using binary search to find insertion positions,
+           returning a new sorted combined array.
+  @note: Requires both Self and items to be sorted according to oAscending.
+         Iteratively binary searches Self—leveraging monotonically advancing lower search bounds—to compute insertion offsets for items,
+		 then interleave-copies both sequences into the destination buffer in a single linear pass.
+[==============================================================================}
+function MArrayHelper.BinaryInterposed(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  p: TIntegerArray;
+  n, m, k, l, h, q, a, c: Integer;
+begin
+  n := Self.Length;
+  m := items.Length;
+  if (Result.SetSize(n + m) = 0) then
+    Exit;
+  l := 0;
+  for k := 0 to p.Alloc(m) do
+  begin
+    h := n;
+    while (l < h) do
+    begin
+      q := (l + ((h - l) div 2));
+      if ((oAscending and (Self[q] <= items[k])) or ((not oAscending) and (Self[q] >= items[k]))) then
+        l := (q + 1)
+      else
+        h := q;
+    end;
+    p[k] := l;
+  end;
+  a := 0;
+  c := 0;
+  for k := 0 to (m - 1) do
+  begin
+    while (a < p[k]) do
+      Result[c.Increase] := Self[a.Increase];
+    Result[c.Increase] := items[k];
+  end;
+  while (a < n) do
+    Result[c.Increase] := Self[a.Increase];
 end;
 
 {==============================================================================]
