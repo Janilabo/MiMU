@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function BinaryClampMax(const aMax: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryClampMin(const aMin: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryCommon(const items: MArray; const oAscending: Boolean = True): MArray; overload;
 function BinaryExcept(const target: MArray; const oAscending: Boolean = True): MArray; overload;
 function BinaryExtract(const items: MArray; const aAscending: Boolean = True): MArray; overload;
 function BinaryFilter(const items: MArray; const aAscending: Boolean = True): MArray; overload;
@@ -122,6 +123,42 @@ begin
       Self[i - r.start] := Self[i];
     SetLength(Self, c);
   end;
+end;
+
+{==============================================================================]
+  <BinaryCommon>
+  @action: Returns the elements of `items` that are also present in `Self`, found by narrowing both arrays
+           to their overlapping value window and probing `Self` with binary search.
+  @note: Both arrays must already be sorted in the direction given by oAscending.
+         Supports ascending (oAscending = True) and descending (oAscending = False) order.
+         The result follows `items` order: duplicates in `items` repeat, duplicates in `Self` do not.
+         Returns an empty array if either array is empty or the value ranges do not overlap.
+         Non-mutating. Cost is O(log n + log m + k log n), where k is the number of `items` inside the overlap window.
+[==============================================================================}
+function MArrayHelper.BinaryCommon(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  h, l, r, s, m, t: Integer;
+  i, o: TRange;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  h := High(items);
+  if (h = -1) then
+    Exit([]);
+  l := Self.BinaryLeftSupra(items[0], oAscending);
+  if ((l >= s) or (oAscending and (Self[l] > items[h])) or ((not oAscending) and (Self[l] < items[h]))) then
+    Exit([]);
+  r := Self.BinaryRightInfra(items[h], oAscending);
+  i.start := items.BinaryLeftSupra(Self[l], oAscending);
+  i.stop := items.BinaryRightInfra(Self[r], oAscending);
+  o.Create(l, r);
+  SetLength(Result, (h + 1));
+  t := 0;
+  for m := i.start to i.stop do
+    if (Self.BinarySearch(items[m], o, oAscending) > -1) then
+      Result[t.Increase] := items[m];
+  SetLength(Result, t);
 end;
 
 {==============================================================================]

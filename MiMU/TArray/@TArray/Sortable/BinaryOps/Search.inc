@@ -35,6 +35,7 @@ function BinaryRanked(const item: MType; const oAscending: Boolean = True): Inte
 function BinaryScope(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryScout(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinarySearch(const item: MType; const sIndices: TRange; const oAscending: Boolean = True): Integer; overload;
 function BinarySearcha(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchBy(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySearchEx(const item: MType; const ignore: MType; const aAscending: Boolean = True): Integer; overload;
@@ -1259,6 +1260,32 @@ begin
       s.start := (m + 1)
     else
       s.stop := (m - 1);
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
+  <BinarySearch>
+  @action: Performs a binary search for a specified value within a range of a sorted array,
+           using normalized indices to ensure valid range boundaries, and returns the 0-based index if found,
+		   or -1 if the item is not present.
+  @note: Operates in O(log n) time. Automatically normalizes input range bounds via sIndices.Normalized before searching.
+         Supports both ascending (oAscending = True) and descending (oAscending = False) sorted arrays.
+[==============================================================================}
+function MArrayHelper.BinarySearch(const item: MType; const sIndices: TRange; const oAscending: Boolean = True): Integer; overload;
+var
+  s: TRange;
+begin
+  s := sIndices.Normalized;
+  while (s.start <= s.stop) do
+  begin
+    Result := s.Pivot;
+    if (Self[Result] = item) then
+      Exit;
+    if ((oAscending and (Self[Result] < item)) or ((not oAscending) and (Self[Result] > item))) then
+      s.start := (Result + 1)
+    else
+      s.stop := (Result - 1);
   end;
   Result := -1;
 end;

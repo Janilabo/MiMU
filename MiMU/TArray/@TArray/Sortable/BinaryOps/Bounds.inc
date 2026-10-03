@@ -75,6 +75,11 @@ function BinaryBoundMin(const target: MType; const oAscending: Boolean = True): 
 function BinaryMaxBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryMinBound(const target: MType; const oAscending: Boolean = True): Integer; overload;
 
+function BinaryLeftInfra(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryLeftSupra(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryRightInfra(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryRightSupra(const item: MType; const oAscending: Boolean = True): Integer; overload;
+
 function BisectLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BisectRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -2482,6 +2487,105 @@ begin
     end else
       s.start := (m + 1);
   end;
+end;
+
+{==============================================================================]
+  <BinaryLeftInfra>
+  @action: Finds the lower bound index or the last occurrence index of a given value in a sorted array.
+           If the exact item exists, it returns the index of its last (rightmost) occurrence; otherwise,
+		   it returns the appropriate boundary index.
+  @note: Operates in O(log n) time. Supports both ascending and descending sorted orders via the oAscending parameter.
+         Includes a post-processing adjustment step to handle duplicate matches correctly.
+[==============================================================================}
+function MArrayHelper.BinaryLeftInfra(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  L, M: Integer;
+begin
+  L := 0;
+  Result := High(Self);
+  while (L <= Result) do
+  begin
+    M := (L + ((Result - L) div 2));
+    if ((oAscending and (Self[M] < item)) or ((not oAscending) and (Self[M] > item))) then
+      L := (M + 1)
+    else
+      Result := (M - 1);
+  end;
+  if ((Result < High(Self)) and (Self[Result + 1] = item)) then
+    Inc(Result);
+end;
+
+{==============================================================================]
+  <BinaryLeftSupra>
+  @action: Finds the lower bound index (the insertion point before existing elements) for a given value in a sorted array,
+           or the index of the first element greater than or equal to the target.
+  @note: Operates in O(log n) time. Works with both ascending and descending sorted configurations controlled by oAscending.
+         Corresponds to a standard lower_bound operation.
+[==============================================================================}
+function MArrayHelper.BinaryLeftSupra(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  R, M: Integer;
+begin
+  Result := 0;
+  R := High(Self);
+  while (Result <= R) do
+  begin
+    M := (Result + ((R - Result) div 2));
+    if ((oAscending and (Self[M] >= item)) or ((not oAscending) and (Self[M] <= item))) then
+      R := (M - 1)
+    else
+      Result := (M + 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryRightInfra>
+  @action: Finds the upper bound index (the insertion point after existing elements) for a given value in a sorted array,
+           or the index of the first element strictly greater than the item (depending on sort order and duplicates).
+		   Specifically, it returns the index where all preceding elements are less than or equal to the item (in ascending order).
+  @note: Operates in O(log n) time. Supports both ascending (oAscending = True) and descending (oAscending = False) sorted arrays.
+         Corresponds to an upper_bound-like operation adapted for right-side infrastructure boundary positioning.
+[==============================================================================}
+function MArrayHelper.BinaryRightInfra(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  L, M: Integer;
+begin
+  L := 0;
+  Result := High(Self);
+  while (L <= Result) do
+  begin
+    M := (L + ((Result - L) div 2));
+    if ((oAscending and (Self[M] <= item)) or ((not oAscending) and (Self[M] >= item))) then
+      L := (M + 1)
+    else
+      Result := (M - 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryRightSupra>
+  @action: Finds the boundary index corresponding to the first occurrence of a duplicate value,
+           or the appropriate upper/supremum threshold from the right side of the search space.
+           If the exact item exists, it adjusts to point to its first (leftmost) occurrence.
+  @note: Operates in O(log n) time. Supports ascending and descending orders (oAscending).
+         Features a decrement adjustment if the preceding element matches the target item.
+[==============================================================================}
+function MArrayHelper.BinaryRightSupra(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  R, M: Integer;
+begin
+  Result := 0;
+  R := High(Self);
+  while (Result <= R) do
+  begin
+    M := (Result + ((R - Result) div 2));
+    if ((oAscending and (Self[M] > item)) or ((not oAscending) and (Self[M] < item))) then
+      R := (M - 1)
+    else
+      Result := (M + 1);
+  end;
+  if ((Result > 0) and (Self[Result - 1] = item)) then
+    Dec(Result);
 end;
 
 {==============================================================================]
