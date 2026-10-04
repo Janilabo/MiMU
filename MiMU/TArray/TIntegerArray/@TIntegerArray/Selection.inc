@@ -7,6 +7,8 @@ function FilterEven: TIntegerArray; overload;
 function FilterOdd: TIntegerArray; overload;
 function FilterValues(const values: TRange): TIntegerArray; overload;
 function FilterValues(const values: TRangeArray): TIntegerArray; overload;
+
+function Primes: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -195,5 +197,10 @@ begin
     if not v.BinaryContains(Self[i]) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
+end;
+
+function TIntegerArrayHelper.Primes: TIntegerArray; overload;
+begin
+  Result := Where(@IsPrime);
 end;
 {$ENDIF}

@@ -12,7 +12,7 @@ function Filterify(const aMin, aMax: MType): MArray; overload;
 function FilterifyMax(const target: MType): MArray; overload;
 function FilterifyMin(const target: MType): MArray; overload;
 function Superlatives: MArray; overload;
-function Where(const operand: MType; const op: string = '='): MArray; overload;
+function Retain(const operand: MType; const op: string = '='): MArray; overload;
 
 function QuickElect(const K: Integer; const oAscending: Boolean = True): MType; overload;
 {$ENDIF}
@@ -275,15 +275,15 @@ begin
 end;
 
 {==============================================================================]
-  <Where>
+  <Retain>
   @action: Returns a new array holding the elements of Self that satisfy `Self[i] <op> operand`, in their
            original order.
-  @note: `op` is one of '=', '<>', '<', '<=', '>', '>='; the default is '=' (`Where(x)` returns every element equal to x).
+  @note: `op` is one of '=', '<>', '<', '<=', '>', '>='; the default is '=' (`Retain(x)` returns every element equal to x).
          The operator is resolved once before the loop, so each comparison has its own specialized loop.
          An unrecognized `op` returns an empty array without raising an error.
          Non-mutating. O(n). Ordered-only tier (the '<', '<=', '>' and '>=' branches need ordering).
 [==============================================================================}
-function MArrayHelper.Where(const operand: MType; const op: string = '='): MArray; overload;
+function MArrayHelper.Retain(const operand: MType; const op: string = '='): MArray; overload;
 var
   i, r: Integer;
 begin

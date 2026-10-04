@@ -159,3 +159,5 @@
   {$DEFINE MPointer := PSegment}
   {$UNDEF Sortable}
 {$ENDIF}
+
+{$DEFINE MPredicate := specialize TPredicate<MType>}

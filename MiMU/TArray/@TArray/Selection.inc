@@ -52,6 +52,7 @@ function Sieve(const items: MArray): MArray; overload;
 function Sift(const reference: MType): MType; overload;
 function Trim(const tCount: Integer = 1): MArray; overload;
 function Truncate(const tRate: Double = 10): MArray; overload;
+function Where(const predicate: MPredicate): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1522,5 +1523,25 @@ begin
   if c <= 0 then
     Exit([]);
   Result := Self.Copy(s, c);
+end;
+
+{==============================================================================]
+  <Where>
+  @action: Returns a new array containing all elements of `Self` that satisfy
+           the `predicate` condition, in their original order.
+  @note: `predicate` must match the `MPredicate` signature.
+         Non-mutating. O(n). Pre-allocates upper-bound storage to minimize heap
+         churn before truncating to the final match count.
+[==============================================================================}
+function MArrayHelper.Where(const predicate: MPredicate): MArray; overload;
+var
+  i, r: Integer;
+begin
+  r := 0;
+  if (Self.Length > 0) then
+  for i := 0 to Result.Alloc(Self.Length) do
+    if predicate(Self[i]) then
+      Result[r.Increase] := Self[i];
+  SetLength(Result, r);
 end;
 {$ENDIF}

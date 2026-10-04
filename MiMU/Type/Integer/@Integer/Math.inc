@@ -17,7 +17,37 @@ function MultipleOf(const value: Integer): Boolean; overload;
 function Squared: Int64; overload;
 {$ENDIF}
 
+{$IFDEF FUNCTIONS}
+function IsPrime(const value: Integer): Boolean; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <IsPrime>
+  @action: Determines whether the value is a prime number.
+  @note: Uses an optimized 2,3,5-wheel trial division algorithm. Handles negative 
+         numbers and edge cases (0, 1) quickly, and leverages the internal 
+         '.Squared' helper to optimize loop boundary checks up to √value.
+[==============================================================================}
+function IsPrime(const value: Integer): Boolean; overload;
+var
+  i: Integer;
+begin
+  if (value < 2) then
+    Exit(False);
+  if (value < 4) then
+    Exit(True);
+  if (((value mod 2) = 0) or ((value mod 3) = 0)) then
+    Exit(False);
+  i := 5;
+  while (i.Squared <= value) do
+    if (((value mod i) = 0) or ((value mod (i + 2)) = 0)) then
+      Exit(False)
+    else
+      Inc(i, 6);
+  Result := True;
+end;
+
 {==============================================================================]
   <Divability>
   @action: Returns True if the integer is evenly divisible by the specified value, supporting both positive and negative integers.
