@@ -9,7 +9,9 @@ function Weld(const A, B: MArray; const oAscending: Boolean = True): Integer; ov
 {$IFDEF FUNCTIONS}
 function Band(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
 function Combine2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
+function Comerge(const A, B: MArray; const rAscending: Boolean = True): MArray; overload;
 function Merge2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
+function Merged2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -103,6 +105,51 @@ begin
 end;
 
 {==============================================================================]
+  <Comerge>
+  @action: Merges two sorted arrays into one array in the order given by
+           rAscending, detecting each input's direction automatically.
+  @note: A and B may each be ascending or descending, in any combination.
+         Direction is read in O(1) from each array's first and last element
+         (see SortedDirection), so both inputs must really be sorted. An input
+         that runs opposite to rAscending is read backward. Length < 2 or
+         constant arrays are read forward. Ties take A first, but equal runs
+         inside an input that has to be read backward come out reversed.
+         Inputs are not modified.
+[==============================================================================}
+function Comerge(const A, B: MArray; const rAscending: Boolean = True): MArray; overload;
+var
+  l, r, i, j, t, x, y, d: Integer;
+begin
+  l := A.Length;
+  if (l = 0) then
+    Exit(B.QuickSorted(rAscending));
+  r := B.Length;
+  if (r = 0) then
+    Exit(A.QuickSorted(rAscending));
+  SetLength(Result, (l + r));
+  d := IfThen(rAscending, 1, -1);
+  i := IfThen((A.Directa = -d), (l - 1), 0);
+  j := IfThen((B.Directa = -d), (r - 1), 0);
+  x := IfThen((A.Directa = -d), -1, 1);
+  y := IfThen((B.Directa = -d), -1, 1);
+  t := 0;
+  while ((l > 0) and (r > 0)) do
+    if ((A[i] <= B[j]) = rAscending) then
+    begin
+      Result[t.Increase] := A[i.Increase(x)];
+      l := (l - 1);
+    end else
+    begin
+      Result[t.Increase] := B[j.Increase(y)];
+      r := (r - 1);
+    end;
+  while (l.Decrement > -1) do
+    Result[t.Increase] := A[i.Increase(x)];
+  while (r.Decrement > -1) do
+    Result[t.Increase] := B[j.Increase(y)];
+end;
+
+{==============================================================================]
   <Merge2>
   @action: Merges two sorted arrays (A and B) into a single sorted array, via
            a standard two-pointer linear merge. Whichever array is exhausted first has
@@ -135,6 +182,37 @@ begin
       else
         Result[t.Increase] := B[j.Increase];
   end;
+  while (i < l) do
+    Result[t.Increase] := A[i.Increase];
+  while (j < r) do
+    Result[t.Increase] := B[j.Increase];
+end;
+
+{==============================================================================]
+  <Merged2>
+  @action: Merges two sorted arrays (A and B) into a single sorted array, via
+           a standard two-pointer linear merge. Whichever array is exhausted first has
+           its remainder skipped; the other's leftover tail is copied over as-is.
+  @note: Assumes both A and B are already sorted according to oAscending;
+         behavior is undefined otherwise (see Kerge's precondition for the same
+         contract).
+[==============================================================================}
+function Merged2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  l, r, i, j, t: Integer;
+begin
+  l := A.Length;
+  r := B.Length;
+  if (Result.SetSize(l + r) = 0) then
+    Exit;
+  i := 0;
+  j := 0;
+  t := 0;
+  while ((i < l) and (j < r)) do
+    if IfThen(oAscending, (A[i] <= B[j]), (A[i] >= B[j])) then
+      Result[t.Increase] := A[i.Increase]
+    else
+      Result[t.Increase] := B[j.Increase];
   while (i < l) do
     Result[t.Increase] := A[i.Increase];
   while (j < r) do

@@ -84,6 +84,8 @@ function BinaryLeftSupra(const item: MType; const oAscending: Boolean = True): I
 function BinaryRightInfra(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRightSupra(const item: MType; const oAscending: Boolean = True): Integer; overload;
 
+function BinaryVerge(const item: MType; const oTies: Boolean; const oAscending: Boolean = True): Integer; overload;
+
 function BisectLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BisectRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -2734,6 +2736,44 @@ begin
   end;
   if ((Result > 0) and (Self[Result - 1] = item)) then
     Dec(Result);
+end;
+
+{==============================================================================]
+  <BinaryVerge>
+  @action: Searches a sorted array for a target boundary/insertion index using binary search.
+  @note: 
+    - Performs logarithmic search over Self using custom direction and tie-breaking options.
+    - Parameters:
+        item       : Target value to search for.
+        oTies      : Controls tie-breaking behavior when Self[m] equals item.
+                     If True, treats equal elements as matching the comparison condition,
+                     advancing the lower bound past matches (upper bound search).
+                     If False, stops at or before equal elements (lower bound search).
+        oAscending : Indicates array sort order (True for ascending, False for descending).
+    - Returns: 
+        Index in the range [0..Self.Length] representing the insertion point or verge.
+[==============================================================================}
+function MArrayHelper.BinaryVerge(const item: MType; const oTies: Boolean; const oAscending: Boolean = True): Integer; overload;
+var
+  s, m: Integer;
+  b: Boolean;
+begin
+  Result := 0;
+  s := Self.Length;
+  while (Result < s) do
+  begin
+    m := (Result + ((s - Result) div 2));
+    if oAscending then
+      b := (Self[m] < item)
+    else
+      b := (Self[m] > item);
+    if ((not b) and oTies) then
+      b := (Self[m] = item);
+    if b then
+      Result := (m + 1)
+    else
+      s := m;
+  end;
 end;
 
 {==============================================================================]

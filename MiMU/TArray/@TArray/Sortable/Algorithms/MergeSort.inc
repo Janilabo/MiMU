@@ -1,7 +1,9 @@
 {$IFDEF HELPERS}
 function MergeSort(const aAscending: Boolean = True): Integer; overload;
 function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
+function MergeSorted(const oAscending: Boolean = True): MArray; overload;
 function MergeSortie(const oAscending: Boolean = True): TIntegerArray; overload;
+function MergeSortify(const oAscending: Boolean = True): MArray; overload;
 function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
 function MergeSortPair(var partner: MArray; const aAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -87,6 +89,57 @@ begin
       end;
       w := (w * 2);
     end;
+  end;
+end;
+
+{==============================================================================]
+  <MergeSorted>
+  @action: Returns a sorted copy of Self, ascending or descending by oAscending.
+  @note: Bottom-up merge sort. Stable (equal elements keep their original
+         order), O(n log n) time, O(n) extra space. Self is not modified. Runs
+         of width 1, 2, 4, ... are merged pairwise, alternating between two
+         buffers, so there is no recursion and no per-pass allocation.
+[==============================================================================}
+function MArrayHelper.MergeSorted(const oAscending: Boolean = True): MArray; overload;
+var
+  r, s: MArray;
+  n, w, l, m, h, i, j, t: Integer;
+begin
+  n := Self.Length;
+  Result := Self.Cloned;
+  if (n < 2) then
+    Exit;
+  SetLength(r, n);
+  w := 1;
+  while (w < n) do
+  begin
+    l := 0;
+    while (l < n) do
+    begin
+      m := (l + w);
+      if (m > n) then
+        m := n;
+      h := (l + (w * 2));
+      if (h > n) then
+        h := n;
+      i := l;
+      j := m;
+      t := l;
+      while ((i < m) and (j < h)) do
+        if ((Result[i] <= Result[j]) = oAscending) then
+          r[t.Increase] := Result[i.Increase]
+        else
+          r[t.Increase] := Result[j.Increase];
+      while (i < m) do
+        r[t.Increase] := Result[i.Increase];
+      while (j < h) do
+        r[t.Increase] := Result[j.Increase];
+      l := h;
+    end;
+    s := Result;
+    Result := r;
+    r := s;
+    w := (w * 2);
   end;
 end;
 
@@ -177,6 +230,65 @@ begin
   end;
   for i := 0 to Result.Alloc(s) do
     Result[o[i]] := i;
+end;
+
+{==============================================================================]
+  <MergeSortify>
+  @action: Returns a sorted copy of Self in the order specified by oAscending.
+  @note: Optimized bottom-up merge sort. Stable, O(n log n) worst-case time, 
+         O(n) best-case time for already-sorted inputs, and O(n) extra space. 
+         Self is not modified. Features short-circuit optimization for adjacent 
+         pre-sorted runs and safe boundary clamping.
+[==============================================================================}
+function MArrayHelper.MergeSortify(const oAscending: Boolean = True): MArray; overload;
+var
+  r, s: MArray;
+  n, w, l, m, h, i, j, t: Integer;
+begin
+  n := Self.Length;
+  if (n < 2) then
+    Exit(Self.Cloned);
+  Result := Self.Cloned;
+  SetLength(r, n);
+  w := 1;
+  while (w < n) do
+  begin
+    l := 0;
+    while (l < n) do
+    begin
+      m := (l + w);
+      if (m > n) then
+        m := n;
+      h := (l + (w * 2));
+      if (h > n) then
+        h := n;
+      case ((m >= n) or ((Result[m - 1] <= Result[m]) = oAscending)) of
+        False:
+        begin
+          i := l;
+          j := m;
+          t := l;
+          while ((i < m) and (j < h)) do
+            if ((Result[i] <= Result[j]) = oAscending) then
+              r[t.Increase] := Result[i.Increase]
+            else
+              r[t.Increase] := Result[j.Increase];
+          while (i < m) do
+            r[t.Increase] := Result[i.Increase];
+          while (j < h) do
+            r[t.Increase] := Result[j.Increase];
+        end;
+        True:
+        for i := l to (h - 1) do
+          r[i] := Result[i];
+      end;
+      l := h;
+    end;
+    s := Result;
+    Result := r;
+    r := s;
+    w := (w * 2);
+  end;
 end;
 
 {==============================================================================]

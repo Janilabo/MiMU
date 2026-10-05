@@ -2,7 +2,9 @@
 function Ascending: Boolean; overload;
 function Descending: Boolean; overload;
 function Decreasing: Boolean; overload;
+function Directa: Integer; overload;
 function Direction: Integer; overload;
+function Directionality: Integer; overload;
 function Directionally: Integer; overload;
 function Directioned: Integer; overload;
 function Downward: Boolean; overload;
@@ -74,6 +76,24 @@ begin
 end;
 
 {==============================================================================]
+  <Directa>
+  @action: Reports the direction of a sorted array: 1 ascending, -1 descending,
+           0 undetermined.
+  @note: O(1). Compares only the first and last elements, so it assumes X is
+         already sorted. 0 means length < 2 or all elements equal, where either
+         direction describes the array equally well.
+[==============================================================================}
+function MArrayHelper.Directa: Integer; overload;
+begin
+  if (Self.Length > 1) then
+    if (Self[0] < Self[High(Self)]) then
+      Exit(1)
+    else if (Self[0] > Self[High(Self)]) then
+      Exit(-1);
+  Result := 0;
+end;
+
+{==============================================================================]
   <Direction>
   @action: Returns numeric trend across the entire array:
            1 = Rising (monotonically non-decreasing),
@@ -89,6 +109,29 @@ begin
     Result := 1
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <Directionality>
+  @action: Determines the sorted orientation of the array:
+             1 = Ascending order (Self[0] < Self[High])
+            -1 = Descending order (Self[0] > Self[High])
+             0 = Undetermined / Symmetric (Length < 2 or first and last elements match)
+  @note: O(1) performance. Performs a boundary comparison between the first and
+         last elements, assuming the input is already sorted.
+[==============================================================================}
+function MArrayHelper.Directionality: Integer; overload;
+var
+  s: Integer;
+begin
+  s := High(Self);
+  if (s < 1) then
+    Exit(0);
+  if (Self[0] < Self[s]) then
+    Exit(1);
+  if (Self[0] > Self[s]) then
+    Exit(-1);
+  Result := 0;
 end;
 
 {==============================================================================]
