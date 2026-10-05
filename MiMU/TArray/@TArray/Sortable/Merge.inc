@@ -7,11 +7,78 @@ function Weld(const A, B: MArray; const oAscending: Boolean = True): Integer; ov
 {$ENDIF}
 
 {$IFDEF FUNCTIONS}
+function Band(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
 function Combine2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
 function Merge2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Band>
+  @action: Merges two sorted arrays into a single sorted array.
+  @note: Both inputs must already be sorted in the direction given by
+         oAscending. The merge is stable (ties take from A first), and
+         inputs are not modified.
+[==============================================================================}
+function Band(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  l, r, c, i, j, t: Integer;
+begin
+  l := A.Length;
+  if (l = 0) then
+    Exit(B.Cloned);
+  r := B.Length;
+  if (r = 0) then
+    Exit(A.Cloned);
+  if ((oAscending and (A[l - 1] <= B[0])) or ((not oAscending) and (A[l - 1] >= B[0]))) then
+    c := -1
+  else if ((oAscending and (A[0] >= B[r - 1])) or ((not oAscending) and (A[0] <= B[r - 1]))) then
+    c := 1
+  else
+    c := 0;
+  SetLength(Result, (l + r));
+  case c of
+    0:
+    begin
+      i := 0;
+      j := 0;
+      t := 0;
+      case oAscending of
+        True:
+        while ((i < l) and (j < r)) do
+          if (A[i] <= B[j]) then
+            Result[t.Increase] := A[i.Increase]
+          else
+            Result[t.Increase] := B[j.Increase];
+        False:
+        while ((i < l) and (j < r)) do
+          if (A[i] >= B[j]) then
+            Result[t.Increase] := A[i.Increase]
+          else
+            Result[t.Increase] := B[j.Increase];
+      end;
+      while (i < l) do
+        Result[t.Increase] := A[i.Increase];
+      while (j < r) do
+        Result[t.Increase] := B[j.Increase];
+    end;
+    -1:
+    begin
+      for i := 0 to (l - 1) do
+        Result[i] := A[i];
+      for i := 0 to (r - 1) do
+        Result[i + l] := B[i];
+    end;
+    1:
+    begin
+      for i := 0 to (r - 1) do
+        Result[i] := B[i];
+      for i := 0 to (l - 1) do
+        Result[i + r] := A[i];
+    end;
+  end;
+end;
+
 {==============================================================================]
   <Combine2>
   @action: Concatenates two MArrays (A and B) — sorted or not — into one array,
