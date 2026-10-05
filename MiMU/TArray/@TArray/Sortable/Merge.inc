@@ -8,6 +8,7 @@ function Weld(const A, B: MArray; const oAscending: Boolean = True): Integer; ov
 
 {$IFDEF FUNCTIONS}
 function Band(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
+function Collate(const A, B: MArray; const rAscending: Boolean = True): MArray; overload;
 function Combine2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
 function Comerge(const A, B: MArray; const rAscending: Boolean = True): MArray; overload;
 function Merge2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
@@ -78,6 +79,27 @@ begin
       for i := 0 to (l - 1) do
         Result[i + r] := A[i];
     end;
+  end;
+end;
+
+{==============================================================================]
+  <Collate>
+  @action: Merges two sorted arrays into a single ordered array, automatically 
+           reversing either input if its internal direction conflicts with the 
+           target sort order.
+  @note: Determines directional mismatch using binary state flags ('00'-'11') 
+         against rAscending before dispatching to Merge2.
+[==============================================================================}
+function Collate(const A, B: MArray; const rAscending: Boolean = True): MArray; overload;
+var
+  d: Integer;
+begin
+  d := IfThen(rAscending, 1, -1);
+  case Binared((A.Directa = -d), (B.Directa = -d)) of
+    '00': Result := Merge2(A, B, rAscending);
+    '01': Result := Merge2(A, B.Reversed, rAscending);
+    '10': Result := Merge2(A.Reversed, B, rAscending);
+    '11': Result := Merge2(A.Reversed, B.Reversed, rAscending);
   end;
 end;
 

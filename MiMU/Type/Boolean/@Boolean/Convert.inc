@@ -7,6 +7,9 @@ function Bitify(const a: Boolean): Integer; overload;
 function Bitify(const a, b: Boolean): Integer; overload;
 function Bitify(const a, b, c: Boolean): Integer; overload;
 function Bitify(const a, b, c, d: Boolean): Integer; overload;
+function Bitmask(const A, B: Boolean): Integer; overload;
+function Bitmask(const A, B, C: Boolean): Integer; overload;
+function Bitmask(const A, B, C, D: Boolean): Integer; overload;
 {$ENDIF}
 
 {$IFDEF HELPERS}
@@ -18,6 +21,7 @@ function BinaryDigit: Integer;
 function Binchared: Char;
 function Bit: Integer;
 function Bitify: Integer;
+function Bitmask: Byte; overload;
 function Ordinal: Byte; overload;
 function ToInteger: Integer;
 function ToString: string;
@@ -67,6 +71,21 @@ end;
 function Bitify(const a, b, c, d: Boolean): Integer; overload;
 begin
   Result := ((Bitify(a) shl 3) or (Bitify(b) shl 2) or (Bitify(c) shl 1) or Bitify(d));
+end;
+
+function Bitmask(const A, B: Boolean): Integer; overload;
+begin
+  Result := (Ord(A) or (Ord(B) shl 1));
+end;
+
+function Bitmask(const A, B, C: Boolean): Integer; overload;
+begin
+  Result := (Ord(A) or (Ord(B) shl 1) or (Ord(C) shl 2));
+end;
+
+function Bitmask(const A, B, C, D: Boolean): Integer; overload;
+begin
+  Result := (Ord(A) or (Ord(B) shl 1) or (Ord(C) shl 2) or (Ord(D) shl 3));
 end;
 
 {==============================================================================]
@@ -147,6 +166,16 @@ end;
 function TBooleanHelper.Bitify: Integer;
 begin
   Result := Self.IfThen(1, 0);
+end;
+
+{==============================================================================]
+  <Bitmask>
+  @action: Converts a single boolean condition into a 1-bit Byte mask (0 or 1).
+  @note: Maintains functional consistency with multi-parameter Bitmask overloads.
+[==============================================================================}
+function TBooleanHelper.Bitmask: Byte; overload;
+begin
+  Result := Ord(Self);
 end;
 
 {==============================================================================]
