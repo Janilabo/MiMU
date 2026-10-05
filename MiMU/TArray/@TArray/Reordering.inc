@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function Barter(var target: MArray): MArray; overload;
 function Exch(const aIndex, bIndex: Integer): Boolean; overload;
 function Exchange(const aIndex, bIndex: Integer): Boolean; overload;
 function Exchange(var b: MArray): Integer; overload;
@@ -11,9 +12,25 @@ function Svvap(var target: MArray): MArray; overload;
 function Swapped(var target: MArray): Integer; overload;
 procedure Switch(const a, b: Integer); overload;
 function Trade(var b: MArray): Integer; overload;
+function Troak(var target: MArray): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Barter>
+  @action: Swaps references between Self and target directly while returning a cloned snapshot of the original Self state.
+  @note: Efficiently exchanges internal references between Self and target without copying buffers, isolating only the returned Result.
+[==============================================================================}
+function MArrayHelper.Barter(var target: MArray): MArray; overload;
+var
+  s: MArray;
+begin
+  Result := Self.Cloned;
+  s := Self;
+  Self := target;
+  target := s;
+end;
+
 {==============================================================================]
   <Exch>
   @action: Fast version of Exchange().
@@ -283,5 +300,17 @@ begin
     b := a.Copy;
     SetLength(a, 0);
   end;
+end;
+
+{==============================================================================]
+  <Troak>
+  @action: Swaps data between Self and target using deep clones, returning a cloned copy of the original Self state.
+  @note: Ensures complete memory isolation across all three references (Self, target, and Result) via explicit cloning.
+[==============================================================================}
+function MArrayHelper.Troak(var target: MArray): MArray; overload;
+begin
+  Result := Self.Cloned;
+  Self := target.Cloned;
+  target := Result.Cloned;
 end;
 {$ENDIF}

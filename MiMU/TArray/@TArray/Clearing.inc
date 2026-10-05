@@ -2,6 +2,7 @@
 function Clear: Boolean; overload;
 function Destruct: Integer; overload;
 function Free: Integer; overload;
+function Eat: MArray; overload;
 function Empten: Integer; overload;
 function Invalidate: Integer; overload;
 function Kill: Integer; overload;
@@ -35,6 +36,17 @@ begin
   Result := Self.Size;
   Finalize(Self);
   SetLength(Self, 0);
+end;
+
+{==============================================================================]
+  <Eat>
+  @action: Consumes and clears Self by resetting it to an empty array, returning the prior un-cloned state.
+  @note: Transfers ownership/data of Self directly to Result without cloning, leaving Self completely empty.
+[==============================================================================}
+function MArrayHelper.Eat: MArray; overload;
+begin
+  Result := Self;
+  Self := [];
 end;
 
 {==============================================================================]

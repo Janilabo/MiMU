@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Adopt(const target: MArray): MArray; overload;
 function Assign(const target: MArray): MArray; overload;
+function IO(const input, output: MArray): MArray; overload;
+function IO(const input: MArray): MArray; overload;
 function Replace(const old, new: MType): MArray; overload;
 function Replace(const old, new: MType; const exceptions: TIntegerArray): MArray; overload;
 function Zet(const item: MType; const sIndex: UInt32 = 0): Boolean; overload;
@@ -39,6 +41,28 @@ begin
     Self[i] := target[i];
 	Result[i] := target[i];
   end;
+end;
+
+{==============================================================================]
+  <IO>
+  @action: Replaces the current instance (Self) with a clone of input and returns a clone of output.
+  @note: Acts as an input/output swap-assign operation, updating Self while providing the specified output array.
+[==============================================================================}
+function MArrayHelper.IO(const input, output: MArray): MArray; overload;
+begin
+  Result := output.Cloned;
+  Self := input.Cloned;
+end;
+
+{==============================================================================]
+  <IO>
+  @action: Replaces the current instance (Self) with a clone of input and returns a clone of the prior Self state.
+  @note: Captures Self before mutating it, effectively swapping Self with input while returning the original Self data.
+[==============================================================================}
+function MArrayHelper.IO(const input: MArray): MArray; overload;
+begin
+  Result := Self.Cloned;
+  Self := input.Cloned;
 end;
 
 {==============================================================================]

@@ -16,6 +16,7 @@ function Detach: MArray; overload;
 function Ditto: MArray; overload;
 function Dupe: MArray; overload;
 function Fork: MArray; overload;
+function Fork(out sClone: MArray): MArray; overload;
 function Imago: MArray; overload;
 function Imprint: MArray; overload;
 function Proversion: MArray; overload;
@@ -346,6 +347,17 @@ end;
 function MArrayHelper.Fork: MArray; overload;
 begin
   Result := System.Concat(Self, []);
+end;
+
+{==============================================================================]
+  <Fork>
+  @action: Outputs a cloned snapshot of Self via the sClone parameter while returning Self for fluent chaining.
+  @note: Allows tapping into a pipeline to capture a cloned snapshot without disrupting the current instance or method chain.
+[==============================================================================}
+function MArrayHelper.Fork(out sClone: MArray): MArray; overload;
+begin
+  sClone := Self.Cloned;
+  Result := Self;
 end;
 
 {==============================================================================]

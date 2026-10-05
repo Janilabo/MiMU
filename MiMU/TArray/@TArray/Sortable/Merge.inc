@@ -10,6 +10,7 @@ function Weld(const A, B: MArray; const oAscending: Boolean = True): Integer; ov
 function Band(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
 function Collate(const A, B: MArray; const rAscending: Boolean = True): MArray; overload;
 function Combine2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
+function Combo(const A, B: MArray; const rAscending: Boolean = True): MArray; overload;
 function Comerge(const A, B: MArray; const rAscending: Boolean = True): MArray; overload;
 function Merge2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
 function Merged2(const A, B: MArray; const oAscending: Boolean = True): MArray; overload;
@@ -124,6 +125,26 @@ begin
   for i := 0 to High(B) do
     Result[l + i] := B[i];
   Result.MergeSort(oAscending);
+end;
+
+{==============================================================================]
+  <Combo>
+  @action: Merges two MArray structures into a single ordered MArray, ensuring both input arrays match the target sort direction before merging.
+  @note: Uses an inline helper function O() to reverse input arrays A or B if their direction (Directa) opposes the target direction (rAscending).
+[==============================================================================}
+function Combo(const A, B: MArray; const rAscending: Boolean = True): MArray; overload;
+var
+  d: Integer;
+  function O(const C: MArray): MArray;
+  begin
+    if (C.Directa = -d) then
+      Result := C.Reversed
+    else
+      Result := C;
+  end;
+begin
+  d := IfThen(rAscending, 1, -1);
+  Result := Merge2(O(A), O(B), rAscending);
 end;
 
 {==============================================================================]
