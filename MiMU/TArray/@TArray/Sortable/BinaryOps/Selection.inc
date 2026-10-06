@@ -747,7 +747,7 @@ begin
   i := 0;
   o.Create(0, High(s));
   b.Create(0, High(Self));
-  while (i < l) do
+  while ((i < l) and (o.start <= o.stop)) do
   begin
     f := s.BinarySearch(Self[i], o, oAscending);
     if (f > -1) then
@@ -789,7 +789,7 @@ begin
   i := 0;
   o.Create(0, High(s));
   b.Create(0, High(Self));
-  while (i < l) do
+  while ((i < l) and (o.start <= o.stop)) do
   begin
     f := s.BinarySearch(Self[i], o, oAscending);
     if (f > -1) then
@@ -801,6 +801,8 @@ begin
     end else
       Result[r.Increase] := Self[i.Increase];
   end;
+  while (i < l) do
+    Result[r.Increase] := Self[i.Increase];
   SetLength(Result, r);
 end;
 {$ENDIF}
