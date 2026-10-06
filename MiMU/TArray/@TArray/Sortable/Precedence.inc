@@ -60,7 +60,7 @@ end;
 [==============================================================================}
 function MArrayHelper.MergeSortition(const oAscending: Boolean = True): TIntegerArray; overload;
 var
-  a, b, s, w, l, m, r, i, j, k: Integer;
+  a, b, s, w, l, m, r, i, k: Integer;
   t: TIntegerArray;
   function C(const indexA, indexB: Integer): Boolean;
   begin

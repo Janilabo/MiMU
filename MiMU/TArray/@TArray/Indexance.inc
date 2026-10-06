@@ -126,7 +126,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Randexal(const N: Integer = 1): TIntegerArray; overload;
 var
-  i, s, l: Integer;
+  s, l: Integer;
   r: TIntegerArray;
 begin
   s := Self.Length;

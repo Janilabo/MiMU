@@ -3,6 +3,9 @@ function Cleaned(const oAscending: Boolean = True): MArray; overload;
 function Monotonized(const oAscending: Boolean = True): MArray; overload;
 function Sortique(const rAscending: Boolean = True): MArray; overload;
 function Uniqal(const aKeepFirst: Boolean = True): MArray; overload;
+function Winnowed(const aMin, aMax: MType; const oAscending: Boolean = True): MArray; overload;
+function WinnowedByMax(const aMax: MType; const oAscending: Boolean = True): MArray; overload;
+function WinnowedByMin(const aMin: MType; const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -116,4 +119,96 @@ begin
       Result[c.Increase] := Self[i];
   SetLength(Result, c);
 end;
+
+{==============================================================================]
+  <Winnowed>
+  @action: Returns the distinct elements of Self that lie within [aMin, aMax],
+           ordered by oAscending. Filters first so only surviving elements are
+           sorted, then compacts adjacent duplicates in place.
+  @note: Non-mutating. Self need not be sorted. Returns [] if Self is empty or
+         aMin > aMax (bounds are not swapped). Ordered-only tier (< > = <>).
+         Requires a mutating QuickSort(oAscending) on MArray.
+[==============================================================================}
+function MArrayHelper.Winnowed(const aMin, aMax: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  s, i, r, l: Integer;
+begin
+  s := Self.Length;
+  if ((s = 0) or (aMin > aMax)) then
+    Exit([]);
+  r := 0;
+  for i := 0 to Result.Alloc(s) do
+    if not ((Self[i] < aMin) or (Self[i] > aMax)) then
+      Result[r.Increase] := Self[i];
+  if (Result.SetSize(r) < 2) then
+    Exit;
+  Result.QuickSort(oAscending);
+  l := 1;
+  for i := 1 to (r - 1) do
+    if (Result[i] <> Result[l - 1]) then
+      Result[l.Increase] := Result[i];
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <WinnowedByMax>
+  @action: Returns the distinct elements of Self that are <= aMax, ordered by
+           oAscending. Filters first so only surviving elements are sorted,
+           then compacts adjacent duplicates in place.
+  @note: Non-mutating. Self need not be sorted. aMax is an inclusive ceiling:
+         elements greater than aMax are discarded. Returns [] if Self is empty
+         or nothing survives. Ordered-only tier (< > = <>). Requires a
+         mutating QuickSort(oAscending) on MArray.
+[==============================================================================}
+function MArrayHelper.WinnowedByMax(const aMax: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  s, i, r, l: Integer;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  r := 0;
+  for i := 0 to Result.Alloc(s) do
+    if not (Self[i] > aMax) then
+      Result[r.Increase] := Self[i];
+  if (Result.SetSize(r) < 2) then
+    Exit;
+  Result.QuickSort(oAscending);
+  l := 1;
+  for i := 1 to (r - 1) do
+    if (Result[i] <> Result[l - 1]) then
+      Result[l.Increase] := Result[i];
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <WinnowedByMin>
+  @action: Returns the distinct elements of Self that are >= aMin, ordered by
+           oAscending. Filters first so only surviving elements are sorted,
+           then compacts adjacent duplicates in place.
+  @note: Non-mutating. Self need not be sorted. aMin is an inclusive floor:
+         elements less than aMin are discarded. Returns [] if Self is empty
+         or nothing survives. Ordered-only tier (< > = <>). Requires a
+         mutating QuickSort(oAscending) on MArray.
+[==============================================================================}
+function MArrayHelper.WinnowedByMin(const aMin: MType; const oAscending: Boolean = True): MArray; overload;
+var
+  s, i, r, l: Integer;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  r := 0;
+  for i := 0 to Result.Alloc(s) do
+    if not (Self[i] < aMin) then
+      Result[r.Increase] := Self[i];
+  if (Result.SetSize(r) < 2) then
+    Exit;
+  Result.QuickSort(oAscending);
+  l := 1;
+  for i := 1 to (r - 1) do
+    if (Result[i] <> Result[l - 1]) then
+      Result[l.Increase] := Result[i];
+  SetLength(Result, l);
+end; 
 {$ENDIF}

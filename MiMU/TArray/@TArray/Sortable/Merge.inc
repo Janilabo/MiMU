@@ -362,7 +362,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Melt(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 var
-  a, b, s, i, r: Integer;
+  s, i, r: Integer;
 begin
   s := High(Self);
   i := High(items);

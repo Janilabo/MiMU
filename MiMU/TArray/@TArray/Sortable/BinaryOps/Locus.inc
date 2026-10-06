@@ -869,7 +869,6 @@ end;
 function MArrayHelper.BinaryRelay(const target: MType; const oAscending: Boolean = True): TRange; overload;
 var
   h, l, r, m: Integer;
-  a: TRange;
 begin
   h := High(Self);
   Result.start := -1;

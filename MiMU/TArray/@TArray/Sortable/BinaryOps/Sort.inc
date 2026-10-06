@@ -292,7 +292,7 @@ end;
 [==============================================================================}
 function MArrayHelper.BinarySort(const aAscending: Boolean = True): Integer; overload;
 var
-  a, j, m, i, o: Integer;
+  j, m, i, o: Integer;
   s: MType;
   r: TRange;
 begin

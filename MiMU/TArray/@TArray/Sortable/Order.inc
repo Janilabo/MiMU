@@ -112,7 +112,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Order: Integer; overload;
 var
-  i, l: Integer;
+  i: Integer;
   a, d: Boolean;
 begin
   case Self.Length of
@@ -278,7 +278,7 @@ end;
 [==============================================================================}
 function MArrayHelper.Orderion(out sDirection: Integer): Boolean; overload;
 var
-  i, s: Integer;
+  i: Integer;
 begin
   sDirection := 0;
   if (Self.Length < 2) then

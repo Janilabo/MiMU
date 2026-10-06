@@ -660,7 +660,7 @@ end;
 function MArrayHelper.BinaryFilterify(const aMin, aMax: MType; const oAscending: Boolean = True): MArray; overload;
 var
   r: TRange;
-  l, i, s: Integer;
+  i, s: Integer;
 begin
   if oAscending then
     r.Create(Self.BinaryMinBound(aMin, oAscending), Self.BinaryMaxBound(aMax, oAscending))

@@ -96,7 +96,7 @@ function Tangent(const target: TRange): Boolean; overload;
 function Under(const target: TRange): Boolean; overload;
 function Under(const target: Integer): Boolean; overload;
 function Value(const x: Integer): Boolean; overload;
-function WithinBounds(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
+function WithinBounds(const val: Integer): Boolean; overload;
 function Wrapping(const r: TRange): Boolean; overload;
 function Wraps(const r: TRange): Boolean; overload;
 {$ENDIF}
@@ -1341,9 +1341,8 @@ end;
   @action: Returns True if the value lies within the range or is explicitly accepted.
   @note: Performs an inclusive interval check: val ∈ [Start, Stop], regardless
          of bound order. Additionally returns True if Employs(val) is True.
-         The vRadius parameter is reserved and currently unused.
 [==============================================================================}
-function TRange.WithinBounds(const val: Integer; const vRadius: Integer = 0): Boolean; overload;
+function TRange.WithinBounds(const val: Integer): Boolean; overload;
 begin
   Result := (((val > Self.start) <> (val > Self.stop)) or Self.Employs(val));
 end;

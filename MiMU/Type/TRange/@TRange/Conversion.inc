@@ -28,7 +28,7 @@ end;
 [==============================================================================}
 function TRange.Str(const openRange: string = '['; const closeRange: string = ']'; const glueRange: string = '..'): string; overload;
 begin
-  Result := ('[' + IntToStr(Self.start) + glueRange + IntToStr(Self.stop) + ']');
+  Result := (openRange + IntToStr(Self.start) + glueRange + IntToStr(Self.stop) + closeRange);
 end;
 
 {==============================================================================]

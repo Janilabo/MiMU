@@ -2530,7 +2530,7 @@ end;
 [==============================================================================}
 function MArrayHelper.BinaryBoundMax(const target: MType; const oAscending: Boolean = True): Integer; overload;
 var
-  m, r: Integer;
+  m: Integer;
   s: TRange;
 begin
   Result := -1;
@@ -2554,7 +2554,7 @@ end;
 [==============================================================================}
 function MArrayHelper.BinaryBoundMin(const target: MType; const oAscending: Boolean = True): Integer; overload;
 var
-  m, r: Integer;
+  m: Integer;
   s: TRange;
 begin
   Result := -1;

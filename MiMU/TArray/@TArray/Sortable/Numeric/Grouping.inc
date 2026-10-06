@@ -1,6 +1,6 @@
 {$IFDEF HELPERS}
 function Formation(const diff: MType; const oAscending: Boolean = True): M2DArray; overload;
-function Muster(const diff: MType; const oAscending: Boolean = True): M2DArray; overload;
+function Muster(const diff: MType): M2DArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -42,7 +42,7 @@ end;
   @note: Iterates sequentially through elements and places each into the first existing group whose head element (`Result[s][0]`) satisfies `Abs(Self[i] - Head) <= diff`.
          Creates a new cluster if no matching group is found. Preserves insertion order relative to cluster heads.
 [==============================================================================}
-function MArrayHelper.Muster(const diff: MType; const oAscending: Boolean = True): M2DArray; overload;
+function MArrayHelper.Muster(const diff: MType): M2DArray; overload;
 var
   i, r, l, s: Integer;
 begin

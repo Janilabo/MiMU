@@ -313,7 +313,7 @@ end;
 [==============================================================================}
 function MArrayHelper.CycleSort(const oAscending: Boolean = True): Integer; overload;
 var
-  c, p, i, t: Integer;
+  c, p, i: Integer;
   s: MType;
 begin
   Result := Self.Length;
@@ -591,7 +591,7 @@ begin
     Result := (X < Y);
 end;
 var
-  i, j, m, t: Integer;
+  i, j, m: Integer;
 begin
   Result := Self.Length;
   for i := (Result - 1) downto 1 do

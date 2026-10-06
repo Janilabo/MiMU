@@ -296,7 +296,6 @@ end;
 function TPointHelper.Unring(const index: UInt32 = 0): TPoint; overload;
 var
   r, l, i, d, s: Integer;
-  p: TPoint;
 begin
   if (index = 0) then
     Exit(Self);

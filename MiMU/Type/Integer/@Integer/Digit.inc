@@ -306,7 +306,7 @@ end;
 [==============================================================================}
 function TIntegerHelper.Digitlist: TIntegerArray; overload;
 var
-  i, n: Integer;
+  n: Integer;
   l: specialize TList<Integer>;
 begin
   if (Self = 0) then

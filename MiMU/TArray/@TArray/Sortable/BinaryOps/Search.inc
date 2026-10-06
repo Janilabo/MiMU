@@ -524,8 +524,6 @@ end;
   <BinaryID>
   @action: Recursive binary search for item in the array, returning its index.
   @note:
-    - Self must already be sorted ascending. oAscending is accepted but
-      unused — see below.
     - Returns -1 if item is not found.
     - If item appears multiple times, the returned index is whichever
       match the recursion happens to land on first — not guaranteed to
@@ -541,7 +539,7 @@ function MArrayHelper.BinaryID(const item: MType; const oAscending: Boolean = Tr
     M := (L + ((R - L) div 2));
     if (Self[M] = item) then
       Exit(M);
-    if (Self[M].Contest(item) = 1) then
+    if (Self[M].Contest(item, oAscending) = 1) then
       Result := BS(L, (M - 1))
     else
       Result := BS((M + 1), R);
