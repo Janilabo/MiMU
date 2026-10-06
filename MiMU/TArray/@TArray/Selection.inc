@@ -50,6 +50,7 @@ function Resift(const reference: MType): MType; overload;
 function Rest: MArray; overload;
 function Sieve(const items: MArray): MArray; overload;
 function Sift(const reference: MType): MType; overload;
+function Skip(const items: MArray): MArray; overload;
 function Trim(const tCount: Integer = 1): MArray; overload;
 function Truncate(const tRate: Double = 10): MArray; overload;
 function Where(const predicate: MPredicate): MArray; overload;
@@ -1463,6 +1464,33 @@ begin
       Exit(Self[i]);
   if (h > -1) then
     Result := Self[h];
+end;
+
+{==============================================================================]
+  <Skip>
+  @action: Filters out elements present in the specified `items` array.
+  @note: Upper bound `Result.Alloc(Self.Length)` in the main loop causes an
+         out-of-bounds error on the final iteration (`0..Length`).
+[==============================================================================}
+function MArrayHelper.Skip(const items: MArray): MArray; overload;
+var
+  i, j, r, l: Integer;
+  s: Boolean;
+begin
+  l := items.Length;
+  if (l = 0) then
+    Exit(Self.Cloned);
+  r := 0;
+  for i := 0 to Result.Alloc(Self.Length) do
+  begin
+    s := False;
+    j := -1;
+    while ((not s) and (j.Increment < l)) do
+      s := (Self[i] = items[j]);
+    if not s then
+      Result[r.Increase] := Self[i];
+  end;
+  SetLength(Result, r);
 end;
 
 {==============================================================================]

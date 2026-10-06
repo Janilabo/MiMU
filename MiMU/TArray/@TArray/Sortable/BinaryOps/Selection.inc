@@ -21,6 +21,8 @@ function BinaryExtractifyMin(const target: MType; const oAscending: Boolean = Tr
 function BinaryFilterify(const aMin, aMax: MType; const oAscending: Boolean = True): MArray; overload;
 function BinaryFilterifyMax(const target: MType; const oAscending: Boolean = True): MArray; overload;
 function BinaryFilterifyMin(const target: MType; const oAscending: Boolean = True): MArray; overload;
+
+function BinarySkip(const items: MArray; const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -720,5 +722,46 @@ begin
     for i := 0 to Result.Alloc(p + 1) do
       Result[i] := Self[i];
   end;
+end;
+
+{==============================================================================]
+  <BinarySkip>
+  @action: Filters out elements in Self that exist in items by deduplicating and
+           sorting items, then jumping past contiguous matching blocks in Self.
+  @note: Requires Self to be pre-sorted matching oAscending. Narrowing the
+         lookup range assumes matching values in items
+         are encountered in strict monotonic order; if Self contains values
+         that reverse or jump backward relative to items, subsequent matches
+         will be missed.
+[==============================================================================}
+function MArrayHelper.BinarySkip(const items: MArray; const oAscending: Boolean = True): MArray; overload;
+var
+  s: MArray;
+  l, i, r, f: Integer;
+  p, o, b: TRange;
+begin
+  if (items.Length = 0) then
+    Exit(Self.Copy);
+  l := Self.Length;
+  if (Result.SetSize(l) = 0) then
+    Exit;
+  s := items.QuickSorted(oAscending).Compressed;
+  r := 0;
+  i := 0;
+  o.Create(0, High(s));
+  b.Create(0, High(Self));
+  while (i < l) do
+  begin
+    f := s.BinarySearch(Self[i], o, oAscending);
+    if (f > -1) then
+    begin
+      p := Self.BinaryRange(Self[i], b, oAscending);
+      o.start := (f + 1);
+      b.start := (p.stop + 1);
+      Inc(i, p.Size);
+    end else
+      Result[r.Increase] := Self[i.Increase];
+  end;
+  SetLength(Result, r);
 end;
 {$ENDIF}

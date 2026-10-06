@@ -25,6 +25,9 @@ function Reflex(const rIndex: Integer): MType; overload;
 function Reflux: Integer; overload;
 function Regress: MArray; overload;
 function Relist: MArray; overload;
+function Repeal: MArray; overload;
+function Repealed: MArray; overload;
+function Rescend: MArray; overload;
 function Restack: Integer; overload;
 function Reverc: Boolean; overload;
 function Revers: Integer; overload;
@@ -621,6 +624,70 @@ begin
   finally
     l.Free;
   end;
+end;
+
+{==============================================================================]
+  <Repeal>
+  @action: Reverses Self in place and returns a copy of its prior order.
+  @note: Postfix-style (captures, then mutates), like Increase/Decrease. Result
+         is an independent copy of the original sequence, not an alias of Self.
+         Length < 2 leaves Self untouched and returns a clone. Element-wise
+         assignment only (no Move, no comparison, no arithmetic), so it is safe
+         for managed types and needs no tier constraint.
+[==============================================================================}
+function MArrayHelper.Repeal: MArray; overload;
+var
+  s, r, d: Integer;
+begin
+  s := Self.Length;
+  if (s < 2) then
+    Exit(Self.Cloned);
+  d := (s div 2);
+  for r := 0 to Result.Alloc(s) do
+  begin
+    Result[r] := Self[r];
+    if (r < d) then
+      Self[r] := Self[(s - 1) - r]
+    else
+      Self[r] := Result[(s - 1) - r];
+  end;
+end;
+
+{==============================================================================]
+  <Repealed>
+  @action: Reverses Self in-place while returning a copy of the original array.
+  @note: Safe for both odd and even array lengths.
+[==============================================================================}
+function MArrayHelper.Repealed: MArray; overload;
+var
+  s, d, i, j: Integer;
+begin
+  s := Result.SetSize(Self.Length);
+  d := (s div 2);
+  for i := 0 to (d - 1) do
+  begin
+    j := ((s - 1) - i);
+    Result[i] := Self[i];
+    Result[j] := Self[j];
+    Self[i] := Result[j];
+    Self[j] := Result[i];
+  end;
+  Result[d] := Self[d];
+end;
+
+{==============================================================================]
+  <Rescend>
+  @action: Reverses Self in-place while returning a clone of the original array.
+  @note: Uses two-pointer swapping to perform only N/2 element swaps.
+[==============================================================================}
+function MArrayHelper.Rescend: MArray; overload;
+var
+  s, r: Integer;
+begin
+  Result := Self.Cloned;
+  s := Self.Length;
+  for r := 0 to (s - 1) do
+    Self[r] := Result[(s - 1) - r];
 end;
 
 {==============================================================================]

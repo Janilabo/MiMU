@@ -9,6 +9,7 @@ function BinaryLocate(const x: MType; const aAscending: Boolean = True): TRange;
 function BinaryNest(const item: MType; const aAscending: Boolean = True): TRange; overload;
 function BinaryPocket(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryRange(const item: MType; const aAscending: Boolean = True): TRange; overload;
+function BinaryRange(const item: MType; const sIndices: TRange; const aAscending: Boolean = True): TRange; overload;
 function BinaryRangeOf(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinarySpanning(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinarySpanOf(const item: MType; const oAscending: Boolean = True): TRange; overload;
@@ -455,6 +456,33 @@ begin
       R.stop := (M - 1);
   end;
 end;
+
+function MArrayHelper.BinaryRange(const item: MType; const sIndices: TRange; const aAscending: Boolean = True): TRange; overload;
+var
+  M, H: Integer;
+  R: TRange;
+begin
+  Result := TRange.Construct(-1, -1);
+  H := High(Self);
+  R := sIndices.Normalized;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      Result.start := M;
+      Result.stop := M;
+      while ((Result.start > 0) and (Self[Result.start - 1] = item)) do
+        Dec(Result.start);
+      while ((Result.stop < H) and (Self[Result.stop + 1] = item)) do
+        Inc(Result.stop);
+      Exit;
+    end else if ((Self[M] < item) = aAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+end; 
 
 {==============================================================================]
   <BinaryRangeOf>
