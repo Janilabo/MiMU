@@ -3,6 +3,7 @@ function Batched(const batchSize: Integer = 2): T2DPointArray; overload;
 {$ENDIF}
 
 {$IFDEF HELPERS}
+function Excised(const b: TBox): TBoxArray; overload;
 function Partitum(const b: TBox): TBoxArray; overload;
 {$ENDIF}
 
@@ -27,6 +28,32 @@ begin
         SetLength(Result[b div batchSize], Min(batchSize, (p - b)));
       Result[b.Increase div batchSize][i] := Point(h, v);
     end;
+end;
+
+{==============================================================================]
+  <Excised>
+  @action: Returns Self with the area of b cut out, as non-overlapping boxes.
+  @note: Not overlapping: returns [Self].
+         Fully covered by b: returns an empty array.
+         Otherwise: up to 4 pieces (top, bottom, left, right), all inside Self.
+[==============================================================================}
+function TBoxHelper.Excised(const b: TBox): TBoxArray; overload;
+var
+  l, h: Integer;
+begin
+  if not Self.Overlap(b) then
+    Exit([Self]);
+  SetLength(Result, 0);
+  if (Self.Y1 < b.Y1) then
+    Result.Supply(Self.X1, Self.Y1, Self.X2, (b.Y1 - 1));
+  if (Self.Y2 > b.Y2) then
+    Result.Supply(Self.X1, (b.Y2 + 1), Self.X2, Self.Y2);
+  l := Max(Self.Y1, b.Y1);
+  h := Min(Self.Y2, b.Y2);
+  if (Self.X1 < b.X1) then
+    Result.Supply(Self.X1, l, (b.X1 - 1), h);
+  if (Self.X2 > b.X2) then
+    Result.Supply((b.X2 + 1), l, Self.X2, h);
 end;
 
 {==============================================================================]

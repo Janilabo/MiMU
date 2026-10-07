@@ -7,6 +7,7 @@ function Distribute(const parts: Integer= 2): TRangeArray; overload;
 function Distributed(const partCount: Integer = 2): TRangeArray; overload;
 function Divide(const size: Integer = 2): TRangeArray; overload;
 function Divided(const partCount: Integer = 2): TRangeArray; overload;
+function Excised(const b: TRange): TRangeArray; overload;
 function Halve: TRangeArray; overload;
 function Halved: TRangeArray; overload;
 function Halves: TRangeArray; overload;
@@ -289,6 +290,28 @@ begin
   d := Self.Wind;
   for i := 0 to (l - 1) do
     Result[i].Create(PartStarts(i), PartStops(i));
+end;
+
+{==============================================================================]
+  <Excised>
+  @action: Returns Self with the span of b cut out, as non-overlapping ranges.
+  @note: Not overlapping: returns [Self].
+         Fully covered by b: returns an empty array.
+         Otherwise: up to 2 pieces (low side, high side), all inside Self.
+         Pieces keep Self's direction. Start = stop counts as ascending.
+[==============================================================================}
+function TRangeHelper.Excised(const b: TRange): TRangeArray; overload;
+var
+  a: Boolean;
+begin
+  if not Self.Overlap(b) then
+    Exit([Self]);
+  SetLength(Result, 0);
+  a := (Self.start <= Self.stop);
+  if (Self.Minimum < b.Minimum) then
+    Result.Supply(RangeEx(Self.Minimum, (b.Minimum - 1), a));
+  if (Self.Maximum > b.Maximum) then
+    Result.Supply(RangeEx((b.Maximum + 1), Self.Maximum, a));
 end;
 
 {==============================================================================]
