@@ -14,6 +14,7 @@ function Parted(const partSize: Integer = 2): TRangeArray; overload;
 function Partition(const size: Integer = 2): TRangeArray; overload;
 function Partitioned(const partSize: Integer = 2): TRangeArray; overload;
 function Partitions(const partSize: Integer = 2): TRangeArray; overload;
+function Partitum(const r: TRange): TRangeArray; overload;
 function Parts(const partSize: Integer = 2): TRangeArray; overload;
 function Sectioned(const target: TRange): TRangeArray; overload;
 function Segmented(const partCount: Integer = 2): TRangeArray; overload;
@@ -527,6 +528,32 @@ begin
     p := (p + (s * d));
     Dec(l, s);
   end;
+end;
+
+{==============================================================================]
+  <Partitum>
+  @action: Cuts Self and r into non-overlapping ranges covering the same span.
+  @note: Not overlapping: returns [Self, r].
+         One inside the other: returns the single outer range (keeps its direction).
+         Otherwise: returns Self whole + up to 2 pieces of r (low side, high side).
+         Pieces cut from r keep r's direction.
+[==============================================================================}
+function TRangeHelper.Partitum(const r: TRange): TRangeArray; overload;
+var
+  a: Boolean;
+begin
+  if Self.Contains(r) then
+    Exit([Self]);
+  if r.Contains(Self) then
+    Exit([r]);
+  if not Self.Overlap(r) then
+    Exit([Self, r]);
+  a := (r.start <= r.stop);
+  Result := [Self];
+  if (r.Minimum < Self.Minimum) then
+    Result.Supply(RangeEx(r.Minimum, (Self.Minimum - 1), a));
+  if (r.Maximum > Self.Maximum) then
+    Result.Supply(RangeEx((Self.Maximum + 1), r.Maximum, a));
 end;
 
 {==============================================================================]

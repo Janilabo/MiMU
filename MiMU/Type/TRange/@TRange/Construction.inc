@@ -41,6 +41,7 @@ function Create: TRange; overload;
 function Range(const rStart, rStop: Integer): TRange; overload;
 function Range(const val: Integer = 0): TRange; overload;
 function Range(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload;
+function RangeEx(const aStart, aStop: Integer; const oAscending: Boolean = True): TRange; overload;
 function R(const startVal, stopVal: Integer): TRange; overload;
 function R(const val: Integer = 0): TRange; overload;
 function R(const arr: TIntegerArray; const rAscending: Boolean = True): TRange; overload;
@@ -650,6 +651,19 @@ begin
     Result .Create(l, h)
   else
     Result.Create(h, l);
+end;
+
+{==============================================================================]
+  <RangeEx>
+  @action: Creates a TRange between aStart and aStop in the given direction.
+  @note: Arguments are given low to high, whatever the direction.
+         oAscending = True: start = aStart, stop = aStop.
+         oAscending = False: start = aStop, stop = aStart (descending).
+         No normalization: aStart is expected to be <= aStop.
+[==============================================================================}
+function RangeEx(const aStart, aStop: Integer; const oAscending: Boolean = True): TRange; overload;
+begin
+  Result := TRange.Construct(IfThen(oAscending, aStart, aStop), IfThen(oAscending, aStop, aStart));
 end;
 
 {==============================================================================]

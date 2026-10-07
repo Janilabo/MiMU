@@ -2,6 +2,10 @@
 function Batched(const batchSize: Integer = 2): T2DPointArray; overload;
 {$ENDIF}
 
+{$IFDEF HELPERS}
+function Partitum(const b: TBox): TBoxArray; overload;
+{$ENDIF}
+
 {$IFDEF IMPLEMENTATION}
 {==============================================================================]
   <Batched>
@@ -23,5 +27,35 @@ begin
         SetLength(Result[b div batchSize], Min(batchSize, (p - b)));
       Result[b.Increase div batchSize][i] := Point(h, v);
     end;
+end;
+
+{==============================================================================]
+  <Partitum>
+  @action: Cuts Self and b into non-overlapping boxes covering the same area.
+  @note: Not overlapping: returns both as-is.
+         One inside the other: returns the single outer box.
+         Otherwise: returns Self whole + up to 4 pieces of b.
+[==============================================================================}
+function TBoxHelper.Partitum(const b: TBox): TBoxArray; overload;
+var
+  l, h: Integer;
+begin
+  if Self.Contains(b) then
+    Exit([Self]);
+  if b.Contains(Self) then
+    Exit([b]);
+  if not Self.Overlap(b) then
+    Exit([Self, b]);
+  Result := [Self];
+  if (b.Y1 < Self.Y1) then
+    Result.Supply(b.X1, b.Y1, b.X2, (Self.Y1 - 1));
+  if (b.Y2 > Self.Y2) then
+    Result.Supply(b.X1, (Self.Y2 + 1), b.X2, b.Y2);
+  l := Max(b.Y1, Self.Y1);
+  h := Min(b.Y2, Self.Y2);
+  if (b.X1 < Self.X1) then
+    Result.Supply(b.X1, l, (Self.X1 - 1), h);
+  if (b.X2 > Self.X2) then
+    Result.Supply((Self.X2 + 1), l, b.X2, h);
 end;
 {$ENDIF}

@@ -1,5 +1,6 @@
 {$I ../TArray.inc}
 
+{$I @TRangeArray/Add.inc}
 {$I @TRangeArray/Bounding.inc}
 {$I @TRangeArray/Classification.inc}
 {$I @TRangeArray/Conversion.inc}
