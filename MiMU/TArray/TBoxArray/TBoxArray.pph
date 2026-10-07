@@ -2,6 +2,7 @@
 
 {$I @TBoxArray/Add.inc}
 {$I @TBoxArray/Bounds.inc}
+{$I @TBoxArray/Cadastre.inc}
 {$I @TBoxArray/Components.inc}
 {$I @TBoxArray/Extraction.inc}
 {$I @TBoxArray/Materialization.inc}

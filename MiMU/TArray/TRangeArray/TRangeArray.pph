@@ -2,6 +2,7 @@
 
 {$I @TRangeArray/Add.inc}
 {$I @TRangeArray/Bounding.inc}
+{$I @TRangeArray/Cadastre.inc}
 {$I @TRangeArray/Classification.inc}
 {$I @TRangeArray/Conversion.inc}
 {$I @TRangeArray/Deduplication.inc}
