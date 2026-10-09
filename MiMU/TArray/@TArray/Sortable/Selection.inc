@@ -15,6 +15,7 @@ function Superlatives: MArray; overload;
 function Retain(const operand: MType; const op: string = '='): MArray; overload;
 
 function QuickElect(const K: Integer; const oAscending: Boolean = True): MType; overload;
+function QuickSelect(const K: Integer; const oAscending: Boolean = True): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -387,5 +388,51 @@ begin
         Exit(Self[K]);
     until False;
   end;
+end;
+
+{==============================================================================]
+  <QuickSelect>
+  @action: Finds the element of 0-based rank K in the chosen order and returns
+           it. With oAscending = True, K = 0 is the smallest value and
+           K = High(Self) the largest; with oAscending = False the ranking
+           is reversed (K = 0 is the largest). Works on unsorted input.
+  @note: Mutating: Self is partially reordered in place (Hoare partitioning,
+         narrowing toward K). On return Self[K] holds the result, nothing
+         before it ranks after it, and nothing after it ranks before it,
+         but each side is otherwise unsorted. Pass a copy to keep the
+         original order. Not stable. Ordered-only: needs just < and >.
+         O(n) average, O(n^2) worst case (middle-element pivot). K must be
+         within 0..High(Self); an empty Self or out-of-range K is not
+         guarded and fails on the final Self[K] read. Float arrays
+         containing NaN give undefined ranks.
+[==============================================================================}
+function MArrayHelper.QuickSelect(const K: Integer; const oAscending: Boolean = True): MType; overload;
+var
+  L, H, i, j: Integer;
+  P: MType;
+begin
+  L := 0;
+  H := High(Self);
+  while (L < H) do
+  begin
+    P := Self[(L + H) div 2];
+    i := L;
+    j := H;
+    repeat
+      while ((oAscending and (Self[i] < P)) or ((not oAscending) and (Self[i] > P))) do
+        Inc(i);
+      while ((oAscending and (Self[j] > P)) or ((not oAscending) and (Self[j] < P))) do
+        Dec(j);
+      if (i <= j) then
+        Self.Switch(i.Increase, j.Decrease);
+    until (i > j);
+    if (K <= j) then
+      H := j
+    else if (K >= i) then
+      L := i
+    else
+      Break;
+  end;
+  Result := Self[K];
 end;
 {$ENDIF}

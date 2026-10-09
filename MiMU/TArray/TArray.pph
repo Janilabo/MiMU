@@ -55,6 +55,7 @@
 {$I @TArray/Sortable/Counting.inc}
 {$I @TArray/Sortable/Deduplication.inc}
 {$I @TArray/Sortable/Directionality.inc}
+{$I @TArray/Sortable/Echelon.inc}
 {$I @TArray/Sortable/Execution.inc}
 {$I @TArray/Sortable/Extrema.inc}
 {$I @TArray/Sortable/Grouping.inc}

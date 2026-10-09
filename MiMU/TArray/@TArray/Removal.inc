@@ -19,6 +19,7 @@ function Erase(const items: MArray; const index: Integer = 2147483647; const all
 function Erase(const items: MArray; const all: Boolean): MArray; overload;
 function Evict(const item: MType): Boolean; overload;
 function Excise(const ID: TIntegerArray; const iSorted: Boolean = True): Integer; overload;
+function Pluck(const pIndex: Integer = 0): MType; overload;
 function Pop: MType; overload;
 function Pop(const null: MType): MType; overload;
 function Pull: MArray; overload;
@@ -524,7 +525,24 @@ begin
     else
       Self[i - s] := Self[i];
   SetLength(Self, (Self.Length - Result));
-end;  
+end;
+
+{==============================================================================]
+  <Pluck>
+  @action: Removes and returns the element at the specified index, shifting trailing elements left.
+  @note: Destructive function. Modifies Self by shrinking array length by 1.
+         By default 0.
+[==============================================================================}
+function MArrayHelper.Pluck(const pIndex: Integer = 0): MType; overload;
+var
+  i, l: Integer;
+begin
+  l := Self.Length;
+  Result := Self[pIndex];
+  for i := pIndex to (l - 2) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, (l - 1));
+end;
 
 {==============================================================================]
   <Pop>

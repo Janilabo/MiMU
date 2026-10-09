@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function BinaryAssorted(const oAscending: Boolean = True): MArray; overload;
 function BinaryInsertingSort(const aAscending: Boolean = True): Integer; overload;
 function BinaryInsertingSorted(const aAscending: Boolean = True): MArray; overload;
 function BinaryInsertionSort(const aAscending: Boolean = True): Integer; overload;
@@ -8,11 +9,41 @@ function BinaryInsertSorted(const oAscending: Boolean = True): MArray; overload;
 function BinarySort(const aAscending: Boolean = True): Integer; overload;
 function BinarySorted(const aAscending: Boolean = True): MArray; overload;
 function BisectionSort(const oAscending: Boolean = True): Integer; overload;
+function BisectSorted(const oAscending: Boolean = True): MArray; overload;
 function BSort(const aAscending: Boolean = True): Integer; overload;
 function BSorted(const aAscending: Boolean = True): MArray; Overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryAssorted>
+  @action: Returns a sorted copy of the array using binary search insertion and frequency counting.
+  @note: Non-destructive function (returns a new array).
+         Uses duplicate suppression via BinarySupply followed by frequency expansion to construct the final sorted result.
+[==============================================================================}
+function MArrayHelper.BinaryAssorted(const oAscending: Boolean = True): MArray; overload;
+var
+  s: TIntegerArray;
+  i, j, l: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(Self.Copy);
+  SetLength(Result, 0);
+  for i := 0 to High(Self) do
+    Result.BinarySupply(Self[i], oAscending);
+  if (Result.Length = l) then
+    Exit;
+  for i := 0 to s.Alloc(Result.Length) do
+    s[i] := 0;
+  for i := 0 to High(Self) do
+    Inc(s[Result.BinarySearch(Self[i], oAscending)]);
+  SetLength(Result, l);
+  for i := High(s) downto 0 do
+    for j := 0 to (s[i] - 1) do
+      Result[l.Decrement] := Result[i];
+end;
+
 {==============================================================================]
   <BinaryInsertingSort>
   @action: Sorts the array in place using a binary-insertion approach.
@@ -395,6 +426,64 @@ begin
       Self[M] := Self[M - 1];
     Self[L] := s;
   end;
+end;
+
+{==============================================================================]
+  <BisectSorted>
+  @action: Returns a sorted copy using bisection insertion search and inline frequency counting.
+  @note: Non-destructive function. Reduces shift overhead on duplicate-heavy data sets.
+[==============================================================================}
+function MArrayHelper.BisectSorted(const oAscending: Boolean = True): MArray; overload;
+var
+  c: TIntegerArray;
+  i, j, k, s, u, l, h, m: Integer;
+  v: MType;
+  f: Boolean;
+begin
+  s := Self.Length;
+  if (s < 2) then
+    Exit(Self.Cloned);
+  SetLength(c, s);
+  u := 0;
+  for i := 0 to Result.Alloc(s) do
+  begin
+    v := Self[i];
+    l := 0;
+    h := (u - 1);
+    f := False;
+    while (l <= h) do
+    begin
+      m := ((l + h) div 2);
+      if (Result[m] = v) then
+      begin
+        f := True;
+        l := m;
+        Break;
+      end;
+      if ((oAscending and (v < Result[m])) or ((not oAscending) and (v > Result[m]))) then
+        h := (m - 1)
+      else
+        l := (m + 1);
+    end;
+    if not f then
+    begin
+      for j := u downto (l + 1) do
+      begin
+        Result[j] := Result[j - 1];
+        c[j] := c[j - 1];
+      end;
+      Result[l] := v;
+      c[l] := 1;
+      Inc(u);
+    end else
+      Inc(c[l]);
+  end;
+  if (u = s) then
+    Exit;
+  k := s;
+  for i := (u - 1) downto 0 do
+    for j := 1 to c[i] do
+      Result[k.Decrement] := Result[i];
 end;
 
 {==============================================================================]
