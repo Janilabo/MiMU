@@ -1,4 +1,5 @@
 {$IFDEF HELPERS}
+function BinaryCusp(const oAscending: Boolean = True): Integer; overload;
 function BinaryHinge(const oAscending: Boolean = True): Integer; overload;
 function BinaryInflection(const oAscending: Boolean = True): Integer; overload;
 function BinaryPivot(const oAscending: Boolean = True): Integer; overload;
@@ -6,6 +7,27 @@ function BinaryTransition(const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryCusp>
+  @action: Returns the index where the second block begins in a segregated boolean array, in O(log N) time, via half-open binary search.
+  @note: Non-destructive function. Requires the array to be segregated in the given direction (Falses then Trues if ascending, Trues then Falses if descending); unsegregated input gives an unspecified index. Returns Length when the second block is absent (including all-one-value arrays that never reach it) and 0 for an empty array.
+[==============================================================================}
+function TBooleanArrayHelper.BinaryCusp(const oAscending: Boolean = True): Integer; overload;
+var
+  s, m: Integer;
+begin
+  Result := 0;
+  s := Self.Length;
+  while (Result < s) do
+  begin
+    m := (Result + ((s - Result) shr 1));
+    if (Self[m] = oAscending) then
+      s := m
+    else
+      Result := (m + 1);
+  end;
+end;
+
 {==============================================================================|
   <BinaryHinge>
   @action: Pointer-offset based binary search avoiding indexing bounds checks.

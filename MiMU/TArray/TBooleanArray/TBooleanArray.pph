@@ -12,6 +12,7 @@
 {$I @TBooleanArray/Selection.inc}
 {$I @TBooleanArray/Sort.inc}
 {$I @TBooleanArray/Transform.inc}
+{$I @TBooleanArray/Validation.inc}
 
 {$I @TBooleanArray/BinaryOps/Bounds.inc}
 {$I @TBooleanArray/BinaryOps/Counting.inc}

@@ -5,6 +5,8 @@ function Matching(const tState: Boolean): Integer; overload;
 function Score(const iTrue: Integer = 1; const iFalse: Integer = 0): Integer; overload;
 function Trueness: Integer; overload;
 function Unmatching(const tState: Boolean): Integer; overload;
+function Ayes: Integer; overload;
+function Nays: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -95,5 +97,29 @@ end;
 function TBooleanArrayHelper.Unmatching(const tState: Boolean): Integer; overload;
 begin
   Result := Self.Matching(not tState);
+end;
+
+{==============================================================================]
+  <Ayes>
+  @action: Returns the number of True elements in a boolean array in O(N) linear time.
+  @note: Non-destructive function. Returns 0 for an empty array. Normalizes each element through a comparison, so it stays correct for ByteBool/WordBool/LongBool.
+[==============================================================================}
+function TBooleanArrayHelper.Ayes: Integer; overload;
+var
+  i: Integer;
+begin
+  Result := 0;
+  for i := 0 to High(Self) do
+    Inc(Result, Integer(Self[i] <> False));
+end;
+
+{==============================================================================]
+  <Nays>
+  @action: Returns the number of False elements in a boolean array in O(N) linear time.
+  @note: Non-destructive function. Derived from Ayes (Length - Ayes), so it shares its single counting pass. Returns 0 for an empty array.
+[==============================================================================}
+function TBooleanArrayHelper.Nays: Integer; overload;
+begin
+  Result := (Self.Length - Self.Ayes);
 end;
 {$ENDIF}
