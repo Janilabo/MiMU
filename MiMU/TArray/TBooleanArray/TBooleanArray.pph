@@ -10,6 +10,7 @@
 {$I @TBooleanArray/Reset.inc}
 {$I @TBooleanArray/Search.inc}
 {$I @TBooleanArray/Selection.inc}
+{$I @TBooleanArray/Sort.inc}
 {$I @TBooleanArray/Transform.inc}
 
 {$I @TBooleanArray/BinaryOps/Bounds.inc}
