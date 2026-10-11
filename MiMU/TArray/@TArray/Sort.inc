@@ -6,6 +6,8 @@ function QuickSortWeighted(var weight: TIntegerArray; const aAscending: Boolean 
 function QuickSortWeighted(var weight: TDoubleArray; const aAscending: Boolean = True): Integer; overload;
 function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = True): MArray; overload;
 function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): MArray; overload;
+function Sort(const weight: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+function Sort(const weight: TDoubleArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -421,5 +423,147 @@ begin
       Result[i] := Self[r[i]];
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <Sort>
+  @action: Sorts the array indirectly by sorting index references according to the provided weight array, then reorders Self to match.
+  @note: Stable indirect sort (argsort); requires the weight array length to match Self. Returns -1 on dimension mismatch.
+[==============================================================================}
+function MArrayHelper.Sort(const weight: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+var
+  r, w, i: Integer;
+  q, t: TIntegerArray;
+  o: MArray;
+  z: Boolean;
+  procedure P(const s: TIntegerArray; var d: TIntegerArray; const c: Integer);
+  var
+    l, m, h, a, b, k: Integer;
+  begin
+    l := 0;
+    while (l < r) do
+    begin
+      m := (l + c);
+      if (m > r) then
+        m := r;
+      h := (m + c);
+      if (h > r) then
+        h := r;
+      a := l;
+      b := m;
+      k := l;
+      while ((a < m) and (b < h)) do
+        if ((oAscending and (weight[s[b]] < weight[s[a]])) or ((not oAscending) and (weight[s[b]] > weight[s[a]]))) then
+          d[k.Increase] := s[b.Increase]
+        else
+          d[k.Increase] := s[a.Increase];
+      while (a < m) do
+        d[k.Increase] := s[a.Increase];
+      while (b < h) do
+        d[k.Increase] := s[b.Increase];
+      l := h;
+    end;
+  end;
+begin
+  r := Self.Length;
+  if (weight.Length <> r) then
+    Exit(-1);
+  Result := r;
+  if (r < 2) then
+    Exit;
+  SetLength(q, r);
+  SetLength(t, r);
+  for i := 0 to (r - 1) do
+    q[i] := i;
+  w := 1;
+  z := True;
+  while (w < r) do
+  begin
+    if z then
+      P(q, t, w)
+    else
+      P(t, q, w);
+    z := not z;
+    w := (w * 2);
+  end;
+  if not z then
+  for i := 0 to (r - 1) do
+    q[i] := t[i];
+  SetLength(o, r);
+  for i := 0 to (r - 1) do
+    o[i] := Self[i];
+  for i := 0 to (r - 1) do
+    Self[i] := o[q[i]];
+end;
+
+{==============================================================================]
+  <Sort>
+  @action: Sorts the array indirectly by sorting index references according to the provided weight array, then reorders Self to match.
+  @note: Stable indirect sort (argsort); requires the weight array length to match Self. Returns -1 on dimension mismatch.
+[==============================================================================}
+function MArrayHelper.Sort(const weight: TDoubleArray; const oAscending: Boolean = True): Integer; overload;
+var
+  r, w, i: Integer;
+  q, t: TIntegerArray;
+  o: MArray;
+  z: Boolean;
+  procedure P(const s: TIntegerArray; var d: TIntegerArray; const c: Integer);
+  var
+    l, m, h, a, b, k: Integer;
+  begin
+    l := 0;
+    while (l < r) do
+    begin
+      m := (l + c);
+      if (m > r) then
+        m := r;
+      h := (m + c);
+      if (h > r) then
+        h := r;
+      a := l;
+      b := m;
+      k := l;
+      while ((a < m) and (b < h)) do
+        if ((oAscending and (weight[s[b]] < weight[s[a]])) or ((not oAscending) and (weight[s[b]] > weight[s[a]]))) then
+          d[k.Increase] := s[b.Increase]
+        else
+          d[k.Increase] := s[a.Increase];
+      while (a < m) do
+        d[k.Increase] := s[a.Increase];
+      while (b < h) do
+        d[k.Increase] := s[b.Increase];
+      l := h;
+    end;
+  end;
+begin
+  r := Self.Length;
+  if (weight.Length <> r) then
+    Exit(-1);
+  Result := r;
+  if (r < 2) then
+    Exit;
+  SetLength(q, r);
+  SetLength(t, r);
+  for i := 0 to (r - 1) do
+    q[i] := i;
+  w := 1;
+  z := True;
+  while (w < r) do
+  begin
+    if z then
+      P(q, t, w)
+    else
+      P(t, q, w);
+    z := not z;
+    w := (w * 2);
+  end;
+  if not z then
+  for i := 0 to (r - 1) do
+    q[i] := t[i];
+  SetLength(o, r);
+  for i := 0 to (r - 1) do
+    o[i] := Self[i];
+  for i := 0 to (r - 1) do
+    Self[i] := o[q[i]];
 end;
 {$ENDIF}

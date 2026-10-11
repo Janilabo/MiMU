@@ -31,6 +31,7 @@ function Query(const item: MType): Integer; overload;
 function Range(const subArray: MArray; const index: Integer = 0): TRange; overload;
 function Ranges(const subArray: MArray; const index: Integer = 0): TRangeArray; overload;
 function Rout(const item: MType): Integer; overload;
+function SentinelSearch(const item: MType): Integer; overload;
 function Span: TRange; overload;
 function Span(const subArray: MArray; const index: Integer = 2147483647): TRange; overload;
 function Spans(const subArray: MArray; const index: Integer = 2147483647): TRangeArray; overload;
@@ -684,6 +685,32 @@ begin
     if (Self[s[i]] = item) then
       Exit(s[i]);
   Result := -1;
+end;
+
+{==============================================================================]
+  <SentinelSearch>
+  @action: Searches the array for specified item using a sentinel linear search and returns its zero-based index,
+           or -1 if not found.
+  @note: Optimizes performance by placing a temporary sentinel at the end of the array,
+         eliminating bounds checks within the inner search loop.
+[==============================================================================}
+function MArrayHelper.SentinelSearch(const item: MType): Integer; overload;
+var
+  h, i: Integer;
+  s: MType;
+begin
+  Result := -1;
+  h := (Self.Length - 1);
+  if (h = -1) then
+    Exit;
+  s := Self[h];
+  Self[h] := item;
+  i := 0;
+  while (Self[i] <> item) do
+    Inc(i);
+  Self[h] := s;
+  if ((i < h) or (s = item)) then
+    Result := i;
 end;
 
 {==============================================================================]

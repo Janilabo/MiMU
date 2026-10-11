@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function RankSorted(const oAscending: Boolean = True): MArray; overload;
+function Sort(const oAscending: Boolean = True): Integer; overload;
 function TallySorted(const N: Integer = 3; const oAscending: Boolean = True): MArray; overload;
 function TallySorted(const oAscending: Boolean; const N: Integer = 3): MArray; overload;
 function ToOrder(const oAscending: Boolean = True): MArray; overload;
@@ -28,6 +29,66 @@ begin
         Inc(r);
     Result[r] := Self[i];
   end;
+end;
+
+{==============================================================================]
+  <Sort>
+  @action: Sorts the elements of the MArray in ascending or descending order using an iterative bottom-up merge sort.
+  @note: This is a stable sorting algorithm with O(n log n) time complexity and O(n) auxiliary space.
+[==============================================================================}
+function MArrayHelper.Sort(const oAscending: Boolean = True): Integer; overload;
+var
+  r, w, i: Integer;
+  q: MArray;
+  z: Boolean;
+  procedure P(const s: MArray; var d: MArray; const c: Integer);
+  var
+    l, m, h, a, b, k: Integer;
+  begin
+    l := 0;
+    while (l < r) do
+    begin
+      m := (l + c);
+      if (m > r) then
+        m := r;
+      h := (m + c);
+      if (h > r) then
+        h := r;
+      a := l;
+      b := m;
+      k := l;
+      while ((a < m) and (b < h)) do
+        if ((oAscending and (s[b] < s[a])) or ((not oAscending) and (s[b] > s[a]))) then
+          d[k.Increase] := s[b.Increase]
+        else
+          d[k.Increase] := s[a.Increase];
+      while (a < m) do
+        d[k.Increase] := s[a.Increase];
+      while (b < h) do
+        d[k.Increase] := s[b.Increase];
+      l := h;
+    end;
+  end;
+begin
+  r := Self.Length;
+  Result := r;
+  if (r < 2) then
+    Exit;
+  SetLength(q, r);
+  w := 1;
+  z := True;
+  while (w < r) do
+  begin
+    if z then
+      P(Self, q, w)
+    else
+      P(q, Self, w);
+    z := not z;
+    w := (w * 2);
+  end;
+  if not z then
+  for i := 0 to (r - 1) do
+    Self[i] := q[i];
 end;
 
 {==============================================================================]
