@@ -6,3 +6,5 @@
 {$I @TBoxArray/Components.inc}
 {$I @TBoxArray/Extraction.inc}
 {$I @TBoxArray/Materialization.inc}
+{$I @TBoxArray/Metrics.inc}
+{$I @TBoxArray/Sorting.inc}

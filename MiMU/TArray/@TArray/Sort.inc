@@ -8,6 +8,10 @@ function QuickSorted(const weight: TIntegerArray; const aAscending: Boolean = Tr
 function QuickSorted(const weight: TDoubleArray; const aAscending: Boolean = True): MArray; overload;
 function Sort(const weight: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
 function Sort(const weight: TDoubleArray; const oAscending: Boolean = True): Integer; overload;
+function Sortified(const weight: TIntegerArray; const oAscending: Boolean = True): MArray; overload;
+function Sortified(const weight: TDoubleArray; const oAscending: Boolean = True): MArray; overload;
+function SortWith(var weight: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+function SortWith(var weight: TDoubleArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -565,5 +569,321 @@ begin
     o[i] := Self[i];
   for i := 0 to (r - 1) do
     Self[i] := o[q[i]];
+end;
+
+{==============================================================================]
+  <Sortified>
+  @action: Returns a copy of Self sorted by the provided weight array. Self and weight are not modified.
+  @note: Stable indirect sort (argsort); requires the weight array length to match Self.
+         Returns an empty array on dimension mismatch.
+[==============================================================================}
+function MArrayHelper.Sortified(const weight: TIntegerArray; const oAscending: Boolean = True): MArray; overload;
+var
+  r, w, i: Integer;
+  q, t: TIntegerArray;
+  z: Boolean;
+  procedure P(const s: TIntegerArray; var d: TIntegerArray; const c: Integer);
+  var
+    l, m, h, a, b, k: Integer;
+  begin
+    l := 0;
+    while (l < r) do
+    begin
+      m := (l + c);
+      if (m > r) then
+        m := r;
+      h := (m + c);
+      if (h > r) then
+        h := r;
+      a := l;
+      b := m;
+      k := l;
+      while ((a < m) and (b < h)) do
+        if ((oAscending and (weight[s[b]] < weight[s[a]])) or ((not oAscending) and (weight[s[b]] > weight[s[a]]))) then
+          d[k.Increase] := s[b.Increase]
+        else
+          d[k.Increase] := s[a.Increase];
+      while (a < m) do
+        d[k.Increase] := s[a.Increase];
+      while (b < h) do
+        d[k.Increase] := s[b.Increase];
+      l := h;
+    end;
+  end;
+begin
+  r := Self.Length;
+  if (weight.Length <> r) then
+    Exit([]);
+  if (Result.SetSize(r) < 2) then
+  begin
+    if (r = 1) then
+      Result[0] := Self[0];
+    Exit;
+  end;
+  SetLength(t, r);
+  for i := 0 to q.Alloc(r) do
+    q[i] := i;
+  w := 1;
+  z := True;
+  while (w < r) do
+  begin
+    if z then
+      P(q, t, w)
+    else
+      P(t, q, w);
+    z := not z;
+    w := (w * 2);
+  end;
+  if not z then
+  for i := 0 to (r - 1) do
+    q[i] := t[i];
+  for i := 0 to (r - 1) do
+    Result[i] := Self[q[i]];
+end;
+
+{==============================================================================]
+  <Sortified>
+  @action: Returns a copy of Self sorted by the provided weight array. Self and weight are not modified.
+  @note: Stable indirect sort (argsort); requires the weight array length to match Self.
+         Returns an empty array on dimension mismatch.
+[==============================================================================}
+function MArrayHelper.Sortified(const weight: TDoubleArray; const oAscending: Boolean = True): MArray; overload;
+var
+  r, w, i: Integer;
+  q, t: TIntegerArray;
+  z: Boolean;
+  procedure P(const s: TIntegerArray; var d: TIntegerArray; const c: Integer);
+  var
+    l, m, h, a, b, k: Integer;
+  begin
+    l := 0;
+    while (l < r) do
+    begin
+      m := (l + c);
+      if (m > r) then
+        m := r;
+      h := (m + c);
+      if (h > r) then
+        h := r;
+      a := l;
+      b := m;
+      k := l;
+      while ((a < m) and (b < h)) do
+        if ((oAscending and (weight[s[b]] < weight[s[a]])) or ((not oAscending) and (weight[s[b]] > weight[s[a]]))) then
+          d[k.Increase] := s[b.Increase]
+        else
+          d[k.Increase] := s[a.Increase];
+      while (a < m) do
+        d[k.Increase] := s[a.Increase];
+      while (b < h) do
+        d[k.Increase] := s[b.Increase];
+      l := h;
+    end;
+  end;
+begin
+  r := Self.Length;
+  if (weight.Length <> r) then
+    Exit([]);
+  if (Result.SetSize(r) < 2) then
+  begin
+    if (r = 1) then
+      Result[0] := Self[0];
+    Exit;
+  end;
+  SetLength(t, r);
+  for i := 0 to q.Alloc(r) do
+    q[i] := i;
+  w := 1;
+  z := True;
+  while (w < r) do
+  begin
+    if z then
+      P(q, t, w)
+    else
+      P(t, q, w);
+    z := not z;
+    w := (w * 2);
+  end;
+  if not z then
+  for i := 0 to (r - 1) do
+    q[i] := t[i];
+  for i := 0 to (r - 1) do
+    Result[i] := Self[q[i]];
+end;
+
+{==============================================================================]
+  <SortWith>
+  @action: Stable sort of Self by weight; weight is reordered in lockstep so weight[i] still belongs to Self[i] afterwards.
+  @note: Direct merge sort on both arrays (no index indirection); O(n log n) time, O(n) extra space for both.
+         Returns Self.Length, or -1 (nothing sorted) on dimension mismatch.
+[==============================================================================}
+function MArrayHelper.SortWith(var weight: TIntegerArray; const oAscending: Boolean = True): Integer; overload;
+var
+  r, j, i: Integer;
+  s: MArray;
+  w: TIntegerArray;
+  z: Boolean;
+  procedure P(const sSelf: MArray; const sWeight: TIntegerArray; var dSelf: MArray; var dWeight: TIntegerArray; const current: Integer);
+  var
+    l, m, h, a, b, k: Integer;
+  begin
+    l := 0;
+    while (l < r) do
+    begin
+      m := (l + current);
+      if (m > r) then
+        m := r;
+      h := (m + current);
+      if (h > r) then
+        h := r;
+      a := l;
+      b := m;
+      k := l;
+      while ((a < m) and (b < h)) do
+      begin
+        if ((oAscending and (sWeight[b] < sWeight[a])) or ((not oAscending) and (sWeight[b] > sWeight[a]))) then
+        begin
+          dWeight[k] := sWeight[b];
+          dSelf[k] := sSelf[b];
+          Inc(b);
+        end else
+        begin
+          dWeight[k] := sWeight[a];
+          dSelf[k] := sSelf[a];
+          Inc(a);
+        end;
+        Inc(k);
+      end;
+      while (a < m) do
+      begin
+        dWeight[k] := sWeight[a];
+        dSelf[k] := sSelf[a];
+        Inc(a);
+        Inc(k);
+      end;
+      while (b < h) do
+      begin
+        dWeight[k] := sWeight[b];
+        dSelf[k] := sSelf[b];
+        Inc(b);
+        Inc(k);
+      end;
+      l := h;
+    end;
+  end;
+begin
+  r := Self.Length;
+  if (weight.Length <> r) then
+    Exit(-1);
+  Result := r;
+  if (r < 2) then
+    Exit;
+  SetLength(s, r);
+  SetLength(w, r);
+  j := 1;
+  z := True;
+  while (j < r) do
+  begin
+    if z then
+      P(Self, weight, s, w, j)
+    else
+      P(s, w, Self, weight, j);
+    z := not z;
+    j := (j * 2);
+  end;
+  if not z then
+    for i := 0 to (r - 1) do
+    begin
+      Self[i] := s[i];
+      weight[i] := w[i];
+    end;
+end;
+
+{==============================================================================]
+  <SortWith>
+  @action: Stable sort of Self by weight; weight is reordered in lockstep so weight[i] still belongs to Self[i] afterwards.
+  @note: Direct merge sort on both arrays (no index indirection); O(n log n) time, O(n) extra space for both.
+         Returns Self.Length, or -1 (nothing sorted) on dimension mismatch.
+[==============================================================================}
+function MArrayHelper.SortWith(var weight: TDoubleArray; const oAscending: Boolean = True): Integer; overload;
+var
+  r, j, i: Integer;
+  s: MArray;
+  w: TDoubleArray;
+  z: Boolean;
+  procedure P(const sSelf: MArray; const sWeight: TDoubleArray; var dSelf: MArray; var dWeight: TDoubleArray; const current: Integer);
+  var
+    l, m, h, a, b, k: Integer;
+  begin
+    l := 0;
+    while (l < r) do
+    begin
+      m := (l + current);
+      if (m > r) then
+        m := r;
+      h := (m + current);
+      if (h > r) then
+        h := r;
+      a := l;
+      b := m;
+      k := l;
+      while ((a < m) and (b < h)) do
+      begin
+        if ((oAscending and (sWeight[b] < sWeight[a])) or ((not oAscending) and (sWeight[b] > sWeight[a]))) then
+        begin
+          dWeight[k] := sWeight[b];
+          dSelf[k] := sSelf[b];
+          Inc(b);
+        end else
+        begin
+          dWeight[k] := sWeight[a];
+          dSelf[k] := sSelf[a];
+          Inc(a);
+        end;
+        Inc(k);
+      end;
+      while (a < m) do
+      begin
+        dWeight[k] := sWeight[a];
+        dSelf[k] := sSelf[a];
+        Inc(a);
+        Inc(k);
+      end;
+      while (b < h) do
+      begin
+        dWeight[k] := sWeight[b];
+        dSelf[k] := sSelf[b];
+        Inc(b);
+        Inc(k);
+      end;
+      l := h;
+    end;
+  end;
+begin
+  r := Self.Length;
+  if (weight.Length <> r) then
+    Exit(-1);
+  Result := r;
+  if (r < 2) then
+    Exit;
+  SetLength(s, r);
+  SetLength(w, r);
+  j := 1;
+  z := True;
+  while (j < r) do
+  begin
+    if z then
+      P(Self, weight, s, w, j)
+    else
+      P(s, w, Self, weight, j);
+    z := not z;
+    j := (j * 2);
+  end;
+  if not z then
+    for i := 0 to (r - 1) do
+    begin
+      Self[i] := s[i];
+      weight[i] := w[i];
+    end;
 end;
 {$ENDIF}

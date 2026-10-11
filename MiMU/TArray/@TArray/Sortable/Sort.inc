@@ -5,6 +5,8 @@ function TallySorted(const N: Integer = 3; const oAscending: Boolean = True): MA
 function TallySorted(const oAscending: Boolean; const N: Integer = 3): MArray; overload;
 function ToOrder(const oAscending: Boolean = True): MArray; overload;
 function Triage(const oAscending: Boolean = True): Integer; overload;
+function Triorder(const oAscending: Boolean = True): Integer; overload;
+function Triordered(const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -226,6 +228,102 @@ begin
         Inc(m)
       else
         Self.Switch(m, h.Decrease);
+  end;
+end;
+
+{==============================================================================]
+  <Triorder>
+  @action: Sorts the array in place (using an optimized network for sizes 2-3 or QuickSort for larger arrays) and returns its length.
+  @note: Handles arrays of length 2 or 3 via inline conditional swaps, falls back to QuickSort for lengths greater than 3, and respects the oAscending order flag.
+[==============================================================================}
+function MArrayHelper.Triorder(const oAscending: Boolean = True): Integer; overload;
+var
+  S: Integer;
+begin
+  Result := Self.Length;
+  if (Result > 1) then
+  case (Result > 3) of
+    False:
+	begin
+      S := (Result - 1);
+      if (Self[0] > Self[S]) then
+        Self.Switch(0, S);
+      if (S = 2) then
+        if (Self[1] < Self[0]) then
+          Self.Switch(1, 0)
+        else if (Self[1] > Self[2]) then
+          Self.Switch(1, 2);
+      if not oAscending then
+        Self.Switch(0, S);
+    end;
+	True: Self.QuickSort(oAscending);
+  end;
+end;
+
+{==============================================================================]
+  <Triordered>
+  @action: Returns a sorted copy of the array optimized for small lengths (0 to 3),
+           sorted in ascending or descending order.
+		   Handles lengths 0-3 explicitly and falls back to QuickSorted for longer arrays.
+  @note: Highly optimized path for up to 3 elements, falling back to QuickSorted for 4 or more elements.
+[==============================================================================}
+function MArrayHelper.Triordered(const oAscending: Boolean = True): MArray; overload;
+begin
+  case Self.Length of
+    0: Result := [];
+    1: Result := [Self[0]];
+    2:
+    case (Self[0] <= Self[1]) of
+      True:
+      if oAscending then
+        Result := [Self[0], Self[1]]
+      else
+        Result := [Self[1], Self[0]];
+      False:
+      if oAscending then
+        Result := [Self[1], Self[0]]
+      else
+        Result := [Self[0], Self[1]];
+    end;
+    3:
+    case oAscending of
+      True:
+      case (Self[0] <= Self[1]) of
+        True:
+        if (Self[1] <= Self[2]) then
+          Result := [Self[0], Self[1], Self[2]]
+        else if (Self[0] <= Self[2]) then
+          Result := [Self[0], Self[2], Self[1]]
+        else
+          Result := [Self[2], Self[0], Self[1]];
+        False:
+        if (Self[0] <= Self[2]) then
+          Result := [Self[1], Self[0], Self[2]]
+        else if (Self[1] <= Self[2]) then
+          Result := [Self[1], Self[2], Self[0]]
+        else
+          Result := [Self[2], Self[1], Self[0]];
+      end;
+      False:
+      case (Self[0] >= Self[1]) of
+        True:
+        if (Self[1] >= Self[2]) then
+          Result := [Self[0], Self[1], Self[2]]
+        else if (Self[0] >= Self[2]) then
+          Result := [Self[0], Self[2], Self[1]]
+        else
+          Result := [Self[2], Self[0], Self[1]];
+        False:
+        if (Self[0] >= Self[2]) then
+          Result := [Self[1], Self[0], Self[2]]
+        else if (Self[1] >= Self[2]) then
+          Result := [Self[1], Self[2], Self[0]]
+        else
+          Result := [Self[2], Self[1], Self[0]];
+      end;
+    end;
+  else
+    Result := Self.QuickSorted(oAscending);
   end;
 end;
 {$ENDIF}
