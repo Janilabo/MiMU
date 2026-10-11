@@ -14,8 +14,12 @@ function SortSpiraling(const origin: TPoint; const oAscending: Boolean = True): 
 function SortSpiralix(const origin: TPoint; const oAscending: Boolean = True): Integer; overload;
 function SortSpirally(const origin: TPoint; const oAscending: Boolean = True): Integer; overload;
 function SortSpiralwise(const origin: TPoint; const oAscending: Boolean = True): Integer; overload;
-function SortedBySpiral(const origin: TPoint; const oAscending: Boolean = True): TPointArray; overload;
+function SortedByCoords(const oAscending: Boolean = True): TPointArray; overload;
 function SortedByIndex(const aAscending: Boolean = True): TPointArray; overload;
+function SortedByLocale(const oAscending: Boolean = True): TPointArray; overload;
+function SortedByLocation(const oAscending: Boolean = True): TPointArray; overload;
+function SortedByPosition(const oAscending: Boolean = True): TPointArray; overload;
+function SortedBySpiral(const origin: TPoint; const oAscending: Boolean = True): TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -627,6 +631,51 @@ begin
 end;
 
 {==============================================================================]
+  <SortSpiralwise>
+  @action: Sorts a TPointArray lexicographically by coordinates (primarily by Y-coordinate, then by X-coordinate) using an iterative merge sort algorithm.
+  @note: Operates in O(N log N) time complexity with O(N) auxiliary space. As a stable merge sort,
+         it performs consistently regardless of coordinate sparsity or bounding box size.
+[==============================================================================}
+function TPointArrayHelper.SortedByCoords(const oAscending: Boolean = True): TPointArray; overload;
+var
+  n, w, i, a, b, m, e, p: Integer;
+  r, s: TPointArray;
+begin
+  n := Self.Length;
+  if (n = 0) then
+    Exit([]);
+  Result := Self.Copy;
+  SetLength(r, n);
+  w := 1;
+  while (w < n) do
+  begin
+    i := 0;
+    while (i < n) do
+    begin
+      m := Min((i + w), n);
+      e := Min((i + (2 * w)), n);
+      a := i;
+      b := m;
+      p := i;
+      while ((a < m) and (b < e)) do
+        if ((oAscending and ((Result[b].Y < Result[a].Y) or ((Result[b].Y = Result[a].Y) and (Result[b].X < Result[a].X)))) or ((not oAscending) and ((Result[b].Y > Result[a].Y) or ((Result[b].Y = Result[a].Y) and (Result[b].X > Result[a].X))))) then
+          r[p.Increase] := Result[b.Increase]
+        else
+          r[p.Increase] := Result[a.Increase];
+      while (a < m) do
+        r[p.Increase] := Result[a.Increase];
+      while (b < e) do
+        r[p.Increase] := Result[b.Increase];
+      Inc(i, (2 * w));
+    end;
+    s := Result;
+    Result := r;
+    r := s;
+    w := (w * 2);
+  end;
+end;
+
+{==============================================================================]
   <SortedByIndex>
   @action: Returns array sorted by indexes in array bounding box.
   @note: None.
@@ -637,6 +686,165 @@ begin
     SetLength(Result, 0)
   else
     Result := Self.QuickSorted(Self.Bounds.IDs(Self), aAscending);
+end;
+
+{==============================================================================]
+  <SortedByLocale>
+  @action: Sorts a TPointArray primarily by Y-coordinate using a counting sort approach,
+           and then sorts points within each horizontal row by their X-coordinate using insertion sort.
+@note: Hybrid sorting algorithm combining counting sort (for rows) and insertion sort (for columns within each row).
+       Efficient when the vertical span (Y range) is relatively compact, with a final reversal applied if descending order is requested.
+[==============================================================================}
+function TPointArrayHelper.SortedByLocale(const oAscending: Boolean = True): TPointArray; overload;
+var
+  s, i, j, r, h, l: Integer;
+  c: TIntegerArray;
+  p: TPoint;
+  y: TRange;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  y.Create(Self[0].Y);
+  for i := 1 to (s - 1) do
+    if (Self[i].Y < y.start) then
+      y.start := Self[i].Y
+    else if (Self[i].Y > y.stop) then
+      y.stop := Self[i].Y;
+  SetLength(c, (y.stop - y.start + 2));
+  for i := 0 to (s - 1) do
+    Inc(c[Self[i].Y - y.start + 1]);
+  for i := 1 to High(c) do
+    Inc(c[i], c[i - 1]);
+  for i := 0 to Result.Alloc(s) do
+    Result[c[Self[i].Y - y.start].Increase] := Self[i];
+  l := 0;
+  for r := 0 to (y.stop - y.start) do
+  begin
+    h := c[r];
+    for i := (l + 1) to (h - 1) do
+    begin
+      p := Result[i];
+      j := (i - 1);
+      while ((j >= l) and (Result[j].X > p.X)) do
+      begin
+        Result[j + 1] := Result[j];
+        Dec(j);
+      end;
+      Result[j + 1] := p;
+    end;
+    l := h;
+  end;
+  if (not oAscending) then
+    Result.Reverse;
+end;
+
+{==============================================================================]
+  <SortedByLocation>
+  @action: Sorts a TPointArray spatially by coordinate location (top-to-bottom, left-to-right) using a counting sort algorithm based on its bounding box.
+  @note: Operates in O(N + W * H) time complexity. Highly efficient for dense clusters of points,
+         but can consume excessive memory if the bounding box dimensions (W and H) are extremely large due to the frequency array allocation.
+[==============================================================================}
+function TPointArrayHelper.SortedByLocation(const oAscending: Boolean = True): TPointArray; overload;
+var
+  s, i, j, k, w, h, r, c: Integer;
+  x, y: TRange;
+  p: TIntegerArray;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  x.Create(Self[0].X);
+  y.Create(Self[0].Y);
+  for i := 1 to (s - 1) do
+  begin
+    if (Self[i].X < x.start) then
+      x.start := Self[i].X
+    else if (Self[i].X > x.stop) then
+      x.stop := Self[i].X;
+    if (Self[i].Y < y.start) then
+      y.start := Self[i].Y
+    else if (Self[i].Y > y.stop) then
+      y.stop := Self[i].Y;
+  end;
+  w := ((x.stop - x.start) + 1);
+  h := ((y.stop - y.start) + 1);
+  SetLength(p, (w * h));
+  for i := 0 to Result.Alloc(s) do
+    Inc(p[(Self[i].Y - y.start) * w + (Self[i].X - x.start)]);
+  k := 0;
+  case oAscending of
+    True:
+    for i := 0 to (h - 1) do
+      for j := 0 to (w - 1) do
+        for s := 1 to p[i * w + j] do
+          Result[k.Increase] := Point((j + x.start), (i + y.start));
+    False:
+    for i := 0 to (h - 1) do
+    begin
+      r := (h - 1 - i);
+      for j := 0 to (w - 1) do
+      begin
+        c := (w - 1 - j);
+        for s := 1 to p[r * w + c] do
+          Result[k.Increase] := Point((c + x.start), (r + y.start));
+      end;
+    end;
+  end;
+end;
+
+{==============================================================================]
+  <SortedByPosition>
+  @action: Returns a new TPointArray sorted by scanline position (Y, then X).
+  @note: Non-mutating; Self is left untouched.
+   - oAscending = True: top-to-bottom, left-to-right within each row.
+   - oAscending = False: bottom-to-top, right-to-left within each row
+     (the exact reverse of the ascending order).
+   - Two stable counting-sort passes (X, then Y): O(n + rangeX + rangeY).
+   - Memory is O(n + rangeX + rangeY), so very sparse points with huge
+     coordinate spans are better served by a comparison sort.
+[==============================================================================}
+function TPointArrayHelper.SortedByPosition(const oAscending: Boolean = True): TPointArray; overload;
+var
+  s, i: Integer;
+  c, r: TIntegerArray;
+  t: TPointArray;
+  p: TPoint;
+  x, y: TRange;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  x.Create(Self[0].X);
+  y.Create(Self[0].Y);
+  for i := 1 to (s - 1) do
+  begin
+    if (Self[i].X < x.start) then
+      x.start := Self[i].X
+    else if (Self[i].X > x.stop) then
+      x.stop := Self[i].X;
+    if (Self[i].Y < y.start) then
+      y.start := Self[i].Y
+    else if (Self[i].Y > y.stop) then
+      y.stop := Self[i].Y;
+  end;
+  SetLength(c, (x.stop - x.start + 2));
+  SetLength(r, (y.stop - y.start + 2));
+  for i := 0 to (s - 1) do
+  begin
+    Inc(c[(Self[i].X - x.start) + 1]);
+    Inc(r[(Self[i].Y - y.start) + 1]);
+  end;
+  for i := 1 to High(c) do
+    Inc(c[i], c[i - 1]);
+  for i := 1 to High(r) do
+    Inc(r[i], r[i - 1]);
+  for i := 0 to t.Alloc(s) do
+    t[c[Self[i].X - x.start].Increase] := Self[i];
+  for i := 0 to Result.Alloc(s) do
+    Result[r[t[i].Y - y.start].Increase] := t[i];
+  if (not oAscending) then
+    Result.Reverse;
 end;
 
 function TPointArrayHelper.SortedBySpiral(const origin: TPoint; const oAscending: Boolean = True): TPointArray; overload;

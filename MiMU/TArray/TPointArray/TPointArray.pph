@@ -5,6 +5,7 @@
 {$I @TPointArray/BinaryOps/Scanning.inc}
 {$I @TPointArray/BinaryOps/Search.inc}
 {$I @TPointArray/BinaryOps/Selection.inc}
+{$I @TPointArray/BinaryOps/Sorting.inc}
 
 {$I @TPointArray/Add.inc}
 {$I @TPointArray/Aggregation.inc}
@@ -16,6 +17,7 @@
 {$I @TPointArray/Deduplicate.inc}
 {$I @TPointArray/Extraction.inc}
 {$I @TPointArray/Fill.inc}
+{$I @TPointArray/Grouping.inc}
 {$I @TPointArray/Insertion.inc}
 {$I @TPointArray/Partition.inc}
 {$I @TPointArray/Selection.inc}

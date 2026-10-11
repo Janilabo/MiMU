@@ -11,8 +11,8 @@ function Extent: TBox;
 function Horizontal: TRange; overload;
 function MinMax: TBox;
 function Region: TBox; overload;
+function Survey(var xWise, yWise: TRange): Integer; overload;
 function Vertical: TRange; overload;
-
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -300,6 +300,38 @@ begin
       Result.X2 := Self[i].X;
     if (Self[i].Y > Result.Y2) then
       Result.Y2 := Self[i].Y;
+  end;
+end;
+
+{==============================================================================]
+  <Survey>
+  @action: Measures the axis-wise extents of the point array in a single pass.
+  @note: Non-mutating; Self is left untouched.
+   - xWise = [minX .. maxX], yWise = [minY .. maxY], both ascending
+     (start <= stop).
+   - Returns Self.Length (the number of points surveyed).
+   - Empty Self returns 0 and leaves xWise/yWise untouched.
+   - A single point yields degenerate ranges (start = stop on both axes).
+[==============================================================================}
+function TPointArrayHelper.Survey(var xWise, yWise: TRange): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  if (Result = 0) then
+    Exit;
+  xWise.Create(Self[0].X);
+  yWise.Create(Self[0].Y);
+  for i := 1 to (Result - 1) do
+  begin
+    if (Self[i].X < xWise.start) then
+      xWise.start := Self[i].X
+    else if (Self[i].X > xWise.stop) then
+      xWise.stop := Self[i].X;
+    if (Self[i].Y < yWise.start) then
+      yWise.start := Self[i].Y
+    else if (Self[i].Y > yWise.stop) then
+      yWise.stop := Self[i].Y;
   end;
 end;
 
