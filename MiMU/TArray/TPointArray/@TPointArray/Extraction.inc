@@ -7,14 +7,26 @@ function Unzip(var xArr, yArr: TIntegerArray): Integer;
 function XArr(const aAscending: Boolean = True): TIntegerArray;
 function XAxis(const rUnique: Boolean = True): TIntegerArray; overload;
 function Xs: TIntegerArray; overload;
+function Xs(const aBox: TBox): TIntegerArray; overload;
 function XVals(const aAscending: Boolean = True): TIntegerArray;
 function XValues: TIntegerArray; overload;
+function Xz(const rReversed: Boolean = False): TIntegerArray; overload;
 function YArr(const aAscending: Boolean = True): TIntegerArray;
 function YAxis(const rUnique: Boolean = True): TIntegerArray; overload;
 function Ys: TIntegerArray; overload;
+function Ys(const aBox: TBox): TIntegerArray; overload;
 function YVals(const aAscending: Boolean = True): TIntegerArray;
 function YValues: TIntegerArray; overload;
-function Zip(const xArr, yArr: TIntegerArray): Integer;
+function Yz(const rReversed: Boolean = False): TIntegerArray; overload;
+function Xd(const aIndices: TIntegerArray): TIntegerArray; overload;
+function Yd(const aIndices: TIntegerArray): TIntegerArray; overload;
+function Xy(const atY: Integer): TIntegerArray; overload;
+function Yx(const atX: Integer): TIntegerArray; overload;
+function Zip(const xArr, yArr: TIntegerArray): Integer; overload;
+function Zip(const sAxes: T2DIntegerArray): Integer; overload;
+
+function Xrev: TIntegerArray; overload;
+function Yrev: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -182,6 +194,22 @@ begin
 end;
 
 {==============================================================================]
+  <Xs>
+  @action: Extracts the X-coordinates of all points that lie inside aBox.
+  @note: Bounds are inclusive. Result follows the order of appearance.
+[==============================================================================}
+function TPointArrayHelper.Xs(const aBox: TBox): TIntegerArray; overload;
+var
+  i, c: Integer;
+begin
+  c := 0;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if ((Self[i].X >= aBox.X1) and (Self[i].X <= aBox.X2) and (Self[i].Y >= aBox.Y1) and (Self[i].Y <= aBox.Y2)) then
+      Result[c.Increase] := Self[i].X;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
   <XVals>
   @action: Returns an array of all X coordinates from the point array,
            optionally sorted in ascending or descending order.
@@ -208,6 +236,37 @@ begin
   l := Result.SetSize(Self.Length);
   while (l.Decrement > -1) do
     Result[l] := Self[l].X;
+end;
+
+{==============================================================================]
+  <Xz>
+  @action: Extracts and compresses unique X coordinates from a point array into an integer array.
+  @note: Traverses the point array (forward or in reverse based on rReversed),
+         filtering out consecutive duplicate X values. Uses memory allocation and helper methods like Alloc and Increment,
+		 then trims the final array length.
+[==============================================================================}
+function TPointArrayHelper.Xz(const rReversed: Boolean = False): TIntegerArray; overload;
+var
+  i, h, r: Integer;
+begin
+  h := Result.Alloc(Self.Length);
+  if (h = -1) then
+    Exit;
+  Result[0] := Self[IfThen(rReversed, h, 0)].X;
+  if (h = 0) then
+    Exit;
+  r := 0;
+  case rReversed of
+    False:
+    for i := 1 to h do
+      if (Self[i].X <> Result[r]) then
+        Result[r.Increment] := Self[i].X;
+    True:
+    for i := (h - 1) downto 0 do
+      if (Self[i].X <> Result[r]) then
+        Result[r.Increment] := Self[i].X;
+  end;
+  SetLength(Result, (r + 1));
 end;
 
 {==============================================================================]
@@ -259,6 +318,22 @@ begin
 end;
 
 {==============================================================================]
+  <Ys>
+  @action: Extracts the Y-coordinates of all points that lie inside aBox.
+  @note: Bounds are inclusive. Result follows the order of appearance.
+[==============================================================================}
+function TPointArrayHelper.Ys(const aBox: TBox): TIntegerArray; overload;
+var
+  i, c: Integer;
+begin
+  c := 0;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if ((Self[i].X >= aBox.X1) and (Self[i].X <= aBox.X2) and (Self[i].Y >= aBox.Y1) and (Self[i].Y <= aBox.Y2)) then
+      Result[c.Increase] := Self[i].Y;
+  SetLength(Result, c);
+end;
+
+{==============================================================================]
   <YVals>
   @action: Returns an array of all Y coordinates from the point array,
            optionally sorted in ascending or descending order.
@@ -288,16 +363,161 @@ begin
 end;
 
 {==============================================================================]
+  <Yz>
+  @action: Extracts and compresses unique Y coordinates from a point array into an integer array.
+  @note: Traverses the point array (forward or in reverse based on rReversed), filtering out consecutive duplicate Y values.
+         Uses memory allocation and helper methods like Alloc and Increment, then trims the final array length.
+[==============================================================================}
+function TPointArrayHelper.Yz(const rReversed: Boolean = False): TIntegerArray; overload;
+var
+  i, h, r: Integer;
+begin
+  h := Result.Alloc(Self.Length);
+  if (h = -1) then
+    Exit;
+  Result[0] := Self[IfThen(rReversed, h, 0)].Y;
+  if (h = 0) then
+    Exit;
+  r := 0;
+  case rReversed of
+    False:
+    for i := 1 to h do
+      if (Self[i].Y <> Result[r]) then
+        Result[r.Increment] := Self[i].Y;
+    True:
+    for i := (h - 1) downto 0 do
+      if (Self[i].Y <> Result[r]) then
+        Result[r.Increment] := Self[i].Y;
+  end;
+  SetLength(Result, (r + 1));
+end;
+
+{==============================================================================]
+  <Xd>
+  @action: Extracts the X-coordinates of the points at the given indices.
+  @note: Result follows the order of aIndices. Out-of-range indices are skipped.
+[==============================================================================}
+function TPointArrayHelper.Xd(const aIndices: TIntegerArray): TIntegerArray; overload;
+var
+  i, r, h: Integer;
+begin
+  h := High(Self);
+  r := 0;
+  for i := 0 to Result.Alloc(aIndices.Length) do
+    if ((aIndices[i] >= 0) and (aIndices[i] <= h)) then
+      Result[r.Increase] := Self[aIndices[i]].X;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Yd>
+  @action: Extracts the Y-coordinates of the points at the given indices.
+  @note: Result follows the order of aIndices. Out-of-range indices are skipped.
+[==============================================================================}
+function TPointArrayHelper.Yd(const aIndices: TIntegerArray): TIntegerArray; overload;
+var
+  i, r, h: Integer;
+begin
+  h := High(Self);
+  r := 0;
+  for i := 0 to Result.Alloc(aIndices.Length) do
+    if ((aIndices[i] >= 0) and (aIndices[i] <= h)) then
+      Result[r.Increase] := Self[aIndices[i]].Y;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Xy>
+  @action: Extracts all X coordinates from points that match a specified Y coordinate.
+  @note: Pre-allocates memory for the result array based on the total point count,
+         filters points where the Y coordinate equals atY, and trims the final array to the matched count.
+[==============================================================================}
+function TPointArrayHelper.Xy(const atY: Integer): TIntegerArray; overload;
+var
+  i, r: Integer;
+begin
+  r := 0;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if (Self[i].Y = atY) then
+      Result[r.Increase] := Self[i].X;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Yx>
+  @action: Extracts all Y coordinates from points that match a specified X coordinate.
+  @note: Pre-allocates memory for the result array based on the total point count,
+         filters points where the X coordinate equals atX, and trims the final array to the matched count.
+[==============================================================================}
+function TPointArrayHelper.Yx(const atX: Integer): TIntegerArray; overload;
+var
+  i, r: Integer;
+begin
+  r := 0;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if (Self[i].X = atX) then
+      Result[r.Increase] := Self[i].Y;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
   <Zip>
   @action: Zips TPointArray with xArr and yArr.
   @note: Uses minimum length(!), if xArr differs from yArr size.
 [==============================================================================}
-function TPointArrayHelper.Zip(const xArr, yArr: TIntegerArray): Integer;
+function TPointArrayHelper.Zip(const xArr, yArr: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
   Result := Self.SetSize(Min(xArr.Size, yArr.Size));
   for i := 0 to (Result - 1) do
     Self[i] := Point(xArr[i], yArr[i]);
+end;
+
+{==============================================================================]
+  <Zip>
+  @action: Zips TPointArray with the X and Y arrays of a 2D integer array.
+  @note: Expects axes[0] to hold X-values and axes[1] Y-values (as produced by
+         Axed). Returns Self.Length; Self is emptied if axes has fewer than
+         two rows.
+[==============================================================================}
+function TPointArrayHelper.Zip(const sAxes: T2DIntegerArray): Integer; overload;
+begin
+  if (sAxes.Length < 2) then
+  begin
+    SetLength(Self, 0);
+    Exit(0);
+  end;
+  Result := Self.Zip(sAxes[0], sAxes[1]);
+end;
+
+{==============================================================================]
+  <Xrev>
+  @action: Extracts the X-coordinates of the point array in reverse order.
+  @note: Result[0] is the X of the last point.
+[==============================================================================}
+function TPointArrayHelper.Xrev: TIntegerArray; overload;
+var
+  i, h: Integer;
+begin
+  h := High(Self);
+  SetLength(Result, (h + 1));
+  for i := 0 to h do
+    Result[i] := Self[h - i].X;
+end;
+
+{==============================================================================]
+  <Yrev>
+  @action: Extracts the Y-coordinates of the point array in reverse order.
+  @note: Result[0] is the Y of the last point.
+[==============================================================================}
+function TPointArrayHelper.Yrev: TIntegerArray; overload;
+var
+  i, h: Integer;
+begin
+  h := High(Self);
+  SetLength(Result, (h + 1));
+  for i := 0 to h do
+    Result[i] := Self[h - i].Y;
 end;
 {$ENDIF}

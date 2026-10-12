@@ -38,7 +38,9 @@ function Loses(const target: MType; const oAscending: Boolean = True): Boolean; 
 function Leads(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 function Trails(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 
+function Ante(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 function Anterior(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+function Post(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 function Posterior(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
@@ -461,6 +463,19 @@ begin
 end;
 
 {==============================================================================]
+  <Ante>
+  @action: Determines whether Self comes strictly before the target in the
+           ordering given by oAscending.
+  @note: Ascending: Self < target. Descending: Self > target. Equal values
+         never lead (returns False), so this is a strict predicate. Ordered-only
+         tier (uses only <, > and =).
+[==============================================================================}
+function MTypeHelper.Ante(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := (((Self < target) = oAscending) and (Self <> target));
+end;
+
+{==============================================================================]
   <Anterior>
   @action: Returns True if Self is at or before target along the given direction.
   @note: Direction is controlled by oAscending (default True). Inclusive
@@ -470,6 +485,20 @@ end;
 function MTypeHelper.Anterior(const target: MType; const oAscending: Boolean = True): Boolean; overload;
 begin
   Result := ((Self = target) or ((Self < target) = oAscending));
+end;
+
+{==============================================================================]
+  <Post>
+  @action: Determines whether Self comes strictly after the target in the
+           ordering given by oAscending.
+  @note: Ascending: Self > target. Descending: Self < target. Equal values
+         never trail (returns False), so this is a strict predicate. Mirror of
+         Leads: Self.Trails(target) = target.Leads(Self). Note that Trails is
+         NOT the negation of Leads, since equality makes both False.
+[==============================================================================}
+function MTypeHelper.Post(const target: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := (((Self > target) = oAscending) and (Self <> target));
 end;
 
 {==============================================================================]

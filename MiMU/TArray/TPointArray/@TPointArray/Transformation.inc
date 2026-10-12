@@ -1,9 +1,27 @@
 {$IFDEF HELPERS}
+function Interleaved: TIntegerArray; overload;
 function FrameLinks(const dist: Integer; const area: TBox): TPointArray; overload;
 function FrameLinks(const dist: Integer = 1): TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Interleaved>
+  @action: Flattens the point array into a single integer array: X0, Y0, X1, Y1, ...
+  @note: Result length is 2 * Self.Length.
+[==============================================================================}
+function TPointArrayHelper.Interleaved: TIntegerArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, (Self.Length * 2));
+  for i := 0 to High(Self) do
+  begin
+    Result[i * 2] := Self[i].X;
+    Result[i * 2 + 1] := Self[i].Y;
+  end;
+end;
+
 {==============================================================================]
   <FrameLinks>
   @action: For each point in the array that lies within the given area, generates

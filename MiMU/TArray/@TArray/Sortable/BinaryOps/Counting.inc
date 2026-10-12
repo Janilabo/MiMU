@@ -14,11 +14,13 @@ function BinaryEncounter(const startItem, stopItem: MType; const oAscending: Boo
 function BinaryFrequency(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryHigherCount(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLowerCount(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryNumeratum(const x: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryOccurrence(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryOccurrences(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryOccurrency(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryQuantity(const x: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryRecur(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryRecursum(const x: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryTally(const x: MType; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
@@ -496,6 +498,51 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryNumeratum>
+  @action: Counts the frequency of a specified value x in a sorted array using binary search.
+  @note: Supports both ascending and descending sorted arrays via the oAscending parameter. Returns 0 if the value is not found. Time complexity is O(log n).
+[==============================================================================}
+function MArrayHelper.BinaryNumeratum(const x: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  l, h, m, a, n: Integer;
+  function C(const v: MType): Integer;
+  begin
+    if (v = x) then
+      Exit(0);
+    if ((v < x) = oAscending) then
+      Result := -1
+    else
+      Result := 1;
+  end;
+begin
+  n := Self.Length;
+  l := 0;
+  h := n;
+  while (l < h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if (C(Self[m]) < 0) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  a := l;
+  if ((a >= n) or (Self[a] <> x)) then
+    Exit(0);
+  l := (a + 1);
+  h := n;
+  while (l < h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if (Self[m] = x) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := (l - a);
+end;
+
+{==============================================================================]
   <BinaryOccurrence>
   @action: Returns the number of occurrences of the specified item in the
            sorted array using binary boundary search primitives.
@@ -626,6 +673,55 @@ function MArrayHelper.BinaryRecur(const item: MType; const oAscending: Boolean =
       Result := R((m + 1), hi)
     else
       Result := R(lo, (m - 1));
+  end;
+begin
+  Result := R(0, High(Self));
+end;
+
+{==============================================================================]
+  <BinaryRecursum>
+  @action: Returns the number of elements equal to x in a sorted array, using
+           pruned recursive bisection. Slices that cannot contain x are
+           discarded, and slices that consist entirely of x are counted in
+           O(1) from their bounds.
+  @note: Requires the array to be sorted according to oAscending; an unsorted
+         or mis-ordered array yields undefined results.
+         Returns 0 if the array is empty or x is not present.
+         Each call classifies the slice by its two end elements:
+           - last element lies before x, or first element lies after x
+             -> x cannot be in the slice, contributes 0
+           - first and last elements both equal x
+             -> sorted order means the whole slice is x, contributes its length
+           - otherwise -> bisect and recurse into both halves
+         Only the two paths toward the boundaries of the run keep recursing.
+         Every other branch ends immediately, so the time complexity is
+         O(log n) regardless of how many duplicates there are, and the
+         recursion depth is O(log n).
+         Corrected, pruned counterpart of BinaryRecur, which degrades to O(n)
+         on long runs of equal values.
+[==============================================================================}
+function MArrayHelper.BinaryRecursum(const x: MType; const oAscending: Boolean = True): Integer; overload;
+  function C(const v: MType): Integer;
+  begin
+    if (v = x) then
+      Exit(0);
+    if ((v < x) = oAscending) then
+      Result := -1
+    else
+      Result := 1;
+  end;
+  function R(lIndex, hIndex: Integer): Integer;
+  var
+    m: Integer;
+  begin
+    if (lIndex > hIndex) then
+      Exit(0);
+    if ((C(Self[hIndex]) < 0) or (C(Self[lIndex]) > 0)) then
+      Exit(0);
+    if ((C(Self[lIndex]) = 0) and (C(Self[hIndex]) = 0)) then
+      Exit((hIndex - lIndex) + 1);
+    m := (lIndex + ((hIndex - lIndex) div 2));
+    Result := (R(lIndex, m) + R((m + 1), hIndex));
   end;
 begin
   Result := R(0, High(Self));
