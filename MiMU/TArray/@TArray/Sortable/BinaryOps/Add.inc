@@ -1,17 +1,23 @@
 {$IFDEF HELPERS}
 function BinaryAdd(const item: MType; const aAscending: Boolean = True): MArray; overload;
+function BinaryAdd(const item: MType; const itemCount: UInt32; const aAscending: Boolean = True): MArray; overload;
 function BinaryAddendum(const item: MType; const allowDuplicates: Boolean = True; const oAscending: Boolean = True): Integer; overload;
 function BinaryAnnex(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryAnnex(const item: MType; const itemCount: UInt32; const oAscending: Boolean = True): Integer; overload;
 function BinaryAppend(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryAppend(const item: MType; const itemCount: UInt32; const oAscending: Boolean = True): Integer; overload;
 function BinaryAttach(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function BinaryFeed(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryFeed(const item: MType; const itemCount: UInt32; const oAscending: Boolean = True): Boolean; overload;
 function BinaryGive(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryGive(const item: MType; const itemCount: UInt32; const oAscending: Boolean = True): Boolean; overload;
 function BinaryInclude(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryInsert(const x: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryInsert(const x: MType; const xCount: UInt32; const aAscending: Boolean = True): Integer; overload;
 function BinaryInserta(const item: MType; const allowDuplicates: Boolean = True; const oAscending: Boolean = True): Integer; overload;
 function BinaryInsertion(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySupply(const item: MType; const aAscending: Boolean = True): Boolean; overload;
+function BinarySupply(const item: MType; const itemCount: UInt32; const aAscending: Boolean = True): Boolean; overload;
 function BinarySupply(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
@@ -45,6 +51,44 @@ begin
   Result[r.start] := item;
   for i := r.start to High(Self) do
     Result[i + 1] := Self[i];
+end;
+
+{==============================================================================]
+  <BinaryAdd>
+  @action: Creates a new array with itemCount copies of an item inserted into
+           their correctly sorted position, without modifying Self.
+  @note:
+    - Self must already be sorted according to aAscending.
+    - Duplicate values are permitted; the items are inserted at the first
+      valid position consistent with sort order.
+    - If itemCount is 0, the result is a copy of Self.
+[==============================================================================}
+function MArrayHelper.BinaryAdd(const item: MType; const itemCount: UInt32; const aAscending: Boolean = True): MArray; overload;
+var
+  m, i, c, s, p: Integer;
+  r: TRange;
+begin
+  if (itemCount = 0) then
+    Exit(Self.Cloned);
+  s := Self.Length;
+  c := Integer(itemCount);
+  r.Create(0, (s - 1));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    if ((aAscending and (Self[m] < item)) or ((not aAscending) and (Self[m] > item))) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  p := r.start;
+  SetLength(Result, (s + c));
+  for i := 0 to (p - 1) do
+    Result[i] := Self[i];
+  for i := p to (p + c - 1) do
+    Result[i] := item;
+  for i := p to (s - 1) do
+    Result[i + c] := Self[i];
 end;
 
 {==============================================================================]
@@ -96,6 +140,37 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryAnnex>
+  @action: Inserts itemCount copies of item into the array at their correct
+           sorted position, determined via BinaryLeftpos, and shifts subsequent
+           elements right to make room. Modifies Self in place.
+  @note:
+    - Self must already be sorted according to oAscending.
+    - Duplicates are permitted; the items are inserted before any existing
+      equal elements (leftmost valid position, per BinaryLeftpos).
+    - Returns the index at which the first copy was inserted.
+    - If itemCount is 0, Self is not modified and the index where the item
+      would have been inserted is returned.
+    - Uses element-wise assignment for the shift, safe for both managed
+      (e.g. String) and unmanaged MType instantiations.
+[==============================================================================}
+function MArrayHelper.BinaryAnnex(const item: MType; const itemCount: UInt32; const oAscending: Boolean = True): Integer; overload;
+var
+  i, c, s: Integer;
+begin
+  if (itemCount = 0) then
+    Exit(-1);
+  c := Integer(itemCount);
+  s := Self.Length;
+  Result := Self.BinaryLeftpos(item, oAscending);
+  SetLength(Self, (s + c));
+  for i := (s - 1) downto Result do
+    Self[i + c] := Self[i];
+  for i := Result to (Result + c - 1) do
+    Self[i] := item;
+end;
+
+{==============================================================================]
   <BinaryAppend>
   @action: Inserts an item into the array while maintaining sorted order.
            Locates the correct index via binary search and shifts elements
@@ -125,6 +200,39 @@ begin
   for i := (High(Self) - 1) downto Result do
     Self[i + 1] := Self[i];
   Self[Result] := item;
+end;
+
+{==============================================================================]
+  <BinaryAppend>
+  @action: Inserts an item into a sorted array using binary search to maintain order.
+  @note: Locates the insertion index using a binary search over a custom range,
+         resizes the array to accommodate multiple copies, and shifts existing elements to make room.
+		 Returns the insertion index, or -1 if itemCount is zero.
+[==============================================================================}
+function MArrayHelper.BinaryAppend(const item: MType; const itemCount: UInt32; const oAscending: Boolean = True): Integer; overload;
+var
+  m, i, c, s: Integer;
+  r: TRange;
+begin
+  if (itemCount = 0) then
+    Exit(-1);
+  s := Self.Length;
+  c := Integer(itemCount);
+  r.Create(0, High(Self));
+  while r.Asceal do
+  begin
+    m := r.Pivot;
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  Result := r.start;
+  SetLength(Self, (s + c));
+  for i := (s - 1) downto Result do
+    Self[i + c] := Self[i];
+  for i := Result to (Result + c - 1) do
+    Self[i] := item;
 end;
 
 {==============================================================================]
@@ -199,6 +307,43 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryFeed>
+  @action: Inserts itemCount copies of item into Self while maintaining sorted
+           order. Works with ascending or descending order based on oAscending.
+  @note:
+    - Returns True if the items were inserted, False if item already exists
+      or itemCount is 0.
+[==============================================================================}
+function MArrayHelper.BinaryFeed(const item: MType; const itemCount: UInt32; const oAscending: Boolean = True): Boolean; overload;
+var
+  m, i, c, s, p: Integer;
+  r: TRange;
+begin
+  if (itemCount = 1) then
+    Exit(False);
+  c := Integer(itemCount);
+  s := Self.Length;
+  r.Create(0, (s - 1));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  p := r.start;
+  Result := ((p = s) or (Self[p] <> item));
+  if not Result then
+    Exit;
+  SetLength(Self, (s + c));
+  for i := (s - 1) downto p do
+    Self[i + c] := Self[i];
+  for i := p to (p + c - 1) do
+    Self[i] := item;
+end;
+
+{==============================================================================]
   <BinaryGive>
   @action: Inserts item into Self while maintaining sorted order. Works with
            ascending or descending order based on oAscending.
@@ -223,6 +368,42 @@ begin
   for i := Self.Alloc(Self.Length + 1) downto (l + 1) do
     Self[i] := Self[i - 1];
   Self[l] := item;
+  Result := True;
+end;
+
+{==============================================================================]
+  <BinaryGive>
+  @action: Inserts itemCount copies of item into Self while maintaining sorted
+           order. Works with ascending or descending order based on oAscending.
+  @note:
+    - Returns True if the items were inserted, False if item already exists
+      or itemCount is 0.
+[==============================================================================}
+function MArrayHelper.BinaryGive(const item: MType; const itemCount: UInt32; const oAscending: Boolean = True): Boolean; overload;
+var
+  l, h, m, i, c, s: Integer;
+begin
+  if (itemCount = 0) then
+    Exit(False);
+  c := Integer(itemCount);
+  s := Self.Length;
+  l := 0;
+  h := (s - 1);
+  while (l <= h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if (Self[m] = item) then
+      Exit(False);
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := (m - 1);
+  end;
+  SetLength(Self, (s + c));
+  for i := (s - 1) downto l do
+    Self[i + c] := Self[i];
+  for i := l to (l + c - 1) do
+    Self[i] := item;
   Result := True;
 end;
 
@@ -419,6 +600,52 @@ begin
   for i := High(Self) downto (r.start + 1) do
     Self[i] := Self[i - 1];
   Self[r.start] := item;
+end;
+
+{==============================================================================]
+  <BinarySupply>
+  @action: Inserts itemCount copies of the item into the array at the correct
+           position to maintain sorted order. Supports both ascending and
+           descending order.
+  @note:
+    • The array must already be sorted according to aAscending.  
+    • If aAscending = True, ascending order is assumed;  
+      if aAscending = False, descending order is assumed.  
+    • Nothing is inserted if the value already exists in the array.  
+    • Returns True if the items were inserted, False if the value already
+      exists or itemCount is 0.  
+    • Search complexity: O(log n).  
+    • Insertion (element shift) complexity: O(n).  
+    • Overall complexity: O(n).  
+    • The array is resized when insertion occurs.
+[==============================================================================}
+function MArrayHelper.BinarySupply(const item: MType; const itemCount: UInt32; const aAscending: Boolean = True): Boolean; overload;
+var
+  m, i, c, s, p: Integer;
+  r: TRange;
+begin
+  s := Self.Length;
+  if (itemCount = 0) then
+    Exit(False);
+  c := Integer(itemCount);
+  r.Create(0, (s - 1));
+  while (r.start <= r.stop) do
+  begin
+    m := r.Pivot;
+    if ((aAscending and (Self[m] < item)) or ((not aAscending) and (Self[m] > item))) then
+      r.start := (m + 1)
+    else
+      r.stop := (m - 1);
+  end;
+  p := r.start;
+  Result := ((p = s) or (Self[p] <> item));
+  if not Result then
+    Exit;
+  SetLength(Self, (s + c));
+  for i := (s - 1) downto p do
+    Self[i + c] := Self[i];
+  for i := p to (p + c - 1) do
+    Self[i] := item;
 end;
 
 {==============================================================================]

@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function XGrouped: T2DPointArray; overload;
+function XGroups(const oAscending: Boolean = True): T2DPointArray; overload;
 function YGrouped: T2DPointArray; overload;
+function YGroups(const oAscending: Boolean = True): T2DPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -55,6 +57,40 @@ begin
 end;
 
 {==============================================================================]
+  <XGroups>
+  @action: Groups points into a 2D point array by their X coordinates using a sorted linear scan.
+  @note: Copies and sorts the points using QuickSortByYX, then partitions them into sub-arrays based on matching X values.
+         Pre-allocates memory and trims dynamic array sizes for optimization.
+[==============================================================================}
+function TPointArrayHelper.XGroups(const oAscending: Boolean = True): T2DPointArray; overload;
+var
+  i, g, s, l, p: Integer;
+  r: TPointArray;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  r := Self.Copy;
+  r.QuickSortByYX(oAscending);
+  SetLength(Result, s);
+  SetLength(Result[0], s);
+  Result[0][0] := r[0];
+  g := 0;
+  p := 1;
+  for i := 1 to High(r) do
+    if (r[i].X <> r[i - 1].X) then
+    begin
+      SetLength(Result[g], p);
+      p := 1;
+      SetLength(Result, (g.Increment + 1));
+      SetLength(Result[g], ((s - i) + 1));
+      Result[g][0] := r[i];
+    end else
+      Result[g][p.Increase] := r[i];
+  SetLength(Result[g], p);
+end;
+
+{==============================================================================]
   <YGrouped>
   @action: Groups points sharing the same Y (rows). Returns new T2DPointArray.
   @note: Non-mutating; Self is left untouched.
@@ -102,5 +138,39 @@ begin
     Result[z[j]][r[j]] := t[i];
     Inc(r[j]);
   end;
+end;
+
+{==============================================================================]
+  <YGroups>
+  @action: Groups points into a 2D point array by their Y coordinates using a sorted linear scan.
+  @note: Copies and sorts the points using QuickSortByXY, then partitions them into sub-arrays based on matching Y values.
+         Pre-allocates memory and trims dynamic array sizes for optimization.
+[==============================================================================}
+function TPointArrayHelper.YGroups(const oAscending: Boolean = True): T2DPointArray; overload;
+var
+  i, g, s, l, p: Integer;
+  r: TPointArray;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  r := Self.Copy;
+  r.QuickSortByXY(oAscending);
+  SetLength(Result, s);
+  SetLength(Result[0], s);
+  Result[0][0] := r[0];
+  g := 0;
+  p := 1;
+  for i := 1 to High(r) do
+    if (r[i].Y <> r[i - 1].Y) then
+    begin
+      SetLength(Result[g], p);
+      p := 1;
+      SetLength(Result, (g.Increment + 1));
+      SetLength(Result[g], ((s - i) + 1));
+      Result[g][0] := r[i];
+    end else
+      Result[g][p.Increase] := r[i];
+  SetLength(Result[g], p);
 end;
 {$ENDIF}
