@@ -8,6 +8,7 @@ function BinaryFeed(const item: MType; const oAscending: Boolean = True): Boolea
 function BinaryGive(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryInclude(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryInsert(const x: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryInsert(const x: MType; const xCount: UInt32; const aAscending: Boolean = True): Integer; overload;
 function BinaryInserta(const item: MType; const allowDuplicates: Boolean = True; const oAscending: Boolean = True): Integer; overload;
 function BinaryInsertion(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinarySupply(const item: MType; const aAscending: Boolean = True): Boolean; overload;
@@ -280,6 +281,42 @@ begin
     Self[Result] := x;
   end else
     Self[0] := x;
+end;
+
+{==============================================================================]
+  <BinaryInsert>
+  @action: Insert xCount copies of an item (x) into a sorted array using binary search, preserving order.
+  @note: Returns the index of the first inserted element. Supports ascending or descending order.
+[==============================================================================}
+function MArrayHelper.BinaryInsert(const x: MType; const xCount: UInt32; const aAscending: Boolean = True): Integer; overload;
+var
+  m, i, c, s: Integer;
+  r: TRange;
+begin
+  if (xCount = 0) then
+    Exit(-1);
+  s := Self.Length;
+  Result := s;
+  c := Integer(xCount);
+  Self.SetSize(s + c);
+  if (s > 0) then
+  begin
+    r.Create(0, (s - 1));
+    while (r.start <= r.stop) do
+    begin
+      m := r.Pivot;
+      if ((aAscending and (Self[m] >= x)) or ((not aAscending) and (Self[m] <= x))) then
+      begin
+        Result := m;
+        r.stop := (m - 1);
+      end else
+        r.start := (m + 1);
+    end;
+    for i := High(Self) downto (Result + c) do
+      Self[i] := Self[i - c];
+  end;
+  for i := Result to (Result + c - 1) do
+    Self[i] := x;
 end;
 
 {==============================================================================]

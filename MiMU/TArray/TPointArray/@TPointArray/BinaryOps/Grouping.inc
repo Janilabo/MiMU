@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function BinaryXGrouped: T2DPointArray; overload;
+function BinaryXGroups(const oAscending: Boolean = True): T2DPointArray; overload;
 function BinaryYGrouped: T2DPointArray; overload;
+function BinaryYGroups(const oAscending: Boolean = True): T2DPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -40,6 +42,25 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryXGroups>
+  @action: Groups points into a 2D point array by their X coordinates using binary search.
+  @note: Returns a T2DPointArray where each sub-array contains points sharing the same X value,
+         ordered according to the oAscending parameter.
+[==============================================================================}
+function TPointArrayHelper.BinaryXGroups(const oAscending: Boolean = True): T2DPointArray; overload;
+var
+  i: Integer;
+  x: TIntegerArray;
+begin
+  if (Self.Length = 0) then
+    Exit([]);
+  x := Self.XArr(oAscending).Compressed;
+  SetLength(Result, x.Length);
+  for i := 0 to High(Self) do
+    Result[x.BinarySearch(Self[i].X, oAscending)].BinaryAppend(Self[i], oAscending);
+end;
+
+{==============================================================================]
   <BinaryGrouped>
   @action:
     Groups all points in the TPointArray by their Y-coordinate using binary search.
@@ -70,5 +91,24 @@ begin
       SetLength(Result, r);
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <BinaryYGroups>
+  @action: Groups points into a 2D point array by their Y coordinates using binary search.
+  @note: Returns a T2DPointArray where each sub-array contains points sharing the same Y value,
+         ordered according to the oAscending parameter.
+[==============================================================================}
+function TPointArrayHelper.BinaryYGroups(const oAscending: Boolean = True): T2DPointArray; overload;
+var
+  i: Integer;
+  y: TIntegerArray;
+begin
+  if (Self.Length = 0) then
+    Exit([]);
+  y := Self.YArr(oAscending).Compressed;
+  SetLength(Result, y.Length);
+  for i := 0 to High(Self) do
+    Result[y.BinarySearch(Self[i].Y, oAscending)].BinaryAppend(Self[i], oAscending);
 end;
 {$ENDIF}
