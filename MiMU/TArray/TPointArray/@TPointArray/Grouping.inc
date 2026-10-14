@@ -1,7 +1,11 @@
 {$IFDEF HELPERS}
 function XGrouped: T2DPointArray; overload;
+function XGroupify(const oAscending: Boolean = True): T2DPointArray; overload;
+function XGrouping: T2DPointArray; overload;
 function XGroups(const oAscending: Boolean = True): T2DPointArray; overload;
 function YGrouped: T2DPointArray; overload;
+function YGroupify(const oAscending: Boolean = True): T2DPointArray; overload;
+function YGrouping: T2DPointArray; overload;
 function YGroups(const oAscending: Boolean = True): T2DPointArray; overload;
 {$ENDIF}
 
@@ -52,6 +56,76 @@ begin
   begin
     j := (t[i].X - x.start);
     Result[z[j]][c[j]] := t[i];
+    Inc(c[j]);
+  end;
+end;
+
+{==============================================================================]
+  <XGroupify>
+  @action: Groups the points in the TPointArray by their X-coordinate into a T2DPointArray.
+  @note: Sorts the array using QuickSortByYX (based on oAscending) and then groups consecutive points that share the same X-coordinate.
+[==============================================================================}
+function TPointArrayHelper.XGroupify(const oAscending: Boolean = True): T2DPointArray; overload;
+var
+  i, g, b, s: Integer;
+  r: TPointArray;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  r := Self.Copy;
+  r.QuickSortByYX(oAscending);
+  g := 1;
+  for i := 1 to (s - 1) do
+    if (r[i].X <> r[i - 1].X) then
+      Inc(g);
+  SetLength(Result, g);
+  g := 0;
+  b := 0;
+  for i := 1 to s do
+    if ((i = s) or (r[i].X <> r[i - 1].X)) then
+    begin
+      SetLength(Result[g], (i - b));
+      Move(r[b], Result[g][0], ((i - b) * SizeOf(TPoint)));
+      Inc(g);
+      b := i;
+    end;
+end;
+
+{==============================================================================]
+  <XGrouping>
+  @action: Groups the points in the TPointArrayHelper by their X-coordinate into a T2DPointArray without sorting.
+  @note: Uses a counting/survey approach based on the X range of the points to group them in linear time complexity.
+[==============================================================================}
+function TPointArrayHelper.XGrouping: T2DPointArray; overload;
+var
+  s, i, j, g: Integer;
+  c, z: TIntegerArray;
+  x, y: TRange;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  Self.Survey(x, y);
+  SetLength(c, (x.stop - x.start + 1));
+  SetLength(z, (x.stop - x.start + 1));
+  for i := 0 to (s - 1) do
+    Inc(c[Self[i].X - x.start]);
+  g := 0;
+  for i := 0 to High(c) do
+    if (c[i] > 0) then
+      z[i] := g.Increase;
+  SetLength(Result, g);
+  for i := 0 to High(c) do
+    if (c[i] > 0) then
+    begin
+      SetLength(Result[z[i]], c[i]);
+      c[i] := 0;
+    end;
+  for i := 0 to (s - 1) do
+  begin
+    j := (Self[i].X - x.start);
+    Result[z[j]][c[j]] := Self[i];
     Inc(c[j]);
   end;
 end;
@@ -136,6 +210,76 @@ begin
   begin
     j := (t[i].Y - y.start);
     Result[z[j]][r[j]] := t[i];
+    Inc(r[j]);
+  end;
+end;
+
+{==============================================================================]
+  <YGroupify>
+  @action: Groups the points in the TPointArray by their Y-coordinate into a T2DPointArray.
+  @note: Sorts the array using QuickSortByXY (based on oAscending) and then groups consecutive points that share the same Y-coordinate.
+[==============================================================================}
+function TPointArrayHelper.YGroupify(const oAscending: Boolean = True): T2DPointArray; overload;
+var
+  i, g, b, s: Integer;
+  r: TPointArray;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  r := Self.Copy;
+  r.QuickSortByXY(oAscending);
+  g := 1;
+  for i := 1 to (s - 1) do
+    if (r[i].Y <> r[i - 1].Y) then
+      Inc(g);
+  SetLength(Result, g);
+  g := 0;
+  b := 0;
+  for i := 1 to s do
+    if ((i = s) or (r[i].Y <> r[i - 1].Y)) then
+    begin
+      SetLength(Result[g], (i - b));
+      Move(r[b], Result[g][0], ((i - b) * SizeOf(TPoint)));
+      Inc(g);
+      b := i;
+    end;
+end;
+
+{==============================================================================]
+  <YGrouping>
+  @action: Groups the points in the TPointArrayHelper by their Y-coordinate into a T2DPointArray without sorting.
+  @note: Uses a counting/survey approach based on the Y range of the points to group them in linear time complexity.
+[==============================================================================}
+function TPointArrayHelper.YGrouping: T2DPointArray; overload;
+var
+  s, i, j, g: Integer;
+  r, z: TIntegerArray;
+  x, y: TRange;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  Self.Survey(x, y);
+  SetLength(r, (y.stop - y.start + 1));
+  SetLength(z, (y.stop - y.start + 1));
+  for i := 0 to (s - 1) do
+    Inc(r[Self[i].Y - y.start]);
+  g := 0;
+  for i := 0 to High(r) do
+    if (r[i] > 0) then
+      z[i] := g.Increase;
+  SetLength(Result, g);
+  for i := 0 to High(r) do
+    if (r[i] > 0) then
+    begin
+      SetLength(Result[z[i]], r[i]);
+      r[i] := 0;
+    end;
+  for i := 0 to (s - 1) do
+  begin
+    j := (Self[i].Y - y.start);
+    Result[z[j]][r[j]] := Self[i];
     Inc(r[j]);
   end;
 end;
