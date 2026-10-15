@@ -1,4 +1,8 @@
 {$IFDEF HELPERS}
+function AsX(const rAscending: Boolean = True): TIntegerArray; overload;
+function AsXs: TIntegerArray; overload;
+function AsY(const rAscending: Boolean = True): TIntegerArray; overload;
+function AsYs: TIntegerArray; overload;
 function Axed: T2DIntegerArray; overload;
 function Axed(var X, Y: TIntegerArray): Integer; overload;
 function Axes(var X, Y: TIntegerArray): Integer; overload;
@@ -34,6 +38,178 @@ function Yrev: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsX>
+  @action: Extract all unique X coordinates from the point array, sort them according to the specified direction, and return them as an integer array.
+  @note: 
+  - Uses direct pointer arithmetic for high-performance coordinate extraction and in-place compaction.
+  - Supports sorting in ascending (default) or descending order via rAscending.
+  - Automatically removes duplicate values.
+[==============================================================================}
+function TPointArrayHelper.AsX(const rAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, n, l: Integer;
+  s: PPoint;
+  r, c: PInteger;
+begin
+  n := Self.Length;
+  if (n = 0) then
+    Exit([]);
+  SetLength(Result, n);
+  s := @Self[0];
+  r := @Result[0];
+  for i := 0 to (n - 1) do
+  begin
+    r^ := s^.X;
+    Inc(s);
+    Inc(r);
+  end;
+  if (n = 1) then
+    Exit;
+  Result.QuickSort(rAscending);
+  r := @Result[0];
+  c := r;
+  l := 1;
+  for i := 1 to (n - 1) do
+  begin
+    Inc(c);
+    if (c^ <> r^) then
+    begin
+      Inc(r);
+      r^ := c^;
+      Inc(l);
+    end;
+  end;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <AsY>
+  @action: Extract all unique Y coordinates from the point array, sort them according to the specified direction, and return them as an integer array.
+  @note: 
+  - Uses direct pointer arithmetic for high-performance coordinate extraction and in-place compaction.
+  - Supports sorting in ascending (default) or descending order via rAscending.
+  - Automatically removes duplicate values.
+[==============================================================================}
+function TPointArrayHelper.AsY(const rAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, n, l: Integer;
+  s: PPoint;
+  r, c: PInteger;
+begin
+  n := Self.Length;
+  if (n = 0) then
+    Exit([]);
+  SetLength(Result, n);
+  s := @Self[0];
+  r := @Result[0];
+  for i := 0 to (n - 1) do
+  begin
+    r^ := s^.Y;
+    Inc(s);
+    Inc(r);
+  end;
+  if (n = 1) then
+    Exit;
+  Result.QuickSort(rAscending);
+  r := @Result[0];
+  c := r;
+  l := 1;
+  for i := 1 to (n - 1) do
+  begin
+    Inc(c);
+    if (c^ <> r^) then
+    begin
+      Inc(r);
+      r^ := c^;
+      Inc(l);
+    end;
+  end;
+  SetLength(Result, l);
+end;
+
+{==============================================================================]
+  <AsXs>
+  @action: Extract all unique X coordinates from a point array, maintaining them in sorted order.
+  @note: 
+  - Uses binary search to insert each X coordinate into a sorted tracking array in O(log N) time per element.
+  - Skips duplicate X coordinates to ensure uniqueness.
+  - Returns an ordered integer array of unique X values.
+[==============================================================================}
+function TPointArrayHelper.AsXs: TIntegerArray; overload;
+var
+  s: TIntegerArray;
+  z, i, r, n, l, h, m: Integer;
+begin
+  z := Self.Length;
+  if (z = 0) then
+    Exit([]);
+  SetLength(s, (z + 1));
+  n := 0;
+  r := 0;
+  for i := 0 to Result.Alloc(z) do
+  begin
+    l := 0;
+    h := n;
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if (s[m] < Self[i].X) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    if ((l < n) and (s[l] = Self[i].X)) then
+      Continue;
+    Move(s[l], s[l + 1], ((n - l) * SizeOf(Integer)));
+    s[l] := Self[i].X;
+    Inc(n);
+    Result[r.Increase] := Self[i].X;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <AsYs>
+  @action: Extract all unique Y coordinates from a point array, maintaining them in sorted order.
+  @note: 
+  - Uses binary search to insert each Y coordinate into a sorted tracking array in O(log N) time per element.
+  - Skips duplicate Y coordinates to ensure uniqueness.
+  - Returns an ordered integer array of unique Y values.
+[==============================================================================}
+function TPointArrayHelper.AsYs: TIntegerArray; overload;
+var
+  s: TIntegerArray;
+  z, i, r, n, l, h, m: Integer;
+begin
+  z := Self.Length;
+  if (z = 0) then
+    Exit([]);
+  SetLength(s, (z + 1));
+  n := 0;
+  r := 0;
+  for i := 0 to Result.Alloc(z) do
+  begin
+    l := 0;
+    h := n;
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if (s[m] < Self[i].Y) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    if ((l < n) and (s[l] = Self[i].Y)) then
+      Continue;
+    Move(s[l], s[l + 1], ((n - l) * SizeOf(Integer)));
+    s[l] := Self[i].Y;
+    Inc(n);
+    Result[r.Increase] := Self[i].Y;
+  end;
+  SetLength(Result, r);
+end;
+
 {==============================================================================]
   <Axed>
   @action: Stores X-values and Y-values from TPointArray to X and Y TIntegerArrays.
