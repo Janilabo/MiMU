@@ -2,7 +2,11 @@
 function Axed: T2DIntegerArray; overload;
 function Axed(var X, Y: TIntegerArray): Integer; overload;
 function Axes(var X, Y: TIntegerArray): Integer; overload;
+function GetX: TIntegerArray; overload;
+function GetY: TIntegerArray; overload;
 function Project(var sX, sY: TIntegerArray): TBox; overload;
+function ToXs: TIntegerArray; overload;
+function ToYs: TIntegerArray; overload;
 function Unzip(var xArr, yArr: TIntegerArray): Integer;
 function XArr(const aAscending: Boolean = True): TIntegerArray;
 function XAxis(const rUnique: Boolean = True): TIntegerArray; overload;
@@ -98,6 +102,58 @@ begin
 end;
 
 {==============================================================================]
+  <GetX>
+  @action: Returns the unique X values in order of first appearance.
+  @note: Counting-array flags over the X range: O(n + rangeX) time and memory.
+         PascalScript-compatible. Prefer XAxis when sorted output is fine.
+[==============================================================================}
+function TPointArrayHelper.GetX: TIntegerArray; overload;
+var
+  i, r: Integer;
+  x, y: TRange;
+  s: TBooleanArray;
+begin
+  if (Self.Length = 0) then
+    Exit([]);
+  Self.Survey(x, y);
+  SetLength(s, (x.stop - x.start + 1));
+  r := 0;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if not s[Self[i].X - x.start] then
+    begin
+      s[Self[i].X - x.start] := True;
+      Result[r.Increase] := Self[i].X;
+    end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <GetY>
+  @action: Returns the unique Y values in order of first appearance.
+  @note: Counting-array flags over the Y range: O(n + rangeY) time and memory.
+         PascalScript-compatible. Prefer YAxis when sorted output is fine.
+[==============================================================================}
+function TPointArrayHelper.GetY: TIntegerArray; overload;
+var
+  i, r: Integer;
+  x, y: TRange;
+  s: TBooleanArray;
+begin
+  if (Self.Length = 0) then
+    Exit([]);
+  Self.Survey(x, y);
+  SetLength(s, (y.stop - y.start + 1));
+  r := 0;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if not s[Self[i].Y - y.start] then
+    begin
+      s[Self[i].Y - y.start] := True;
+      Result[r.Increase] := Self[i].Y;
+    end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
   <Project>
   @action: Projects the point array into separate X and Y coordinate arrays
            while computing and returning the axis-aligned bounding box.
@@ -124,6 +180,58 @@ begin
     else if (sY[i] > Result.Y2) then
       Result.Y2 := sY[i];
   end;
+end;
+
+{==============================================================================]
+  <ToXs>
+  @action: Returns the unique X values in order of first appearance.
+  @note: Dictionary-based, O(n) expected time, memory proportional to the number
+         of distinct values. Use for huge sparse ranges.
+[==============================================================================}
+function TPointArrayHelper.ToXs: TIntegerArray; overload;
+var
+  i, r: Integer;
+  d: specialize TDictionary<Integer, Boolean>;
+begin
+  r := 0;
+  d := specialize TDictionary<Integer, Boolean>.Create;
+  try
+    for i := 0 to Result.Alloc(Self.Length) do
+      if not d.ContainsKey(Self[i].X) then
+      begin
+        d.Add(Self[i].X, True);
+        Result[r.Increase] := Self[i].X;
+      end;
+  finally
+    d.Free;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <ToXs>
+  @action: Returns the unique Y values in order of first appearance.
+  @note: Dictionary-based, O(n) expected time, memory proportional to the number
+         of distinct values. Use for huge sparse ranges.
+[==============================================================================}
+function TPointArrayHelper.ToYs: TIntegerArray; overload;
+var
+  i, r: Integer;
+  d: specialize TDictionary<Integer, Boolean>;
+begin
+  r := 0;
+  d := specialize TDictionary<Integer, Boolean>.Create;
+  try
+    for i := 0 to Result.Alloc(Self.Length) do
+      if not d.ContainsKey(Self[i].Y) then
+      begin
+        d.Add(Self[i].Y, True);
+        Result[r.Increase] := Self[i].Y;
+      end;
+  finally
+    d.Free;
+  end;
+  SetLength(Result, r);
 end;
 
 {==============================================================================]
