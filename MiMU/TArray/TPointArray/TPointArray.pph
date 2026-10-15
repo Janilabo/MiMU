@@ -24,6 +24,7 @@
 {$I @TPointArray/Selection.inc}
 {$I @TPointArray/Sorting.inc}
 {$I @TPointArray/Transformation.inc}
+{$I @TPointArray/Vicinity.inc}
 
 {$I @TPointArray/Clustering/Blob.inc}
 {$I @TPointArray/Clustering/Cluster.inc}
