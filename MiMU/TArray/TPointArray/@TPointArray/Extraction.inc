@@ -1,4 +1,6 @@
 {$IFDEF HELPERS}
+function AllX: TIntegerArray; overload;
+function AllY: TIntegerArray; overload;
 function AsX(const rAscending: Boolean = True): TIntegerArray; overload;
 function AsXs: TIntegerArray; overload;
 function AsY(const rAscending: Boolean = True): TIntegerArray; overload;
@@ -28,6 +30,8 @@ function Ys(const aBox: TBox): TIntegerArray; overload;
 function YVals(const aAscending: Boolean = True): TIntegerArray; overload;
 function YValues: TIntegerArray; overload;
 function Yz(const rReversed: Boolean = False): TIntegerArray; overload;
+function Xment(const sAscending: Boolean = True): TIntegerArray; overload;
+function Yment(const sAscending: Boolean = True): TIntegerArray; overload;
 function Xd(const aIndices: TIntegerArray): TIntegerArray; overload;
 function Yd(const aIndices: TIntegerArray): TIntegerArray; overload;
 function Xy(const atY: Integer): TIntegerArray; overload;
@@ -40,6 +44,52 @@ function Yrev: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AllX>
+  @action: Extracts all X-coordinates from the point array into an integer array, preserving their original order.
+  @note: Returns an empty array if the point array is empty. The resulting array has the exact same length as the source point array.
+[==============================================================================}
+function TPointArrayHelper.AllX: TIntegerArray; overload;
+var
+  i: Integer;
+  s: PPoint;
+  r: PInteger;
+begin
+  if (Result.SetSize(Self.Length) = 0) then
+    Exit;
+  s := @Self[0];
+  r := @Result[0];
+  for i := 1 to Self.Length do
+  begin
+    r^ := s^.X;
+    Inc(s);
+    Inc(r);
+  end;
+end;
+
+{==============================================================================]
+  <AllY>
+  @action: Extracts all Y-coordinates from the point array into an integer array, preserving their original order.
+  @note: Returns an empty array if the point array is empty. The resulting array has the exact same length as the source point array.
+[==============================================================================}
+function TPointArrayHelper.AllY: TIntegerArray; overload;
+var
+  i: Integer;
+  s: PPoint;
+  r: PInteger;
+begin
+  if (Result.SetSize(Self.Length) = 0) then
+    Exit;
+  s := @Self[0];
+  r := @Result[0];
+  for i := 1 to Self.Length do
+  begin
+    r^ := s^.Y;
+    Inc(s);
+    Inc(r);
+  end;
+end;
+
 {==============================================================================]
   <AsX>
   @action: Extract all unique X coordinates from the point array, sort them according to the specified direction, and return them as an integer array.
@@ -746,6 +796,98 @@ begin
         Result[r.Increment] := Self[i].Y;
   end;
   SetLength(Result, (r + 1));
+end;
+
+{==============================================================================]
+  <Xment>
+  @action: Returns an array of unique X-coordinates from the point array.
+  @note: Traverses the array forward (if True) or backward (if False),
+         preserving the order in which unique X-coordinates first appear.
+[==============================================================================}
+function TPointArrayHelper.Xment(const sAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, j, r: Integer;
+  f: Boolean;
+begin
+  if (Result.SetSize(Self.Length) > 0) then
+  begin
+    r := 0;
+    case sAscending of
+      True:
+      for i := 0 to High(Self) do
+      begin
+        f := False;
+        for j := 0 to (r - 1) do
+          if (Result[j] = Self[i].X) then
+          begin
+            f := True;
+            Break;
+          end;
+        if not f then
+          Result[r.Increase] := Self[i].X;
+      end;
+      False:
+      for i := High(Self) downto 0 do
+      begin
+        f := False;
+        for j := 0 to (r - 1) do
+          if (Result[j] = Self[i].X) then
+          begin
+            f := True;
+            Break;
+          end;
+        if not f then
+          Result[r.Increase] := Self[i].X;
+      end;
+    end;
+    SetLength(Result, r);
+  end;
+end;
+
+{==============================================================================]
+  <Yment>
+  @action: Returns an array of unique Y-coordinates from the point array.
+  @note: Traverses the array forward (if True) or backward (if False),
+         preserving the order in which unique Y-coordinates first appear.
+[==============================================================================}
+function TPointArrayHelper.Yment(const sAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, j, r: Integer;
+  f: Boolean;
+begin
+  if (Result.SetSize(Self.Length) > 0) then
+  begin
+    r := 0;
+    case sAscending of
+      True:
+      for i := 0 to High(Self) do
+      begin
+        f := False;
+        for j := 0 to (r - 1) do
+          if (Result[j] = Self[i].Y) then
+          begin
+            f := True;
+            Break;
+          end;
+        if not f then
+          Result[r.Increase] := Self[i].Y;
+      end;
+      False:
+      for i := High(Self) downto 0 do
+      begin
+        f := False;
+        for j := 0 to (r - 1) do
+          if (Result[j] = Self[i].Y) then
+          begin
+            f := True;
+            Break;
+          end;
+        if not f then
+          Result[r.Increase] := Self[i].Y;
+      end;
+    end;
+    SetLength(Result, r);
+  end;
 end;
 
 {==============================================================================]
