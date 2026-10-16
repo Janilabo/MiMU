@@ -8,11 +8,15 @@ function Box: TBox;
 function Boxed: TBox;
 function Coverage: TBox; overload;
 function Extent: TBox;
-function Horizontal: TRange; overload;
 function MinMax: TBox;
 function Region: TBox; overload;
+
 function Survey(var xWise, yWise: TRange): Integer; overload;
+
+function Horizontal: TRange; overload;
 function Vertical: TRange; overload;
+function XRange: TRange; overload;
+function YRange: TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -236,27 +240,6 @@ begin
 end;
 
 {==============================================================================]
-  <Horizontal>
-  @action: Returns Horizontal-axis from TPointArray as TRange.
-  @note: MinMax X-values.
-[==============================================================================}
-function TPointArrayHelper.Horizontal: TRange; overload;
-var
-  i: Integer;
-begin
-  if Self.Exists then
-  begin
-    Result.Create(Self[0].X, Self[0].X);
-    for i := 0 to High(Self) do
-      if (Self[i].X < Result.start) then
-        Result.start := Self[i].X
-      else if (Self[i].X > Result.stop) then
-        Result.stop := Self[i].X;
-  end else
-    Result := Default(TRange);
-end;
-
-{==============================================================================]
   <MinMax>
   @action: Returns bounding box around TPointArray arr.
   @note: None.
@@ -336,6 +319,27 @@ begin
 end;
 
 {==============================================================================]
+  <Horizontal>
+  @action: Returns Horizontal-axis from TPointArray as TRange.
+  @note: MinMax X-values.
+[==============================================================================}
+function TPointArrayHelper.Horizontal: TRange; overload;
+var
+  i: Integer;
+begin
+  if Self.Exists then
+  begin
+    Result.Create(Self[0].X, Self[0].X);
+    for i := 1 to High(Self) do
+      if (Self[i].X < Result.start) then
+        Result.start := Self[i].X
+      else if (Self[i].X > Result.stop) then
+        Result.stop := Self[i].X;
+  end else
+    Result := Default(TRange);
+end;
+
+{==============================================================================]
   <Vertical>
   @action: Returns Vertical-axis from TPointArray as TRange.
   @note: MinMax Y-values.
@@ -347,12 +351,50 @@ begin
   if Self.Exists then
   begin
     Result.Create(Self[0].Y, Self[0].Y);
-    for i := 0 to High(Self) do
+    for i := 1 to High(Self) do
       if (Self[i].Y < Result.start) then
         Result.start := Self[i].Y
       else if (Self[i].Y > Result.stop) then
         Result.stop := Self[i].Y;
   end else
     Result := Default(TRange);
+end;
+
+{==============================================================================]
+  <XRange>
+  @action: Returns the minimum and maximum X coordinates (range) of the points in the array.
+  @note: Returns a default TRange if the point array is empty.
+[==============================================================================}
+function TPointArrayHelper.XRange: TRange; overload;
+var
+  i: Integer;
+begin
+  if (Self.Length = 0) then
+    Exit(Default(TRange));
+  Result := TRange.Construct(Self[0].X);
+  for i := 1 to High(Self) do
+    if (Self[i].X < Result.start) then
+      Result.start := Self[i].X
+    else if (Self[i].X > Result.stop) then
+      Result.stop := Self[i].X;
+end;
+
+{==============================================================================]
+  <YRange>
+  @action: Returns the minimum and maximum Y coordinates (range) of the points in the array.
+  @note: Returns a default TRange if the point array is empty.
+[==============================================================================}
+function TPointArrayHelper.YRange: TRange; overload;
+var
+  i: Integer;
+begin
+  if (Self.Length = 0) then
+    Exit(Default(TRange));
+  Result := TRange.Construct(Self[0].Y);
+  for i := 1 to High(Self) do
+    if (Self[i].Y < Result.start) then
+      Result.start := Self[i].Y
+    else if (Self[i].Y > Result.stop) then
+      Result.stop := Self[i].Y;
 end;
 {$ENDIF}

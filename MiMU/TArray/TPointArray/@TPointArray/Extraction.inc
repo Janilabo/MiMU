@@ -11,19 +11,21 @@ function GetY: TIntegerArray; overload;
 function Project(var sX, sY: TIntegerArray): TBox; overload;
 function ToXs: TIntegerArray; overload;
 function ToYs: TIntegerArray; overload;
-function Unzip(var xArr, yArr: TIntegerArray): Integer;
-function XArr(const aAscending: Boolean = True): TIntegerArray;
+function Unzip(var xArr, yArr: TIntegerArray): Integer; overload;
+function XArr(const aAscending: Boolean = True): TIntegerArray; overload;
+function XArray(const rAscending: Boolean = True): TIntegerArray; overload;
 function XAxis(const rUnique: Boolean = True): TIntegerArray; overload;
 function Xs: TIntegerArray; overload;
 function Xs(const aBox: TBox): TIntegerArray; overload;
-function XVals(const aAscending: Boolean = True): TIntegerArray;
+function XVals(const aAscending: Boolean = True): TIntegerArray; overload;
 function XValues: TIntegerArray; overload;
 function Xz(const rReversed: Boolean = False): TIntegerArray; overload;
-function YArr(const aAscending: Boolean = True): TIntegerArray;
+function YArr(const aAscending: Boolean = True): TIntegerArray; overload;
+function YArray(const rAscending: Boolean = True): TIntegerArray; overload;
 function YAxis(const rUnique: Boolean = True): TIntegerArray; overload;
 function Ys: TIntegerArray; overload;
 function Ys(const aBox: TBox): TIntegerArray; overload;
-function YVals(const aAscending: Boolean = True): TIntegerArray;
+function YVals(const aAscending: Boolean = True): TIntegerArray; overload;
 function YValues: TIntegerArray; overload;
 function Yz(const rReversed: Boolean = False): TIntegerArray; overload;
 function Xd(const aIndices: TIntegerArray): TIntegerArray; overload;
@@ -415,7 +417,7 @@ end;
   @action: Stores arr X and Y values to xArr and yArr.
   @note: Returns Length(arr).
 [==============================================================================}
-function TPointArrayHelper.Unzip(var xArr, yArr: TIntegerArray): Integer;
+function TPointArrayHelper.Unzip(var xArr, yArr: TIntegerArray): Integer; overload;
 var
   i: Integer;
 begin
@@ -433,9 +435,44 @@ end;
            optionally sorted in ascending or descending order.
   @note: Uses Quicksorting to maintain the order efficiently.
 [==============================================================================}
-function TPointArrayHelper.XArr(const aAscending: Boolean = True): TIntegerArray;
+function TPointArrayHelper.XArr(const aAscending: Boolean = True): TIntegerArray; overload;
 begin
   Result := Self.Xs.QuickSorted(aAscending);
+end;
+
+{==============================================================================]
+  <XArray>
+  @action: Extracts a sorted array of all unique X-coordinates from the point array.
+  @note: Returns an empty array if the point array is empty. The rAscending 
+         parameter determines whether the resulting coordinates are ordered in 
+         ascending (True, default) or descending (False) order.
+[==============================================================================}
+function TPointArrayHelper.XArray(const rAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, l: Integer;
+  m: TBooleanArray;
+  r: TRange;
+begin
+  if (Self.Length = 0) then
+    Exit([]);
+  r := Self.XRange;
+  SetLength(m, r.Size);
+  l := 0;
+  for i := 0 to High(Self) do
+    if m[Self[i].X - r.start].TurnTrue then
+      Inc(l);
+  SetLength(Result, l);
+  l := 0;
+  case rAscending of
+    True:
+    for i := 0 to High(m) do
+      if m[i] then
+        Result[l.Increase] := (i + r.start);
+    False:
+    for i := High(m) downto 0 do
+      if m[i] then
+        Result[l.Increase] := (i + r.start);
+  end;
 end;
 
 {==============================================================================]
@@ -499,7 +536,7 @@ end;
            optionally sorted in ascending or descending order.
   @note: Uses TIntegerArray_BinaryAppend to maintain the order efficiently.
 [==============================================================================}
-function TPointArrayHelper.XVals(const aAscending: Boolean = True): TIntegerArray;
+function TPointArrayHelper.XVals(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   i: Integer;
 begin
@@ -559,9 +596,44 @@ end;
            optionally sorted in ascending or descending order.
   @note: Uses Quicksorting to maintain the order efficiently.
 [==============================================================================}
-function TPointArrayHelper.YArr(const aAscending: Boolean = True): TIntegerArray;
+function TPointArrayHelper.YArr(const aAscending: Boolean = True): TIntegerArray; overload;
 begin
   Result := Self.Ys.QuickSorted(aAscending);
+end;
+
+{==============================================================================]
+  <YArray>
+  @action: Extracts a sorted array of all unique Y-coordinates from the point array.
+  @note: Returns an empty array if the point array is empty. The rAscending 
+         parameter determines whether the resulting coordinates are ordered in 
+         ascending (True, default) or descending (False) order.
+[==============================================================================}
+function TPointArrayHelper.YArray(const rAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, l: Integer;
+  m: TBooleanArray;
+  r: TRange;
+begin
+  if (Self.Length = 0) then
+    Exit([]);
+  r := Self.YRange;
+  SetLength(m, r.Size);
+  l := 0;
+  for i := 0 to High(Self) do
+    if m[Self[i].Y - r.start].TurnTrue then
+      Inc(l);
+  SetLength(Result, l);
+  l := 0;
+  case rAscending of
+    True:
+    for i := 0 to High(m) do
+      if m[i] then
+        Result[l.Increase] := (i + r.start);
+    False:
+    for i := High(m) downto 0 do
+      if m[i] then
+        Result[l.Increase] := (i + r.start);
+  end;
 end;
 
 {==============================================================================]
@@ -623,7 +695,7 @@ end;
            optionally sorted in ascending or descending order.
   @note: Uses TIntegerArray_BinaryAppend to maintain the order efficiently.
 [==============================================================================}
-function TPointArrayHelper.YVals(const aAscending: Boolean = True): TIntegerArray;
+function TPointArrayHelper.YVals(const aAscending: Boolean = True): TIntegerArray; overload;
 var
   i: Integer;
 begin

@@ -7,6 +7,8 @@ function SetFalse: Integer; overload;
 function SetTrue: Integer; overload;
 function SwitchOff(const state: Boolean): Boolean; overload;
 function SwitchOn(const state: Boolean): Boolean; overload;
+function TurnTrue: Boolean; overload;
+function TurnFalse: Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -98,5 +100,29 @@ begin
   Result := (Self <> state);
   if Result then
     Self := state;
+end;
+
+{==============================================================================]
+  <TurnTrue>
+  @action: Sets the boolean value to True if it is currently False.
+  @note: Returns True if the state was successfully changed, or False if it was already True.
+[==============================================================================}
+function TBooleanHelper.TurnTrue: Boolean; overload;
+begin
+  Result := (Self = False);
+  if Result then
+    Self := True;
+end;
+
+{==============================================================================]
+  <TurnFalse>
+  @action: Sets the boolean value to False if it is currently True.
+  @note: Returns True if the state was successfully changed, or False if it was already False.
+[==============================================================================}
+function TBooleanHelper.TurnFalse: Boolean; overload;
+begin
+  Result := (Self = True);
+  if Result then
+    Self := False;
 end;
 {$ENDIF}
