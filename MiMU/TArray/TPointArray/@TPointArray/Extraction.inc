@@ -32,6 +32,8 @@ function YValues: TIntegerArray; overload;
 function Yz(const rReversed: Boolean = False): TIntegerArray; overload;
 function Xment(const sAscending: Boolean = True): TIntegerArray; overload;
 function Yment(const sAscending: Boolean = True): TIntegerArray; overload;
+function XList: TIntegerArray; overload;
+function YList: TIntegerArray; overload;
 function Xd(const aIndices: TIntegerArray): TIntegerArray; overload;
 function Yd(const aIndices: TIntegerArray): TIntegerArray; overload;
 function Xy(const atY: Integer): TIntegerArray; overload;
@@ -887,6 +889,66 @@ begin
       end;
     end;
     SetLength(Result, r);
+  end;
+end;
+
+{==============================================================================]
+  <XList>
+  @action: Extracts the sorted, de-duplicated X coordinates using a generic list.
+  @note: Sorts the list with the default comparer, then compacts duplicates in
+         place with a write index before converting to an array.
+[==============================================================================}
+function TPointArrayHelper.XList: TIntegerArray; overload;
+var
+  l: specialize TList<Integer>;
+  i, r: Integer;
+begin
+  if (Self.Length = 0) then
+    Exit([]);
+  l := specialize TList<Integer>.Create;
+  try
+    l.Capacity := Self.Length;
+    for i := 0 to High(Self) do
+      l.Add(Self[i].X);
+    l.Sort;
+    r := 0;
+    for i := 1 to (l.Count - 1) do
+      if (l[i] <> l[r]) then
+        l[r.Increment] := l[i];
+    l.Count := (r + 1);
+    Result := l.ToArray;
+  finally
+    l.Free;
+  end;
+end;
+
+{==============================================================================]
+  <YList>
+  @action: Extracts the sorted, de-duplicated Y coordinates using a generic list.
+  @note: Sorts the list with the default comparer, then compacts duplicates in
+         place with a write index before converting to an array.
+[==============================================================================}
+function TPointArrayHelper.YList: TIntegerArray; overload;
+var
+  l: specialize TList<Integer>;
+  i, r: Integer;
+begin
+  if (Self.Length = 0) then
+    Exit([]);
+  l := specialize TList<Integer>.Create;
+  try
+    l.Capacity := Self.Length;
+    for i := 0 to High(Self) do
+      l.Add(Self[i].Y);
+    l.Sort;
+    r := 0;
+    for i := 1 to (l.Count - 1) do
+      if (l[i] <> l[r]) then
+        l[r.Increment] := l[i];
+    l.Count := (r + 1);
+    Result := l.ToArray;
+  finally
+    l.Free;
   end;
 end;
 

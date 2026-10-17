@@ -15,6 +15,10 @@ function Survey(var xWise, yWise: TRange): Integer; overload;
 
 function Horizontal: TRange; overload;
 function Vertical: TRange; overload;
+function XBoundaries: TRange; overload;
+function YBoundaries: TRange; overload;
+function XBounds: TRange; overload;
+function YBounds: TRange; overload;
 function XRange: TRange; overload;
 function YRange: TRange; overload;
 {$ENDIF}
@@ -358,6 +362,128 @@ begin
         Result.stop := Self[i].Y;
   end else
     Result := Default(TRange);
+end;
+
+{==============================================================================]
+  <XBoundaries>
+  @action: Returns the minimum and maximum X coordinates (horizontal bounds) of the point array using pairwise comparisons.
+  @note: Returns a default TRange if the point array is empty.
+[==============================================================================}
+function TPointArrayHelper.XBoundaries: TRange; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit(Default(TRange));
+  if ((s and 1) = 1) then
+  begin
+    Result := TRange.Construct(Self[0].X);
+    i := -1;
+  end else
+  begin
+    if (Self[0].X < Self[1].X) then
+      Result := TRange.Construct(Self[0].X, Self[1].X)
+    else
+      Result := TRange.Construct(Self[1].X, Self[0].X);
+    i := 0;
+  end;
+  while (i.Increment < (s - 1)) do
+    if (Self[i].X < Self[i + 1].X) then
+    begin
+      if (Self[i].X < Result.start) then
+        Result.start := Self[i].X;
+      if (Self[i + 1].X > Result.stop) then
+        Result.stop := Self[i + 1].X;
+    end else
+    begin
+      if (Self[i + 1].X < Result.start) then
+        Result.start := Self[i + 1].X;
+      if (Self[i].X > Result.stop) then
+        Result.stop := Self[i].X;
+    end;
+end;
+
+{==============================================================================]
+  <YBoundaries>
+  @action: Returns the minimum and maximum Y coordinates (vertical bounds) of the point array using pairwise comparisons.
+  @note: Returns a default TRange if the point array is empty.
+[==============================================================================}
+function TPointArrayHelper.YBoundaries: TRange; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit(Default(TRange));
+  if ((s and 1) = 1) then
+  begin
+    Result := TRange.Construct(Self[0].Y);
+    i := -1;
+  end else
+  begin
+    if (Self[0].Y < Self[1].Y) then
+      Result := TRange.Construct(Self[0].Y, Self[1].Y)
+    else
+      Result := TRange.Construct(Self[1].Y, Self[0].Y);
+    i := 0;
+  end;
+  while (i.Increment < (s - 1)) do
+    if (Self[i].Y < Self[i + 1].Y) then
+    begin
+      if (Self[i].Y < Result.start) then
+        Result.start := Self[i].Y;
+      if (Self[i + 1].Y > Result.stop) then
+        Result.stop := Self[i + 1].Y;
+    end else
+    begin
+      if (Self[i + 1].Y < Result.start) then
+        Result.start := Self[i + 1].Y;
+      if (Self[i].Y > Result.stop) then
+        Result.stop := Self[i].Y;
+    end;
+end;
+
+{==============================================================================]
+  <XBounds>
+  @action: Returns the minimum and maximum X coordinates (horizontal bounds) of the point array.
+  @note: Returns a default TRange if the point array is empty.
+[==============================================================================}
+function TPointArrayHelper.XBounds: TRange; overload;
+var
+  i, l, h: Integer;
+begin
+  if (Self.Length = 0) then
+    Exit(Default(TRange));
+  l := Self[0].X;
+  h := l;
+  for i := 1 to High(Self) do
+    if (Self[i].X < l) then
+      l := Self[i].X
+    else if (Self[i].X > h) then
+      h := Self[i].X;
+  Result.Create(l, h);
+end;
+
+{==============================================================================]
+  <YBounds>
+  @action: Returns the minimum and maximum Y coordinates (vertical bounds) of the point array.
+  @note: Returns a default TRange if the point array is empty.
+[==============================================================================}
+function TPointArrayHelper.YBounds: TRange; overload;
+var
+  i, l, h: Integer;
+begin
+  if (Self.Length = 0) then
+    Exit(Default(TRange));
+  l := Self[0].Y;
+  h := l;
+  for i := 1 to High(Self) do
+    if (Self[i].Y < l) then
+      l := Self[i].Y
+    else if (Self[i].Y > h) then
+      h := Self[i].Y;
+  Result.Create(l, h);
 end;
 
 {==============================================================================]
