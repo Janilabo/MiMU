@@ -1,4 +1,6 @@
 {$IFDEF METHODS}
+function Eat(const val: Integer): Boolean; overload;
+function Feed(const val: Integer): Boolean; overload;
 function Grow(const val: Integer): Boolean; overload;
 function Grown(const val: Integer): TRange; overload;
 function Restart(const vStart: Integer = 0): Boolean; overload;
@@ -10,6 +12,51 @@ function Shrunk(const val: Integer): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Eat>
+  @action: Shrinks the range from the boundary closest to the specified value, provided the value lies within the range bounds.
+  @note: Returns True if the range was successfully trimmed, or False if the range is empty (start equals stop) or if the value is outside the current range.
+[==============================================================================}
+function TRange.Eat(const val: Integer): Boolean; overload;
+begin
+  if (Self.start = Self.stop) then
+    Exit(False);
+  case (Self.start < Self.stop) of
+    True:
+    if ((val < Self.start) or (val > Self.stop)) then
+      Exit(False)
+    else if (val.Distance(Self.start) < val.Distance(Self.stop)) then
+      Self.start := (val + 1)
+    else
+      Self.stop := (val - 1);
+    False:
+    if ((val < Self.stop) or (val > Self.start)) then
+      Exit(False)
+    else if (val.Distance(Self.start) < val.Distance(Self.stop)) then
+      Self.start := (val - 1)
+    else
+      Self.stop := (val + 1);
+  end;
+  Result := True;
+end;
+
+{==============================================================================]
+  <Feed>
+  @action: Expands the range to include the specified value if it falls outside the current bounds.
+  @note: Returns True if the range was modified, or False if the value is already within the range. Supports both ascending and descending ranges.
+[==============================================================================}
+function TRange.Feed(const val: Integer): Boolean; overload;
+begin
+  Result := (Self.start <= Self.stop);
+  if ((Result and (val < Self.start)) or ((not Result) and (val > Self.start))) then
+    Self.start := val
+  else if ((Result and (val > Self.stop)) or ((not Result) and (val < Self.stop))) then
+    Self.stop := val
+  else
+    Exit(False);
+  Result := True;
+end;
+
 {==============================================================================]
   <Grow>
   @action: Expands the range boundaries to encompass an external target value.
