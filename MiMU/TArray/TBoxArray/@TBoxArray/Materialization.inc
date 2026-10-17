@@ -1,4 +1,6 @@
 {$IFDEF HELPERS}
+function AsPoints: TPointArray; overload;
+function GetPoints: TPointArray; overload;
 function Pixeled(const oAscending: Boolean = True): TPointArray; overload;
 function Pixelize(const oAscending: Boolean = True): TPointArray; overload;
 function Pixels(const oAscending: Boolean = True): TPointArray; overload;
@@ -8,6 +10,47 @@ function ToPoints(const oAscending: Boolean = True): TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <AsPoints>
+  @action: Converts an array of bounding boxes (TBoxArray) into an array of all individual coordinate points (TPointArray).
+  @note: Pre-allocates memory based on the total area of all boxes for optimal performance;
+         iterates in reverse order (downto), resulting in a backwards point sequence.
+[==============================================================================}
+function TBoxArrayHelper.AsPoints: TPointArray; overload;
+var
+  i, l, r, c: Integer;
+begin
+  l := 0;
+  for i := 0 to High(Self) do
+    Inc(l, Self[i].Area);
+  SetLength(Result, l);
+  for i := High(Self) downto 0 do
+    for r := Self[i].Y2 downto Self[i].Y1 do
+      for c := Self[i].X2 downto Self[i].X1 do
+        Result[l.Decrement] := Point(c, r);
+end;
+
+{==============================================================================]
+  <GetPoints>
+  @action: Extracts and returns all individual coordinate points contained within the bounding boxes of the TBoxArray as a TPointArray.
+  @note: Dynamically resizes the result array inside the loop for each box and iterates forward (to),
+         resulting in a standard top-left to bottom-right point sequence.
+[==============================================================================}
+function TBoxArrayHelper.GetPoints: TPointArray; overload;
+var
+  i, l, r, c: Integer;
+begin
+  l := 0;
+  Result := [];
+  for i := 0 to High(Self) do
+  begin
+    SetLength(Result, (Result.Length + Self[i].Area));
+    for r := Self[i].Y1 to Self[i].Y2 do
+      for c := Self[i].X1 to Self[i].X2 do
+        Result[l.Increase] := Point(c, r);
+  end;
+end;
+
 {==============================================================================]
   <Pixeled>
   @action: Splices overlapping boxes into non-overlapping sub-boxes before
