@@ -36,8 +36,6 @@ function XList: TIntegerArray; overload;
 function YList: TIntegerArray; overload;
 function Xd(const aIndices: TIntegerArray): TIntegerArray; overload;
 function Yd(const aIndices: TIntegerArray): TIntegerArray; overload;
-function Xy(const atY: Integer): TIntegerArray; overload;
-function Yx(const atX: Integer): TIntegerArray; overload;
 function Zip(const xArr, yArr: TIntegerArray): Integer; overload;
 function Zip(const sAxes: T2DIntegerArray): Integer; overload;
 
@@ -983,40 +981,6 @@ begin
   for i := 0 to Result.Alloc(aIndices.Length) do
     if ((aIndices[i] >= 0) and (aIndices[i] <= h)) then
       Result[r.Increase] := Self[aIndices[i]].Y;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <Xy>
-  @action: Extracts all X coordinates from points that match a specified Y coordinate.
-  @note: Pre-allocates memory for the result array based on the total point count,
-         filters points where the Y coordinate equals atY, and trims the final array to the matched count.
-[==============================================================================}
-function TPointArrayHelper.Xy(const atY: Integer): TIntegerArray; overload;
-var
-  i, r: Integer;
-begin
-  r := 0;
-  for i := 0 to Result.Alloc(Self.Length) do
-    if (Self[i].Y = atY) then
-      Result[r.Increase] := Self[i].X;
-  SetLength(Result, r);
-end;
-
-{==============================================================================]
-  <Yx>
-  @action: Extracts all Y coordinates from points that match a specified X coordinate.
-  @note: Pre-allocates memory for the result array based on the total point count,
-         filters points where the X coordinate equals atX, and trims the final array to the matched count.
-[==============================================================================}
-function TPointArrayHelper.Yx(const atX: Integer): TIntegerArray; overload;
-var
-  i, r: Integer;
-begin
-  r := 0;
-  for i := 0 to Result.Alloc(Self.Length) do
-    if (Self[i].X = atX) then
-      Result[r.Increase] := Self[i].Y;
   SetLength(Result, r);
 end;
 

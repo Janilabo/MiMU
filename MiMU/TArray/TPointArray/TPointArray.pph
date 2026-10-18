@@ -6,6 +6,7 @@
 {$I @TPointArray/BinaryOps/Search.inc}
 {$I @TPointArray/BinaryOps/Selection.inc}
 {$I @TPointArray/BinaryOps/Sorting.inc}
+{$I @TPointArray/BinaryOps/Transect.inc}
 {$I @TPointArray/BinaryOps/Vicinity.inc}
 
 {$I @TPointArray/Add.inc}
@@ -23,6 +24,7 @@
 {$I @TPointArray/Partition.inc}
 {$I @TPointArray/Selection.inc}
 {$I @TPointArray/Sorting.inc}
+{$I @TPointArray/Transect.inc}
 {$I @TPointArray/Transformation.inc}
 {$I @TPointArray/Vicinity.inc}
 
