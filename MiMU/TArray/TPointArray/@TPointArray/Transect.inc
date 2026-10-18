@@ -1,10 +1,14 @@
 {$IFDEF HELPERS}
+function XatY(const atY: Integer): TIntegerArray; overload;
+function XbyY(const valueY: Integer): TIntegerArray; overload;
 function XwithY(const valueY: Integer): TIntegerArray; overload;
 function Xy(const atY: Integer): TIntegerArray; overload;
 function Xy2(const atY: Integer): TIntegerArray; overload;
 function Xyed(const atY: Integer): TIntegerArray; overload;
 function Xys(const atY: Integer): TIntegerArray; overload;
 
+function YatX(const atX: Integer): TIntegerArray; overload;
+function YbyX(const valueX: Integer): TIntegerArray; overload;
 function YwithX(const valueX: Integer): TIntegerArray; overload;
 function Yx(const atX: Integer): TIntegerArray; overload;
 function Yx2(const atX: Integer): TIntegerArray; overload;
@@ -13,6 +17,80 @@ function Yxs(const atX: Integer): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <XatY>
+  @action: Extracts all X coordinates from points that match a specified Y coordinate,
+           returned in ascending order.
+  @note: Sorts a copy by Y, then X (QuickSortByYX), steps past every row below atY,
+         measures the run on row atY, allocates the result at its exact size and
+         copies the X values, then stops. Self is left untouched. Returns an empty
+         array if Self is empty or no point matches. Cost is dominated by the
+         O(n log n) sort.
+[==============================================================================}
+function TPointArrayHelper.XatY(const atY: Integer): TIntegerArray; overload;
+var
+  p: TPointArray;
+  i, j, s, f: Integer;
+begin
+  Result := [];
+  s := Self.Length;
+  if (s = 0) then
+    Exit;
+  p := Self.Copy;
+  p.QuickSortByYX;
+  i := 0;
+  while ((i < s) and (p[i].Y < atY)) do
+    Inc(i);
+  f := i;
+  while ((i < s) and (p[i].Y = atY)) do
+    Inc(i);
+  if (i = f) then
+    Exit;
+  SetLength(Result, (i - f));
+  for j := f to (i - 1) do
+    Result[j - f] := p[j].X;
+end;
+
+{==============================================================================]
+  <XbyY>
+  @action: Extracts all X coordinates from points that match a specified Y coordinate,
+           returned in ascending order.
+  @note: Sorts a copy by X, then Y (QuickSortByXY). Matching points are spread across
+         the columns, so it walks column by column: within each column it steps past
+         Y values below atY, emits one X per match, then skips the rest of the
+         column. Self is left untouched. Returns an empty array if Self is empty or
+         no point matches. Cost is dominated by the O(n log n) sort.
+[==============================================================================}
+function TPointArrayHelper.XbyY(const valueY: Integer): TIntegerArray; overload;
+var
+  p: TPointArray;
+  i, s, r, x: Integer;
+begin
+  Result := [];
+  s := Self.Length;
+  if (s = 0) then
+    Exit;
+  p := Self.Copy;
+  p.QuickSortByXY;
+  SetLength(Result, s);
+  r := 0;
+  i := 0;
+  while (i < s) do
+  begin
+    x := p[i].X;
+    while ((i < s) and (p[i].X = x) and (p[i].Y < valueY)) do
+      Inc(i);
+    while ((i < s) and (p[i].X = x) and (p[i].Y = valueY)) do
+    begin
+      Result[r.Increase] := x;
+      Inc(i);
+    end;
+    while ((i < s) and (p[i].X = x)) do
+      Inc(i);
+  end;
+  SetLength(Result, r);
+end;
+
 {==============================================================================]
   <XwithY>
   @action: Extracts all X coordinates from points that match a specified Y coordinate.
@@ -141,6 +219,80 @@ begin
       Break
     else if (p[i].Y = atY) then
       Result[r.Increase] := p[i].X;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <YatX>
+  @action: Extracts all Y coordinates from points that match a specified X coordinate,
+           returned in ascending order.
+  @note: Sorts a copy by X, then Y (QuickSortByXY), steps past every column left of
+         atX, measures the run on column atX, allocates the result at its exact size
+         and copies the Y values, then stops. Self is left untouched. Returns an
+         empty array if Self is empty or no point matches. Cost is dominated by the
+         O(n log n) sort.
+[==============================================================================}
+function TPointArrayHelper.YatX(const atX: Integer): TIntegerArray; overload;
+var
+  p: TPointArray;
+  i, j, s, f: Integer;
+begin
+  Result := [];
+  s := Self.Length;
+  if (s = 0) then
+    Exit;
+  p := Self.Copy;
+  p.QuickSortByXY;
+  i := 0;
+  while ((i < s) and (p[i].X < atX)) do
+    Inc(i);
+  f := i;
+  while ((i < s) and (p[i].X = atX)) do
+    Inc(i);
+  if (i = f) then
+    Exit;
+  SetLength(Result, (i - f));
+  for j := f to (i - 1) do
+    Result[j - f] := p[j].Y;
+end;
+
+{==============================================================================]
+  <YbyX>
+  @action: Extracts all Y coordinates from points that match a specified X coordinate,
+           returned in ascending order.
+  @note: Sorts a copy by Y, then X (QuickSortByYX). Matching points are spread across
+         the rows, so it walks row by row: within each row it steps past X values
+         below atX, emits one Y per match, then skips the rest of the row. Self is
+         left untouched. Returns an empty array if Self is empty or no point
+         matches. Cost is dominated by the O(n log n) sort.
+[==============================================================================}
+function TPointArrayHelper.YbyX(const valueX: Integer): TIntegerArray; overload;
+var
+  p: TPointArray;
+  i, s, r, y: Integer;
+begin
+  Result := [];
+  s := Self.Length;
+  if (s = 0) then
+    Exit;
+  p := Self.Copy;
+  p.QuickSortByYX;
+  SetLength(Result, s);
+  r := 0;
+  i := 0;
+  while (i < s) do
+  begin
+    y := p[i].Y;
+    while ((i < s) and (p[i].Y = y) and (p[i].X < valueX)) do
+      Inc(i);
+    while ((i < s) and (p[i].Y = y) and (p[i].X = valueX)) do
+    begin
+      Result[r.Increase] := y;
+      Inc(i);
+    end;
+    while ((i < s) and (p[i].Y = y)) do
+      Inc(i);
+  end;
   SetLength(Result, r);
 end;
 
