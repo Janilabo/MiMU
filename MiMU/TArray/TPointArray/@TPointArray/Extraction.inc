@@ -5,6 +5,8 @@ function AsX(const rAscending: Boolean = True): TIntegerArray; overload;
 function AsXs: TIntegerArray; overload;
 function AsY(const rAscending: Boolean = True): TIntegerArray; overload;
 function AsYs: TIntegerArray; overload;
+function JustX: TIntegerArray; overload;
+function JustY: TIntegerArray; overload;
 function Axed: T2DIntegerArray; overload;
 function Axed(var X, Y: TIntegerArray): Integer; overload;
 function Axes(var X, Y: TIntegerArray): Integer; overload;
@@ -260,6 +262,50 @@ begin
     Result[r.Increase] := Self[i].Y;
   end;
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <JustX>
+  @action: Returns the X-coordinates of the TPointArray as a TIntegerArray.
+  @note: Returns an empty array if the point array is empty.
+[==============================================================================}
+function TPointArrayHelper.JustX: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Result.SetSize(Self.Length);
+  i := -4;
+  while (i.Increment(4) <= (s - 4)) do
+  begin
+    Result[i] := Self[i].X;
+    Result[i + 1] := Self[i + 1].X;
+    Result[i + 2] := Self[i + 2].X;
+    Result[i + 3] := Self[i + 3].X;
+  end;
+  while (s.Decrement >= i) do
+    Result[s] := Self[s].X;
+end;
+
+{==============================================================================]
+  <JustY>
+  @action: Returns the Y-coordinates of the TPointArray as a TIntegerArray.
+  @note: Returns an empty array if the point array is empty.
+[==============================================================================}
+function TPointArrayHelper.JustY: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Result.SetSize(Self.Length);
+  i := -4;
+  while (i.Increment(4) <= (s - 4)) do
+  begin
+    Result[i] := Self[i].Y;
+    Result[i + 1] := Self[i + 1].Y;
+    Result[i + 2] := Self[i + 2].Y;
+    Result[i + 3] := Self[i + 3].Y;
+  end;
+  while (s.Decrement >= i) do
+    Result[s] := Self[s].Y;
 end;
 
 {==============================================================================]

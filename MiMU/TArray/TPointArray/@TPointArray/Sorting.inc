@@ -22,6 +22,8 @@ function SortedByLocale(const oAscending: Boolean = True): TPointArray; overload
 function SortedByLocation(const oAscending: Boolean = True): TPointArray; overload;
 function SortedByPosition(const oAscending: Boolean = True): TPointArray; overload;
 function SortedBySpiral(const origin: TPoint; const oAscending: Boolean = True): TPointArray; overload;
+function XthenY(const oAscending: Boolean = True): TPointArray; overload;
+function YthenX(const oAscending: Boolean = True): TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -931,5 +933,137 @@ function TPointArrayHelper.SortedBySpiral(const origin: TPoint; const oAscending
 begin
   Result := Self.Cloned;
   Result.SortBySpiral(origin, oAscending);
+end;
+
+{==============================================================================]
+  <XthenY>
+  @action: Returns a copy of the TPointArray sorted by X, then by Y.
+  @note: Returns a copy of the array as-is if its length is less than 2.
+[==============================================================================}
+function TPointArrayHelper.XthenY(const oAscending: Boolean = True): TPointArray; overload;
+var
+  i, j, l, h, t: Integer;
+  r, p: TPoint;
+  s: array[0..63] of Integer;
+begin
+  Result := Self.Copy;
+  if (Result.Length < 2) then
+    Exit;
+  t := 0;
+  l := 0;
+  h := High(Result);
+  repeat
+    while ((h - l) > 16) do
+    begin
+      r := Result[l + ((h - l) div 2)];
+      i := l;
+      j := h;
+      repeat
+        while ((Result[i].X < r.X) or ((Result[i].X = r.X) and (Result[i].Y < r.Y))) do
+          Inc(i);
+        while ((Result[j].X > r.X) or ((Result[j].X = r.X) and (Result[j].Y > r.Y))) do
+          Dec(j);
+        if (i <= j) then
+          Swap(Result[i.Increase], Result[j.Decrease]);
+      until (i > j);
+      if ((j - l) < (h - i)) then
+      begin
+        s[t] := i;
+        s[t + 1] := h;
+        Inc(t, 2);
+        h := j;
+      end else
+      begin
+        s[t] := l;
+        s[t + 1] := j;
+        Inc(t, 2);
+        l := i;
+      end;
+    end;
+    for i := (l + 1) to h do
+    begin
+      p := Result[i];
+      j := i - 1;
+      while ((j >= l) and ((Result[j].X > p.X) or ((Result[j].X = p.X) and (Result[j].Y > p.Y)))) do
+      begin
+        Result[j + 1] := Result[j];
+        Dec(j);
+      end;
+      Result[j + 1] := p;
+    end;
+    if (t = 0) then
+      Break;
+    Dec(t, 2);
+    l := s[t];
+    h := s[t + 1];
+  until False;
+  if not oAscending then
+    Result.Reverse;
+end;
+
+{==============================================================================]
+  <YthenX>
+  @action: Returns a copy of the TPointArray sorted by Y, then by X.
+  @note: Returns a copy of the array as-is if its length is less than 2.
+[==============================================================================}
+function TPointArrayHelper.YthenX(const oAscending: Boolean = True): TPointArray; overload;
+var
+  i, j, l, h, t: Integer;
+  r, p: TPoint;
+  s: array[0..63] of Integer;
+begin
+  Result := Self.Copy;
+  if (Result.Length < 2) then
+    Exit;
+  t := 0;
+  l := 0;
+  h := High(Result);
+  repeat
+    while ((h - l) > 16) do
+    begin
+      r := Result[l + ((h - l) div 2)];
+      i := l;
+      j := h;
+      repeat
+        while ((Result[i].Y < r.Y) or ((Result[i].Y = r.Y) and (Result[i].X < r.X))) do
+          Inc(i);
+        while ((Result[j].Y > r.Y) or ((Result[j].Y = r.Y) and (Result[j].X > r.X))) do
+          Dec(j);
+        if (i <= j) then
+          Swap(Result[i.Increase], Result[j.Decrease]);
+      until (i > j);
+      if ((j - l) < (h - i)) then
+      begin
+        s[t] := i;
+        s[t + 1] := h;
+        Inc(t, 2);
+        h := j;
+      end else
+      begin
+        s[t] := l;
+        s[t + 1] := j;
+        Inc(t, 2);
+        l := i;
+      end;
+    end;
+    for i := (l + 1) to h do
+    begin
+      p := Result[i];
+      j := (i - 1);
+      while ((j >= l) and ((Result[j].Y > p.Y) or ((Result[j].Y = p.Y) and (Result[j].X > p.X)))) do
+      begin
+        Result[j + 1] := Result[j];
+        Dec(j);
+      end;
+      Result[j + 1] := p;
+    end;
+    if (t = 0) then
+      Break;
+    Dec(t, 2);
+    l := s[t];
+    h := s[t + 1];
+  until False;
+  if not oAscending then
+    Result.Reverse;
 end;
 {$ENDIF}

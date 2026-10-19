@@ -21,6 +21,7 @@
 {$I @TPointArray/Fill.inc}
 {$I @TPointArray/Grouping.inc}
 {$I @TPointArray/Insertion.inc}
+{$I @TPointArray/Modify.inc}
 {$I @TPointArray/Partition.inc}
 {$I @TPointArray/Scan.inc}
 {$I @TPointArray/Selection.inc}
