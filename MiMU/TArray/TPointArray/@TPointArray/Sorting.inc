@@ -1,8 +1,10 @@
 {$IFDEF HELPERS}
-function QuickSortByX(const aAscending: Boolean = True): Integer;
-function QuickSortByXY(const aAscending: Boolean = True): Integer;
-function QuickSortByY(const aAscending: Boolean = True): Integer;
-function QuickSortByYX(const aAscending: Boolean = True): Integer;
+function QuickSortByX(const aAscending: Boolean = True): Integer; overload;
+function QuickSortByXY(const aAscending: Boolean = True): Integer; overload;
+function QuickSortByY(const aAscending: Boolean = True): Integer; overload;
+function QuickSortByYX(const aAscending: Boolean = True): Integer; overload;
+function QuickSortedByXY(const aAscending: Boolean = True): TPointArray; overload;
+function QuickSortedByYX(const aAscending: Boolean = True): TPointArray; overload;
 function SortByColumn(const aAscending: Boolean = True): Integer; overload;
 function SortByIndex(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
 function SortByIndex(const aAscending: Boolean = True): Integer; overload;
@@ -29,7 +31,7 @@ function SortedBySpiral(const origin: TPoint; const oAscending: Boolean = True):
   @note: Uses an in-place recursive QuickSort. Does not guarantee stability
          for equal X values. Complexity is O(n log n) on average.
 [==============================================================================}
-function TPointArrayHelper.QuickSortByX(const aAscending: Boolean = True): Integer;
+function TPointArrayHelper.QuickSortByX(const aAscending: Boolean = True): Integer; overload;
   procedure QSX(var arr: TPointArray; const L, R: Integer; const A: Boolean);
   var
     i, j: Integer;
@@ -64,7 +66,7 @@ end;
   @note: Implements a dual-key QuickSort for consistent ordering by (X,Y).
          Average complexity O(n log n). Not stable for equal (X,Y) pairs.
 [==============================================================================}
-function TPointArrayHelper.QuickSortByXY(const aAscending: Boolean = True): Integer;
+function TPointArrayHelper.QuickSortByXY(const aAscending: Boolean = True): Integer; overload;
   procedure QSXY(var arr: TPointArray; const L, R: Integer; const A: Boolean);
   var
     i, j: Integer;
@@ -98,7 +100,7 @@ end;
   @note: In-place recursive QuickSort implementation. Equal Y values are not
          guaranteed to preserve original order (unstable sort).
 [==============================================================================}
-function TPointArrayHelper.QuickSortByY(const aAscending: Boolean = True): Integer;
+function TPointArrayHelper.QuickSortByY(const aAscending: Boolean = True): Integer; overload;
   procedure QSY(var arr: TPointArray; const L, R: Integer; const A: Boolean);
   var
     i, j: Integer;
@@ -133,7 +135,7 @@ end;
   @note: Commonly used for spatial clustering and grid-based sorting.
          In-place QuickSort with O(n log n) average complexity.
 [==============================================================================}
-function TPointArrayHelper.QuickSortByYX(const aAscending: Boolean = True): Integer;
+function TPointArrayHelper.QuickSortByYX(const aAscending: Boolean = True): Integer; overload;
   procedure QSYX(var arr: TPointArray; const L, R: Integer; const A: Boolean);
   var
     i, j: Integer;
@@ -159,6 +161,84 @@ begin
   Result := Self.Size;
   if (Result > 1) then
     QSYX(Self, 0, (Result - 1), aAscending);
+end;
+
+{==============================================================================]
+  <QuickSortedByXY>
+  @action: Returns a copy of all points sorted by X coordinate first, and then by Y
+           coordinate for points sharing the same X value.
+  @note: Self-contained, non-mutating. Copies Self and runs a dual-key Hoare
+         QuickSort on the copy, so Self is left untouched. Average complexity
+         O(n log n). Not stable for equal (X,Y) pairs.
+[==============================================================================}
+function TPointArrayHelper.QuickSortedByXY(const aAscending: Boolean = True): TPointArray; overload;
+  procedure QSXY(var arr: TPointArray; const L, R: Integer; const A: Boolean);
+  var
+    i, j: Integer;
+    p, t: TPoint;
+  begin
+    i := L;
+    j := R;
+    p := arr[(L + R) shr 1];
+    repeat
+      while ((A and ((arr[i].X < p.X) or ((arr[i].X = p.X) and (arr[i].Y < p.Y)))) or ((not A) and ((arr[i].X > p.X) or ((arr[i].X = p.X) and (arr[i].Y > p.Y))))) do
+        Inc(i);
+      while ((A and ((arr[j].X > p.X) or ((arr[j].X = p.X) and (arr[j].Y > p.Y)))) or ((not A) and ((arr[j].X < p.X) or ((arr[j].X = p.X) and (arr[j].Y < p.Y))))) do
+        Dec(j);
+      if (i <= j) then
+        Swap(arr[i.Increase], arr[j.Decrease]);
+    until (i > j);
+    if (L < j) then
+      QSXY(arr, L, j, A);
+    if (i < R) then
+      QSXY(arr, i, R, A);
+  end;
+var
+  s: Integer;
+begin
+  Result := Self.Copy;
+  s := Result.Length;
+  if (s > 1) then
+    QSXY(Result, 0, (s - 1), aAscending);
+end;
+
+{==============================================================================]
+  <QuickSortedByYX>
+  @action: Returns a copy of all points sorted by Y coordinate first, and then by X
+           coordinate for points sharing the same Y value.
+  @note: Self-contained, non-mutating. Copies Self and runs a dual-key Hoare
+         QuickSort on the copy, so Self is left untouched. Average complexity
+         O(n log n). Not stable for equal (X,Y) pairs.
+[==============================================================================}
+function TPointArrayHelper.QuickSortedByYX(const aAscending: Boolean = True): TPointArray; overload;
+  procedure QSYX(var arr: TPointArray; const L, R: Integer; const A: Boolean);
+  var
+    i, j: Integer;
+    p, t: TPoint;
+  begin
+    i := L;
+    j := R;
+    p := arr[(L + R) shr 1];
+    repeat
+      while ((A and ((arr[i].Y < p.Y) or ((arr[i].Y = p.Y) and (arr[i].X < p.X)))) or ((not A) and ((arr[i].Y > p.Y) or ((arr[i].Y = p.Y) and (arr[i].X > p.X))))) do
+        Inc(i);
+      while ((A and ((arr[j].Y > p.Y) or ((arr[j].Y = p.Y) and (arr[j].X > p.X)))) or ((not A) and ((arr[j].Y < p.Y) or ((arr[j].Y = p.Y) and (arr[j].X < p.X))))) do
+        Dec(j);
+      if (i <= j) then
+        Swap(arr[i.Increase], arr[j.Decrease]);
+    until (i > j);
+    if (L < j) then
+      QSYX(arr, L, j, A);
+    if (i < R) then
+      QSYX(arr, i, R, A);
+  end;
+var
+  s: Integer;
+begin
+  Result := Self.Copy;
+  s := Result.Length;
+  if (s > 1) then
+    QSYX(Result, 0, (s - 1), aAscending);
 end;
 
 {==============================================================================]
