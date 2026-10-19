@@ -6,6 +6,7 @@ function BinaryAnnex(const item: MType; const oAscending: Boolean = True): Integ
 function BinaryAnnex(const item: MType; const itemCount: UInt32; const oAscending: Boolean = True): Integer; overload;
 function BinaryAppend(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryAppend(const item: MType; const itemCount: UInt32; const oAscending: Boolean = True): Integer; overload;
+function BinaryAppend(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function BinaryAttach(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryAttach(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function BinaryFeed(const item: MType; const oAscending: Boolean = True): Boolean; overload;
@@ -236,6 +237,58 @@ begin
     Self[i + c] := Self[i];
   for i := Result to (Result + c - 1) do
     Self[i] := item;
+end;
+
+{==============================================================================]
+  <BinaryAppend>
+  @action: Inserts all items into the sorted array so that it stays sorted
+           according to oAscending. Returns the new length of Self.
+           Each item's position is located with a binary search over the part
+           of Self that has not been displaced yet.
+  @note: Requires Self to be sorted according to oAscending; items may be in
+         any order and are left untouched (a sorted temporary copy is used).
+         Duplicates are kept. Equal values already in Self stay ahead of the
+         new ones, so existing elements keep their relative order.
+         Method: sort the temp copy, grow Self, then take the items from
+         largest to smallest. For each one, binary search the unplaced prefix
+         of Self for the first element that comes strictly after it, shift the
+         block from there to the end of the prefix up by the number of items
+         still waiting, and drop the item into the gap just before that block.
+         Each element of Self moves at most once, and the search range shrinks
+         with every placed item because the items are processed in sorted order.
+         Time complexity: O(m log m) for the sort, O(m log n) for the searches
+         and O(n + m) for the moves, where n = Self.Length and m = items.Length.
+[==============================================================================}
+function MArrayHelper.BinaryAppend(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  a: MArray;
+  j, i, p, l, h, m, n, c: Integer;
+begin
+  n := Self.Length;
+  c := items.Length;
+  if (c = 0) then
+    Exit(n);
+  a := items.QuickSorted(oAscending);
+  Self.SetSize(n + c);
+  h := (n - 1);
+  for j := (c - 1) downto 0 do
+  begin
+    l := 0;
+    p := (h + 1);
+    while (l < p) do
+    begin
+      m := (l + ((p - l) div 2));
+      if ((oAscending and (Self[m] > a[j])) or ((not oAscending) and (Self[m] < a[j]))) then
+        p := m
+      else
+        l := (m + 1);
+    end;
+    for i := h downto l do
+      Self[i + j + 1] := Self[i];
+    Self[l + j] := a[j];
+    h := (l - 1);
+  end;
+  Result := (n + c);
 end;
 
 {==============================================================================]

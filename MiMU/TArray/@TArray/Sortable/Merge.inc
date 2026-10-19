@@ -3,6 +3,7 @@ function House(const items: MArray; const oAscending: Boolean = True): Integer; 
 function Intermerge(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function Intermerged(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function Melt(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+function Meltify(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 function Weld(const A, B: MArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
@@ -379,6 +380,43 @@ begin
   for r := 0 to i do
     Self[r] := items[r];
 end;
+
+{==============================================================================]
+  <Meltify>
+  @action: Inserts all items into the sorted array so that it stays sorted
+           according to oAscending. Returns the new length of Self.
+  @note: Requires Self to be sorted according to oAscending; items may be in
+         any order and are left untouched (a sorted temporary copy is used).
+         Duplicates are kept. Equal values already in Self stay ahead of the
+         new ones, so existing elements keep their relative order.
+         Method: sort the temp copy, grow Self, then merge from the tail
+         backwards into the free space. Each element of Self moves at most once,
+         and the loop stops as soon as the last item is placed, so the untouched
+         prefix of Self is never visited.
+         Time complexity: O(m log m) for the sort plus O(n + m) for the merge,
+         where n = Self.Length and m = items.Length.
+[==============================================================================}
+function MArrayHelper.Meltify(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  a: MArray;
+  i, j, k, n, m: Integer;
+begin
+  n := Self.Length;
+  m := items.Length;
+  if (m = 0) then
+    Exit(n);
+  a := items.QuickSorted(oAscending);
+  Self.SetSize(n + m);
+  i := (n - 1);
+  j := (m - 1);
+  k := ((n + m) - 1);
+  while (j >= 0) do
+    if ((i >= 0) and ((oAscending and (Self[i] > a[j])) or ((not oAscending) and (Self[i] < a[j])))) then
+      Self[k.Decrease] := Self[i.Decrease]
+    else
+      Self[k.Decrease] := a[j.Decrease];
+  Result := (n + m);
+end; 
 
 {==============================================================================]
   <Weld>
