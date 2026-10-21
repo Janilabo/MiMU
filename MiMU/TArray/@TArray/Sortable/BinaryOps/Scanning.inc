@@ -6,6 +6,7 @@ function BinaryIndices(const items: MArray; const oAscending: Boolean = True): T
 function BinaryInterval(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryRadar(const aMin, aMax: MType; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryScan(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function BinaryScanned(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -214,5 +215,33 @@ begin
     end;
   end;
   SetLength(Result, r);
-end; 
+end;
+
+{==============================================================================]
+  <BinaryScanned>
+  @action: Scans the sorted array using binary bounds for multiple items and returns all matching index positions.
+  @note: Uses BinaryBourne to locate ranges for each item, flattening all matched index ranges into a single integer array.
+[==============================================================================}
+function MArrayHelper.BinaryScanned(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, l, s, h: Integer;
+  r: TRangeArray;
+begin
+  if ((Self.Length = 0) or (items.Length = 0)) then
+    Exit([]);
+  l := 0;
+  SetLength(r, items.Length);
+  for i := 0 to High(items) do
+    if Self.BinaryBourne(items[i], r[l], oAscending) then
+      Inc(l);
+  if (l = 0) then
+    Exit([]);
+  h := 0;
+  for i := 0 to (l - 1) do
+    h := (h + r[i].Size);
+  SetLength(Result, h);
+  for i := (l - 1) downto 0 do
+    for s := r[i].stop downto r[i].start do
+      Result[h.Decrement] := s;
+end;
 {$ENDIF}
