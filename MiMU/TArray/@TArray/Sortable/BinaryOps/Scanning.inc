@@ -230,16 +230,13 @@ begin
   if ((Self.Length = 0) or (items.Length = 0)) then
     Exit([]);
   l := 0;
-  SetLength(r, items.Length);
-  for i := 0 to High(items) do
+  for i := 0 to r.Alloc(items.Length) do
     if Self.BinaryBourne(items[i], r[l], oAscending) then
       Inc(l);
   if (l = 0) then
     Exit([]);
-  h := 0;
-  for i := 0 to (l - 1) do
-    h := (h + r[i].Size);
-  SetLength(Result, h);
+  SetLength(r, l);
+  h := Result.SetSize(r.Sizing);
   for i := (l - 1) downto 0 do
     for s := r[i].stop downto r[i].start do
       Result[h.Decrement] := s;
