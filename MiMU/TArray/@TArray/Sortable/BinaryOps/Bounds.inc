@@ -88,6 +88,13 @@ function BinaryVerge(const item: MType; const oTies: Boolean; const oAscending: 
 
 function BisectLeft(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BisectRight(const item: MType; const oAscending: Boolean = True): Integer; overload;
+
+function BinaryBodena(const item: MType; out iIndices: TRange; const oAscending: Boolean = True): Boolean; overload;
+function BinaryBordera(const item: MType; out indices: TRange; const oAscending: Boolean = True): Boolean; overload;
+function BinaryBorderline(const item: MType; out iIndices: TRange; const oAscending: Boolean = True): Boolean; overload;
+function BinaryBounde(const item: MType; out iIndices: TRange; const oAscending: Boolean = True): Boolean; overload;
+function BinaryBourne(const item: MType; out iIndices: TRange; const oAscending: Boolean = True): Boolean; overload;
+function BinaryBunda(const item: MType; out iIndices: TRange; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -2897,6 +2904,287 @@ begin
       Result := s
     else
       Result := l;
+  end;
+end;
+
+{==============================================================================]
+  <BinaryBodena>
+  @action: Finds the range of duplicate items by performing a standard binary search to find any arbitrary matching index,
+           followed by linear expansion (decrementing and incrementing) to find the contiguous start and end boundaries.
+  @note: Very simple and effective when duplicates are sparse or non-existent. However,
+         its time complexity can degrade to O(N) in the worst-case scenario where the entire array contains identical elements.
+[==============================================================================}
+function MArrayHelper.BinaryBodena(const item: MType; out iIndices: TRange; const oAscending: Boolean = True): Boolean; overload;
+var
+  M, L: Integer;
+  R: TRange;
+begin
+  L := Self.Length;
+  if (L = 0) then
+    Exit(False);
+  R.Create(0, (L - 1));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      iIndices.start := M;
+      while ((iIndices.start > 0) and (Self[iIndices.start - 1] = item)) do
+        Dec(iIndices.start);
+	  iIndices.stop := M;
+      while ((iIndices.stop < (L - 1)) and (Self[iIndices.stop + 1] = item)) do
+        Inc(iIndices.stop);
+      Exit(True);
+    end else if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := False;
+end;
+
+{==============================================================================]
+  <BinaryBordera>
+  @action: Finds the range of indices (indices.start to indices.stop) for duplicate occurrences of a specified item
+           in a sorted array using a power-of-two step binary search (binary lifting / bitwise search) for both bounds.
+  @note: Instead of traditional midpoint calculations (A + (B - A) div 2), this implementation uses a power-of-two bit-shifting approach
+         (similar to binary lifting) to incrementally test and build the index position.
+		 It provides a consistent, branch-lean binary search flow for locating both the lower and upper bounds.
+[==============================================================================}
+function MArrayHelper.BinaryBordera(const item: MType; out indices: TRange; const oAscending: Boolean = True): Boolean; overload;
+var
+  P, S, L: Integer;
+begin
+  L := Self.Length;
+  if (L = 0) then
+    Exit(False);
+  S := 1;
+  while ((S shl 1) <= L) do
+    S := (S shl 1);
+  P := 0;
+  while (S > 0) do
+  begin
+    if (((P + S) <= L) and (Self[(P + S) - 1] <> item) and ((Self[(P + S) - 1] < item) = oAscending)) then
+      P := (P + S);
+    S := (S shr 1);
+  end;
+  Result := not ((P = L) or (Self[P] <> item));
+  if not Result then
+    Exit;
+  indices.start := P;
+  S := 1;
+  while ((P + (S shl 1)) <= L) do
+    S := (S shl 1);
+  while (S > 0) do
+  begin
+    if (((P + S) <= L) and (Self[(P + S) - 1] = item)) then
+      P := (P + S);
+    S := (S shr 1);
+  end;
+  indices.stop := (P - 1);
+end;
+
+{==============================================================================]
+  <BinaryBorderline>
+  @action: Finds the range of indices (iIndices.start to iIndices.stop) for duplicate occurrences of a specified item
+           in a sorted array by performing an integrated lower-bound search that tracks an upper limit hint,
+		   followed by a constrained upper-bound search.
+  @note: This implementation optimizes the standard two-pass search approach
+         by recording a divergence hint (H) during the first pass whenever a non-matching element is encountered.
+		 This allows the second pass (finding the upper bound) to restrict its upper search boundary directly to H
+		 rather than scanning all the way to the end of the array, improving efficiency for clustered data.
+[==============================================================================}
+function MArrayHelper.BinaryBorderline(const item: MType; out iIndices: TRange; const oAscending: Boolean = True): Boolean; overload;
+var
+  M, A, B, H, L: Integer;
+begin
+  L := Self.Length;
+  if (L = 0) then
+    Exit(False);
+  A := 0;
+  B := L;
+  H := L;
+  while (A < B) do
+  begin
+    M := (A + ((B - A) shr 1));
+    if not ((Self[M] <> item) and ((Self[M] < item) = oAscending)) then
+    begin
+      B := M;
+      if (Self[M] <> item) then
+        H := M;
+    end else
+      A := (M + 1);
+  end;
+  Result := not ((A = L) or (Self[A] <> item));
+  if not Result then
+    Exit;
+  iIndices.start := A;
+  B := H;
+  while (A < B) do
+  begin
+    M := A + ((B - A) shr 1);
+    if (Self[M] = item) then
+      A := (M + 1)
+    else
+      B := M;
+  end;
+  iIndices.stop := (A - 1);
+end; 
+
+{==============================================================================]
+  <BinaryBounde>
+  @action: Locates the range of duplicate items by first finding a single matching element via binary search,
+           and then using exponential search (galloping) with powers-of-two steps (shl 1) to find the outer boundaries,
+		   followed by binary searches within those bounds.
+  @note: Highly optimized for scenarios where duplicate runs can be extremely large,
+         as the exponential step-out quickly bounds large clusters of identical elements before refining the edges.
+[==============================================================================}
+function MArrayHelper.BinaryBounde(const item: MType; out iIndices: TRange; const oAscending: Boolean = True): Boolean; overload;
+var
+  M, A, B, S, L: Integer;
+  R: TRange;
+begin
+  L := Self.Length;
+  if (L = 0) then
+    Exit(False);
+  R.Create(0, (L - 1));
+  M := -1;
+  while (R.start <= R.stop) do
+  begin
+    A := R.Pivot;
+    if (Self[A] = item) then
+    begin
+      M := A;
+      Break;
+    end else if ((Self[A] < item) = oAscending) then
+      R.start := (A + 1)
+    else
+      R.stop := (A - 1);
+  end;
+  if (M < 0) then
+    Exit(False);
+  S := 1;
+  while (((M - S) >= 0) and (Self[M - S] = item)) do
+    S := (S shl 1);
+  A := (M - S);
+  if (A < 0) then
+    A := 0;
+  B := (M - (S shr 1));
+  while (A < B) do
+  begin
+    R.start := (A + ((B - A) shr 1));
+    if (Self[R.start] = item) then
+      B := R.start
+    else
+      A := (R.start + 1);
+  end;
+  iIndices.start := B;
+  S := 1;
+  while (((M + S) <= (L - 1)) and (Self[M + S] = item)) do
+    S := (S shl 1);
+  A := (M + (S shr 1));
+  B := (M + S);
+  if (B > (L - 1)) then
+    B := (L - 1);
+  while (A < B) do
+  begin
+    R.stop := (A + ((B - A + 1) shr 1));
+    if (Self[R.stop] = item) then
+      A := R.stop
+    else
+      B := (R.stop - 1);
+  end;
+  iIndices.stop := A;
+  Result := True;
+end;
+
+{==============================================================================]
+  <BinaryBourne>
+  @action: Finds the range of indices for a given item in a sorted array using separate lower-bound and upper-bound search loops.
+  @note: Closely mirrors the standard C++ STL style (std::lower_bound and std::upper_bound).
+         It efficiently handles bounds without requiring a preliminary linear scan or complex stepping logic,
+		 leading to consistent $O(\log N)$ performance.
+[==============================================================================}
+function MArrayHelper.BinaryBourne(const item: MType; out iIndices: TRange; const oAscending: Boolean = True): Boolean; overload;
+var
+  M, A, B, F, L: Integer;
+begin
+  L := Self.Length;
+  if (L = 0) then
+    Exit(False);
+  A := 0;
+  B := L;
+  while (A < B) do
+  begin
+    M := (A + ((B - A) shr 1));
+    if ((Self[M] <> item) and ((Self[M] < item) = oAscending)) then
+      A := (M + 1)
+    else
+      B := M;
+  end;
+  F := A;
+  if ((F = L) or (Self[F] <> item)) then
+    Exit(False);
+  B := L;
+  while (A < B) do
+  begin
+    M := (A + ((B - A) shr 1));
+    if ((Self[M] = item) or ((Self[M] < item) = oAscending)) then
+      A := (M + 1)
+    else
+      B := M;
+  end;
+  iIndices.start := F;
+  iIndices.stop := (A - 1);
+  Result := True;
+end;
+
+{==============================================================================]
+  <BinaryBunda>
+  @action: Finds the range of indices (iIndices.start to iIndices.stop) for duplicate occurrences of a specified item
+           in a sorted array by performing two successive binary searches—first to locate the lower bound and then the upper bound.
+  @note: This is a classic two-pass binary search approach. Once a match is found,
+         the first pass narrows the search space to the left to find the first occurrence,
+		 and the second pass narrows it to the right from that occurrence to find the last.
+[==============================================================================}
+function MArrayHelper.BinaryBunda(const item: MType; out iIndices: TRange; const oAscending: Boolean = True): Boolean; overload;
+var
+  M, L, S: Integer;
+  R: TRange;
+begin
+  L := Self.Length;
+  if (L = 0) then
+    Exit(False);
+  R.Create(0, (L - 1));
+  S := -1;
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      S := M;
+      R.stop := (M - 1);
+    end else if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
+  end;
+  Result := (S > -1);
+  if not Result then
+    Exit(False);
+  iIndices.start := S;
+  R.Create(S, (L - 1));
+  while (R.start <= R.stop) do
+  begin
+    M := R.Pivot;
+    if (Self[M] = item) then
+    begin
+      iIndices.stop := M;
+      R.start := (M + 1);
+    end else if ((Self[M] < item) = oAscending) then
+      R.start := (M + 1)
+    else
+      R.stop := (M - 1);
   end;
 end;
 {$ENDIF}

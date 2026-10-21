@@ -7,6 +7,7 @@ function EndWith(const aItem: MType): MArray; overload;
 function EndWith(const aItem: MArray): MArray; overload;
 function FromLeft(const count: Integer; const index: Integer = 2147483647): MArray; overload;
 function FromRight(const count: Integer; const index: Integer = 0): MArray; overload;
+function Gather(const ID: TIntegerArray): MArray; overload;
 function Get: MArray; overload;
 function Get(const ID: TIntegerArray): MArray; overload;
 function Get(const ID: TRange): MArray; overload;
@@ -196,6 +197,30 @@ begin
     Result := Self.Copy(i.start, ((i.stop - i.start) + 1))
   else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <Gather>
+  @action: Gathers elements from the array at the specified index positions (ID).
+  @note: Clamps out-of-bounds indices to valid array bounds and preserves duplicate index references.
+[==============================================================================}
+function MArrayHelper.Gather(const ID: TIntegerArray): MArray; overload;
+var
+  l, i: Integer;
+  s: TIntegerArray;
+begin
+  if ((Self.Length = 0) or (ID.Length = 0)) then
+    Exit([]);
+  s := ID.QuickSorted;
+  s.BinaryClamp(0, High(Self));
+  if (Result.SetSize(s.Length) = 0) then
+    Exit;
+  s.Compact;
+  l := 0;
+  for i := 0 to High(ID) do
+    if s.BinaryHave(ID[i]) then
+      Result[l.Increase] := Self[ID[i]];
+  SetLength(Result, l);
 end;
 
 {==============================================================================]
