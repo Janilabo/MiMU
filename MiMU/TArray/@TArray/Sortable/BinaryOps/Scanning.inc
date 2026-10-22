@@ -3,10 +3,15 @@ function BinaryCluster(const start: Integer; const allowed: MArray; const aAscen
 function BinaryHits(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryHitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryIndices(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function BinaryInquire(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function BinaryInquiry(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryInterval(const item: MType; const oAscending: Boolean = True): TRange; overload;
 function BinaryRadar(const aMin, aMax: MType; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryScan(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function BinaryScan2(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function BinaryScanned(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function BinaryScanner(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function BinarySweep(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -140,6 +145,104 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryInquire>
+  @action: Finds and returns the indices of all elements in the sorted underlying array (Self) that match any of the items in the lookup array,
+           utilizing binary search bounds (lower and upper bounds) for each item.
+  @note: Calculates the exact lower and upper boundaries via a nested helper function B for every item in items,
+         aggregates the total count of matching elements, and flattens all corresponding index ranges into a single resulting integer array.
+         Supports sorting specified by oAscending.
+[==============================================================================}
+function MArrayHelper.BinaryInquire(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, j, k, s, r: Integer;
+  l, u: TIntegerArray;
+  function B(const item: MType; const upper: Boolean): Integer;
+  var
+    h, m: Integer;
+    z: Boolean;
+  begin
+    Result := 0;
+    h := s;
+    while (Result < h) do
+    begin
+      m := ((Result + h) shr 1);
+      if oAscending then
+        z := ((Self[m] < item) or (upper and (Self[m] = item)))
+      else
+        z := ((Self[m] > item) or (upper and (Self[m] = item)));
+      if z then
+        Result := (m + 1)
+      else
+        h := m;
+    end;
+  end;
+begin
+  s := Self.Length;
+  k := High(items);
+  if ((s = 0) or (k = -1)) then
+    Exit([]);
+  SetLength(l, (k + 1));
+  SetLength(u, (k + 1));
+  r := 0;
+  for i := 0 to k do
+  begin
+    l[i] := B(items[i], False);
+    u[i] := B(items[i], True);
+    Inc(r, (u[i] - l[i]));
+  end;
+  SetLength(Result, r);
+  r := 0;
+  for i := 0 to k do
+    for j := l[i] to (u[i] - 1) do
+      Result[r.Increase] := j;
+end;
+
+{==============================================================================]
+  <BinaryInquiry>
+  @action: Finds and returns the indices of elements in a sorted array (Self) that match the specified lookup items
+           using an optimized binary search approach with a running search cursor.
+  @note: Leverages a stateful cursor (c) that updates with each lookup, reducing the search space for subsequent items.
+         Like BinarySweep, it handles potentially unsorted lookup arrays (items) by resetting the cursor when an item falls out of order,
+		 and respects the sorting order defined by oAscending.
+[==============================================================================}
+function MArrayHelper.BinaryInquiry(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, c, l, h, m, s, r: Integer;
+  v: MType;
+begin
+  s := Self.Length;
+  SetLength(Result, 0);
+  if ((s = 0) or (items.Length = 0)) then
+    Exit;
+  r := 0;
+  c := 0;
+  for i := 0 to High(items) do
+  begin
+    v := items[i];
+    if ((i > 0) and ((oAscending and (v < items[i - 1])) or ((not oAscending) and (v > items[i - 1])))) then
+      c := 0;
+    l := c;
+    h := s;
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if ((oAscending and (Self[m] < v)) or ((not oAscending) and (Self[m] > v))) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    c := l;
+    while ((l < s) and (Self[l] = v)) do
+    begin
+      if (r = Result.Length) then
+        SetLength(Result, Max((r * 2), 16));
+      Result[r.Increase] := l.Increase;
+    end;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
   <BinaryInterval>
   @action: Performs a binary search for <item> in a sorted array and returns the
            contiguous interval (range) of all elements equal to <item>.
@@ -218,6 +321,72 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryScan2>
+  @action: Finds and returns the indices of elements in a sorted underlying array (Self) that match any of the items in the lookup array,
+           using binary search with exponential bounding to find match ranges.
+  @note: For each item in items, performs a binary search to locate the start of matching elements,
+         then uses an exponential step-up followed by binary search to find the end boundary (b[i]).
+		 It accumulates the size of all matches, aggregates them, and flattens the resulting index ranges into a single integer array, respecting order.
+[==============================================================================}
+function MArrayHelper.BinaryScan2(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, j, k, p, t, l, h, m, s, r: Integer;
+  v: MType;
+  a, b: TIntegerArray;
+begin
+  s := Self.Length;
+  k := High(items);
+  if ((s = 0) or (k = -1)) then
+    Exit([]);
+  SetLength(a, (k + 1));
+  SetLength(b, (k + 1));
+  r := 0;
+  for i := 0 to k do
+  begin
+    v := items[i];
+    l := 0;
+    h := s;
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if ((oAscending and (Self[m] < v)) or ((not oAscending) and (Self[m] > v))) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    a[i] := l;
+    b[i] := l;
+    if ((l < s) and (Self[l] = v)) then
+    begin
+      p := l;
+      t := 1;
+      while (((p + t) < s) and (Self[p + t] = v)) do
+      begin
+        Inc(p, t);
+        t := (t shl 1);
+      end;
+      l := (p + 1);
+      h := Min((p + t), s);
+      while (l < h) do
+      begin
+        m := ((l + h) shr 1);
+        if (Self[m] = v) then
+          l := (m + 1)
+        else
+          h := m;
+      end;
+      b[i] := l;
+      Inc(r, (l - a[i]));
+    end;
+  end;
+  SetLength(Result, r);
+  r := 0;
+  for i := 0 to k do
+    for j := a[i] to (b[i] - 1) do
+      Result[r.Increase] := j;
+end;
+
+{==============================================================================]
   <BinaryScanned>
   @action: Scans the sorted array using binary bounds for multiple items and returns all matching index positions.
   @note: Uses BinaryBourne to locate ranges for each item, flattening all matched index ranges into a single integer array.
@@ -240,5 +409,83 @@ begin
   for i := (l - 1) downto 0 do
     for s := r[i].stop downto r[i].start do
       Result[h.Decrement] := s;
+end;
+
+{==============================================================================]
+  <BinaryScanner>
+  @action: Finds and returns the indices of elements in the underlying array (Self)
+           that match any of the specified lookup items using binary search.
+  @note: Leverages BinaryBourne to locate matching index ranges for each item in the lookup array,
+         accumulates their sizes, and flattens all collected ranges into a single resulting integer array.
+		 Respects the sorting order specified by oAscending
+[==============================================================================}
+function MArrayHelper.BinaryScanner(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, s, l, h: Integer;
+  r: TRangeArray;
+begin
+  if ((Self.Length = 0) or (items.Length = 0)) then
+    Exit([]);
+  l := 0;
+  h := 0;
+  for i := 0 to r.Alloc(items.Length) do
+    if Self.BinaryBourne(items[i], r[l], oAscending) then
+      Inc(h, r[l.Increase].Size);
+  if (l = 0) then
+    Exit([]);
+  SetLength(Result, h);
+  h := 0;
+  for i := 0 to (l - 1) do
+    for s := r[i].start to r[i].stop do
+      Result[h.Increase] := s;
+end;
+
+{==============================================================================]
+  <BinarySweep>
+  @action: Finds and returns the indices of elements in a sorted array (Self),
+           that match the specified lookup items using a hybrid binary search and linear sweep approach.
+  @note: Assumes the underlying array (Self) is sorted (matching oAscending). Unlike standard Sweep,
+         BinarySweep safely handles lookup arrays (items) that may not be strictly sorted
+         by dynamically falling back to a binary search whenever a lookup item falls out of order.
+[==============================================================================}
+function MArrayHelper.BinarySweep(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, j, k, l, h, m, s, r: Integer;
+  v: MType;
+begin
+  s := Self.Length;
+  if ((s = 0) or (items.Length = 0)) then
+    Exit([]);
+  r := 0;
+  j := 0;
+  SetLength(Result, 0);
+  for i := 0 to High(items) do
+  begin
+    v := items[i];
+    if ((i > 0) and ((oAscending and (v < items[i - 1])) or ((not oAscending) and (v > items[i - 1])))) then
+    begin
+      l := 0;
+      h := s;
+      while (l < h) do
+      begin
+        m := ((l + h) shr 1);
+        if ((oAscending and (Self[m] < v)) or ((not oAscending) and (Self[m] > v))) then
+          l := (m + 1)
+        else
+          h := m;
+      end;
+      j := l;
+    end;
+    while ((j < s) and ((oAscending and (Self[j] < v)) or ((not oAscending) and (Self[j] > v)))) do
+      Inc(j);
+    k := j;
+    while ((k < s) and (Self[k] = v)) do
+    begin
+      if (r = Result.Length) then
+        SetLength(Result, Max((r * 2), 16));
+      Result[r.Increase] := k.Increase;
+    end;
+  end;
+  SetLength(Result, r);
 end;
 {$ENDIF}

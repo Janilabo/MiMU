@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Hits(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function HitsOf(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+function Sweep(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 function Where(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
@@ -89,6 +90,39 @@ begin
       Inc(j);
   end;
   SetLength(Result, k);
+end;
+
+{==============================================================================]
+  <Sweep>
+  @action: Finds and returns the indices of elements in a sorted array that match the specified lookup items.
+  @note: Assumes both the underlying array (Self) and the lookup array (items) are sorted in the same order (matching oAscending).
+         It efficiently scans through and collects the indices of all matching occurrences, returning them as a dynamic integer array.
+[==============================================================================}
+function MArrayHelper.Sweep(const items: MArray; const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, j, k, s, r: Integer;
+begin
+  s := Self.Length;
+  if ((s = 0) or (items.Length = 0)) then
+    Exit([]);
+  r := 0;
+  j := 0;
+  SetLength(Result, 0);
+  for i := 0 to High(items) do
+  begin
+    while ((j < s) and ((oAscending and (Self[j] < items[i])) or ((not oAscending) and (Self[j] > items[i])))) do
+      Inc(j);
+    if (j = s) then
+      Break;
+    k := j;
+    while ((k < s) and (Self[k] = items[i])) do
+    begin
+      if (r = Result.Length) then
+        SetLength(Result, Max((r * 2), 16));
+      Result[r.Increase] := k.Increase;
+    end;
+  end;
+  SetLength(Result, r);
 end;
 
 {==============================================================================]
