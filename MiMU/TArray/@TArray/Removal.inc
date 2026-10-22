@@ -19,6 +19,7 @@ function Erase(const items: MArray; const index: Integer = 2147483647; const all
 function Erase(const items: MArray; const all: Boolean): MArray; overload;
 function Evict(const item: MType): Boolean; overload;
 function Excise(const ID: TIntegerArray; const iSorted: Boolean = True): Integer; overload;
+function Expunge(const map: TBooleanArray): Integer; overload;
 function Pluck(const pIndex: Integer = 0): MType; overload;
 function Pop: MType; overload;
 function Pop(const null: MType): MType; overload;
@@ -525,6 +526,32 @@ begin
     else
       Self[i - s] := Self[i];
   SetLength(Self, (Self.Length - Result));
+end;
+
+{==============================================================================]
+  <Expunge>
+  @action: Removes every element of Self whose position is True in map,
+           compacting the survivors in place. Returns the number removed.
+  @note: map must have the same length as Self, otherwise Self is left
+         unmodified and 0 is returned. Single forward pass with one write
+         cursor; order of survivors is preserved. Does not require Self to be
+         sorted.
+[==============================================================================}
+function MArrayHelper.Expunge(const map: TBooleanArray): Integer; overload;
+var
+  i, j, l: Integer;
+begin
+  l := Self.Length;
+  if ((l = 0) or (map.Length <> l)) then
+    Exit(0);
+  j := 0;
+  for i := 0 to (l - 1) do
+    if not map[i] then
+      Self[j.Increase] := Self[i];
+  if (j = l) then
+    Exit(0);
+  SetLength(Self, j);
+  Result := (l - j);
 end;
 
 {==============================================================================]

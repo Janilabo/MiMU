@@ -1,11 +1,18 @@
 {$IFDEF HELPERS}
 function BinaryDelete(const item: MType; const aAscending: Boolean = True): Boolean; overload;
 function BinaryDeletion(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryDitch(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryEat(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryElide(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExclude(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryJettison(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryOust(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+function BinaryRavage(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryRemoval(const item: MType; const all: Boolean = True; const oAscending: Boolean = True): Integer; overload;
 function BinaryRemove(const item: MType; const all: Boolean = True; const aAscending: Boolean = True): Integer; overload;
 function BinaryRemoveAll(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+function BinaryRenounce(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryScrap(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryTake(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
@@ -55,6 +62,40 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryDitch>
+  @action: Removes the first occurrence of item by copying elements into
+           a freshly allocated array buffer (no in-place shifting or moving).
+  @note: Array must be sorted according to oAscending. Completely avoids buffer
+         overlap issues and handles reference-counted managed types cleanly.
+[==============================================================================}
+function MArrayHelper.BinaryDitch(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  n, l, h, m, i: Integer;
+  s: MArrayHelper;
+begin
+  n := Self.Length;
+  l := 0;
+  h := n;
+  while (l < h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := ((l < n) and (Self[l] = item));
+  if not Result then
+    Exit;
+  SetLength(s, (n - 1));
+  for i := 0 to (l - 1) do
+    s[i] := Self[i];
+  for i := (l + 1) to (n - 1) do
+    s[i - 1] := Self[i];
+  Self := s;
+end;
+
+{==============================================================================]
   <BinaryEat>
   @action: Removes item from Self via binary search, preserving sorted order.
            Works with ascending or descending order based on oAscending.
@@ -83,6 +124,39 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryElide>
+  @action: Removes the first occurrence of item from a sorted Self by sinking
+           it to the stern: adjacent swaps carry it to the last slot, which is
+           then cut away.
+  @note: Array must be sorted according to oAscending. Unlike the shift-based
+         removers, the removed element is never overwritten before it leaves,
+         so every slot is moved by swap rather than assignment (safe for
+         managed MType). Returns False and leaves Self unmodified if absent.
+[==============================================================================}
+function MArrayHelper.BinaryElide(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  n, l, h, m, i: Integer;
+begin
+  n := Self.Length;
+  l := 0;
+  h := n;
+  while (l < h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := ((l < n) and (Self[l] = item));
+  if not Result then
+    Exit;
+  for i := l to (n - 2) do
+    Self.Switch(i, (i + 1));
+  SetLength(Self, (n - 1));
+end;
+
+{==============================================================================]
   <BinaryExclude>
   @action: Removes item from Self via binary search, preserving sorted order.
            Works with ascending or descending order based on oAscending.
@@ -108,6 +182,126 @@ begin
       r.stop := (m - 1);
   end;
   Result := False;
+end;
+
+{==============================================================================]
+  <BinaryJettison>
+  @action: Removes the first occurrence of item from a sorted Self, located by
+           a half-open lower-bound bisection. Returns True if an element was
+           jettisoned, otherwise False.
+  @note: Array must be sorted according to oAscending. The search narrows
+         [l, h) without an early-exit on equality, so it always settles on the
+         leftmost match even when duplicates are present. Returns False and
+         leaves Self unmodified if item is absent. O(log n) lookup, O(n) shift.
+[==============================================================================}
+function MArrayHelper.BinaryJettison(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  l, h, m, i, n: Integer;
+begin
+  n := Self.Length;
+  l := 0;
+  h := n;
+  while (l < h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := ((l < n) and (Self[l] = item));
+  if not Result then
+    Exit;
+  for i := l to (n - 2) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, (n - 1));
+end;
+
+{==============================================================================]
+  <BinaryOust>
+  @action: Removes every occurrence in sorted Self of each value listed in
+           items. Returns the number of elements removed.
+  @note: Self must be sorted according to oAscending; items may be in any
+         order and may contain duplicates. Each listed value is located by a
+         half-open lower-bound bisection and its whole run is marked in a
+         Boolean map, then Winnow compacts once. O(k log n + n) time, O(n)
+         temporary memory. Returns 0 and leaves Self unmodified if nothing
+         matched.
+[==============================================================================}
+function MArrayHelper.BinaryOust(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  k, n, i, l, h, m: Integer;
+  o: TBooleanArray;
+  d: Boolean;
+begin
+  n := Self.Length;
+  if ((n = 0) or (items.Length = 0)) then
+    Exit(0);
+  SetLength(o, n);
+  d := False;
+  for k := 0 to High(items) do
+  begin
+    l := 0;
+    h := n;
+    while (l < h) do
+    begin
+      m := (l + ((h - l) div 2));
+      if ((oAscending and (Self[m] < items[k])) or ((not oAscending) and (Self[m] > items[k]))) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    if ((l < n) and (Self[l] = items[k]) and (not o[l])) then
+    begin
+      d := True;
+      i := l;
+      while ((i < n) and (Self[i] = items[k])) do
+        o[i.Increase] := True;
+    end;
+  end;
+  if not d then
+    Exit(0);
+  Result := Self.Expunge(o);
+end;
+
+{==============================================================================]
+  <BinaryRavage>
+  @action: Removes the first occurrence of item from a sorted Self, located by
+           an exponential (galloping) probe followed by a half-open bisection
+           of the bracketed window. Returns True if an element was removed.
+  @note: Array must be sorted according to oAscending. The probe doubles from
+         index 1 until it overshoots item or the array end, so the cost is
+         O(log i) where i is the index of the first occurrence; favors items
+         near the front. Returns False and leaves Self unmodified if absent.
+[==============================================================================}
+function MArrayHelper.BinaryRavage(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  n, b, l, h, m, i: Integer;
+begin
+  n := Self.Length;
+  if (n = 0) then
+    Exit(False);
+  b := 1;
+  while ((b < n) and ((oAscending and (Self[b] < item)) or ((not oAscending) and (Self[b] > item)))) do
+    b := (b * 2);
+  l := (b div 2);
+  h := b;
+  if (h > n) then
+    h := n;
+  while (l < h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := ((l < n) and (Self[l] = item));
+  if not Result then
+    Exit;
+  for i := l to (n - 2) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, (n - 1));
 end;
 
 {==============================================================================]
@@ -228,6 +422,78 @@ begin
     Exit(0);
   SetLength(Self, Result);
   Result := (l - Result);
+end;
+
+{==============================================================================]
+  <BinaryRenounce>
+  @action: Removes the first occurrence of item from a sorted Self, located by
+           recursive bisection. Returns True if an element was removed.
+  @note: Array must be sorted according to oAscending. The nested Bound
+         function narrows [l, h) by recursion instead of a loop and returns the
+         leftmost insertion point; recursion depth is O(log n). Returns False
+         and leaves Self unmodified if absent.
+[==============================================================================}
+function MArrayHelper.BinaryRenounce(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  n, p, i: Integer;
+  function B(const l, h: Integer): Integer;
+  var
+    m: Integer;
+  begin
+    if (l >= h) then
+      Exit(l);
+    m := (l + ((h - l) div 2));
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      Result := B((m + 1), h)
+    else
+      Result := B(l, m);
+  end;
+begin
+  n := Self.Length;
+  p := B(0, n);
+  Result := ((p < n) and (Self[p] = item));
+  if not Result then
+    Exit;
+  for i := p to (n - 2) do
+    Self[i] := Self[i + 1];
+  SetLength(Self, (n - 1));
+end;
+
+{==============================================================================]
+  <BinaryScrap>
+  @action: Removes the first occurrence of item from a sorted Self by
+           rebuilding: the elements before and after the match are copied into
+           a fresh array of length n - 1, which then replaces Self.
+  @note: Array must be sorted according to oAscending. No element is ever
+         shifted within the original buffer, so the cost is a clean two-block
+         copy at the price of O(n) temporary memory. Returns False and leaves
+         Self unmodified if absent.
+[==============================================================================}
+function MArrayHelper.BinaryScrap(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  n, l, h, m, i: Integer;
+  s: MArray;
+begin
+  n := Self.Length;
+  l := 0;
+  h := n;
+  while (l < h) do
+  begin
+    m := (l + ((h - l) div 2));
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := ((l < n) and (Self[l] = item));
+  if not Result then
+    Exit;
+  SetLength(s, (n - 1));
+  for i := 0 to (l - 1) do
+    s[i] := Self[i];
+  for i := (l + 1) to (n - 1) do
+    s[i - 1] := Self[i];
+  Self := s;
 end;
 
 {==============================================================================]
