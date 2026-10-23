@@ -2,6 +2,7 @@
 function BinaryCusp(const oAscending: Boolean = True): Integer; overload;
 function BinaryHinge(const oAscending: Boolean = True): Integer; overload;
 function BinaryInflection(const oAscending: Boolean = True): Integer; overload;
+function BinaryLimen(const oAscending: Boolean = True): Integer; overload;
 function BinaryPivot(const oAscending: Boolean = True): Integer; overload;
 function BinaryTransition(const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
@@ -87,6 +88,34 @@ begin
       R := (M - 1);
     end else
       L := (M + 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryLimen>
+  @action: Returns the index of the boundary in a partitioned Self, where the
+           leading block ends and the trailing block begins.
+           oAscending = True : Self is False...True, returns the first True.
+           oAscending = False: Self is True...False, returns the first False.
+           Returns Self.Length if the trailing block is empty or absent.
+  @note: Half-open [l, h) bisection. Behaviour is undefined if Self is not
+         partitioned in the stated direction. The result is the size of the
+         leading block, so it counts the Falses when ascending and the Trues
+         when descending. The complementary count is Length - Limen.
+[==============================================================================}
+function TBooleanArrayHelper.BinaryLimen(const oAscending: Boolean = True): Integer; overload;
+var
+  l, h, m: Integer;
+begin
+  Result := 0;
+  h := Self.Length;
+  while (Result < h) do
+  begin
+    m := (Result + ((h - Result) div 2));
+    if (Self[m] = oAscending) then
+      h := m
+    else
+      Result := (m + 1);
   end;
 end;
 

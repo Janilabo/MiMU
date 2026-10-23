@@ -71,7 +71,7 @@ end;
 function MArrayHelper.BinaryDitch(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 var
   n, l, h, m, i: Integer;
-  s: MArrayHelper;
+  s: MArray;
 begin
   n := Self.Length;
   l := 0;
