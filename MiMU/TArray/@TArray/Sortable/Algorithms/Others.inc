@@ -16,6 +16,7 @@ function PancakeSort2(const oAscending: Boolean = True): Integer; overload;
 function PartitionSort(const aAscending: Boolean = True): Integer; overload;
 function ShakerSort(const oAscending: Boolean = True): Integer; overload;
 function TreeSort(const oAscending: Boolean = True): Integer; overload;
+function TunicSorted(const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -781,5 +782,105 @@ begin
   SetLength(Self, System.Length(t));
   p := 0;
   TreeOrder(t, r, Self, p);
+end;
+
+{==============================================================================]
+  <TunicSorted>
+  @action: Returns a sorted copy of Self. Each element joins the first bucket
+           in which it is a new minimum or maximum, wrapping that bucket in
+           another layer (a tunic) and recording which side it took. Each
+           bucket is then deployed outward, outermost layer first, into a
+           sorted run, and the runs are merged pairwise into the result.
+  @note: Non-mutating. Self is left untouched; length < 2 returns a copy.
+         Not stable. Elements equal to a bucket's minimum join its min side,
+         so equal values can change relative order.
+         The worst case is O(n * k) for the admission scan, where k is the bucket count (up to n on
+         adversarial input), plus O(n log k) for the merge.
+[==============================================================================}
+function MArrayHelper.TunicSorted(const oAscending: Boolean = True): MArray; overload;
+var
+  s, g, p: TIntegerArray;
+  t: MArray;
+  k: M2DArray;
+  d: TBooleanArray;
+  o: T2DBooleanArray;
+  b: TRangeArray;
+  i, j, l, r, f, n: Integer;
+begin
+  l := Self.Length;
+  if (l < 2) then
+    Exit(Self.Copy);
+  SetLength(s, l);
+  SetLength(g, l);
+  SetLength(d, l);
+  SetLength(b, l);
+  b[0].Create(0, 0);
+  d[0] := False;
+  g[0] := 0;
+  s[0] := 1;
+  r := 0;
+  for i := 1 to High(Self) do
+  begin
+    f := -1;
+    for j := 0 to r do
+      if not ((Self[i] > Self[b[j].start]) and (Self[i] < Self[b[j].stop])) then
+      begin
+        f := j;
+        if (Self[i] <= Self[b[j].start]) then
+        begin
+          b[j].start := i;
+          d[i] := False;
+        end else
+        begin
+          b[j].stop := i;
+          d[i] := True;
+        end;
+        Inc(s[j]);
+        g[i] := j;
+        Break;
+      end;
+    if (f = -1) then
+    begin
+      Inc(r);
+      b[r].start := i;
+      b[r].stop := i;
+      g[i] := r;
+      d[i] := False;
+      s[r] := 1;
+    end;
+  end;
+  SetLength(k, (r + 1));
+  SetLength(o, (r + 1));
+  for i := 0 to High(k) do
+  begin
+    SetLength(o[i], s[i]);
+    SetLength(k[i], s[i]);
+  end;
+  for i := 0 to p.Alloc(k.Length) do
+    p[i] := 0;
+  for i := 0 to High(Self) do
+  begin
+    k[g[i]][p[g[i]]] := Self[i];
+    o[g[i]][p[g[i]]] := d[i];
+    Inc(p[g[i]]);
+  end;
+  for i := 0 to r do
+    k[i] := k[i].Deployed(o[i], oAscending);
+  n := (r + 1);
+  while (n > 1) do
+  begin
+    j := 0;
+    i := 0;
+    while ((i + 1) < n) do
+    begin
+      t := Merged2(k[i], k[i + 1], oAscending);
+      k[j.Increase] := t;
+      i := (i + 2);
+    end;
+    if (i < n) then
+      k[j.Increase] := k[i];
+    n := j;
+  end;
+  Result := k[0];
 end;
 {$ENDIF}

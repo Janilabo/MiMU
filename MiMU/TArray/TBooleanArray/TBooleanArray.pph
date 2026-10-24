@@ -4,6 +4,7 @@
 {$I @TBooleanArray/Bitwise.inc}
 {$I @TBooleanArray/Construction.inc}
 {$I @TBooleanArray/Conversion.inc}
+{$I @TBooleanArray/Mapping.inc}
 {$I @TBooleanArray/Metric.inc}
 {$I @TBooleanArray/Mutate.inc}
 {$I @TBooleanArray/Quantifier.inc}

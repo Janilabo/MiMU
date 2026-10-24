@@ -16,12 +16,14 @@
 {$I @TArray/Endpoints.inc}
 {$I @TArray/Equality.inc}
 {$I @TArray/Fill.inc}
+{$I @TArray/Formation.inc}
 {$I @TArray/Frequency.inc}
 {$I @TArray/Geometry.inc}
 {$I @TArray/Grouping.inc}
 {$I @TArray/Indexance.inc}
 {$I @TArray/Indexing.inc}
 {$I @TArray/Inequality.inc}
+{$I @TArray/Mapping.inc}
 {$I @TArray/Membership.inc}
 {$I @TArray/Merging.inc}
 {$I @TArray/Miscellaneous.inc}
