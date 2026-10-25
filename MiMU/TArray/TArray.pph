@@ -51,6 +51,7 @@
 {$I @TArray/Validation.inc}
 
 {$IFDEF Sortable}
+{$I @TArray/Sortable/Arrangement.inc}
 {$I @TArray/Sortable/Bounds.inc}
 {$I @TArray/Sortable/Comparators.inc}
 {$I @TArray/Sortable/Containment.inc}
