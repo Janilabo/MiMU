@@ -16,6 +16,7 @@ function PancakeSort2(const oAscending: Boolean = True): Integer; overload;
 function PartitionSort(const aAscending: Boolean = True): Integer; overload;
 function ShakerSort(const oAscending: Boolean = True): Integer; overload;
 function TreeSort(const oAscending: Boolean = True): Integer; overload;
+function TSorted(const oAscending: Boolean = True): MArray; overload;
 function TunicSorted(const oAscending: Boolean = True): MArray; overload;
 {$ENDIF}
 
@@ -782,6 +783,112 @@ begin
   SetLength(Self, System.Length(t));
   p := 0;
   TreeOrder(t, r, Self, p);
+end;
+
+{==============================================================================]
+  <TSorted>
+  @action: Returns a sorted copy of the array.
+  @note: Buckets elements by nested min/max flanks, scatters each bucket into
+         its sorted run, then merges the runs bottom-up.
+[==============================================================================}
+function MArrayHelper.TSorted(const oAscending: Boolean = True): MArray; overload;
+var
+  i, n, j, l, r, h, m, k, w, a, b, o, c: Integer;
+  v: MType;
+  x, y, s, t: MArray;
+  z, e, f, q: TIntegerArray;
+  u: TBooleanArray;
+begin
+  n := Self.Length;
+  if (n < 2) then
+    Exit(Self.Copy);
+  SetLength(x, n);
+  SetLength(y, n);
+  SetLength(z, (n + 1));
+  SetLength(q, n);
+  SetLength(u, n);
+  j := 0;
+  for i := 0 to (n - 1) do
+  begin
+    v := Self[i];
+    l := 0;
+    r := j;
+    while (l < r) do
+    begin
+      m := ((l + r) shr 1);
+      if ((v <= x[m]) or (v >= y[m])) then
+        r := m
+      else
+        l := (m + 1);
+    end;
+    if (l = j) then
+    begin
+      x[l] := v;
+      y[l] := v;
+      u[i] := False;
+      Inc(j);
+    end else if (v <= x[l]) then
+    begin
+      x[l] := v;
+      u[i] := False;
+    end else
+    begin
+      y[l] := v;
+      u[i] := True;
+    end;
+    q[i] := l;
+    Inc(z[l + 1]);
+  end;
+  for k := 1 to j do
+    z[k] := (z[k] + z[k - 1]);
+  SetLength(Result, n);
+  SetLength(e, j);
+  SetLength(f, j);
+  for i := (n - 1) downto 0 do
+  begin
+    k := q[i];
+    if u[i] then
+      Result[z[k + 1] - 1 - f[k].Increase] := Self[i]
+    else
+      Result[z[k] + e[k].Increase] := Self[i];
+  end;
+  SetLength(s, n);
+  w := 1;
+  while (w < j) do
+  begin
+    k := 0;
+    while (k < j) do
+    begin
+      l := z[k];
+      m := (k + w);
+      if (m > j) then
+        m := j;
+      c := z[m];
+      m := (k + 2 * w);
+      if (m > j) then
+        m := j;
+      h := z[m];
+      a := l;
+      b := c;
+      o := l;
+      while ((a < c) and (b < h)) do
+        if (Result[b] < Result[a]) then
+          s[o.Increase] := Result[b.Increase]
+        else
+          s[o.Increase] := Result[a.Increase];
+      while (a < c) do
+        s[o.Increase] := Result[a.Increase];
+      while (b < h) do
+        s[o.Increase] := Result[b.Increase];
+      Inc(k, (2 * w));
+    end;
+    t := Result;
+    Result := s;
+    s := t;
+    w := (w * 2);
+  end;
+  if not oAscending then
+    Result.Flippy;
 end;
 
 {==============================================================================]

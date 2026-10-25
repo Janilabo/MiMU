@@ -13,6 +13,7 @@ function Evert: Boolean; overload;
 function Everted: MArray; overload;
 function Evertify: MArray; overload;
 function Flip: Boolean; overload;
+function Flippy: Integer; overload;
 function Obverse: MArray; overload;
 function Obversed: MArray; overload;
 function Obversion: MArray; overload;
@@ -338,7 +339,7 @@ end;
 {==============================================================================]
   <Flip>
   @action: Reverses array arr.
-  @note: Alternative for TArray_Reverse
+  @note: Alternative for arr.Reverse
 [==============================================================================}
 function MArrayHelper.Flip: Boolean; overload;
 var
@@ -348,6 +349,26 @@ begin
   Result := (r.stop > 0);
   while (r.start < r.stop) do
     Exchange(r.start.Increase, r.stop.Decrease);
+end;
+
+{==============================================================================]
+  <Flippy>
+  @action: Reverses the elements of the array in-place and returns the total number of swap operations performed.
+  @note: Modifies the original array directly.
+[==============================================================================}
+function MArrayHelper.Flippy: Integer; overload;
+var
+  s: MType;
+  i, r: Integer;
+begin
+  r := Self.Length;
+  Result := (r.Decrease shr 1);
+  for i := 0 to (Result - 1) do
+  begin
+    s := Self[i];
+    Self[i] := Self[r - i];
+    Self[r - i] := s;
+  end;
 end;
 
 {==============================================================================]
