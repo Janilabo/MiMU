@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Funnelled(const origins: TIntegerArray): MArray; overload;
+function MergeRuns(const origins: TIntegerArray): MArray; overload;
 
+function GetRuns(const oAscending: Boolean = True): TIntegerArray; overload;
 function Tacks(const oAscending: Boolean = True): TIntegerArray; overload;
 {$ENDIF}
 
@@ -69,7 +71,95 @@ begin
     f := not f;
     w := (w * 2);
   end;
-end; 
+end;
+
+{==============================================================================]
+  <MergeRuns>
+  @action: Returns Self with its pre-sorted runs merged into one ascending array.
+  @note: origins holds the first index of each run, ascending, with origins[0] = 0.
+         Every run must already be sorted ascending. Merges are stable (ties
+         come from the earlier run). Self is left unchanged.
+[==============================================================================}
+function MArrayHelper.MergeRuns(const origins: TIntegerArray): MArray; overload;
+var
+  n, z, w, k, l, m, h, a, b, o, c: Integer;
+  s: TIntegerArray;
+  p, q, r: MArray;
+  f: Boolean;
+begin
+  Result := Self.Copy;
+  z := origins.Length;
+  if (z < 2) then
+    Exit;
+  n := Self.Length;
+  SetLength(s, (z + 1));
+  System.Move(origins[0], s[0], (z * SizeOf(Integer)));
+  s[z] := n;
+  SetLength(p, n);
+  SetLength(q, n);
+  System.Move(Result[0], p[0], (n * SizeOf(Integer)));
+  f := False;
+  w := 1;
+  while (w < z) do
+  begin
+    if f then
+      r := q
+    else
+      r := p;
+    k := 0;
+    while (k < z) do
+    begin
+      l := s[k];
+      m := (k + w);
+      if (m > z) then
+        m := z;
+      c := s[m];
+      m := (k + 2 * w);
+      if (m > z) then
+        m := z;
+      h := s[m];
+      a := l;
+      b := c;
+      o := l;
+      while ((a < c) and (b < h)) do
+        if (Result[b] < Result[a]) then
+          r[o.Increase] := Result[b.Increase]
+        else
+          r[o.Increase] := Result[a.Increase];
+      while (a < c) do
+        r[o.Increase] := Result[a.Increase];
+      while (b < h) do
+        r[o.Increase] := Result[b.Increase];
+      Inc(k, 2 * w);
+    end;
+    Result := r;
+    f := not f;
+    w := (w * 2);
+  end;
+end;
+
+{==============================================================================]
+  <GetRuns>
+  @action: Returns the starting index of every sorted run in the array.
+  @note: oAscending = True:  a new run starts wherever Self[i] < Self[i - 1].
+         oAscending = False: a new run starts wherever Self[i] > Self[i - 1].
+         Equal neighbors stay in the same run. Returns an empty array if Self
+         is empty. The result is a valid origins parameter for merging functions
+         with the same oAscending configuration.
+[==============================================================================}
+function MArrayHelper.GetRuns(const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  i, r: Integer;
+begin
+  if (Result.SetSize(Self.Length) = 0) then
+    Exit;
+  Result[0] := 0;
+  r := 1;
+  for i := 1 to High(Self) do
+    if ((oAscending and (Self[i] < Self[i - 1])) or ((not oAscending) and (Self[i] > Self[i - 1]))) then
+      Result[r.Increase] := i;
+  SetLength(Result, r);
+end;
 
 {==============================================================================]
   <Tacks>
