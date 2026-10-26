@@ -75,6 +75,7 @@
 {$I @TArray/Sortable/Selection.inc}
 {$I @TArray/Sortable/Sort.inc}
 {$I @TArray/Sortable/Sorted.inc}
+{$I @TArray/Sortable/Sweep.inc}
 {$I @TArray/Sortable/Ternary.inc}
 {$I @TArray/Sortable/Trajectory.inc}
 {$I @TArray/Sortable/Trend.inc}
