@@ -12,6 +12,7 @@
 {$I @TIntegerArray/BinaryOps/Selection.inc}
 {$I @TIntegerArray/BinaryOps/Sort.inc}
 
+{$I @TIntegerArray/Allegiance.inc}
 {$I @TIntegerArray/Analytics.inc}
 {$I @TIntegerArray/Bounding.inc}
 {$I @TIntegerArray/Clustering.inc}
