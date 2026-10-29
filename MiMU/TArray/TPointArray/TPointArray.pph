@@ -11,6 +11,7 @@
 
 {$I @TPointArray/Add.inc}
 {$I @TPointArray/Aggregation.inc}
+{$I @TPointArray/Allegiance.inc}
 {$I @TPointArray/Binning.inc}
 {$I @TPointArray/Bounding.inc}
 {$I @TPointArray/Bucketing.inc}

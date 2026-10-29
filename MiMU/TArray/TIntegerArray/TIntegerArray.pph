@@ -30,6 +30,7 @@
 {$I @TIntegerArray/Selection.inc}
 {$I @TIntegerArray/Sorting.inc}
 {$I @TIntegerArray/Spanning.inc}
+{$I @TIntegerArray/Sweep.inc}
 {$I @TIntegerArray/Transformation.inc}
 {$I @TIntegerArray/Traversal.inc}
 {$I @TIntegerArray/Unparsing.inc}
