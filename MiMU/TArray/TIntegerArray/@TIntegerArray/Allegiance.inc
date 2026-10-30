@@ -1,11 +1,15 @@
 {$IFDEF HELPERS}
 function Cantoned: TIntegerArray; overload;
+function Hauled: TIntegerArray; overload;
 
+function Anchored(const oAscending: Boolean = True): TIntegerArray; overload;
 function Meted(const oAscending: Boolean = True): TIntegerArray; overload;
 function Moored(const oAscending: Boolean = True): TIntegerArray; overload;
 function Patrolled(const oAscending: Boolean = True): TIntegerArray; overload;
 function Sounded(const oAscending: Boolean = True): TIntegerArray; overload;
 function Tacked(const oAscending: Boolean = True): TIntegerArray; overload;
+
+function Plied: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -34,6 +38,70 @@ begin
       Result[k + j] := Self[i + 1];
   end;
   Result[High(Result)] := Self[h];
+end;
+
+{==============================================================================]
+  <Hauled>
+  @action: Generates a stepped/quantized integer array using a branchless nearest-neighbor selection per output position.
+  @note: For each offset j within an interval of length d, the value is Self[i] + (Self[i + 1] - Self[i]) * Ord(2 * j > d),
+         so the result flips to the next element only once j is strictly past the midpoint (ties stay with Self[i]).
+         Offsets use Int64 for the doubling to avoid overflow on large intervals. Handles ascending and descending sequences.
+[==============================================================================}
+function TIntegerArrayHelper.Hauled: TIntegerArray; overload;
+var
+  h, i, j, r, a, d: Integer;
+begin
+  h := High(Self);
+  if (h < 1) then
+    Exit(Self.Copy);
+  SetLength(Result, (Abs(Int64(Self[h]) - Self[0]) + 1));
+  r := 0;
+  for i := 0 to (h - 1) do
+  begin
+    a := Self[i];
+    d := Abs(Self[i + 1] - a);
+    for j := 0 to (d - 1) do
+      Result[r.Increase] := (a + ((Self[i + 1] - a) * Ord((Int64(j) * 2) > d)));
+  end;
+  Result[r] := Self[h];
+end;
+
+{==============================================================================]
+  <Anchored>
+  @action: Precomputes output-index boundaries, then fills output in one pass.
+  @note: O(N + h) time, O(h) extra memory. Each Bounds[i] marks the first
+         output index NOT owned by Self[i]. Unlike Patrolled (value sweep),
+         this compares the current output index against positional thresholds.
+[==============================================================================}
+function TIntegerArrayHelper.Anchored(const oAscending: Boolean = True): TIntegerArray; overload;
+var
+  h, i, r, d, s, p: Integer;
+  b: TIntegerArray;
+begin
+  h := High(Self);
+  if (h < 1) then
+    Exit(Self.Copy);
+  SetLength(Result, (Abs(Int64(Self[h]) - Self[0]) + 1));
+  SetLength(b, h);
+  p := 0;
+  for i := 0 to (h - 1) do
+  begin
+    if (i > 0) then
+    begin
+      s  := Abs(Self[i] - Self[i - 1]);
+      Inc(p, (s - ((s div 2) + 1)));
+    end;
+    d := Abs(Self[i + 1] - Self[i]);
+    Inc(p, ((d div 2) + 1));
+    b[i] := p;
+  end;
+  i := 0;
+  for r := 0 to High(Result) do
+  begin
+    while ((i < h) and (r >= b[i])) do
+      Inc(i);
+    Result[r] := Self[i];
+  end;
 end;
 
 {==============================================================================]
@@ -237,6 +305,36 @@ begin
           Result[r.Increase] := b;
       end;
     end;
+  end;
+  Result[r] := Self[h];
+end;
+
+{==============================================================================]
+  <Plied>
+  @action: Generates a stepped/quantized integer array using a branchless nearest-neighbor selection per output position.
+  @note: For each offset j within an interval of length d, the value is Self[i] + (Self[i + 1] - Self[i]) * Ord(2 * j > d),
+         so the result flips to the next element only once j is strictly past the midpoint (ties stay with Self[i]).
+         Result length is the sum of all interval distances + 1, so non-monotonic input is supported.
+[==============================================================================}
+function TIntegerArrayHelper.Plied: TIntegerArray; overload;
+var
+  h, i, j, r, a, d: Integer;
+  t: Int64;
+begin
+  h := High(Self);
+  if (h < 1) then
+    Exit(Self.Copy);
+  t := 1;
+  for i := 0 to (h - 1) do
+    Inc(t, Abs(Int64(Self[i + 1]) - Self[i]));
+  SetLength(Result, t);
+  r := 0;
+  for i := 0 to (h - 1) do
+  begin
+    a := Self[i];
+    d := Abs(Self[i + 1] - a);
+    for j := 0 to (d - 1) do
+      Result[r.Increase] := (a + ((Self[i + 1] - a) * Ord((Int64(j) * 2) > d)));
   end;
   Result[r] := Self[h];
 end;
