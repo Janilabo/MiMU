@@ -1,9 +1,11 @@
 {$IFDEF HELPERS}
 function BBox: TBox; overload;
+function Bordure: TBox; overload;
 function Boundaries: TBox;
 function BoundingBox: TBox;
 function Bounds: TBox; overload;
 function Bounds(var width, height: Integer): TBox; overload;
+function Bourne: TBox; overload;
 function Box: TBox;
 function Boxed: TBox;
 function Coverage: TBox; overload;
@@ -63,6 +65,86 @@ begin
         Y2 := P^.Y;
       Inc(P);
     until (P = M);
+  end;
+end;
+
+{==============================================================================]
+  <Bordure>
+  @action: Calculates and returns the bounding box (TBox) that encompasses all points in the point array (TPointArray)
+           using a pairwise unrolled loop.
+  @note: Handles empty arrays (returning an uninitialized/default TBox) and single-point arrays specially.
+         For larger arrays, it processes elements in pairs to compare and update minimum and maximum boundaries efficiently,
+		 handling any remaining odd element at the end.
+[==============================================================================}
+function TPointArrayHelper.Bordure: TBox; overload;
+var
+  s, i: Integer;
+  h, v: TRange;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit(TBox.Construct(High(Integer), High(Integer), Low(Integer), Low(Integer)));
+  if (s = 1) then
+    Exit(TBox.Construct(Self[0].X, Self[0].Y, Self[0].X, Self[0].Y));
+  if (Self[0].X < Self[1].X) then
+  begin
+    Result.X1 := Self[0].X;
+    Result.X2 := Self[1].X;
+  end else
+  begin
+    Result.X1 := Self[1].X;
+    Result.X2 := Self[0].X;
+  end;
+  if (Self[0].Y < Self[1].Y) then
+  begin
+    Result.Y1 := Self[0].Y;
+    Result.Y2 := Self[1].Y;
+  end else
+  begin
+    Result.Y1 := Self[1].Y;
+    Result.Y2 := Self[0].Y;
+  end;
+  i := 2;
+  while ((i + 1) < s) do
+  begin
+    if (Self[i].X < Self[i + 1].X) then
+    begin
+      h.start := Self[i].X;
+      h.stop := Self[i + 1].X;
+    end else
+    begin
+      h.start := Self[i + 1].X;
+      h.stop := Self[i].X;
+    end;
+    if (Self[i].Y < Self[i + 1].Y) then
+    begin
+      v.start := Self[i].Y;
+      v.stop := Self[i + 1].Y;
+    end else
+    begin
+      v.start := Self[i + 1].Y;
+      v.stop := Self[i].Y;
+    end;
+    if (h.start < Result.X1) then
+      Result.X1 := h.start;
+    if (h.stop > Result.X2) then
+      Result.X2 := h.stop;
+    if (v.start < Result.Y1) then
+      Result.Y1 := v.start;
+    if (v.stop > Result.Y2) then
+      Result.Y2 := v.stop;
+    Inc(i, 2);
+  end;
+  if (i < s) then
+  begin
+    if (Self[i].X < Result.X1) then
+      Result.X1 := Self[i].X
+    else if (Self[i].X > Result.X2) then
+      Result.X2 := Self[i].X;
+    if (Self[i].Y < Result.Y1) then
+      Result.Y1 := Self[i].Y
+    else if (Self[i].Y > Result.Y2) then
+      Result.Y2 := Self[i].Y;
   end;
 end;
 
@@ -151,6 +233,28 @@ begin
       width := 0;
       height := 0;
     end;
+  end;
+end;
+
+{==============================================================================]
+  <Bourne>
+  @action: Calculates and returns the bounding box (TBox) that encompasses all points within the point array (TPointArray).
+  @note: Returns an empty/inverted bounding box if the array is empty. Iterates through all points,
+         updating the minimum and maximum X and Y coordinates using the branchless Minor and Major helper functions.
+[==============================================================================}
+function TPointArrayHelper.Bourne: TBox; overload;
+var
+  i: Integer;
+begin
+  if Self.Empty then
+    Exit(TBox.Construct(High(Integer), High(Integer), Low(Integer), Low(Integer)));
+  Result.Build(Self[0]);
+  for i := 1 to High(Self) do
+  begin
+    Result.X1 := Minor(Result.X1, Self[i].X);
+    Result.Y1 := Minor(Result.Y1, Self[i].Y);
+    Result.X2 := Major(Result.X2, Self[i].X);
+    Result.Y2 := Major(Result.Y2, Self[i].Y);
   end;
 end;
 

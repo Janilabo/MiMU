@@ -1,4 +1,7 @@
 {$IFDEF FUNCTIONS}
+function Lesser(const a, b: MType): MType; overload;
+function Greater(const a, b: MType): MType; overload;
+
 function Max3(const A, B, C: MType): MType; overload;
 function MaxBy(const A, B, C: MType): MType; overload;
 function Maximal(const A, B, C: MType): MType; overload;
@@ -22,6 +25,34 @@ function Triomin(const A, B, C: MType): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Lesser>
+  @action: Returns the minimum of two values (a and b) of type using an array-based lookup.
+  @note: Implements a branchless min function by mapping boolean comparison results to an array index (0 or 1).
+[==============================================================================}
+function Lesser(const a, b: MType): MType; overload;
+var
+  r: array[0..1] of MType;
+begin
+  r[0] := a;
+  r[1] := b;
+  Result := r[Ord(b < a)];
+end;
+
+{==============================================================================]
+  <Greater>
+  @action: Returns the maximum of two values (a and b) of type using an array-based lookup.
+@note: Implements a branchless max function by mapping boolean comparison results to an array index (0 or 1).
+[==============================================================================}
+function Greater(const a, b: MType): MType; overload;
+var
+  r: array[0..1] of MType;
+begin
+  r[0] := a;
+  r[1] := b;
+  Result := r[Ord(b > a)];
+end;
+
 {==============================================================================]
   <Max3>
   @action: Returns the highest value among three items using left-associative nesting.
