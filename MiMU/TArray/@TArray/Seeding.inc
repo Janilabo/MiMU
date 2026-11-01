@@ -3,6 +3,9 @@ function Fill(const item: MType; const index: Integer = 0; const count: Integer 
 function Fill(const items: MArray; const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Populate(const items: MArray; const times: Integer = 1): Boolean; overload;
 function Populate(const item: MType; const times: Integer = 1): Boolean; overload;
+
+function Exscribe(var target: MArray): Integer; overload;
+function Inscribe(const source: MArray): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -83,5 +86,35 @@ begin;
   if Result then
   for i := 0 to (times - 1) do
     Self[i] := item;
+end;
+
+{==============================================================================]
+  <Exscribe>
+  @action: Copies/exports elements from the current array (Self) into a target array.
+  @note: Assumes 'target' is already allocated with sufficient length.
+         Returns the number of elements copied.
+[==============================================================================}
+function MArrayHelper.Exscribe(var target: MArray): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := Self.Length;
+  for i := 0 to (Result - 1) do
+    target[i] := Self[i];
+end;
+
+{==============================================================================]
+  <Inscribe>
+  @action: Copies/imports elements from a source array into the current array (Self).
+  @note: Assumes 'Self' is already allocated with sufficient length to hold the source data.
+         Returns the number of elements copied.
+[==============================================================================}
+function MArrayHelper.Inscribe(const source: MArray): Integer; overload;
+var
+  i: Integer;
+begin
+  Result := source.Length;
+  for i := 0 to (Result - 1) do
+    Self[i] := source[i];
 end;
 {$ENDIF}

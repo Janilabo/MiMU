@@ -39,6 +39,7 @@ function Reversed: MArray; overload;
 function ReversedEx: MArray; overload;
 function Reversedly: MArray; overload;
 function ReverseEx: MArray; overload;
+function Reverself: MArray; overload;
 function Reversement: Boolean; overload;
 function Reversied: MArray; overload;
 function Reversified: MArray; overload;
@@ -53,6 +54,7 @@ function Reverte: MArray; overload;
 function Reverted: MArray; overload;
 function Reverto: MArray; overload;
 function RReverse: MArray; overload;
+function Selverse: MArray; overload;
 function Snapshot: MArray; overload;
 function Turn: Integer; overload;
 function Upend: Integer; overload;
@@ -957,7 +959,33 @@ begin
     for i := 0 to High(Result) do
       Result[l.Decrement] := Self[i];
   end;
-end; 
+end;
+
+{==============================================================================]
+  <Reverself>
+  @action: Reverses the array elements in-place while constructing and returning a new reversed copy.
+  @note: Mutates the original array (Self) as a side effect. Allows chainability.
+[==============================================================================}
+function MArrayHelper.Reverself: MArray; overload;
+var
+  l, i: Integer;
+begin
+  l := Self.Length;
+  if (Result.SetSize(l) > 1) then
+  begin
+    i := -1;
+    while (i.Increment < l.Decrement) do
+    begin
+      Result[i] := Self[l];
+      Result[l] := Self[i];
+      Self[i] := Result[i];
+      Self[l] := Result[l];
+    end;
+    if (i = l) then
+      Result[i] := Self[l];
+  end else
+    Result.Inscribe(Self);
+end;
 
 {==============================================================================]
   <Reversement>
@@ -1237,6 +1265,30 @@ function MArrayHelper.RReverse: MArray; overload;
   end;
 begin
   Result := R(Self.Clone, 0, High(Self));
+end;
+
+{==============================================================================]
+  <Selverse>
+  @action: Reverses the elements of the array in-place and returns Self to support method chaining.
+  @note: Modifies the original array directly.
+[==============================================================================}
+function MArrayHelper.Selverse: MArray; overload;
+var
+  i, l: Integer;
+  s: MType;
+begin
+  l := Self.Length;
+  if (l > 1) then
+  begin
+    i := -1;
+    while (i.Increment < l.Decrement) do
+    begin
+      s := Self[i];
+      Self[i] := Self[l];
+      Self[l] := s;
+    end;
+  end;
+  Result := Self;
 end;
 
 {==============================================================================]
