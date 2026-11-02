@@ -12,6 +12,7 @@ function Join(const other: TRange): TRange; overload;
 function Joinage(const val: Integer): TRange; overload;
 function Joinage(const other: TRange): TRange; overload;
 function Overlay(const target: TRange): TRange; overload;
+function Superimposed(const target: TRange; out aIntersection: TRange): Boolean; overload;
 function Union(const b: TRange): TRange; overload;
 function Union(const val: Integer): TRange; overload;
 {$ENDIF}
@@ -219,6 +220,30 @@ begin
     Result := TRange.Null
   else
     Result := TRange.Construct(Max(Self.Minimum, target.Minimum), Min(Self.Maximum, target.Maximum));
+end;
+
+{==============================================================================]
+  <Superimposed>
+  @action: Determines whether the range overlaps with a target range,
+           returning the overlapping intersection adjusted to match the directional orientation of the calling range.
+  @note: Automatically normalizes both ranges to compute the intersection safely,
+         regardless of whether they are ascending or descending.
+         Returns True and populates 'aIntersection' if an overlap exists; otherwise, returns False.
+[==============================================================================}
+function TRange.Superimposed(const target: TRange; out aIntersection: TRange): Boolean; overload;
+var
+  s, t, r: TRange;
+begin
+  s := Self.Normalized;
+  t := target.Normalized;
+  r.start := Max(s.start, t.start);
+  r.stop := Min(s.stop, t.stop);
+  Result := (r.start <= r.stop);
+  if Result then
+    if (Self.start <= Self.stop) then
+      aIntersection := r
+    else
+      aIntersection := r.Reversed;
 end;
 
 {==============================================================================]

@@ -58,6 +58,7 @@ function RReverse: MArray; overload;
 function Selverse: MArray; overload;
 function Snapshot: MArray; overload;
 function Turn: Integer; overload;
+function Turned: MArray; overload;
 function Upend: Integer; overload;
 {$ENDIF}
 
@@ -1360,6 +1361,19 @@ begin
   for i := 0 to (Result - 1) do
     Self[(s - i) - 1] := Self[s + i];
   SetLength(Self, s);
+end;
+
+{==============================================================================]
+  <Turned>
+  @action: Returns a new array containing the elements of the original array in reverse order.
+  @note: If the array contains fewer than 2 elements, it returns a copy of the original array.
+         Otherwise, it uses a descending range to flip the sequence from end to start.
+[==============================================================================}
+function MArrayHelper.Turned: MArray; overload;
+begin
+  if (Self.Length < 2) then
+    Exit(Self.Copy);
+  Result := Self.Qet(TRange.Construct(High(Self), 0));
 end;
 
 {==============================================================================]
