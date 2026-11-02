@@ -22,6 +22,7 @@ function Opposed: MArray; overload;
 function Opposite: MArray; overload;
 function Overturn: Boolean; overload;
 function Rebel: MArray; overload;
+function Recursed: MArray; overload;
 function Reflex(const rIndex: Integer): MType; overload;
 function Reflux: Integer; overload;
 function Regress: MArray; overload;
@@ -555,6 +556,27 @@ begin
   Result[i.Increase] := Self[s];
   if (s.Decrement > -1) then
     goto loop;
+end;
+
+{==============================================================================]
+  <Recursed>
+  @action: Reverses the order of elements in the array using a backward-looping 
+           mechanism controlled by an explicit goto label.
+  @note: Achieves O(N) efficiency by pre-allocating the result array and copying 
+         elements directly. However, the use of a 'goto' statement and sequential 
+         labels deviates from modern structured programming paradigms (like for/while loops).
+[==============================================================================}
+function MArrayHelper.Recursed: MArray; overload;
+  procedure R(const arr: MArray; var rec: MArray; const idx, hi: Integer);
+  begin
+    if (idx > hi) then
+      Exit;
+    rec[hi - idx] := arr[idx];
+    R(arr, rec, (idx + 1), hi);
+end;
+begin
+  SetLength(Result, Self.Length);
+  R(Self, Result, 0, High(Self));
 end;
 
 {==============================================================================]

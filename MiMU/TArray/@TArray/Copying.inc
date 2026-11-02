@@ -14,6 +14,9 @@ function Get(const ID: TRange): MArray; overload;
 function Next(const index: Integer; const count: Integer = 2147483647): MArray; overload;
 function Piece(const sIndexes: TRange): MArray; overload;
 function Previous(const index: Integer; const count: Integer = 2147483647): MArray; overload;
+function Qet(const ID: TRange): MArray; overload;
+function Qet: MArray; overload;
+function Qet(const ID: TIntegerArray): MArray; overload;
 function Replica(const oAscending: Boolean = True): MArray; overload;
 function Replicate(const index: Integer = 0; const count: Integer = 2147483647): MArray; overload;
 function Slice(const r: TRange): MArray; overload;
@@ -321,6 +324,54 @@ begin
       Result[i] := Self[m + i];
   end else
     SetLength(Result, 0);
+end;
+
+{==============================================================================]
+  <Qet>
+  @action: Extracts a sub-array (slice) from the integer array based on a given range (TRange),
+           supporting both ascending and descending index traversal.
+  @note: Automatically handles the direction of the range (ascending when start <= stop, descending when start > stop).
+         Ensure that TRange indices are within the valid bounds of the array to prevent out-of-bounds exceptions.
+[==============================================================================}
+function MArrayHelper.Qet(const ID: TRange): MArray; overload;
+var
+  i: Integer;
+begin
+  SetLength(Result, ID.Size);
+  case (ID.start <= ID.stop) of
+    True:
+    for i := ID.start to ID.stop do
+      Result[i - ID.start] := Self[i];
+	  False:
+    for i := ID.start downto ID.stop do
+      Result[ID.start - i] := Self[i];
+  end;
+end;
+
+{==============================================================================]
+  <Qet>
+  @action: Copy of an array arr.
+  @note: Just an alternative.
+[==============================================================================}
+function MArrayHelper.Qet: MArray; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to Result.Alloc(Self.Length) do
+    Result[i] := Self[i];
+ end;
+ 
+ {==============================================================================]
+  <Qet>
+  @action: Outputs array of items from arr by indexes (IDs).
+  @note: Unsafe method! No safety checking.
+[==============================================================================}
+function MArrayHelper.Qet(const ID: TIntegerArray): MArray; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to Result.Alloc(ID.Length) do
+    Result[i] := Self[ID[i]];
 end;
 
 {==============================================================================]
