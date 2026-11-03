@@ -13,6 +13,9 @@ function Swapped(var target: MArray): Integer; overload;
 procedure Switch(const a, b: Integer); overload;
 function Trade(var b: MArray): Integer; overload;
 function Troak(var target: MArray): MArray; overload;
+
+function Leftate(const k: Integer = 1): Boolean; overload;
+function Rightate(const k: Integer = 1): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -312,5 +315,57 @@ begin
   Result := Self.Cloned;
   Self := target.Cloned;
   target := Result.Cloned;
+end;
+
+{==============================================================================]
+  <Leftate>
+  @action: Rotates the array left in-place by k positions, so the element at
+           index k becomes the first element and the first k elements wrap to the end.
+  @note: Uses the three-reversal method (no extra memory). Negative k is normalized
+         into range. Returns True only if the array was actually rotated; False if it
+         has fewer than 2 elements or k is a multiple of the length.
+[==============================================================================}
+function MArrayHelper.Leftate(const k: Integer = 1): Boolean; overload;
+var
+  s, r: Integer;
+begin
+  s := Self.Length;
+  if (s < 2) then
+    Exit(False);
+  r := (k mod s);
+  if (r < 0) then
+    r := (r + s);
+  if (r = 0) then
+    Exit(False);
+  Self.Reversex(0, (r - 1));
+  Self.Reversex(r, (s - 1));
+  Self.Reversex(0, (s - 1));
+  Result := True;
+end;
+
+{==============================================================================]
+  <Rightate>
+  @action: Rotates the array right in-place by k positions, so the last k elements
+           wrap to the front.
+  @note: Uses the three-reversal method (no extra memory). Negative k is normalized
+         into range. Returns True only if the array was actually rotated; False if it
+         has fewer than 2 elements or k is a multiple of the length.
+[==============================================================================}
+function MArrayHelper.Rightate(const k: Integer = 1): Boolean; overload;
+var
+  s, r: Integer;
+begin
+  s := Self.Length;
+  if (s < 2) then
+    Exit(False);
+  r := (k mod s);
+  if (r < 0) then
+    r := (r + s);
+  if (r = 0) then
+    Exit(False);
+  Self.Reversex(0, (s - 1));
+  Self.Reversex(0, (r - 1));
+  Self.Reversex(r, (s - 1));
+  Result := True;
 end;
 {$ENDIF}

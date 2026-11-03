@@ -7,6 +7,9 @@ function Hull(const target: TRange): TRange; overload;
 function Intersect(const b: TRange): TRange; overload;
 function Intersect(const b: TRange; var iZone: TRange): Boolean; overload;
 function Intersection(const target: TRange): TRange; overload;
+function IntersectionStart(const target: TRange): Integer; overload;
+function IntersectionStop(const target: TRange): Integer; overload;
+function Intersectry(const target: TRange; out aIntersection: TRange): Boolean; overload;
 function Join(const val: Integer): TRange; overload;
 function Join(const other: TRange): TRange; overload;
 function Joinage(const val: Integer): TRange; overload;
@@ -140,6 +143,41 @@ begin
   if not Self.IsConnected(target) then 
     Exit(TRange.Null);
   Result.Create(Max(Self.Minimum, target.Minimum), Min(Self.Maximum, target.Maximum));
+end;
+
+{==============================================================================]
+  <IntersectionStart>
+  @action: Calculates and returns the starting boundary of the intersection between the current range and the target range.
+  @note: If the ranges do not intersect, the returned value will be greater than IntersectionStop, resulting in an inverted/invalid range.
+[==============================================================================}
+function TRange.IntersectionStart(const target: TRange): Integer; overload;
+begin
+  Result := Max(Min(Self.start, Self.stop), Min(target.start, target.stop));
+end;
+
+{==============================================================================]
+  <IntersectionStop>
+  @action: Calculates and returns the ending boundary of the intersection between the current range and the target range.
+  @note: If the ranges do not intersect, the returned value will be less than IntersectionStart, resulting in an inverted/invalid range.
+[==============================================================================}
+function TRange.IntersectionStop(const target: TRange): Integer; overload;
+begin
+  Result := Min(Max(Self.start, Self.stop), Max(target.start, target.stop));
+end;
+
+{==============================================================================]
+  <Intersectry>
+  @action: Attempts to compute the intersection between the current range and the target range,
+           returning the result via the out parameter. Returns True if a valid intersection exists, or False otherwise.
+  @note: If the ranges do not intersect, the function returns False and sets aIntersection to TRange.Null.
+[==============================================================================}
+function TRange.Intersectry(const target: TRange; out aIntersection: TRange): Boolean; overload;
+begin
+  aIntersection.start := Self.IntersectionStart(target);
+  aIntersection.stop := Self.IntersectionStop(target);
+  Result := (aIntersection.start <= aIntersection.stop);
+  if not Result then
+    aIntersection := TRange.Null;
 end;
 
 {==============================================================================]

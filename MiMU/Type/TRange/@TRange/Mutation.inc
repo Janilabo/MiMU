@@ -9,6 +9,10 @@ function Restop(const vStop: Integer = 0): Boolean; overload;
 function Restopped(const vStop: Integer = 0): TRange; overload;
 function Shrink(const val: Integer): Boolean; overload;
 function Shrunk(const val: Integer): TRange; overload;
+
+function Deflated(const N: Integer = 1): TRange; overload;
+function Inflated(const N: Integer = 1): TRange; overload;
+function Shrunken(const N: Integer = 1): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -198,4 +202,61 @@ begin
   else
     Result.Create(Self.start, val);
 end;
+
+{==============================================================================]
+  <Deflated>
+  @action: Returns a new range shrunk inward by the specified amount N in both directions.
+  @note: Automatically handles range orientation and allows inversion if N exceeds the size of the range.
+[==============================================================================}
+function TRange.Deflated(const N: Integer = 1): TRange; overload;
+begin
+  if not Self.Descending then
+    Result := TRange.Construct((Self.start + N), (Self.stop - N))
+  else
+    Result := TRange.Construct((Self.start - N), (Self.stop + N));
+end;
+
+{==============================================================================]
+  <Inflated>
+  @action: Returns a new range expanded outward by the specified amount N in both directions.
+  @note: Automatically handles both ascending and descending range orientations.
+[==============================================================================}
+function TRange.Inflated(const N: Integer = 1): TRange; overload;
+begin
+  if not Self.Descending then
+    Result := TRange.Construct((Self.start - N), (Self.stop + N))
+  else
+    Result := TRange.Construct((Self.start + N), (Self.stop - N));
+end;
+
+{==============================================================================]
+  <Shrunken>
+  @action: Returns a new range shrunk inward by the specified amount N, clamping at the midpoint if the bounds would cross over.
+  @note: Prevents range inversion by collapsing over-shrunken ranges to a single point at their center.
+[==============================================================================}
+function TRange.Shrunken(const N: Integer = 1): TRange; overload;
+begin
+  case not Self.Descending of
+    True:
+    begin
+      Result.start := (Self.start + N);
+      Result.stop := (Self.stop - N);
+      if (Result.start > Result.stop) then
+      begin
+        Result.start := ((Self.start + Self.stop) div 2);
+        Result.stop := Result.start;
+      end;
+    end;
+    False:
+    begin
+      Result.start := (Self.start - N);
+      Result.stop := (Self.stop + N);
+      if (Result.start < Result.stop) then
+      begin
+        Result.start := ((Self.start + Self.stop) div 2);
+        Result.stop := Result.start;
+      end;
+    end;
+  end;
+end; 
 {$ENDIF}

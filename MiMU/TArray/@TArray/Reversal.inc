@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Antipodean: MArray; overload;
 function Backflip: Integer; overload;
+function Backwarded: MArray; overload;
 function Backwardize: MArray; overload;
 function Backwards: MArray; overload;
 function Converse: MArray; overload;
@@ -41,7 +42,9 @@ function ReversedEx: MArray; overload;
 function Reversedly: MArray; overload;
 function ReverseEx: MArray; overload;
 function Reverself: MArray; overload;
+function Reversely: MArray; overload;
 function Reversement: Boolean; overload;
+function Reversex(const lo, hi: Integer): Integer; overload;
 function Reversied: MArray; overload;
 function Reversified: MArray; overload;
 function Reversify: Boolean; overload;
@@ -99,6 +102,17 @@ begin
   for i := 0 to r.Alloc(s) do
     r[i] := Self[(s - 1) - i];
   Self := r;
+end;
+
+{==============================================================================]
+  <Backwarded>
+  @action: Creates and returns a new copy of the array with its elements in reverse order.
+  @note: The original array remains unmodified as the operation is performed on a copy.
+[==============================================================================}
+function MArrayHelper.Backwarded: MArray; overload;
+begin
+  Result := Self.Copy;
+  Result.Reverse;
 end;
 
 {==============================================================================]
@@ -1011,6 +1025,20 @@ begin
 end;
 
 {==============================================================================]
+  <Reversely>
+  @action: Returns a new array with the elements of the current array arranged in reverse order.
+  @note: Efficiently allocates and populates the reversed array in a single forward pass without requiring an intermediate copy.
+[==============================================================================}
+function MArrayHelper.Reversely: MArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Length;
+  for i := 0 to Result.Alloc(s) do
+    Result[s.Decrement] := Self[i];
+end;
+
+{==============================================================================]
   <Reversement>
   @action: Reverses the elements of the array in place.
   @note: Performs an in-place symmetric swap of elements from both ends toward 
@@ -1028,6 +1056,28 @@ begin
   i := -1;
   while (i.Increment < l.Decrement) do
     Swap(Self[i], Self[l]);
+end;
+
+{==============================================================================]
+  <Reversex>
+  @action: Reverses the elements of the array in-place within the specified lo and hi range boundaries,
+           returning the total number of swaps performed.
+  @note: Automatically normalizes and processes the bounds, swapping elements from the outside inward until they meet.
+[==============================================================================}
+function MArrayHelper.Reversex(const lo, hi: Integer): Integer; overload;
+var
+  s: MType;
+  r: TRange;
+begin
+  Result := 0;
+  r := TRange.Construct(lo, hi).Inflated.Normalized;
+  while (r.start.Increment < r.stop.Decrement) do
+  begin
+    s := Self[r.start];
+    Self[r.start] := Self[r.stop];
+    Self[r.stop] := s;
+	Inc(Result);
+  end;
 end;
 
 {==============================================================================]
