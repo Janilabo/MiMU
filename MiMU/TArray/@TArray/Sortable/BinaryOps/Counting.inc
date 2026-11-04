@@ -4,6 +4,7 @@ function BinaryAmountage(const item: MType; const oAscending: Boolean = True): I
 function BinaryAmountOf(const x: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCardinality(const itemMin, itemMax: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCount(const item: MType; const aAscending: Boolean = True): Integer; overload;
+function BinaryCount(const minItem, maxItem: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCountage(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCounted(const x: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryCounter(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -166,6 +167,57 @@ var
 begin
   r := Self.BinaryLocate(item, aAscending);
   Result := IfThen((r.start > -1), r.Size, 0);
+end;
+
+{==============================================================================]
+  <BinaryCount>
+  @action: Counts the number of elements falling within a specified range [minItem, maxItem] in a sorted array.
+  @note: The array must be sorted according to oAscending. Runs in O(log N) time using binary search bounds.
+[==============================================================================}
+function MArrayHelper.BinaryCount(const minItem, maxItem: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  a, b: MType;
+  l, h, m, s: Integer;
+  r: TRange;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit(0);
+  l := 0;
+  h := s;
+  if oAscending then
+  begin
+    a := Min(minItem, maxItem);
+    b := Max(minItem, maxItem);
+  end else
+  begin
+    a := Max(minItem, maxItem);
+    b := Min(minItem, maxItem);
+  end;
+  while (l < h) do
+  begin
+    m := ((l + h) shr 1);
+    if ((oAscending and (Self[m] < a)) or ((not oAscending) and (Self[m] > a))) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  r.start := l;
+  l := 0;
+  h := s;
+  while (l < h) do
+  begin
+    m := ((l + h) shr 1);
+    if ((oAscending and (Self[m] <= b)) or ((not oAscending) and (Self[m] >= b))) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  r.stop := l;
+  if (r.stop > r.start) then
+    Result := (r.stop - r.start)
+  else
+    Result := 0;
 end;
 
 {==============================================================================]

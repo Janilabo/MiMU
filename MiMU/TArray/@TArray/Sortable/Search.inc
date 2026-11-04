@@ -2,6 +2,9 @@
 function Fathom(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function Sift(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function FibonacciSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
+
+function Disparify(const items: MArray): Integer; overload;
+function Disparity(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -179,6 +182,61 @@ begin
   end;
   if ((F.stop = 1) and ((o + 1) <= H) and (Self[o + 1] = item)) then
     Exit(o + 1);
+  Result := -1;
+end;
+
+{==============================================================================]
+  <Disparify>
+  @action: Finds and returns the index of the first element in Self that does not exist in the items array using a hash lookup.
+  @note: Returns -1 if all elements in Self are present in items. Allocates a temporary dictionary for fast O(1) lookups.
+[==============================================================================}
+function MArrayHelper.Disparify(const items: MArray): Integer; overload;
+var
+  d: specialize TDictionary<MType, Boolean>;
+  i: Integer;
+begin
+  d := specialize TDictionary<MType, Boolean>.Create(items.Length);
+  try
+    for i := 0 to High(items) do
+	  d.AddOrSetValue(items[i], True);
+	for i := 0 to High(Self) do
+      if not d.ContainsKey(Self[i]) then
+        Exit(i);
+  finally
+    d.Free;
+  end;
+  Result := -1;
+end;
+
+{==============================================================================]
+  <Disparity>
+  @action: Finds and returns the index of the first element in Self that does not exist in the items array using a linear two-pointer scan.
+  @note: Both Self and items must be sorted according to oAscending. Returns -1 if all elements in Self are matched.
+[==============================================================================}
+function MArrayHelper.Disparity(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  i, j, s, l: Integer;
+  a, b: MType;
+begin
+  s := Self.Length;
+  l := items.Length;
+  i := 0;
+  j := 0;
+  while ((i < s) and (j < l)) do
+  begin
+    a := Self[i];
+    b := items[j];
+    if (a = b) then
+    begin
+      Inc(i);
+      Inc(j);
+    end else if ((oAscending and (a > b)) or ((not oAscending) and (a < b))) then
+      Inc(j)
+    else
+      Exit(i);
+  end;
+  if (i < s) then
+    Exit(i);
   Result := -1;
 end;
 {$ENDIF}

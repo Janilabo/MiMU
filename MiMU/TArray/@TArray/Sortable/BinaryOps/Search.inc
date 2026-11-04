@@ -16,7 +16,10 @@ function BinaryID(const item: MType; const oAscending: Boolean = True): Integer;
 function BinaryIndex(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryIndexFor(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryIndexOf(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryInsertix(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryInsertPosition(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryInsertum(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryInsertrix(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLocalize(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryLookup(const item: MType): Integer; overload;
 function BinaryMetaSearch(const item: MType; const oAscending: Boolean = True): Integer; overload;
@@ -635,6 +638,83 @@ begin
 end;
 
 {==============================================================================]
+  <BinaryInsertix>
+  @action: Finds the optimal index to insert a item while maintaining sorted order.
+  @note: Respects sorting direction (oAscending). Runs in O(log N) time.
+[==============================================================================}
+function MArrayHelper.BinaryInsertix(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  l, h, m: Integer;
+begin
+  l := 0;
+  h := Self.Length;
+  case oAscending of
+    True:
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if (Self[m] < item) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    False:
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if (Self[m] > item) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+  end;
+  Result := l;
+end;
+
+{==============================================================================]
+  <BinaryInsertrix>
+  @action: Finds the rightmost index to insert an item while maintaining sorted
+           order (the position just after any equal elements).
+  @note: Requires the array to be sorted.
+         Respects sorting direction (oAscending). Runs in O(log N) time.
+         The function returns:
+           0 .. Length(Self)
+           Position where item should be inserted.
+         If the item already exists, the insertion position will be the
+         boundary after its last occurrence, so a repeated insertion is
+         stable (the new item lands behind its equals).
+         Mirror of BinaryInsertix, which returns the first occurrence boundary.
+[==============================================================================}
+function MArrayHelper.BinaryInsertrix(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  l, h, m: Integer;
+begin
+  l := 0;
+  h := Self.Length;
+  case oAscending of
+    True:
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if not (item < Self[m]) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    False:
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if not (item > Self[m]) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+  end;
+  Result := l;
+end;
+
+{==============================================================================]
   <BinaryInsertPosition>
   @action: Returns the insertion position where the specified item should be
            inserted to maintain sorted array order.
@@ -665,6 +745,27 @@ begin
       R.stop := (M - 1);
     end else
       R.start := (M + 1);
+  end;
+end;
+
+{==============================================================================]
+  <BinaryInsertum>
+  @action: Finds the optimal index to insert a value while maintaining sorted order using a unified loop.
+  @note: Respects sorting direction (oAscending) in a single-pass binary search.
+[==============================================================================}
+function MArrayHelper.BinaryInsertum(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  s, m: Integer;
+begin
+  Result := 0;
+  s := Self.Length;
+  while (Result < s) do
+  begin
+    m := ((Result + s) shr 1);
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      Result := (m + 1)
+    else
+      s := m;
   end;
 end;
 

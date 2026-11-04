@@ -7,6 +7,7 @@ function BinaryExistence(const item: MType; const oAscending: Boolean = True): B
 function BinaryExistency(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExisting(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExists(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryExtant(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryFit(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryIncludes(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryMember(const item: MType; const oAscending: Boolean = True): Boolean; overload;
@@ -206,6 +207,29 @@ function MArrayHelper.BinaryExists(const item: MType; const oAscending: Boolean 
   end;
 begin
   Result := BS(0, High(Self));
+end;
+
+{==============================================================================]
+  <BinaryExtant>
+  @action: Checks whether a specific item exists in a sorted array using binary search.
+  @note: The array must be sorted according to oAscending. Returns True if found, False otherwise.
+[==============================================================================}
+function MArrayHelper.BinaryExtant(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  l, h, m, s: Integer;
+begin
+  l := 0;
+  s := Self.Length;
+  h := s;
+  while (l < h) do
+  begin
+    m := ((l + h) shr 1);
+    if ((oAscending and (Self[m] < item)) or ((not oAscending) and (Self[m] > item))) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := ((l < s) and (Self[l] = item));
 end;
 
 {==============================================================================]
