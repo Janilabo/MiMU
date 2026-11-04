@@ -57,6 +57,8 @@ function BinaryFirst(const item: MType; const lIndex, hIndex: Integer; const oAs
 function BinaryLast(const item: MType; const lIndex, hIndex: Integer; const oAscending: Boolean = True): Integer; overload;
 
 function BisectNth(const item: MType; const N: Integer = 1; const oAscending: Boolean = True): Integer; overload;
+
+function BinaryDisparity(const items: MArray; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1857,5 +1859,35 @@ begin
   Result := (Self.BisectLeft(item, oAscending) + N - 1);
   if ((Result > High(Self)) or (Self[Result] <> item)) then
     Result := -1;
+end;
+
+{==============================================================================]
+  <BinaryDisparity>
+  @action: Finds and returns the index of the first element in Self that does not exist in the items array.
+  @note: The target items array must be sorted according to oAscending. Returns -1 if all elements are matched.
+[==============================================================================}
+function MArrayHelper.BinaryDisparity(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+var
+  i, l, h, m, c: Integer;
+  s: MType;
+begin
+  c := items.Length;
+  for i := 0 to (Self.Length - 1) do
+  begin
+    s := Self[i];
+    l := 0;
+    h := c;
+    while (l < h) do
+    begin
+      m := ((l + h) shr 1);
+      if ((oAscending and (items[m] < s)) or ((not oAscending) and (items[m] > s))) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    if ((l = c) or (items[l] <> s)) then
+      Exit(i);
+  end;
+  Result := -1;
 end;
 {$ENDIF}

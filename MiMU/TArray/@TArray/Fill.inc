@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Implant(const source: MArray; const sAdjustment: Integer): Integer; overload;
 function Implant(const source: MArray): Integer; overload;
+function Impose(const item: MType; const ID: TRange): Integer; overload;
+function Impose(const item: MType; const ID: TIntegerArray): Integer; overload;
 function Lade(const item: MType; const sSize: Integer = 0): Integer; overload;
 function Lade(const items: MArray; const sSize: Integer = 0): Integer; overload;
 function Plant(const source: MArray; const sAdjustment: Integer): Integer; overload;
@@ -35,6 +37,34 @@ function MArrayHelper.Implant(const source: MArray): Integer; overload;
 begin
   for Result := 0 to Self.Alloc(source.Length) do
     Self[Result] := source[Result];
+end;
+
+{==============================================================================]
+  <Impose>
+  @action: Assigns the given item to all elements of the array within the specified index range (ID.Minimum to ID.Maximum).
+  @note: Returns the size of the range (number of elements modified).
+[==============================================================================}
+function MArrayHelper.Impose(const item: MType; const ID: TRange): Integer; overload;
+var
+   i: Integer;
+begin
+  for i := ID.Minimum to ID.Maximum do
+    Self[i] := item;
+  Result := ID.Size;
+end;
+
+{==============================================================================]
+  <Impose>
+  @action: Assigns the given item to all elements of the array at the specific indices provided in the integer array (ID).
+  @note: Returns the length of the index array (number of elements modified).
+[==============================================================================}
+function MArrayHelper.Impose(const item: MType; const ID: TIntegerArray): Integer; overload;
+var
+   i: Integer;
+begin
+  for i := 0 to High(ID) do
+    Self[ID[i]] := item;
+  Result := ID.Length;
 end;
 
 {==============================================================================]

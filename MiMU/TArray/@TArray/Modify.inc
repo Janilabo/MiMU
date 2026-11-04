@@ -1,5 +1,6 @@
 {$IFDEF HELPERS}
 function Adopt(const target: MArray): MArray; overload;
+function Appoint(const ID: TRange; const items: MArray): Integer; overload;
 function Assign(const target: MArray): MArray; overload;
 function IO(const input, output: MArray): MArray; overload;
 function IO(const input: MArray): MArray; overload;
@@ -22,6 +23,30 @@ function MArrayHelper.Adopt(const target: MArray): MArray; overload;
 begin
   Result := Self.Copy;
   Self := target.Copy;
+end;
+
+{==============================================================================]
+  <Appoint>
+  @action: Assigns elements from a given source array (items) to a specified range (ID) within the current array,
+           supporting both ascending and descending traversal directions.
+  @note: Returns the size of the assigned range. Safely exits and returns 0 if the range employs a sentinel/invalid value (-1).
+[==============================================================================}
+function MArrayHelper.Appoint(const ID: TRange; const items: MArray): Integer; overload;
+var
+  i, a: Integer;
+begin
+  if ID.Employs(-1) then
+    Exit(0);
+  a := 0;
+  case ID.Asceal of
+    True:
+    for i := ID.start to ID.stop do
+      Self[i] := items[a.Increase];
+    False:
+    for i := ID.start downto ID.stop do
+      Self[i] := items[a.Increase];
+  end;
+  Result := ID.Size;
 end;
 
 {==============================================================================]
