@@ -19,6 +19,7 @@ function BinaryIndexOf(const item: MType; const oAscending: Boolean = True): Int
 function BinaryInsertix(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryInsertPosition(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryInsertum(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function BinaryInsertus(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryInsertrix(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BinaryLocalize(const item: MType; const aAscending: Boolean = True): Integer; overload;
 function BinaryLookup(const item: MType): Integer; overload;
@@ -767,6 +768,41 @@ begin
     else
       s := m;
   end;
+end;
+
+{==============================================================================]
+  <BinaryInsertus>
+  @action: Finds the optimal index to insert a value while maintaining sorted order using a power-of-two step binary search.
+  @note: Respects sorting direction (oAscending). Runs in O(log N) time using bitwise step reduction instead of traditional low/high bounds.
+[==============================================================================}
+function MArrayHelper.BinaryInsertus(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  p, s, n: Integer;
+begin
+  n := Self.Length;
+  p := 0;
+  s := 1;
+  while ((s shl 1) <= n) do
+    s := (s shl 1);
+  case oAscending of
+    True:
+    while (s > 0) do
+    begin
+      if ((p + s) <= n) then
+        if (Self[p + s - 1] < item) then
+          p := (p + s);
+      s := (s shr 1);
+    end;
+    False:
+    while (s > 0) do
+    begin
+      if ((p + s) <= n) then
+        if (Self[p + s - 1] > item) then
+          p := (p + s);
+      s := (s shr 1);
+    end;
+  end;
+  Result := p;
 end;
 
 {==============================================================================]

@@ -2,7 +2,7 @@
 function BinaryAvailable(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryContains(const item: MType; const aAscending: Boolean = True): Boolean; overload;
 function BinaryContact(const item: MType; const oAscending: Boolean = True): Boolean; overload;
-function BinaryExcludes(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryCovers(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExistence(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExistency(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryExisting(const item: MType; const oAscending: Boolean = True): Boolean; overload;
@@ -12,6 +12,12 @@ function BinaryFit(const item: MType; const oAscending: Boolean = True): Boolean
 function BinaryIncludes(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryMember(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryOverlaps(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryOwns(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryPresence(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+
+function BinaryAbsent(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryExcludes(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function BinaryLacks(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryUnavailable(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 function BinaryUnfit(const item: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
@@ -101,17 +107,41 @@ begin
 end;
 
 {==============================================================================]
-  <BinaryExcludes>
-  @action: Determines whether the specified item does not exist in this array
-           by using a binary search. The array is assumed to be pre-sorted in
-           the order specified by oAscending.
-  @note: Performs boundary checks before invoking the binary search. Returns
-         True if the array is empty, if the item lies outside the array’s
-         sorted bounds, or if the binary search fails to locate the item.
+  <BinaryCovers>
+  @action: Checks whether a value exists using a classic mid-point check with early exit.
+  @note: Respects sorting direction (oAscending). Can return True faster if the target is found mid-search.
 [==============================================================================}
-function MArrayHelper.BinaryExcludes(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+function MArrayHelper.BinaryCovers(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  l, h, m: Integer;
 begin
-  Result := (Self.BinaryUnfit(item, oAscending) or (Self.BinaryPos(item, oAscending) = -1));
+  l := 0;
+  h := (Self.Length - 1);
+  case oAscending of
+    True:
+    while (l <= h) do
+    begin
+      m := (l + ((h - l) shr 1));
+      if (Self[m] = item) then
+        Exit(True)
+      else if (Self[m] < item) then
+        l := (m + 1)
+      else
+        h := (m - 1);
+    end;
+    False:
+    while (l <= h) do
+    begin
+      m := (l + ((h - l) shr 1));
+      if (Self[m] = item) then
+        Exit(True)
+      else if (Self[m] < item) then
+        h := (m - 1)
+      else
+        l := (m + 1);
+    end;
+  end;
+  Result := False;
 end;
 
 {==============================================================================]
@@ -327,6 +357,120 @@ begin
       R.stop := (M - 1);
   until (R.start > R.stop);
   Result := False;
+end;
+
+{==============================================================================]
+  <BinaryOwns>
+  @action: Checks whether a item exists using a power-of-two step binary search.
+  @note: Respects sorting direction (oAscending). Uses bitwise step reduction.
+[==============================================================================}
+function MArrayHelper.BinaryOwns(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  p, s, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(False);
+  p := 0;
+  s := 1;
+  while ((s shl 1) <= l) do
+    s := (s shl 1);
+  case oAscending of
+    True:
+    while (s > 0) do
+    begin
+      if ((p + s) <= l) then
+        if (Self[p + s - 1] < item) then
+          p := (p + s);
+      s := (s shr 1);
+    end;
+    False:
+    while (s > 0) do
+    begin
+      if ((p + s) <= l) then
+        if (Self[p + s - 1] > item) then
+          p := (p + s);
+      s := (s shr 1);
+    end;
+  end;
+  Result := ((p < l) and (Self[p] = item));
+end;
+
+{==============================================================================]
+  <BinaryPresence>
+  @action: Checks whether a specific item exists in a sorted array by reusing BinaryInsertus.
+  @note: Respects sorting direction (oAscending). O(log N) time complexity.
+[==============================================================================}
+function MArrayHelper.BinaryPresence(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  p: Integer;
+begin
+  p := Self.BinaryInsertus(item, oAscending);
+  Result := ((p < Self.Length) and (Self[p] = item));
+end;
+
+{==============================================================================]
+  <BinaryAbsent>
+  @action: Checks whether a specific item is absent from a sorted array.
+  @note: Returns True if the value does not exist, False if it is present. Respects sorting direction (oAscending). Runs in O(log N) time.
+[==============================================================================}
+function MArrayHelper.BinaryAbsent(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  p: Integer;
+begin
+  p := BinaryInsertus(item, oAscending);
+  Result := ((p >= Self.Length) or (Self[p] <> item));
+end;
+
+{==============================================================================]
+  <BinaryExcludes>
+  @action: Determines whether the specified item does not exist in this array
+           by using a binary search. The array is assumed to be pre-sorted in
+           the order specified by oAscending.
+  @note: Performs boundary checks before invoking the binary search. Returns
+         True if the array is empty, if the item lies outside the array’s
+         sorted bounds, or if the binary search fails to locate the item.
+[==============================================================================}
+function MArrayHelper.BinaryExcludes(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  Result := (Self.BinaryUnfit(item, oAscending) or (Self.BinaryPos(item, oAscending) = -1));
+end;
+
+{==============================================================================]
+  <BinaryLacks>
+  @action: Checks whether a value is absent using a power-of-two step binary search.
+  @note: Returns True if the value is missing. Respects sorting direction (oAscending).
+[==============================================================================}
+function MArrayHelper.BinaryLacks(const item: MType; const oAscending: Boolean = True): Boolean; overload;
+var
+  p, s, l: Integer;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit(True);
+  p := 0;
+  s := 1;
+  while ((s shl 1) <= l) do
+    s := (s shl 1);
+  case oAscending of
+    True:
+    while (s > 0) do
+    begin
+      if ((p + s) <= l) then
+        if (Self[p + s - 1] < item) then
+          p := (p + s);
+      s := (s shr 1);
+    end;
+    False:
+    while (s > 0) do
+    begin
+      if ((p + s) <= l) then
+        if (Self[p + s - 1] > item) then
+          p := (p + s);
+      s := (s shr 1);
+    end;
+  end;
+  Result := ((p >= l) or (Self[p] <> item));
 end;
 
 {==============================================================================]
