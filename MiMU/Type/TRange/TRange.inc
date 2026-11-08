@@ -9,6 +9,7 @@ end;
 TRangeCompare = specialize TCompare<TRange>;
 TRangeArray = array of TRange;
 T2DRangeArray = array of TRangeArray;
+T3DRangeArray = array of T2DRangeArray;
 PRange = ^TRange;
 {$ENDIF}
 

@@ -5,6 +5,7 @@ TDoubleInterval = specialize TInterval<Double>;
 TDoubleCompare = specialize TCompare<Double>;
 TDoubleArray = array of Double;
 T2DDoubleArray = array of TDoubleArray;
+T3DDoubleArray = array of T2DDoubleArray;
 {$ENDIF}
 
 {$IFDEF HELPERS}

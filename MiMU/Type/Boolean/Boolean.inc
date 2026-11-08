@@ -4,6 +4,7 @@
 TBooleanCompare = specialize TCompare<Boolean>;
 TBooleanArray = array of Boolean;
 T2DBooleanArray = array of TBooleanArray;
+T3DBooleanArray = array of T2DBooleanArray;
 {$ENDIF}
 
 {$IFDEF HELPERS}

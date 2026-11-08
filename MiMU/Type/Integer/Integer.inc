@@ -5,6 +5,7 @@ TIntegerInterval = specialize TInterval<Integer>;
 TIntegerCompare = specialize TCompare<Integer>;
 TIntegerArray = array of Integer;
 T2DIntegerArray = array of TIntegerArray;
+T3DIntegerArray = array of T2DIntegerArray;
 {$ENDIF}
 
 {$IFDEF HELPERS}

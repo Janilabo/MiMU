@@ -20,6 +20,7 @@ function RCluster(const xRadius, yRadius: Integer): T2DPointArray; overload;
 function RCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
 function ProximityCluster(const xRadius, yRadius: Integer; const method: Integer = 0): T2DPointArray; overload;
 function ProximityCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean; const method: Integer = 0): T2DPointArray; overload;
+function Clustrix(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1093,5 +1094,69 @@ begin
     1: Result := Self.Grouping(g);
     2: Result := Self.Grouped(g);
   end;
+end;
+
+{==============================================================================]
+  <Clustrix>
+  @action: Clusters the point array into spatial groups where points are within the specified radius of each other,
+           utilizing grid optimization and the given distance metric.
+  @returns: A T2DPointArray containing the separated point clusters, or an empty array if the input is empty.
+[==============================================================================}
+function TPointArrayHelper.Clustrix(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
+var
+  g: T3DPointArray;
+  s: TIntegerArray;
+  b: TBox;
+  i, j, m, h, w, r, c, k, z, t, q, l, x, y: Integer;
+  p: TPoint;
+begin
+  case High(Self) of
+    -1: Exit([]);
+     0: Exit([Self]);
+  end;
+  b := Self.Bounds();
+  m := Max(1, Ceil(radius));
+  g := Self.Gridify(m, m, b);
+  h := System.Length(g);
+  w := g[0].Length;
+  SetLength(s, (h * w));
+  for r := 0 to (h - 1) do
+    for c := 0 to (w - 1) do
+      s[(r * w) + c] := g[r][c].Length;
+  SetLength(Result, Self.Length);
+  t := 0;
+  for r := 0 to (h - 1) do
+    for c := 0 to (w - 1) do
+      while (s[(r * w) + c] > 0) do
+      begin
+        SetLength(Result[t], 16);
+        Result[t][0] := g[r][c][s[r * w + c].Decrement];
+        l := 1;
+        q := 0;
+        while (q < l) do
+        begin
+          p := Result[t][q];
+          y := ((p.Y - b.Y1) div m);
+          x := ((p.X - b.X1) div m);
+          for i := Max(0, (y - 1)) to Min((h - 1), (y + 1)) do
+            for j := Max(0, (x - 1)) to Min((w - 1), (x + 1)) do
+            begin
+              z := ((i * w) + j);
+              k := 0;
+              while (k < s[z]) do
+                if p.Within(g[i][j][k], radius, metric) then
+                begin
+                  if (l = Result[t].Length) then
+                    SetLength(Result[t], (l * 2));
+                  Result[t][l.Increase] := g[i][j][k];
+                  g[i][j][k] := g[i][j][s[z].Decrement];
+                end else
+                  Inc(k);
+            end;
+          Inc(q);
+        end;
+        SetLength(Result[t.Increase], l);
+      end;
+  SetLength(Result, t);
 end;
 {$ENDIF}

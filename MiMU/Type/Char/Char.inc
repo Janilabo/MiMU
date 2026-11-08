@@ -5,6 +5,7 @@ TCharInterval = specialize TInterval<Char>;
 TCharCompare = specialize TCompare<Char>;
 TCharArray = array of Char;
 T2DCharArray = array of TCharArray;
+T3DCharArray = array of T2DCharArray;
 {$ENDIF}
 
 {$IFDEF HELPERS}

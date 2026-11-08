@@ -5,6 +5,7 @@ TInt64Interval = specialize TInterval<Int64>;
 TInt64Compare = specialize TCompare<Int64>;
 TInt64Array = array of Int64;
 T2DInt64Array = array of TInt64Array;
+T3DInt64Array = array of T2DInt64Array;
 {$ENDIF}
 
 {$IFDEF HELPERS}

@@ -9,6 +9,7 @@ end;
 TCircleCompare = specialize TCompare<TCircle>;
 TCircleArray = array of TCircle;
 T2DCircleArray = array of TCircleArray;
+T3DCircleArray = array of T2DCircleArray;
 PCircle = ^TCircle;
 {$ENDIF}
 

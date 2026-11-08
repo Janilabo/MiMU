@@ -5,6 +5,7 @@ TStringInterval = specialize TInterval<string>;
 TStringCompare = specialize TCompare<string>;
 TStringArray = array of string;
 T2DStringArray = array of TStringArray;
+T3DStringArray = array of T2DStringArray;
 {$ENDIF}
 
 {$IFDEF HELPERS}

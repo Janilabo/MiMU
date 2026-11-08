@@ -8,6 +8,7 @@ end;
 TConnectionCompare = specialize TCompare<TConnection>;
 TConnectionArray = array of TConnection;
 T2DConnectionArray = array of TConnectionArray;
+T3DConnectionArray = array of T2DConnectionArray;
 PConnection = ^TConnection;
 {$ENDIF}
 

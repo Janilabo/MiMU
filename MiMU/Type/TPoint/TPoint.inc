@@ -12,6 +12,7 @@ TPointInterval = specialize TInterval<TPoint>;
 TPointCompare = specialize TCompare<TPoint>;
 TPointArray = array of TPoint;
 T2DPointArray = array of TPointArray;
+T3DPointArray = array of T2DPointArray;
 PPoint = ^TPoint;
 TMetrics = (dmHypotEuclidean, dmEuclidean, dmEuclidean2, dmSquaredEuclidean, dmManhattan, dmChebyshev, dmMinkowski, dmMaxMinChebyshev, dmOctile);
 TDistance = function(const A, B: TPoint): Double;

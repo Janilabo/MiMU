@@ -9,6 +9,7 @@ end;
 TBoxCompare = specialize TCompare<TBox>;
 TBoxArray = array of TBox;
 T2DBoxArray = array of TBoxArray;
+T3DBoxArray = array of T2DBoxArray;
 PBox = ^TBox;
 {$ENDIF}
 

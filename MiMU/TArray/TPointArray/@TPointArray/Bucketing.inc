@@ -9,8 +9,12 @@ function Bucketed(const bWidth, bHeight: Integer): T2DPointArray; overload;
 function Bucketed(const bSize: Integer = 1): T2DPointArray; overload;
 function Buckets(const bWidth, bHeight: Integer): T2DPointArray; overload;
 function Buckets(const bSize: Integer = 1): T2DPointArray; overload;
-function XBuckets(const bWidth: Integer = 1): T2DPointArray;
-function YBuckets(const bHeight: Integer = 1): T2DPointArray;
+
+function XBuckets(const bWidth: Integer = 1): T2DPointArray; overload;
+function YBuckets(const bHeight: Integer = 1): T2DPointArray; overload;
+
+function Gridify(const rowHeight, columnWidth: Integer; const sBounds: TBox): T3DPointArray; overload;
+function Gridify(const rowHeight, columnWidth: Integer): T3DPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -308,7 +312,7 @@ end;
   @note: Returns a 2D array (T2DPointArray) where each element is a bucket (array of points).
          The default bucket width is 1. Use a larger value to group points into wider columns.
 [==============================================================================}
-function TPointArrayHelper.XBuckets(const bWidth: Integer = 1): T2DPointArray;
+function TPointArrayHelper.XBuckets(const bWidth: Integer = 1): T2DPointArray; overload;
 var
   i, m: Integer;
 begin
@@ -328,7 +332,7 @@ end;
   @note: Returns a 2D array (T2DPointArray) where each element is a bucket (array of points).
          The default bucket height is 1. Use a larger value to group points into taller rows.
 [==============================================================================}
-function TPointArrayHelper.YBuckets(const bHeight: Integer = 1): T2DPointArray;
+function TPointArrayHelper.YBuckets(const bHeight: Integer = 1): T2DPointArray; overload;
 var
   i, m: Integer;
 begin
@@ -338,5 +342,56 @@ begin
   SetLength(Result, (m + 1));
   for i := 0 to High(Self) do
     Result[Self[i].Y div bHeight].Supply(Self[i]);
+end;
+
+{==============================================================================]
+  <Gridify>
+  @action: Groups the point array into a 3D grid structure based on the given row height, column width, and bounding box.
+  @note: Points outside the specified bounds (or before sBounds.X1/Y1) are filtered out.
+         Returns an empty array if rowHeight < 1, columnWidth < 1, or the array is empty.
+[==============================================================================}
+function TPointArrayHelper.Gridify(const rowHeight, columnWidth: Integer; const sBounds: TBox): T3DPointArray; overload;
+var
+  v, h, i, r, c: Integer;
+  s: TIntegerArray;
+begin
+  if ((rowHeight < 1) or (columnWidth < 1) or (Self.Length = 0)) then
+    Exit;
+  v := (((sBounds.Y2 - sBounds.Y1) div rowHeight) + 1);
+  h := (((sBounds.X2 - sBounds.X1) div columnWidth) + 1);
+  SetLength(Result, v);
+  for r := 0 to (v - 1) do
+    SetLength(Result[r], h);
+  SetLength(s, (v * h));
+  for i := 0 to High(Self) do
+  begin
+    r := ((Self[i].Y - sBounds.Y1) div rowHeight);
+    c := ((Self[i].X - sBounds.X1) div columnWidth);
+    if ((Self[i].Y >= sBounds.Y1) and (Self[i].X >= sBounds.X1) and (r < v) and (c < h)) then
+      Inc(s[(r * h) + c]);
+  end;
+  for r := 0 to (v - 1) do
+    for c := 0 to (h - 1) do
+      SetLength(Result[r][c], s[(r * h) + c]);
+  for i := 0 to High(s) do
+    s[i] := 0;
+  for i := 0 to High(Self) do
+  begin
+    r := ((Self[i].Y - sBounds.Y1) div rowHeight);
+    c := ((Self[i].X - sBounds.X1) div columnWidth);
+    if ((Self[i].Y >= sBounds.Y1) and (Self[i].X >= sBounds.X1) and (r < v) and (c < h)) then
+      Result[r][c][s[(r * h) + c].Increase] := Self[i];
+  end;
+end;
+
+{==============================================================================]
+  <Gridify>
+  @action: Groups the point array into a 3D grid structure based on specified row height and column width,
+           automatically using Self.Bounds().
+  @note: Convenience overload that calculates bounds dynamically using Self.Bounds().
+[==============================================================================}
+function TPointArrayHelper.Gridify(const rowHeight, columnWidth: Integer): T3DPointArray; overload;
+begin
+  Result := Self.Gridify(rowHeight, columnWidth, Self.Bounds());
 end;
 {$ENDIF}
