@@ -15,6 +15,8 @@ function YBuckets(const bHeight: Integer = 1): T2DPointArray; overload;
 
 function Gridify(const rowHeight, columnWidth: Integer; const sBounds: TBox): T3DPointArray; overload;
 function Gridify(const rowHeight, columnWidth: Integer): T3DPointArray; overload;
+function Tessellate(const rowCount, columnCount: Integer; const sBounds: TBox): T3DPointArray; overload;
+function Tessellate(const rowCount, columnCount: Integer): T3DPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -355,7 +357,7 @@ var
   v, h, i, r, c: Integer;
   s: TIntegerArray;
 begin
-  if ((rowHeight < 1) or (columnWidth < 1) or (Self.Length = 0)) then
+  if ((rowHeight < 1) or (columnWidth < 1) or Self.Empty) then
     Exit;
   v := (((sBounds.Y2 - sBounds.Y1) div rowHeight) + 1);
   h := (((sBounds.X2 - sBounds.X1) div columnWidth) + 1);
@@ -393,5 +395,51 @@ end;
 function TPointArrayHelper.Gridify(const rowHeight, columnWidth: Integer): T3DPointArray; overload;
 begin
   Result := Self.Gridify(rowHeight, columnWidth, Self.Bounds());
+end;
+
+{==============================================================================]
+  <Tessellate>
+  @action: Groups the point array into a 3D grid of exactly rowCount x columnCount cells spanning the given bounds.
+  @note: Cell sizes differ by at most 1 pixel. Points outside sBounds are filtered out.
+         Returns an empty array if rowCount < 1, columnCount < 1, or the array is empty.
+[==============================================================================}
+function TPointArrayHelper.Tessellate(const rowCount, columnCount: Integer; const sBounds: TBox): T3DPointArray; overload;
+var
+  v, h, i, r, c: Integer;
+  s: TIntegerArray;
+begin
+  if ((rowCount < 1) or (columnCount < 1) or Self.Empty) then
+    Exit;
+  v := ((sBounds.Y2 - sBounds.Y1) + 1);
+  h := ((sBounds.X2 - sBounds.X1) + 1);
+  SetLength(Result, rowCount);
+  for r := 0 to (rowCount - 1) do
+    SetLength(Result[r], columnCount);
+  SetLength(s, (rowCount * columnCount));
+  for i := 0 to High(Self) do
+    if ((Self[i].Y >= sBounds.Y1) and (Self[i].Y <= sBounds.Y2) and (Self[i].X >= sBounds.X1) and (Self[i].X <= sBounds.X2)) then
+      Inc(s[((((Self[i].Y - sBounds.Y1) * rowCount) div v) * columnCount) + (((Self[i].X - sBounds.X1) * columnCount) div h)]);
+  for r := 0 to (rowCount - 1) do
+    for c := 0 to (columnCount - 1) do
+      SetLength(Result[r][c], s[(r * columnCount) + c]);
+  for i := 0 to High(s) do
+    s[i] := 0;
+  for i := 0 to High(Self) do
+    if ((Self[i].Y >= sBounds.Y1) and (Self[i].Y <= sBounds.Y2) and (Self[i].X >= sBounds.X1) and (Self[i].X <= sBounds.X2)) then
+    begin
+      r := (((Self[i].Y - sBounds.Y1) * rowCount) div v);
+      c := (((Self[i].X - sBounds.X1) * columnCount) div h);
+      Result[r][c][s[(r * columnCount) + c].Increase] := Self[i];
+    end;
+end;
+
+{==============================================================================]
+  <Tessellate>
+  @action: Groups the point array into a rowCount x columnCount 3D grid, automatically using Self.Bounds().
+  @note: None.
+[==============================================================================}
+function TPointArrayHelper.Tessellate(const rowCount, columnCount: Integer): T3DPointArray; overload;
+begin
+  Result := Self.Tessellate(rowCount, columnCount, Self.Bounds());
 end;
 {$ENDIF}

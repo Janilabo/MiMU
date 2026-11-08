@@ -31,6 +31,7 @@
 {$I @TPointArray/Transformation.inc}
 {$I @TPointArray/Vicinity.inc}
 
+{$I @TPointArray/Clustering/Axis.inc}
 {$I @TPointArray/Clustering/Blob.inc}
 {$I @TPointArray/Clustering/Cluster.inc}
 {$I @TPointArray/Clustering/Connectivity.inc}
