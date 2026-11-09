@@ -21,6 +21,8 @@ function RCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclide
 function ProximityCluster(const xRadius, yRadius: Integer; const method: Integer = 0): T2DPointArray; overload;
 function ProximityCluster(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean; const method: Integer = 0): T2DPointArray; overload;
 function Clustrix(const radius: Double; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
+function ToClusters(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
+function ToClusters(const xRadius, yRadius: Integer): T2DPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1158,5 +1160,159 @@ begin
         SetLength(Result[t.Increase], l);
       end;
   SetLength(Result, t);
+end;
+
+{==============================================================================]
+  <ToClusters>
+  @action: Groups the points in the array into spatial clusters (connected components) based on the specified distance radius and metric.
+  @returns: A two-dimensional point array (T2DPointArray) where each sub-array represents a distinct cluster of connected points.
+[==============================================================================}
+function TPointArrayHelper.ToClusters(const radius: Double = 1.0; const metric: TMetrics = dmEuclidean): T2DPointArray; overload;
+var
+  h, z, p: T2DIntegerArray;
+  v, q: TIntegerArray;
+  l, d, i, j, k, r, g, w, o: Integer;
+  x, y, s: TRange;
+  t: TPoint;
+  function ToNext(const row, from: Integer): Integer;
+  begin
+    Result := from;
+    while (p[row][Result] <> Result) do
+    begin
+      p[row][Result] := p[row][p[row][Result]];
+      Result := p[row][Result];
+    end;
+  end;
+  function HalfWidth(const dy: Integer): Integer;
+  begin
+    case metric of
+      dmChebyshev: Result := d;
+      dmManhattan: Result := Floor(radius - dy);
+    else
+      Result := Floor(Sqrt(Max(0.0, (radius * radius) - Sqr(dy * 1.0))) + 1e-9);
+    end;
+  end;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  d := Floor(radius);
+  h := Self.XTo2D(v, z);
+  SetLength(p, h.Length);
+  for r := 0 to High(h) do
+    for j := 0 to p[r].Alloc(h[r].Length + 1) do
+      p[r][j] := j;
+  SetLength(q, l);
+  SetLength(Result, 0);
+  g := 0;
+  for i := 0 to High(h) do
+    for j := 0 to High(h[i]) do
+    begin
+      if (p[i][j] <> j) then
+        Continue;
+      p[i][j] := (j + 1);
+      q[0] := z[i][j];
+      s := TRange.Construct(0, 0);
+      while (s.start <= s.stop) do
+      begin
+        t := Self[q[s.start.Increase]];
+        y := v.BinaryRange(TRange.Construct((t.Y - d), (t.Y + d)));
+        if y.Employs(-1) then
+          Continue;
+        for r := y.start to y.stop do
+        begin
+          o := Abs(v[r] - t.Y);
+          w := HalfWidth(o);
+          if (w < 0) then
+            Continue;
+          x := h[r].BinaryRange(TRange.Construct((t.X - w), (t.X + w)));
+          if x.Employs(-1) then
+            Continue;
+          k := ToNext(r, x.start);
+          while (k <= x.stop) do
+          begin
+            p[r][k] := (k + 1);
+            q[s.stop.Increment] := z[r][k];
+            k := ToNext(r, (k + 1));
+          end;
+        end;
+      end;
+      SetLength(Result, (g + 1));
+      SetLength(Result[g], (s.stop + 1));
+      for k := 0 to s.stop do
+        Result[g][k] := Self[q[k]];
+      Inc(g);
+    end;
+end;
+
+{==============================================================================]
+  <ToClusters>
+  @action: Groups the points in the array into spatial clusters (connected components) using separate X and Y distance limits.
+  @returns: A two-dimensional point array (T2DPointArray) where each sub-array represents a distinct cluster of connected points.
+[==============================================================================}
+function TPointArrayHelper.ToClusters(const xRadius, yRadius: Integer): T2DPointArray; overload;
+var
+  h, z, p: T2DIntegerArray;
+  v, q: TIntegerArray;
+  l, a, b, i, j, k, r, g: Integer;
+  x, y, s: TRange;
+  t: TPoint;
+  function ToNext(const row, from: Integer): Integer;
+  begin
+    Result := from;
+    while (p[row][Result] <> Result) do
+    begin
+      p[row][Result] := p[row][p[row][Result]];
+      Result := p[row][Result];
+    end;
+  end;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  a := Max(0, xRadius);
+  b := Max(0, yRadius);
+  h := Self.XTo2D(v, z);
+  SetLength(p, h.Length);
+  for r := 0 to High(h) do
+    for j := 0 to p[r].Alloc(h[r].Length + 1) do
+      p[r][j] := j;
+  SetLength(q, l);
+  SetLength(Result, 0);
+  g := 0;
+  for i := 0 to High(h) do
+    for j := 0 to High(h[i]) do
+    begin
+      if (p[i][j] <> j) then
+        Continue;
+      p[i][j] := (j + 1);
+      q[0] := z[i][j];
+      s := TRange.Construct(0, 0);
+      while (s.start <= s.stop) do
+      begin
+        t := Self[q[s.start.Increase]];
+        y := v.BinaryRange(TRange.Construct((t.Y - b), (t.Y + b)));
+        if y.Employs(-1) then
+          Continue;
+        for r := y.start to y.stop do
+        begin
+          x := h[r].BinaryRange(TRange.Construct((t.X - a), (t.X + a)));
+          if x.Employs(-1) then
+            Continue;
+          k := ToNext(r, x.start);
+          while (k <= x.stop) do
+          begin
+            p[r][k] := (k + 1);
+            q[s.stop.Increment] := z[r][k];
+            k := ToNext(r, (k + 1));
+          end;
+        end;
+      end;
+      SetLength(Result, (g + 1));
+      SetLength(Result[g], (s.stop + 1));
+      for k := 0 to s.stop do
+        Result[g][k] := Self[q[k]];
+      Inc(g);
+    end;
 end;
 {$ENDIF}
