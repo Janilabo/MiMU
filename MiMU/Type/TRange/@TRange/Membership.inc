@@ -27,7 +27,10 @@ function Disjoint(const target: TRange): Boolean; overload;
 function Disjointed(const target: TRange): Boolean; overload;
 function Distant(const val: Integer; const threshold: Integer = 1): Boolean; overload;
 function Embody(const val: Integer): Boolean; overload;
+function Employed(const val: Integer): Boolean; overload;
+function Employing(const val: Integer): Boolean; overload;
 function Employs(const val: Integer): Boolean; overload;
+function Employz(const val: Integer): Boolean; overload;
 function Encloses(const val: Integer): Boolean; overload;
 function Encloses(const vals: TRange): Boolean; overload;
 function Enveloping(const target: TRange): Boolean; overload;
@@ -456,6 +459,30 @@ begin
 end;
 
 {==============================================================================]
+  <Employed>
+  @action: Checks if the given integer value matches either the start or stop of the range,
+           with explicit handling for single-point ranges.
+  @note: Optimized for boundary checks while accounting for degenerate ranges where start equals stop.
+[==============================================================================}
+function TRange.Employed(const val: Integer): Boolean; overload;
+begin
+  if (Self.start = Self.stop) then
+    Result := (Self.start = val)
+  else
+    Result := ((Self.start = val) or (Self.stop = val));
+end;
+
+{==============================================================================]
+  <Employing>
+  @action: Checks if the given integer value matches either range endpoint using an algebraic product evaluation.
+  @note: Avoids conditional branching logic via multiplication; ensure values do not risk integer overflow.
+[==============================================================================}
+function TRange.Employing(const val: Integer): Boolean; overload;
+begin
+  Result := ((val - Self.start) * (val - Self.stop) = 0);
+end;
+
+{==============================================================================]
   <Employs>
   @action: Checks if the given integer value matches either the start or stop of the range.
   @note: Useful for quickly verifying if a value is an endpoint of the range.
@@ -463,6 +490,19 @@ end;
 function TRange.Employs(const val: Integer): Boolean; overload;
 begin
   Result := ((Self.start = val) or (Self.stop = val));
+end;
+
+{==============================================================================]
+  <Employz>
+  @action: Checks if the given integer value matches the start or stop of the range via sequential evaluation.
+  @note: Explicitly evaluates the start boundary first, falling back to the stop boundary if necessary.
+[==============================================================================}
+function TRange.Employz(const val: Integer): Boolean; overload;
+begin
+  if (Self.start = val) then
+    Result := True
+  else
+    Result := (Self.stop = val);
 end;
 
 {==============================================================================]

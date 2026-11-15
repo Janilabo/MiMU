@@ -16,8 +16,6 @@ function CountBetween(const minTarget, maxTarget: Integer; const mItem: MType): 
 function CountExactly(const target: Integer; const mItem: MType): Boolean; overload;
 function Dull(const item: MType): Boolean; overload;
 function Dull: Boolean; overload;
-function EndsWith(const aItem: MType): Boolean; overload;
-function EndsWith(const aItem: MArray): Boolean; overload;
 function Exact(const items: MArray): Boolean; overload;
 function Existence(const mItem: MType): Boolean; overload;
 function Existency(const mItem: MType): Boolean; overload;
@@ -41,9 +39,15 @@ function MeetsExact(const target: Integer; const mItem: MType): Boolean; overloa
 function MeetsFloor(const target: Integer; const mItem: MType): Boolean; overload;
 function Occurs(const item: MType; const occurrence: Integer = 1): Boolean; overload;
 function Presence(const item: MType; const occurrence: Integer = 1): Boolean; overload;
+function Subset(const items: MArray): Boolean; overload;
+
+function EndsWith(const aItem: MType): Boolean; overload;
+function EndsWith(const aItem: MArray): Boolean; overload;
 function StartsWith(const aItem: MType): Boolean; overload;
 function StartsWith(const aItem: MArray): Boolean; overload;
-function Subset(const items: MArray): Boolean; overload;
+function Limitem(const item: MType): Boolean; overload;
+function Limitem(const item: MArray): Boolean; overload;
+function Marginates(const item: MArray): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -426,37 +430,6 @@ end;
 function MArrayHelper.Dull: Boolean; overload;
 begin
   Result := ((Self.Length > 0) and Self.Dull(Self[0]));
-end;
-
-{==============================================================================]
-  <EndsWith>
-  @action: Checks whether the array is non-empty and its last element is equal
-           to the specified item.
-  @note: This overload performs a simple boundary comparison only. It does not
-         verify sequence suffix matching when a collection is supplied.
-[==============================================================================}
-function MArrayHelper.EndsWith(const aItem: MType): Boolean; overload;
-begin
-  Result := ((Self.Length > 0) and (Self[High(Self)] = aItem));
-end;
-
-{==============================================================================]
-  <EndsWith>
-  @action: Returns True if the array is non-empty and the last element of the array
-           matches any element contained in the provided array parameter.
-  @note: This implementation checks only the last array element against members
-         of aItem. It does not perform full suffix sequence comparison.
-[==============================================================================}
-function MArrayHelper.EndsWith(const aItem: MArray): Boolean; overload;
-var
-  h, i: Integer;
-begin
-  h := High(Self);
-  if (h > -1) then
-  for i := 0 to High(aItem) do
-    if (Self[h] = aItem[i]) then
-      Exit(True);
-  Result := False;
 end;
 
 {==============================================================================]
@@ -975,6 +948,52 @@ begin
 end;
 
 {==============================================================================]
+  <Subset>
+  @action: Returns true if arr is subset of items.
+  @note: None.
+[==============================================================================}
+function MArrayHelper.Subset(const items: MArray): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to High(Self) do
+    if not items.Contains(Self[i]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
+  <EndsWith>
+  @action: Checks whether the array is non-empty and its last element is equal
+           to the specified item.
+  @note: This overload performs a simple boundary comparison only. It does not
+         verify sequence suffix matching when a collection is supplied.
+[==============================================================================}
+function MArrayHelper.EndsWith(const aItem: MType): Boolean; overload;
+begin
+  Result := ((Self.Length > 0) and (Self[High(Self)] = aItem));
+end;
+
+{==============================================================================]
+  <EndsWith>
+  @action: Returns True if the array is non-empty and the last element of the array
+           matches any element contained in the provided array parameter.
+  @note: This implementation checks only the last array element against members
+         of aItem. It does not perform full suffix sequence comparison.
+[==============================================================================}
+function MArrayHelper.EndsWith(const aItem: MArray): Boolean; overload;
+var
+  h, i: Integer;
+begin
+  h := High(Self);
+  if (h > -1) then
+  for i := 0 to High(aItem) do
+    if (Self[h] = aItem[i]) then
+      Exit(True);
+  Result := False;
+end;
+
+{==============================================================================]
   <StartsWith>
   @action: Checks whether the array is non-empty and its first element is equal
            to the specified item.
@@ -1004,17 +1023,79 @@ begin
   Result := False;
 end;
 
-{==============================================================================]
-  <Subset>
-  @action: Returns true if arr is subset of items.
-  @note: None.
-[==============================================================================}
-function MArrayHelper.Subset(const items: MArray): Boolean; overload;
+{==============================================================================
+  <Limitem>
+  @action: Checks if the given item matches either the first or last element of the array.
+  @note: Uses case branching on High(Self).Compare(0) to efficiently handle empty, single-element, and multi-element arrays.
+==============================================================================}
+function MArrayHelper.Limitem(const item: MType): Boolean; overload;
 var
-  i: Integer;
+  h: Integer;
 begin
-  for i := 0 to High(Self) do
-    if not items.Contains(Self[i]) then
+  h := High(Self);
+  case h.Compare(0) of
+    -1: Result := False;
+     0: Result := (Self[0] = item);
+     1: Result := ((Self[0] = item) or (Self[h] = item));
+  end;
+end;
+
+{==============================================================================
+  <Limitem>
+  @action: Returns True if the beginning (prefix) or the ending (suffix) of the
+           array exactly equals the provided sub-array item.
+  @note: Verifies sequence equality against the outer boundaries of the array.
+==============================================================================}
+function MArrayHelper.Limitem(const item: MArray): Boolean; overload;
+var
+  l, s, i: Integer;
+begin
+  l := item.Length;
+  if (l = 0) then
+    Exit(False);
+  s := Self.Length;
+  if (l > s) then
+    Exit(False);
+  Result := True;
+  for i := 0 to (l - 1) do
+    if (Self[i] <> item[i]) then
+    begin
+      Result := False;
+      Break;
+    end;
+  if not Result then
+  for i := 0 to (l - 1) do
+    if (Self[s - l + i] <> item[i]) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================
+  <Marginates>
+  @action: Returns True if the beginning (prefix) or ending (suffix) of the array 
+           exactly matches the specified sub-array item.
+  @note: Evaluates the prefix first. If the prefix does not fully match, it 
+         seamlessly falls back to validate the suffix in a unified flow.
+==============================================================================}
+function MArrayHelper.Marginates(const item: MArray): Boolean; overload;
+var
+  l, s, i, r: Integer;
+begin
+  l := item.Length;
+  if (l = 0) then
+    Exit(False);
+  s := Self.Length;
+  if (l > s) then
+    Exit(False);
+  r := 0;
+  for i := 0 to (l - 1) do
+    if (Self[i] <> item[i]) then
+      Break
+    else
+      Inc(r);
+  if not (r = l) then
+  for i := 0 to (l - 1) do
+    if (Self[s - l + i] <> item[i]) then
       Exit(False);
   Result := True;
 end;

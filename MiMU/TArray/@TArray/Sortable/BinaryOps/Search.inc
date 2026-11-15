@@ -60,6 +60,8 @@ function BinaryIterum(const aMin, aMax: MType; const oAscending: Boolean = True)
 function BinaryFirst(const item: MType; const lIndex, hIndex: Integer; const oAscending: Boolean = True): Integer; overload;
 function BinaryLast(const item: MType; const lIndex, hIndex: Integer; const oAscending: Boolean = True): Integer; overload;
 
+function Bisect(const item: MType; const oAscending: Boolean = True): Integer; overload;
+function Bisectify(const item: MType; const oAscending: Boolean = True): Integer; overload;
 function BisectNth(const item: MType; const N: Integer = 1; const oAscending: Boolean = True): Integer; overload;
 
 function BinaryDisparity(const items: MArray; const oAscending: Boolean = True): Integer; overload;
@@ -1981,6 +1983,81 @@ begin
       R.stop := (M - 1);
   end;
 end;
+
+{==============================================================================
+  <Bisect>
+  @action: Fast bisection search with boundary short-circuiting for out-of-bounds targets.
+  @note: Ideal when search queries frequently target items outside array ranges.
+==============================================================================}
+function MArrayHelper.Bisect(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  l, h, m: Integer;
+begin
+  h := High(Self);
+  case h of
+    -1: Exit(-1);
+	0: Exit(IfThen((Self[0] = item), 0, -1));
+  end;
+  case oAscending of
+    True:
+    if ((item < Self[0]) or (item > Self[h])) then
+      Exit(-1)
+    else if (Self[0] = item) then
+      Exit(0)
+    else if (Self[h] = item) then
+      Exit(h);
+    False:
+    if ((item > Self[0]) or (item < Self[h])) then
+      Exit(-1)
+    else if (Self[0] = item) then
+      Exit(0)
+    else if (Self[h] = item) then
+      Exit(h);
+  end;
+  l := 0;
+  while (l <= h) do
+  begin
+    m := (l + ((h - l) shr 1));
+    if (Self[m] = item) then
+      Exit(m);
+    if ((Self[m] < item) = oAscending) then
+      l := (m + 1)
+    else
+      h := (m - 1);
+  end;
+  Result := -1;
+end;
+
+{==============================================================================
+  <Bisectify>
+  @action: Performs a branch-reduced bisection search with boundary short-circuiting to find an item's index.
+  @note: Optimizes loop performance by deferring the exact equality match until the final convergence step.
+==============================================================================}
+function MArrayHelper.Bisectify(const item: MType; const oAscending: Boolean = True): Integer; overload;
+var
+  h, m: Integer;
+begin
+  h := High(Self);
+  if (h < 0) then
+    Exit(-1);
+  case oAscending of
+    True: if ((item < Self[0]) or (item > Self[h])) then
+      Exit(-1);
+    False: if ((item > Self[0]) or (item < Self[h])) then
+      Exit(-1);
+  end;
+  Result := 0;
+  while (Result < h) do
+  begin
+    m := (Result + ((h - Result) shr 1));
+    if ((Self[m] < item) = oAscending) then
+      Result := (m + 1)
+    else
+      h := m;
+  end;
+  if not (Self[Result] = item) then
+    Result := -1;
+end; 
 
 {==============================================================================]
   <BisectNth>
