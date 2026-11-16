@@ -175,8 +175,7 @@ var
   i, s, r: Integer;
 begin
   s := Self.Length;
-  SetLength(Result, s);
-  if (s = 0) then
+  if (Result.SetSize(s) = 0) then
     Exit;
   Result[0] := 0;
   r := 1;

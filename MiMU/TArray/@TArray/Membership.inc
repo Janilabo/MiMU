@@ -45,9 +45,6 @@ function EndsWith(const aItem: MType): Boolean; overload;
 function EndsWith(const aItem: MArray): Boolean; overload;
 function StartsWith(const aItem: MType): Boolean; overload;
 function StartsWith(const aItem: MArray): Boolean; overload;
-function Limitem(const item: MType): Boolean; overload;
-function Limitem(const item: MArray): Boolean; overload;
-function Marginates(const item: MArray): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1021,82 +1018,5 @@ begin
     if (Self[0] = aItem[i]) then
       Exit(True);
   Result := False;
-end;
-
-{==============================================================================
-  <Limitem>
-  @action: Checks if the given item matches either the first or last element of the array.
-  @note: Uses case branching on High(Self).Compare(0) to efficiently handle empty, single-element, and multi-element arrays.
-==============================================================================}
-function MArrayHelper.Limitem(const item: MType): Boolean; overload;
-var
-  h: Integer;
-begin
-  h := High(Self);
-  case h.Compare(0) of
-    -1: Result := False;
-     0: Result := (Self[0] = item);
-     1: Result := ((Self[0] = item) or (Self[h] = item));
-  end;
-end;
-
-{==============================================================================
-  <Limitem>
-  @action: Returns True if the beginning (prefix) or the ending (suffix) of the
-           array exactly equals the provided sub-array item.
-  @note: Verifies sequence equality against the outer boundaries of the array.
-==============================================================================}
-function MArrayHelper.Limitem(const item: MArray): Boolean; overload;
-var
-  l, s, i: Integer;
-begin
-  l := item.Length;
-  if (l = 0) then
-    Exit(False);
-  s := Self.Length;
-  if (l > s) then
-    Exit(False);
-  Result := True;
-  for i := 0 to (l - 1) do
-    if (Self[i] <> item[i]) then
-    begin
-      Result := False;
-      Break;
-    end;
-  if not Result then
-  for i := 0 to (l - 1) do
-    if (Self[s - l + i] <> item[i]) then
-      Exit(False);
-  Result := True;
-end;
-
-{==============================================================================
-  <Marginates>
-  @action: Returns True if the beginning (prefix) or ending (suffix) of the array 
-           exactly matches the specified sub-array item.
-  @note: Evaluates the prefix first. If the prefix does not fully match, it 
-         seamlessly falls back to validate the suffix in a unified flow.
-==============================================================================}
-function MArrayHelper.Marginates(const item: MArray): Boolean; overload;
-var
-  l, s, i, r: Integer;
-begin
-  l := item.Length;
-  if (l = 0) then
-    Exit(False);
-  s := Self.Length;
-  if (l > s) then
-    Exit(False);
-  r := 0;
-  for i := 0 to (l - 1) do
-    if (Self[i] <> item[i]) then
-      Break
-    else
-      Inc(r);
-  if not (r = l) then
-  for i := 0 to (l - 1) do
-    if (Self[s - l + i] <> item[i]) then
-      Exit(False);
-  Result := True;
 end;
 {$ENDIF}

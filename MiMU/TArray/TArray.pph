@@ -15,6 +15,7 @@
 {$I @TArray/Duplication.inc}
 {$I @TArray/Endpoints.inc}
 {$I @TArray/Equality.inc}
+{$I @TArray/Extremities.inc}
 {$I @TArray/Fill.inc}
 {$I @TArray/Formation.inc}
 {$I @TArray/Frequency.inc}
@@ -50,6 +51,12 @@
 {$I @TArray/Transfer.inc}
 {$I @TArray/Transform.inc}
 {$I @TArray/Validation.inc}
+
+{$I @TArray/Deduplication/Cardinality.inc}
+{$I @TArray/Deduplication/Global.inc}
+{$I @TArray/Deduplication/Runlength.inc}
+{$I @TArray/Deduplication/Scan.inc}
+{$I @TArray/Deduplication/Singular.inc}
 
 {$IFDEF Sortable}
 {$I @TArray/Sortable/Arrangement.inc}
@@ -146,9 +153,3 @@
 {$I @TArray/Sortable/BinaryOps/TBinarySearch/Bounds.inc}
 {$I @TArray/Sortable/BinaryOps/TBinarySearch/Search.inc}
 {$ENDIF}
-
-{$I @TArray/Deduplication/Cardinality.inc}
-{$I @TArray/Deduplication/Global.inc}
-{$I @TArray/Deduplication/Runlength.inc}
-{$I @TArray/Deduplication/Scan.inc}
-{$I @TArray/Deduplication/Singular.inc}
