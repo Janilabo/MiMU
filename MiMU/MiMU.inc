@@ -67,6 +67,7 @@
 
   {$DEFINE OPERATORS}
   {$I Type/Type+.inc}
+  {$I TArray/TArray.inc}
   {$UNDEF OPERATORS}
 
   {$DEFINE HELPERS}

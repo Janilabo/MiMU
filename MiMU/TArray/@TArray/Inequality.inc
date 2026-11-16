@@ -3,6 +3,7 @@ function Differ(const target: MArray): Boolean; overload;
 function Different(const target: MArray): Boolean; overload;
 function Discordant(const target: MArray): Boolean; overload;
 function Dissimilar(const target: MArray; const stride: Integer = 10): Boolean; overload;
+function Diverge(const target: MArray): Boolean; overload;
 function Nonanalogous(const target: MArray): Boolean; overload;
 function NonIdentic(const target: MArray): Boolean; overload;
 function NonIdentical(const target: MArray): Boolean; overload;
@@ -98,6 +99,19 @@ begin
         Exit(True);
   end;
   Result := False;
+end;
+
+{==============================================================================]
+  <Diverge>
+  @action: Determines whether the current MArray instance and a target MArray 
+           diverge by containing any non-overlapping elements.
+  @note: Evaluates the symmetric difference (Self >< target) and returns True if 
+         at least one unshared element exists (Length > 0). Performs an unordered, 
+         set-based comparison that ignores element positions and duplicates.
+[==============================================================================}
+function MArrayHelper.Diverge(const target: MArray): Boolean; overload;
+begin
+  Result := ((Self >< target).Length > 0);
 end;
 
 {==============================================================================]

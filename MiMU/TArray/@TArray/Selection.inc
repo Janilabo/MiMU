@@ -54,6 +54,7 @@ function Skip(const items: MArray): MArray; overload;
 function Trim(const tCount: Integer = 1): MArray; overload;
 function Truncate(const tRate: Double = 10): MArray; overload;
 function Where(const predicate: MPredicate): MArray; overload;
+function Divergence(const target: MArray): MArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1571,5 +1572,17 @@ begin
     if predicate(Self[i]) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Divergence>
+  @action: Computes the symmetric difference between the current MArray instance 
+           and a target MArray, returning a new array of unshared elements.
+  @note: Delegates directly to the overloaded symmetric difference operator (><) 
+         to collect elements present in either array but not both.
+[==============================================================================}
+function MArrayHelper.Divergence(const target: MArray): MArray; overload;
+begin
+  Result := (Self >< target);
 end;
 {$ENDIF}

@@ -6,6 +6,7 @@ function Equal(const target: MArray): Boolean; overload;
 function Equivalent(const target: MArray): Boolean; overload;
 function Identic(const target: MArray): Boolean; overload;
 function Identical(const target: MArray): Boolean; overload;
+function Resemble(const target: MArray): Boolean; overload;
 function Same(const target: MArray): Boolean; overload;
 function Selfsame(const target: MArray): Boolean; overload;
 function Twin(const target: MArray): Boolean; overload;
@@ -146,6 +147,30 @@ begin
     if (Self[i] <> target[i]) then
       Exit(False);
   Result := True;
+end;
+
+{==============================================================================]
+  <Resemble>
+  @action: Checks if the current array and the target array are identical in length and element-by-element content.
+  @note: Uses a recursive divide-and-conquer approach (binary splitting) with short-circuit evaluation,
+         returning False on the first mismatched element.
+[==============================================================================}
+function MArrayHelper.Resemble(const target: MArray): Boolean; overload;
+  function R(lowID, highID: Integer): Boolean;
+  var
+    m: Integer;
+  begin
+    if (lowID > highID) then
+      Exit(True);
+    if (lowID = highID) then
+      Exit(Self[lowID] = target[lowID]);
+    m := ((lowID + highID) div 2);
+    Result := (R(lowID, m) and R((m + 1), highID));
+  end;
+begin
+  if (Self.Length <> target.Length) then
+    Exit(False);
+  Result := R(0, High(Self));
 end;
 
 {==============================================================================]
