@@ -5,6 +5,9 @@ operator =(const a, b: TRange): Boolean;
 operator <>(const a, b: TRange): Boolean;
 
 operator in(const I: Integer; const R: TRange): Boolean;
+operator in(const S: TRange; const R: TRange): Boolean;
+operator in(const A: TIntegerArray; const R: TRange): Boolean;
+
 operator shl(const R: TRange; const N: Integer): TRange;
 operator shr(const R: TRange; const N: Integer): TRange;
 
@@ -91,6 +94,32 @@ end;
 operator in(const I: Integer; const R: TRange): Boolean;
 begin
   Result := R.Contains(I);
+end;
+
+{==============================================================================]
+  <in>
+  @action: Evaluates whether the range S is fully enclosed within the bounds of
+           the specified range R, returning True only when no part of S extends
+           outside R.
+  @note: Delegates directly to TRange.Contains, requiring complete subset
+         containment rather than partial overlap.
+[==============================================================================}
+operator in(const S: TRange; const R: TRange): Boolean;
+begin
+  Result := R.Contains(S);
+end;
+
+{==============================================================================]
+  <in>
+  @action: Evaluates whether all integers in the array A lie within the bounds
+           of the specified range R, returning True only when no element of A
+           falls outside R.
+  @note: Delegates directly to TRange.Contains, evaluating every element against
+         the range's containment rules.
+[==============================================================================}
+operator in(const A: TIntegerArray; const R: TRange): Boolean;
+begin
+  Result := R.Contains(A);
 end;
 
 {==============================================================================]

@@ -22,6 +22,7 @@ function Select(const arr: TPointArray): TPointArray; overload;
 function Select(const arr: TBoxArray): TBoxArray; overload;
 function Select(const arr: TRangeArray): TRangeArray; overload;
 function Xorred(const other: TRange): TRangeArray; overload;
+function Exor(const target: TRange): TRangeArray; overload;
 {$ENDIf}
 
 {$IFDEF IMPLEMENTATION}
@@ -435,4 +436,43 @@ begin
       Result[(l - 1) - i] := Result[i];
   end;
 end;
+
+{==============================================================================]
+  <Exor>
+  @action: Computes the symmetric difference between ranges A and B, returning
+           an array of 0 to 2 disjoint, non-adjacent TRange segments containing
+           all values present in either A or B, but not both.
+  @note: Normalizes ascending/descending bounds internally before computing
+         exclusive intervals. Returns an empty array if A and B span the exact
+         same interval. If A and B are disjoint, both normalized ranges are
+         returned in ascending order, unless they are directly adjacent, in
+         which case they are merged into a single range. For overlapping
+         ranges, only the outer edges are returned, never the shared middle.
+[==============================================================================}
+function TRangeHelper.Exor(const target: TRange): TRangeArray; overload;
+var
+  s, t: TRange;
+begin
+  Result := [];
+  s := Self.Normalize;
+  t := target.Normalize;
+  if (s = t) then
+    Exit;
+  if (s.stop < t.start) then
+  begin
+    if ((s.stop + 1) = t.start) then
+      Exit([TRange.Construct(s.start, t.stop)]);
+    Exit([s, t]);
+  end;
+  if (t.stop < s.start) then
+  begin
+    if ((t.stop + 1) = s.start) then
+      Exit([TRange.Construct(t.start, s.stop)]);
+    Exit([t, s]);
+  end;
+  if (s.start <> t.start) then
+    Result := (Result + [TRange.Construct(Min(s.start, t.start), (Max(s.start, t.start) - 1))]);
+  if (s.stop <> t.stop) then
+    Result := (Result + [TRange.Construct((Min(s.stop, t.stop) + 1), Max(s.stop, t.stop))]);
+end; 
 {$ENDIF}

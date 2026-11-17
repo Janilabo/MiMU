@@ -19,8 +19,10 @@ function Contains(const x: Integer): Boolean; overload;
 function Contains(const x: TRange): Boolean; overload;
 function Contains(const x: TIntegerArray): Boolean; overload;
 function Covered(const val: Integer): Boolean; overload;
+function Covered(const vals: TIntegerArray): Boolean; overload;
 function Covering(const val: Integer): Boolean; overload;
 function Covers(const val: Integer): Boolean; overload;
+function Covers(const vals: TIntegerArray): Boolean; overload;
 function Deviant(const val: Integer): Boolean; overload;
 function Digit(const x: Integer): Boolean; overload;
 function Disjoint(const target: TRange): Boolean; overload;
@@ -321,16 +323,18 @@ begin
 end;
 
 {==============================================================================]
-  <Contains>
+  <Covered>
   @action: Returns True if every value in x exists within the range.
   @note: Returns True for an empty array.
 [==============================================================================}
 function TRange.Contains(const x: TIntegerArray): Boolean; overload;
 var
   i: Integer;
+  n: TRange;
 begin
+  n := Self.Normalize;
   for i := 0 to High(x) do
-    if not Self.Contains(x[i]) then
+    if ((x[i] < n.start) or (x[i] > n.stop)) then
       Exit(False);
   Result := True;
 end;
@@ -345,6 +349,23 @@ end;
 function TRange.Covered(const val: Integer): Boolean; overload;
 begin
   Result := not ((val < Self.Minimum) xor (val > Self.Maximum));
+end;
+
+{==============================================================================]
+  <Covered>
+  @action: Returns True if every value in vals exists within the range.
+  @note: Returns True for an empty array.
+[==============================================================================}
+function TRange.Covered(const vals: TIntegerArray): Boolean; overload;
+var
+  i, l, h: Integer;
+begin
+  l := Self.Minimum;
+  h := Self.Maximum;
+  for i := 0 to High(vals) do
+    if ((vals[i] < l) or (vals[i] > h)) then
+      Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]
@@ -373,6 +394,21 @@ begin
   if Self.Descending then
     Exit(InRange(val, Self.stop, Self.start));
   Result := InRange(val, Self.start, Self.stop);
+end;
+
+{==============================================================================]
+  <Covers>
+  @action: Returns True if every value in vals exists within the range.
+  @note: Returns True for an empty array.
+[==============================================================================}
+function TRange.Covers(const vals: TIntegerArray): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to High(vals) do
+    if not Self.Contains(vals[i]) then
+      Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]
