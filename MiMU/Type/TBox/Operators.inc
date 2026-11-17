@@ -5,6 +5,8 @@ operator =(const a, b: TBox): Boolean;
 operator <>(const a, b: TBox): Boolean;
 
 operator in(const P: TPoint; const B: TBox): Boolean;
+operator in(const S: TBox; const B: TBox): Boolean;
+operator in(const P: TPointArray; const B: TBox): Boolean;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -52,6 +54,16 @@ begin
 end;
 
 operator in(const P: TPoint; const B: TBox): Boolean;
+begin
+  Result := B.Contains(P);
+end;
+
+operator in(const S: TBox; const B: TBox): Boolean;
+begin
+  Result := B.Contains(S);
+end;
+
+operator in(const P: TPointArray; const B: TBox): Boolean;
 begin
   Result := B.Contains(P);
 end;

@@ -1,10 +1,13 @@
 {$IFDEF METHODS}
 function Accepts(const pt: TPoint): Boolean; overload;
+function Accommodates(const pts: TPointArray): Boolean; overload;
 function Binds(const pt: TPoint): Boolean; overload;
 function Contained(const pt: TPoint): Boolean; overload;
 function Contained(const b: TBox): Boolean; overload;
+function Contained(const pts: TPointArray): Boolean; overload;
 function Contains(const pt: TPoint): Boolean; overload;
 function Contains(const b: TBox): Boolean; overload;
+function Contains(const pts: TPointArray): Boolean; overload;
 function Covers(const pt: TPoint): Boolean; overload;
 function Disjoint(const target: TBox): Boolean; overload;
 function Embody(const pt: TPoint): Boolean; overload;
@@ -23,6 +26,7 @@ function Lacks(const pt: TPoint): Boolean; overload;
 function Membership(const pt: TPoint): Boolean; overload;
 function Nests(const pt: TPoint): Boolean; overload;
 function Owns(const pt: TPoint): Boolean; overload;
+function Retains(const pts: TPointArray): Boolean; overload;
 function Seals(const pt: TPoint): Boolean; overload;
 {$ENDIF}
 
@@ -37,10 +41,35 @@ function Inside(const targets: TBoxArray): Boolean; overload;
   @note: Relies on Area calculations.
          Fails or yields unpredictable results if coordinate bounds are inverted (e.g., X1 > X2).
 [==============================================================================}
-
 function TBox.Accepts(const pt: TPoint): Boolean; overload;
 begin
   Result := (Self.Area = Box(Min(pt.X, Self.X1), Min(pt.Y, Self.Y1), Max(pt.X, Self.X2), Max(pt.Y, Self.Y2)).Area);
+end;
+
+{==============================================================================]
+  <Accommodates>
+  @action: Returns true if all points in pts fit within the inclusive boundaries
+           of the box.
+  @note: Uses two-way pointer iteration from both ends of pts, exiting
+         immediately with False on the first point found outside Self. Returns
+         True for an empty array.
+[==============================================================================}
+function TBox.Accommodates(const pts: TPointArray): Boolean; overload;
+var
+  l, r: PPoint;
+begin
+  if (pts.Length = 0) then
+    Exit(True);
+  l := @pts[0];
+  r := @pts[High(pts)];
+  while (l <= r) do
+  begin
+    if ((l^.X < Self.X1) or (l^.X > Self.X2) or (l^.Y < Self.Y1) or (l^.Y > Self.Y2) or (r^.X < Self.X1) or (r^.X > Self.X2) or (r^.Y < Self.Y1) or (r^.Y > Self.Y2)) then
+      Exit(False);
+    Inc(l);
+    Dec(r);
+  end;
+  Result := True;
 end;
 
 {==============================================================================]
@@ -75,6 +104,24 @@ begin
 end;
 
 {==============================================================================]
+  <Contained>
+  @action: Returns true if all points in pts are inside the given box boundaries.
+  @note: Uses a two-way (meet-in-the-middle) scan from both ends of pts,
+         exiting immediately on the first point found outside Self.
+[==============================================================================}
+function TBox.Contained(const pts: TPointArray): Boolean; overload;
+var
+  l, r: Integer;
+begin
+  l := -1;
+  r := pts.Length;
+  while (l.Increment <= r.Decrement) do
+    if ((pts[l].X < Self.X1) or (pts[l].X > Self.X2) or (pts[l].Y < Self.Y1) or (pts[l].Y > Self.Y2) or (pts[r].X < Self.X1) or (pts[r].X > Self.X2) or (pts[r].Y < Self.Y1) or (pts[r].Y > Self.Y2)) then
+      Exit(False);
+  Result := True;
+end;
+
+{==============================================================================]
   <Contains>
   @action: Returns true if pt is inside the given box (bx).
   @note: None.
@@ -92,6 +139,21 @@ end;
 function TBox.Contains(const b: TBox): Boolean; overload;
 begin
   Result := ((b.X1 >= Self.X1) and (b.X2 <= Self.X2) and (b.Y1 >= Self.Y1) and (b.Y2 <= Self.Y2));
+end;
+
+{==============================================================================]
+  <Contains>
+  @action: Returns true if all points in pts are inside/within the given box boundaries.
+  @note: Exits immediately with False on the first point found outside Self. Returns True for an empty array.
+[==============================================================================}
+function TBox.Contains(const pts: TPointArray): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to High(pts) do
+    if ((pts[i].X < Self.X1) or (pts[i].X > Self.X2) or (pts[i].Y < Self.Y1) or (pts[i].Y > Self.Y2)) then
+      Exit(False);
+  Result := True;
 end;
 
 {==============================================================================]
@@ -333,6 +395,29 @@ begin
   h := TRange.Construct((pt.X - Self.X1), (Self.X2 - pt.X));
   v := TRange.Construct((pt.Y - Self.Y1), (Self.Y2 - pt.Y));
   Result := (((h.start * v.start) >= 0) and ((h.stop * v.start) >= 0) and ((h.stop * v.stop) >= 0) and ((h.start * v.stop) >= 0));
+end;
+
+{==============================================================================]
+  <Retains>
+  @action: Returns true if all points in pts remain within the inclusive
+           boundaries of the box.
+  @note: Uses pointer iteration to short-circuit with False on the first point
+         found outside Self. Returns True for an empty array.
+[==============================================================================}
+function TBox.Retains(const pts: TPointArray): Boolean; overload;
+var
+  p, e: PPoint;
+begin
+  if (pts.Length = 0) then
+    Exit(True);
+  p := @pts[0];
+  e := (p + pts.Length);
+  while (p < e) do
+    if ((p^.X < Self.X1) or (p^.X > Self.X2) or (p^.Y < Self.Y1) or (p^.Y > Self.Y2)) then
+      Exit(False)
+	else
+      Inc(p);
+  Result := True;
 end;
 
 {==============================================================================]
