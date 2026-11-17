@@ -77,7 +77,7 @@ end;
 
 {==============================================================================]
   <BinaryContact>
-  @action: Determines whether a specific integer value exists in a sorted array
+  @action: Determines whether a specific item exists in a sorted array
            using binary search.
   @note: - Assumes the array is sorted according to the `oAscending` flag.
          - Returns True if the value is found, False otherwise.

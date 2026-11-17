@@ -28,6 +28,9 @@ function Nests(const pt: TPoint): Boolean; overload;
 function Owns(const pt: TPoint): Boolean; overload;
 function Retains(const pts: TPointArray): Boolean; overload;
 function Seals(const pt: TPoint): Boolean; overload;
+
+function Contact(const target: TPointArray): Boolean; overload;
+function Contacting(const target: TPointArray; const tHits: Integer = 1): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF HELPERS}
@@ -428,5 +431,56 @@ end;
 function TBox.Seals(const pt: TPoint): Boolean; overload;
 begin
   Result := (((Self.X1 - pt.X) <= 0) and ((Self.X2 - pt.X) >= 0) and ((Self.Y1 - pt.Y) <= 0) and ((Self.Y2 - pt.Y) >= 0));
+end;
+
+{==============================================================================]
+  <Contact>
+  @action: Returns true if at least one point in target lies within the
+           inclusive boundaries of the box.
+  @note: Short-circuits immediately with True on the first point found inside
+         Self. Returns False for an empty array.
+[==============================================================================}
+function TBox.Contact(const target: TPointArray): Boolean; overload;
+var
+  i: Integer;
+begin
+  for i := 0 to High(target) do
+    if Self.Contains(target[i]) then
+      Exit(True);
+  Result := False;
+end;
+
+{==============================================================================]
+  <Contacting>
+  @action: Returns true if at least `tHits` points in target lie within the
+           inclusive boundaries of the box, or if no points make contact when
+           `tHits` is 0.
+  @note: Dual short-circuiting: exits immediately with True once `tHits` matches
+         are found, or breaks early as soon as remaining points cannot satisfy
+         the required threshold. When `tHits` is 0, checks for complete
+         disjointness (no contact); returns False if `tHits` is negative.
+[==============================================================================}
+function TBox.Contacting(const target: TPointArray; const tHits: Integer = 1): Boolean; overload;
+var
+  i, h, l: Integer;
+begin
+  if (tHits < 0) then
+    Exit(False);
+  if (tHits = 0) then
+    Exit(not Self.Contact(target));
+  l := target.Length;
+  if (l < tHits) then
+    Exit(False);
+  h := 0;
+  for i := 0 to (l - 1) do
+  case Self.Contains(target[i]) of
+    True:
+    if (h.Increment >= tHits) then
+      Exit(True);
+    False:
+    if (((l - 1 - i) + h) < tHits) then
+      Break;
+  end;
+  Result := False;
 end;
 {$ENDIF}
