@@ -1,4 +1,17 @@
 {$IFDEF HELPERS}
+function QuickSortByX1(const aAscending: Boolean = True): Integer; overload;
+function QuickSortByY1(const aAscending: Boolean = True): Integer; overload;
+function QuickSortByX2(const aAscending: Boolean = True): Integer; overload;
+function QuickSortByY2(const aAscending: Boolean = True): Integer; overload;
+
+function QuickSortedByX1(const aAscending: Boolean = True): TBoxArray; overload;
+function QuickSortedByY1(const aAscending: Boolean = True): TBoxArray; overload;
+function QuickSortedByX2(const aAscending: Boolean = True): TBoxArray; overload;
+function QuickSortedByY2(const aAscending: Boolean = True): TBoxArray; overload;
+
+function SortByColumn(const aAscending: Boolean = True): Integer; overload;
+function SortByRow(const aAscending: Boolean = True): Integer; overload;
+
 function SortByAreas(var rAreas: TIntegerArray; const oAscending: Boolean): Integer; overload;
 function SortByAreal(const oAscending: Boolean): Integer; overload;
 function SortedByArea(const rAscending: Boolean): TBoxArray; overload;
@@ -8,6 +21,264 @@ function SortWithArea(const oAscending: Boolean): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <QuickSortByX1>
+  @action: Sorts all boxes based on their left edge (X1) coordinate.
+  @note: Uses an in-place recursive QuickSort. Does not guarantee stability
+         for equal X1 values. Complexity is O(n log n) on average.
+[==============================================================================}
+function TBoxArrayHelper.QuickSortByX1(const aAscending: Boolean = True): Integer; overload;
+  procedure QSX1(var arr: TBoxArray; const L, R: Integer; const A: Boolean);
+  var
+    i, j: Integer;
+    p: TBox;
+  begin
+    i := L;
+    j := R;
+    p := arr[(L + R) shr 1];
+    repeat
+      while ((A and (arr[i].X1 < p.X1)) or ((not A) and (arr[i].X1 > p.X1))) do
+        Inc(i);
+      while ((A and (arr[j].X1 > p.X1)) or ((not A) and (arr[j].X1 < p.X1))) do
+        Dec(j);
+      if (i <= j) then
+        Swap(arr[i.Increase], arr[j.Decrease]);
+    until (i > j);
+    if (L < j) then
+      QSX1(arr, L, j, A);
+    if (i < R) then
+      QSX1(arr, i, R, A);
+  end;
+begin
+  Result := Self.Size;
+  if (Result > 1) then
+    QSX1(Self, 0, (Result - 1), aAscending);
+end;
+
+{==============================================================================]
+  <QuickSortByY1>
+  @action: Sorts all boxes based on their top edge (Y1) coordinate.
+  @note: In-place recursive QuickSort implementation. Equal Y1 values are not
+         guaranteed to preserve original order (unstable sort).
+[==============================================================================}
+function TBoxArrayHelper.QuickSortByY1(const aAscending: Boolean = True): Integer; overload;
+  procedure QSY1(var arr: TBoxArray; const L, R: Integer; const A: Boolean);
+  var
+    i, j: Integer;
+    p: TBox;
+  begin
+    i := L;
+    j := R;
+    p := arr[(L + R) shr 1];
+    repeat
+      while ((A and (arr[i].Y1 < p.Y1)) or ((not A) and (arr[i].Y1 > p.Y1))) do
+        Inc(i);
+      while ((A and (arr[j].Y1 > p.Y1)) or ((not A) and (arr[j].Y1 < p.Y1))) do
+        Dec(j);
+      if (i <= j) then
+        Swap(arr[i.Increase], arr[j.Decrease]);
+    until (i > j);
+    if (L < j) then
+      QSY1(arr, L, j, A);
+    if (i < R) then
+      QSY1(arr, i, R, A);
+  end;
+begin
+  Result := Self.Size;
+  if (Result > 1) then
+    QSY1(Self, 0, (Result - 1), aAscending);
+end;
+
+{==============================================================================]
+  <QuickSortByX2>
+  @action: Sorts all boxes based on their right edge (X2) coordinate.
+  @note: Uses an in-place recursive QuickSort. Does not guarantee stability
+         for equal X2 values. Complexity is O(n log n) on average.
+[==============================================================================}
+function TBoxArrayHelper.QuickSortByX2(const aAscending: Boolean = True): Integer; overload;
+  procedure QSX2(var arr: TBoxArray; const L, R: Integer; const A: Boolean);
+  var
+    i, j: Integer;
+    p: TBox;
+  begin
+    i := L;
+    j := R;
+    p := arr[(L + R) shr 1];
+    repeat
+      while ((A and (arr[i].X2 < p.X2)) or ((not A) and (arr[i].X2 > p.X2))) do
+        Inc(i);
+      while ((A and (arr[j].X2 > p.X2)) or ((not A) and (arr[j].X2 < p.X2))) do
+        Dec(j);
+      if (i <= j) then
+        Swap(arr[i.Increase], arr[j.Decrease]);
+    until (i > j);
+    if (L < j) then
+      QSX2(arr, L, j, A);
+    if (i < R) then
+      QSX2(arr, i, R, A);
+  end;
+begin
+  Result := Self.Size;
+  if (Result > 1) then
+    QSX2(Self, 0, (Result - 1), aAscending);
+end;
+
+{==============================================================================]
+  <QuickSortByY2>
+  @action: Sorts all boxes based on their bottom edge (Y2) coordinate.
+  @note: In-place recursive QuickSort implementation. Equal Y2 values are not
+         guaranteed to preserve original order (unstable sort).
+[==============================================================================}
+function TBoxArrayHelper.QuickSortByY2(const aAscending: Boolean = True): Integer; overload;
+  procedure QSY2(var arr: TBoxArray; const L, R: Integer; const A: Boolean);
+  var
+    i, j: Integer;
+    p: TBox;
+  begin
+    i := L;
+    j := R;
+    p := arr[(L + R) shr 1];
+    repeat
+      while ((A and (arr[i].Y2 < p.Y2)) or ((not A) and (arr[i].Y2 > p.Y2))) do
+        Inc(i);
+      while ((A and (arr[j].Y2 > p.Y2)) or ((not A) and (arr[j].Y2 < p.Y2))) do
+        Dec(j);
+      if (i <= j) then
+        Swap(arr[i.Increase], arr[j.Decrease]);
+    until (i > j);
+    if (L < j) then
+      QSY2(arr, L, j, A);
+    if (i < R) then
+      QSY2(arr, i, R, A);
+  end;
+begin
+  Result := Self.Size;
+  if (Result > 1) then
+    QSY2(Self, 0, (Result - 1), aAscending);
+end;
+
+{==============================================================================]
+  <QuickSortedByX1>
+  @action: Returns a new copy of the box array sorted by left edge (X1)
+           coordinate.
+  @note: Non-mutating; Self is left untouched. Extracts X1 keys via Self.X1s
+         and delegates to QuickSorted. Equal X1 values are not guaranteed to
+         preserve original order (unstable sort).
+[==============================================================================}
+function TBoxArrayHelper.QuickSortedByX1(const aAscending: Boolean = True): TBoxArray; overload;
+begin
+  Result := Self.QuickSorted(Self.X1s, aAscending); 
+end;
+
+{==============================================================================]
+  <QuickSortedByY1>
+  @action: Returns a new copy of the box array sorted by top edge (Y1)
+           coordinate.
+  @note: Non-mutating; Self is left untouched. Extracts Y1 keys via Self.Y1s
+         and delegates to QuickSorted. Equal Y1 values are not guaranteed to
+         preserve original order (unstable sort).
+[==============================================================================}
+function TBoxArrayHelper.QuickSortedByY1(const aAscending: Boolean = True): TBoxArray; overload;
+begin
+  Result := Self.QuickSorted(Self.Y1s, aAscending);
+end;
+
+{==============================================================================]
+  <QuickSortedByX2>
+  @action: Returns a new copy of the box array sorted by right edge (X2)
+           coordinate.
+  @note: Non-mutating; Self is left untouched. Extracts X2 keys via Self.X2s
+         and delegates to QuickSorted. Equal X2 values are not guaranteed to
+         preserve original order (unstable sort).
+[==============================================================================}
+function TBoxArrayHelper.QuickSortedByX2(const aAscending: Boolean = True): TBoxArray; overload;
+begin
+  Result := Self.QuickSorted(Self.X2s, aAscending);
+end;
+
+{==============================================================================]
+  <QuickSortedByY2>
+  @action: Returns a new copy of the box array sorted by bottom edge (Y2)
+           coordinate.
+  @note: Non-mutating; Self is left untouched. Extracts Y2 keys via Self.Y2s
+         and delegates to QuickSorted. Equal Y2 values are not guaranteed to
+         preserve original order (unstable sort).
+[==============================================================================}
+function TBoxArrayHelper.QuickSortedByY2(const aAscending: Boolean = True): TBoxArray; overload;
+begin
+  Result := Self.QuickSorted(Self.Y2s, aAscending);
+end;
+
+{==============================================================================]
+  <SortByColumn>
+  @action: Sorts all boxes in column-major order (primarily by X1, then by Y1
+           for boxes sharing the same left edge).
+  @note: Uses an in-place recursive dual-key QuickSort with O(n log n) average
+         complexity. Not stable for boxes with identical (X1, Y1) coordinates.
+[==============================================================================}
+function TBoxArrayHelper.SortByColumn(const aAscending: Boolean = True): Integer; overload;
+  procedure QSC(var arr: TBoxArray; const L, R: Integer; const A: Boolean);
+  var
+    i, j: Integer;
+    p: TBox;
+  begin
+    i := L;
+    j := R;
+    p := arr[(L + R) shr 1];
+    repeat
+      while ((A and ((arr[i].X1 < p.X1) or ((arr[i].X1 = p.X1) and (arr[i].Y1 < p.Y1)))) or ((not A) and ((arr[i].X1 > p.X1) or ((arr[i].X1 = p.X1) and (arr[i].Y1 > p.Y1))))) do
+        Inc(i);
+      while ((A and ((arr[j].X1 > p.X1) or ((arr[j].X1 = p.X1) and (arr[j].Y1 > p.Y1)))) or ((not A) and ((arr[j].X1 < p.X1) or ((arr[j].X1 = p.X1) and (arr[j].Y1 < p.Y1))))) do
+        Dec(j);
+      if (i <= j) then
+        Swap(arr[i.Increase], arr[j.Decrease]);
+    until (i > j);
+    if (L < j) then
+      QSC(arr, L, j, A);
+    if (i < R) then
+      QSC(arr, i, R, A);
+  end;
+begin
+  Result := Self.Size;
+  if (Result > 1) then
+    QSC(Self, 0, (Result - 1), aAscending);
+end;
+
+{==============================================================================]
+  <SortByRow>
+  @action: Sorts all boxes in row-major order (primarily by Y1, then by X1
+           for boxes sharing the same top edge).
+  @note: Uses an in-place recursive dual-key QuickSort with O(n log n) average
+         complexity. Not stable for boxes with identical (X1, Y1) coordinates.
+[==============================================================================}
+function TBoxArrayHelper.SortByRow(const aAscending: Boolean = True): Integer; overload;
+  procedure QSR(var arr: TBoxArray; const L, R: Integer; const A: Boolean);
+  var
+    i, j: Integer;
+    p: TBox;
+  begin
+    i := L;
+    j := R;
+    p := arr[(L + R) shr 1];
+    repeat
+      while ((A and ((arr[i].Y1 < p.Y1) or ((arr[i].Y1 = p.Y1) and (arr[i].X1 < p.X1)))) or ((not A) and ((arr[i].Y1 > p.Y1) or ((arr[i].Y1 = p.Y1) and (arr[i].X1 > p.X1))))) do
+        Inc(i);
+      while ((A and ((arr[j].Y1 > p.Y1) or ((arr[j].Y1 = p.Y1) and (arr[j].X1 > p.X1)))) or ((not A) and ((arr[j].Y1 < p.Y1) or ((arr[j].Y1 = p.Y1) and (arr[j].X1 < p.X1))))) do
+        Dec(j);
+      if (i <= j) then
+        Swap(arr[i.Increase], arr[j.Decrease]);
+    until (i > j);
+    if (L < j) then
+      QSR(arr, L, j, A);
+    if (i < R) then
+      QSR(arr, i, R, A);
+  end;
+begin
+  Result := Self.Size;
+  if (Result > 1) then
+    QSR(Self, 0, (Result - 1), aAscending);
+end;
+
 {==============================================================================]
   <SortByAreas>
   @action: Sorts the box array in-place based on a parallel array of area values using Least Significant Digit (LSD) Radix Sort.
