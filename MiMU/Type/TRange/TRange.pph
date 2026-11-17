@@ -19,6 +19,7 @@
 {$I @TRange/Discrepancy.inc}
 {$I @TRange/Encoding.inc}
 {$I @TRange/Equality.inc}
+{$I @TRange/Exclusions.inc}
 {$I @TRange/Expansion.inc}
 {$I @TRange/Extension.inc}
 {$I @TRange/Extremes.inc}
