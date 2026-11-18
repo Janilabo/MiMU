@@ -9,6 +9,8 @@
 {$I @TPointArray/BinaryOps/Transect.inc}
 {$I @TPointArray/BinaryOps/Vicinity.inc}
 
+{$I @TPointArray/BinaryOps/Axisearch/Bounds.inc}
+
 {$I @TPointArray/Add.inc}
 {$I @TPointArray/Aggregation.inc}
 {$I @TPointArray/Allegiance.inc}
