@@ -13,6 +13,7 @@
 {$I @TPointArray/Aggregation.inc}
 {$I @TPointArray/Allegiance.inc}
 {$I @TPointArray/Binning.inc}
+{$I @TPointArray/Boundaries.inc}
 {$I @TPointArray/Bounding.inc}
 {$I @TPointArray/Bucketing.inc}
 {$I @TPointArray/Classification.inc}
@@ -24,6 +25,7 @@
 {$I @TPointArray/Insertion.inc}
 {$I @TPointArray/Modify.inc}
 {$I @TPointArray/Partition.inc}
+{$I @TPointArray/Proximity.inc}
 {$I @TPointArray/Scan.inc}
 {$I @TPointArray/Selection.inc}
 {$I @TPointArray/Sorting.inc}

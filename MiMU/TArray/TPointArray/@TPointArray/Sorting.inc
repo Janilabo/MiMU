@@ -5,6 +5,8 @@ function QuickSortByY(const aAscending: Boolean = True): Integer; overload;
 function QuickSortByYX(const aAscending: Boolean = True): Integer; overload;
 function QuickSortedByXY(const aAscending: Boolean = True): TPointArray; overload;
 function QuickSortedByYX(const aAscending: Boolean = True): TPointArray; overload;
+function QuickSortedByX(const aAscending: Boolean = True): TPointArray; overload;
+function QuickSortedByY(const aAscending: Boolean = True): TPointArray; overload;
 function SortByColumn(const aAscending: Boolean = True): Integer; overload;
 function SortByIndex(const aBounds: TBox; const aAscending: Boolean = True): Integer; overload;
 function SortByIndex(const aAscending: Boolean = True): Integer; overload;
@@ -241,6 +243,28 @@ begin
   s := Result.Length;
   if (s > 1) then
     QSYX(Result, 0, (s - 1), aAscending);
+end;
+
+{==============================================================================]
+  <QuickSortedByX>
+  @action: Sorts the point array based on the X coordinates of its points.
+  @note: Uses a quicksort algorithm. The sorting direction is determined by the aAscending parameter
+         (True for ascending, False for descending). Returns a new sorted TPointArray.
+[==============================================================================}
+function TPointArrayHelper.QuickSortedByX(const aAscending: Boolean = True): TPointArray; overload;
+begin
+  Result := Self.QuickSorted(Self.Xs, aAscending); 
+end;
+
+{==============================================================================]
+  <QuickSortedByY>
+  @action: Sorts the point array based on the Y coordinates of its points.
+  @note: Uses a quicksort algorithm. The sorting direction is determined by the aAscending parameter
+         (True for ascending, False for descending). Returns a new sorted TPointArray.
+[==============================================================================}
+function TPointArrayHelper.QuickSortedByY(const aAscending: Boolean = True): TPointArray; overload;
+begin
+  Result := Self.QuickSorted(Self.Ys, aAscending);
 end;
 
 {==============================================================================]
