@@ -1,17 +1,82 @@
 {$IFDEF HELPERS}
+function Extract(const values: TRange): TIntegerArray; overload;
+function Extracted(const values: TRange): TIntegerArray; overload;
 function ExtractEven: TIntegerArray; overload;
 function ExtractOdd: TIntegerArray; overload;
 function ExtractValues(const values: TRange): TIntegerArray; overload;
 function ExtractValues(const values: TRangeArray): TIntegerArray; overload;
+function Extractify(const values: TRange): TIntegerArray; overload;
+
+function Filter(const values: TRange): TIntegerArray; overload;
+function Filtered(const values: TRange): TIntegerArray; overload;
 function FilterEven: TIntegerArray; overload;
 function FilterOdd: TIntegerArray; overload;
 function FilterValues(const values: TRange): TIntegerArray; overload;
 function FilterValues(const values: TRangeArray): TIntegerArray; overload;
+function Filterify(const values: TRange): TIntegerArray; overload;
 
 function Primes: TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Extract>
+  @action: Returns a new TIntegerArray containing only the elements of the source
+           array that fall within the specified normalized range (inclusive).
+  @note:
+- The original array order is preserved.
+- Elements outside the given range are excluded.
+- Range normalization is performed via values.Normalize prior to evaluation.
+- Membership check uses explicit bounds testing (greater than or equal to start,
+      and less than or equal to stop).
+- The result array is preallocated to the source length and trimmed
+      to the number of retained elements.
+[==============================================================================}
+function TIntegerArrayHelper.Extract(const values: TRange): TIntegerArray; overload;
+var
+  i, r: Integer;
+  v: TRange;
+begin
+  r := 0;
+  v := values.Normalize;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if (Self[i] >= v.start) then
+      if (Self[i] <= v.stop) then
+        Result[r.Increase] := Self[i];
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Extracted>
+  @action: Returns a new TIntegerArray containing only the elements of the source
+           array that are contained within the specified TRange, utilizing an
+           intermediate index-mapping approach.
+  @note:
+    - The original array order is preserved.
+    - Elements outside the given range are excluded.
+    - Uses a two-pass approach: the first pass records the indices of matching
+      elements into an intermediate array (`m`), and the second pass populates
+      the result.
+  - Membership testing is performed via TRange.Contains.
+  - The result array is sized precisely via SetSize based on the match count.
+[==============================================================================}
+function TIntegerArrayHelper.Extracted(const values: TRange): TIntegerArray; overload;
+var
+  i, r, s: Integer;
+  m: TIntegerArray;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  SetLength(m, s);
+  for i := 0 to High(Self) do
+    if values.Contains(Self[i]) then
+      m[r.Increase] := i;
+  if (Result.SetSize(r) > 0) then
+  for i := High(Self) downto 0 do
+    Result[r.Decrement] := Self[m[i]];
+end;
+
 {==============================================================================]
   <ExtractEven>
   @action: Returns even values from array
@@ -102,6 +167,90 @@ begin
     if v.BinaryContains(Self[i]) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Extractify>
+  @action: Returns a new TIntegerArray containing only the elements of the source 
+           array that ARE contained within the specified TRange.
+  @note:
+    - The original array order is preserved.
+    - Elements outside the given range are excluded.
+    - Uses a two-pass approach (first counting matches, then backward population).
+    - Membership testing is performed via TRange.Contains.
+    - The result array is sized precisely via SetSize based on the match count.
+[==============================================================================}
+function TIntegerArrayHelper.Extractify(const values: TRange): TIntegerArray; overload;
+var
+  i, r: Integer;
+begin
+  r := 0;
+  for i := 0 to High(Self) do
+    if values.Contains(Self[i]) then
+      Inc(r);
+  if (Result.SetSize(r) > 0) then
+  for i := High(Self) downto 0 do
+    if values.Contains(Self[i]) then
+      Result[r.Decrement] := Self[i];
+end;
+
+{==============================================================================]
+  <Filter>
+  @action: Returns a new TIntegerArray containing only the elements of the source
+           array that fall outside the specified normalized range.
+  @note:
+    - The original array order is preserved.
+    - Elements strictly within the given range (inclusive) are excluded.
+    - Range normalization is performed via values.Normalize prior to evaluation.
+    - Exclusion check uses explicit boundary comparisons (less than start or
+      greater than stop).
+    - The result array is preallocated to the source length and trimmed
+      to the number of retained elements.
+[==============================================================================}
+function TIntegerArrayHelper.Filter(const values: TRange): TIntegerArray; overload;
+var
+  i, r: Integer;
+  v: TRange;
+begin
+  r := 0;
+  v := values.Normalize;
+  for i := 0 to Result.Alloc(Self.Length) do
+    if (Self[i] < v.start) then
+      Result[r.Increase] := Self[i]
+    else if (Self[i] > v.stop) then
+      Result[r.Increase] := Self[i];
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Filtered>
+  @action: Returns a new TIntegerArray containing only the elements of the source
+           array that are NOT contained within the specified TRange, utilizing
+           an intermediate index-mapping approach.
+  @note:
+- The original array order is preserved.
+- Elements inside the given range are excluded.
+- Uses a two-pass approach: the first pass records the indices of non-matching
+      elements into an intermediate array (`m`), and the second pass populates
+      the result.
+- Membership testing is performed via TRange.Contains (negated).
+- The result array is sized precisely via SetSize based on the non-match count.
+[==============================================================================}
+function TIntegerArrayHelper.Filtered(const values: TRange): TIntegerArray; overload;
+var
+  i, r, s: Integer;
+  m: TIntegerArray;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  SetLength(m, s);
+  for i := 0 to High(Self) do
+    if not values.Contains(Self[i]) then
+      m[r.Increase] := i;
+  if (Result.SetSize(r) > 0) then
+  for i := High(Self) downto 0 do
+    Result[r.Decrement] := Self[m[i]];
 end;
 
 {==============================================================================]
@@ -197,6 +346,32 @@ begin
     if not v.BinaryContains(Self[i]) then
       Result[r.Increase] := Self[i];
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Filterify>
+  @action: Returns a new TIntegerArray containing only the elements of the source 
+           array that are NOT contained within the specified TRange (mirroring 
+           FilterValues, but implemented via a two-pass backward population).
+  @note:
+    - The original array order is preserved.
+    - Elements inside the given range are excluded.
+    - Uses a two-pass approach (first counting non-matches, then backward population).
+    - Membership testing is performed via TRange.Contains.
+    - The result array is sized precisely via SetSize based on the non-match count.
+[==============================================================================}
+function TIntegerArrayHelper.Filterify(const values: TRange): TIntegerArray; overload;
+var
+  i, r: Integer;
+begin
+  r := 0;
+  for i := 0 to High(Self) do
+    if not values.Contains(Self[i]) then
+      Inc(r);
+  if (Result.SetSize(r) > 0) then
+  for i := High(Self) downto 0 do
+    if not values.Contains(Self[i]) then
+      Result[r.Decrement] := Self[i];
 end;
 
 function TIntegerArrayHelper.Primes: TIntegerArray; overload;
