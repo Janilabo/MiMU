@@ -3,6 +3,8 @@ function Med3(const A, B, C: MType): MType; overload;
 function Median3(const A, B, C: MType): MType; overload;
 function Mid3(const A, B, C: MType): MType; overload;
 function Middle3(const A, B, C: MType): MType; overload;
+
+function M3dian(A, B, C: MType; const oAscending: Boolean = True): MType; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -88,5 +90,32 @@ begin
     Result := C
   else
     Result := A;
+end;
+
+{==============================================================================]
+  <M3dian>
+  @action: Returns the middle (median) value among A, B, and C.
+  @note: Uses Prior(X, Y, oAscending) to rank the three values; the result is
+         invariant to oAscending for distinct values, and equal values are
+         returned naturally when at least two match.
+[==============================================================================}
+function M3dian(A, B, C: MType; const oAscending: Boolean = True): MType; overload;
+begin
+  case Prior(A, B, oAscending) of
+    True:
+    if Prior(B, C, oAscending) then
+      Result := B
+    else if Prior(A, C, oAscending) then
+      Result := C
+    else
+      Result := A;
+    False:
+    if Prior(A, C, oAscending) then
+      Result := A
+    else if Prior(B, C, oAscending) then
+      Result := C
+    else
+      Result := B;
+  end;
 end;
 {$ENDIF}

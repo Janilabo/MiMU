@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function Any(const null: MType): MType; overload;
 function Any: MType; overload;
+function Dealt(const rRounds: Integer = 2): MArray; overload;
 function Derange: Boolean; overload;
 function Deranged: MArray; overload;
 function Disarray: MArray; overload;
@@ -381,6 +382,79 @@ end;
 function MArrayHelper.Any: MType; overload;
 begin
   Result := Self[Low(Self) + Random(Self.Size)];
+end;
+
+{==============================================================================]
+  <Dealt>
+  @action: Returns a new array holding Self's elements in a randomized order,
+           built by rRounds successive double-ended peels: each round
+           repeatedly strips a randomly chosen end (via TRange.Fieldom) off a
+           shrinking window, and the strip order becomes that round's
+           permutation. Rounds are chained, each re-dealing the previous
+           round's order.
+  @note: Non-mutating; Self is never modified. Returns an unshuffled clone
+         when Self.Length < 2 or rRounds < 1. Uses the global RNG, so results
+         follow Randomize/RandSeed. Not a uniform shuffle: a single round
+         has only 2^(n-1) possible outcomes out of n! permutations, and
+         extra rounds improve the mix without guaranteeing uniformity. Works
+         on any MType, since elements are only copied with := (managed types
+         included). Cost is O(n * rRounds) time and two index buffers of
+         extra memory.
+[==============================================================================}
+function MArrayHelper.Dealt(const rRounds: Integer = 2): MArray; overload;
+var
+  i, l, f, p: Integer;
+  s, r: TIntegerArray;
+  o, t: TRange;
+begin
+  l := Self.Length;
+  if ((l < 2) or (rRounds < 1)) then
+    Exit(Self.Cloned);
+  s := Self.IDs;
+  SetLength(r, l);
+  o.start := 0;
+  o.stop := High(Self);
+  for i := 1 to rRounds do
+  begin
+    t := o;
+    p := 0;
+    case i.Odd of
+      True:
+      begin
+        while (t.start < t.stop) do
+        begin
+          f := t.Fieldom;
+          if (f = t.start) then
+            Inc(t.start)
+          else
+            Dec(t.stop);
+          r[p.Increase] := s[f];
+        end;
+        r[p] := s[t.start];
+      end;
+      False:
+      begin
+        while (t.start < t.stop) do
+        begin
+          f := t.Fieldom;
+          if (f = t.start) then
+            Inc(t.start)
+          else
+            Dec(t.stop);
+          s[p.Increase] := r[f];
+        end;
+        s[p] := r[t.start];
+      end;
+    end;
+  end;
+  case rRounds.Odd of
+    True:
+    for i := 0 to Result.Alloc(l) do
+      Result[i] := Self[r[i]];
+    False:
+    for i := 0 to Result.Alloc(l) do
+      Result[i] := Self[s[i]];
+  end;
 end;
 
 {==============================================================================]

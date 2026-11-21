@@ -5,6 +5,7 @@ function QuickSortie(const oAscending: Boolean = True): TIntegerArray; overload;
 function QuickSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
 function QuickSortedly(const aAscending: Boolean = True): TIntegerArray; overload;
 function QuickSorted(const aAscending: Boolean = True): MArray; overload;
+function QuickSort3d(const oAscending: Boolean = True): MArray; overload;
 function QuickSort(const aAscending: Boolean = True): Integer; overload;
 function QuickSort3W(const aAscending: Boolean = True): Integer; overload;
 function QSort(const aAscending: Boolean = True): Integer; overload;
@@ -316,7 +317,7 @@ begin
 end;
 
 {==============================================================================]
-  <QuickSorted(aAscending: Boolean): MArray>
+  <QuickSorted>
   @action: Returns array sorted by its own values, based on QuickSort algorithm.
   @note: None.
 [==============================================================================}
@@ -349,6 +350,53 @@ begin
   Result := Self.Copy(0, a);
   if (a > 1) then
     QS(Result, 0, (a - 1));
+end;
+
+{==============================================================================]
+  <QuickSort3d>
+  @action: Returns a sorted copy of the array using a 3-way median-of-three
+           quicksort in ascending or descending order.
+  @note: Copies Self first (non-mutating), chooses the pivot via M3dian on
+         low, midpoint, and high indices, partitions into <, =, and > regions
+         using Prior, and recurses on the smaller partition first while looping
+         on the larger to bound stack depth.
+[==============================================================================}
+function MArrayHelper.QuickSort3d(const oAscending: Boolean = True): MArray; overload;
+  procedure Q(L, H: Integer);
+  var
+    i, z, g: Integer;
+    P: MType;
+  begin
+    while (L < H) do
+    begin
+      P := M3dian(Result[L], Result[L + (H - L) div 2], Result[H]);
+      z := L;
+      i := L;
+      g := H;
+      while (i <= g) do
+      begin
+        if Prior(Result[i], P, oAscending) then
+          Swap(Result[z.Increase], Result[i.Increase])
+        else if Prior(P, Result[i], oAscending) then
+          Swap(Result[g.Decrease], Result[i])
+        else
+          Inc(i);
+      end;
+      if ((z - l) < (h - g)) then
+      begin
+        Q(L, (z - 1));
+        l := (g + 1);
+      end else
+      begin
+        Q((g + 1), h);
+        h := (z - 1);
+      end;
+    end;
+  end;
+begin
+  Result := Self.Copy;
+  if (Result.Length > 1) then
+    Q(0, High(Result));
 end;
 
 {==============================================================================]

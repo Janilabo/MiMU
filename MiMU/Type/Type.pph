@@ -5,6 +5,7 @@
 {$I @Type/Miscellaneous.inc}
 {$I @Type/Modify.inc}
 {$I @Type/Quantifiers.inc}
+{$I @Type/Randomness.inc}
 {$I @Type/Scanning.inc}
 {$I @Type/Search.inc}
 

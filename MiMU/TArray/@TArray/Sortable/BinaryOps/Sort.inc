@@ -9,6 +9,7 @@ function BinaryInsertSorted(const oAscending: Boolean = True): MArray; overload;
 function BinarySort(const aAscending: Boolean = True): Integer; overload;
 function BinarySorted(const aAscending: Boolean = True): MArray; overload;
 function BisectionSort(const oAscending: Boolean = True): Integer; overload;
+function BisectionSorted(const oAscending: Boolean = True): MArray; overload;
 function BisectSorted(const oAscending: Boolean = True): MArray; overload;
 function BSort(const aAscending: Boolean = True): Integer; overload;
 function BSorted(const aAscending: Boolean = True): MArray; Overload;
@@ -425,6 +426,40 @@ begin
     while (M.Decrement > L) do
       Self[M] := Self[M - 1];
     Self[L] := s;
+  end;
+end;
+
+{==============================================================================]
+  <BisectionSorted>
+  @action: Returns a sorted copy of the array using binary-search insertion
+           sort in ascending or descending order.
+  @note: Copies Self first (non-mutating), finds the insertion point in the
+         already-sorted prefix via bisection (upper bound on equal keys to
+         preserve relative order), shifts elements right, and inserts r.
+[==============================================================================}
+function MArrayHelper.BisectionSorted(const oAscending: Boolean = True): MArray; overload;
+var
+  i, j, l, h, m: Integer;
+  r: MType;
+begin
+  Result := Self.Copy;
+  for i := 1 to High(Result) do
+  begin
+    r := Result[i];
+    l := 0;
+    h := i;
+    while (l < h) do
+    begin
+      m := (l + ((h - l) shr 1));
+      if ((oAscending and (Result[m] <= r)) or ((not oAscending) and (Result[m] >= r))) then
+        l := (m + 1)
+      else
+        h := m;
+    end;
+    j := (i + 1);
+    while (j.Decrement > l) do
+      Result[j] := Result[j - 1];
+    Result[l] := r;
   end;
 end;
 

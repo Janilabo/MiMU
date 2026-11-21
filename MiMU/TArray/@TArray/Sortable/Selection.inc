@@ -5,6 +5,10 @@ function AllowMin(const target: MType): Integer; overload;
 function Deny(const aMin, aMax: MType): Integer; overload;
 function DenyMax(const target: MType): Integer; overload;
 function DenyMin(const target: MType): Integer; overload;
+function ExtractBeneath(const target: MType): MArray; overload;
+function ExtractUpon(const target: MType): MArray; overload;
+function ExtractUntil(const target: MType): MArray; overload;
+function ExtractFrom(const target: MType): MArray; overload;
 function Extractify(const aMin, aMax: MType): MArray; overload;
 function ExtractifyMax(const target: MType): MArray; overload;
 function ExtractifyMin(const target: MType): MArray; overload;
@@ -124,6 +128,80 @@ begin
     if (Self[i] < target) then
       Self[Result.Increase] := Self[i];
   SetLength(Self, Result);
+end;
+
+{==============================================================================]
+  <ExtractBeneath>
+  @action: Returns a new array containing all elements strictly less than `target`, preserving their original order.
+  @note: Counts matching elements first, allocates `Result`, and fills it backwards using `r.Decrement`.
+[==============================================================================}
+function MArrayHelper.ExtractBeneath(const target: MType): MArray; overload;
+var
+  i, r: Integer;
+begin
+  r := 0;
+  for i := 0 to High(Self) do
+    if (Self[i] < target) then
+      Inc(r);
+  if (Result.SetSize(r) > 0) then
+  for i := High(Self) downto 0 do
+    if (Self[i] < target) then
+      Result[r.Decrement] := Self[i];
+end;
+
+{==============================================================================]
+  <ExtractUpon>
+  @action: Returns a new array containing all elements greater than or equal to `target`, preserving their original order.
+  @note: Uses a two-pass count-and-reverse-fill approach via `r.Decrement`.
+[==============================================================================}
+function MArrayHelper.ExtractUpon(const target: MType): MArray; overload;
+var
+  i, r: Integer;
+begin
+  r := 0;
+  for i := 0 to High(Self) do
+    if (Self[i] >= target) then
+      Inc(r);
+  if (Result.SetSize(r) > 0) then
+  for i := High(Self) downto 0 do
+    if (Self[i] >= target) then
+      Result[r.Decrement] := Self[i];
+end;
+
+{==============================================================================]
+  <ExtractUntil>
+  @action: Returns a new array containing all elements strictly less than `target`, preserving their original order.
+  @note: Records matching indices into temporary array `r` (`s` matches) before copying elements into `Result`.
+[==============================================================================}
+function MArrayHelper.ExtractUntil(const target: MType): MArray; overload;
+var
+  i, s: Integer;
+  r: TIntegerArray;
+begin
+  s := 0;
+  for i := 0 to r.Alloc(Self.Length) do
+    if (Self[i] < target) then
+      r[s.Increase] := i;
+  for i := 0 to Result.Alloc(s) do
+    Result[i] := Self[r[i]];
+end;
+
+{==============================================================================]
+  <ExtractFrom>
+  @action: Returns a new array containing all elements greater than or equal to `target`, preserving their original order.
+  @note: Collects matching indices in `r` first, then builds `Result` of length `s`.
+[==============================================================================}
+function MArrayHelper.ExtractFrom(const target: MType): MArray; overload;
+var
+  i, s: Integer;
+  r: TIntegerArray;
+begin
+  s := 0;
+  for i := 0 to r.Alloc(Self.Length) do
+    if (Self[i] >= target) then
+      r[s.Increase] := i;
+  for i := 0 to Result.Alloc(s) do
+    Result[i] := Self[r[i]];
 end;
 
 {==============================================================================]

@@ -1,6 +1,9 @@
 {$IFDEF FUNCTIONS}
 function Compare(const A, B: MType): Integer; overload;
 function Comparison(const A, B: MType): Integer; overload;
+
+function Past(const A, B: MType; const oAscending: Boolean = True): Boolean; overload;
+function Prior(const A, B: MType; const oAscending: Boolean = True): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF HELPERS}
@@ -61,6 +64,32 @@ begin
   if (A > B) then
     Exit(1);
   Result := 0;
+end;
+
+{==============================================================================]
+  <Past>
+  @action: Returns True if A follows B in the requested sort order.
+  @note: Logical complement of Prior; evaluates (A > B) when oAscending is True.
+[==============================================================================}
+function Past(const A, B: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if oAscending then
+    Result := (A > B)
+  else
+    Result := (A < B);
+end;
+
+{==============================================================================]
+  <Prior>
+  @action: Returns True if A precedes B in the requested sort order.
+  @note: Evaluates (A < B) when oAscending is True, or (A > B) when False.
+[==============================================================================}
+function Prior(const A, B: MType; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if oAscending then
+    Result := (A < B)
+  else
+    Result := (A > B);
 end;
 
 {==============================================================================]

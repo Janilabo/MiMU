@@ -39,6 +39,7 @@ function Stopra: Integer; overload;
 function Subsample(const sSize: Integer = 1): TIntegerArray; overload;
 function Subsampled(const sSize: Integer = 1): TIntegerArray; overload;
 function Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
+function Fieldom: Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -928,9 +929,9 @@ end;
   @action: Returns the integer values of the range in an alternating “zig-zag” order,
            taking elements from the start and end of the range alternately.
            For example, for a range 1..5, the result is [1,5,2,4,3].
-  @note:   Works for ascending and descending ranges.
-           If the range contains a single value, returns an array with that single value.
-           Internally uses two arrays (ascending and reversed) to construct the pattern.
+  @note: Works for ascending and descending ranges.
+         If the range contains a single value, returns an array with that single value.
+         Internally uses two arrays (ascending and reversed) to construct the pattern.
 [==============================================================================}
 function TRange.Zigzag(const zAscending: Boolean = True): TIntegerArray; overload;
 var
@@ -952,5 +953,21 @@ begin
       Result[r] := a[i.Increase]
     else
       Result[r] := d[j.Increase];
+end;
+
+{==============================================================================]
+  <Fieldom>
+  @action: Returns either start or stop at random, each with an equal 1/2
+           chance.
+  @note: The result is one of the two stored endpoints, never
+         an interior value. A degenerate range (start = stop) always returns
+         that single value. "Fieldom" is intentional: a random field.
+[==============================================================================}
+function TRange.Fieldom: Integer; overload;
+begin
+  if RandomB then
+    Result := Self.start
+  else
+    Result := Self.stop;
 end;
 {$ENDIF}

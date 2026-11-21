@@ -2,6 +2,7 @@
 function MergeSort(const aAscending: Boolean = True): Integer; overload;
 function MergeSortBU(const aAscending: Boolean = True): Integer; overload;
 function MergeSorted(const oAscending: Boolean = True): MArray; overload;
+function MergeSortedual(const oAscending: Boolean = True): MArray; overload;
 function MergeSortie(const oAscending: Boolean = True): TIntegerArray; overload;
 function MergeSortify(const oAscending: Boolean = True): MArray; overload;
 function MergeSortIndexed(const aAscending: Boolean = True): TIntegerArray; overload;
@@ -140,6 +141,86 @@ begin
     Result := r;
     r := s;
     w := (w * 2);
+  end;
+end;
+
+{==============================================================================]
+  <MergeSortedual>
+  @action: Returns a sorted copy of the array in ascending (default) or descending order using iterative bottom-up merge sort.
+  @note: Uses ping-pong merging between `R` and `Result` across `N` passes (doubling run width `W`),
+         seeding either buffer based on `N.Odd` so the final pass writes directly to `Result`.
+[==============================================================================}
+function MArrayHelper.MergeSortedual(const oAscending: Boolean = True): MArray; overload;
+var
+  R: MArray;
+  W, S, C, N, L, M, H, I, J, K: Integer;
+  procedure M2(const source: MArray; var dest: MArray);
+  begin
+    L := 0;
+    while (L < S) do
+    begin
+      M := (L + W);
+      H := (M + W);
+      if (M > S) then
+        M := S;
+      if (H > S) then
+        H := S;
+      I := L;
+      J := M;
+      K := L;
+      while ((I < M) and (J < H)) do
+      case oAscending of
+        True:
+        if (source[I] <= source[J]) then
+          dest[K.Increase] := source[I.Increase]
+        else
+          dest[k.Increase] := source[J.Increase];
+        False:
+        if (source[I] >= source[J]) then
+          dest[K.Increase] := source[I.Increase]
+        else
+          dest[K.Increase] := source[J.Increase];
+      end;
+      while (I < M) do
+        dest[K.Increase] := source[I.Increase];
+      while (J < H) do
+        dest[K.Increase] := source[J.Increase];
+      L := H;
+    end;
+  end;
+begin
+  S := Self.Length;
+  if (S < 2) then
+    Exit(Self.Copy);
+  N := 0;
+  W := 1;
+  while (W < S) do
+  begin
+    Inc(N);
+    W := (W * 2);
+  end;
+  SetLength(R, S);
+  SetLength(Result, S);
+  if N.Odd then
+    R := Self.Copy
+  else
+    Result := Self.Copy;
+  W := 1;
+  for C := 1 to N do
+  begin
+    case N.Odd of
+      True:
+      if C.Odd then
+        M2(R, Result)
+      else
+        M2(Result, R);
+      False:
+      if C.Odd then
+        M2(Result, R)
+      else
+        M2(R, Result);
+    end;
+    W := (W * 2);
   end;
 end;
 
