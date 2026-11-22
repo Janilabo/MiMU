@@ -38,6 +38,7 @@
 {$I @TArray/Relocation.inc}
 {$I @TArray/Removal.inc}
 {$I @TArray/Reordering.inc}
+{$I @TArray/Replication.inc}
 {$I @TArray/Reversal.inc}
 {$I @TArray/Scanning.inc}
 {$I @TArray/Search.inc}
