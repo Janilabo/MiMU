@@ -1,3 +1,9 @@
+{$IFDEF FUNCTIONS}
+function Constrain(const item, rMinimum, rMaximum: MType): MType; overload;
+function ConstrainMax(const item, rMaximum: MType): MType; overload;
+function ConstrainMin(const item, rMinimum: MType): MType; overload;
+{$ENDIF}
+
 {$IFDEF HELPERS}
 function Clamp(const minimum, maximum: MType): MType; overload;
 function ClampMax(const limit: MType): MType; overload;
@@ -32,6 +38,49 @@ function MinWith(const item: MType): Boolean; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <Constrain>
+  @action: Clamps a value to a closed [rMinimum, rMaximum] range.
+  @note: Returns rMinimum if item is less than rMinimum, rMaximum if item is
+         greater than rMaximum, or item otherwise. Assumes rMinimum <= rMaximum;
+         if rMinimum > rMaximum, rMinimum takes precedence.
+[==============================================================================}
+function Constrain(const item, rMinimum, rMaximum: MType): MType; overload;
+begin
+  if (item < rMinimum) then
+    Result := rMinimum
+  else if (item > rMaximum) then
+    Result := rMaximum
+  else
+    Result := item;
+end;
+
+{==============================================================================]
+  <ConstrainMax>
+  @action: Caps a value at an upper bound rMaximum.
+  @note: Returns rMaximum if item is greater than rMaximum, or item otherwise.
+[==============================================================================}
+function ConstrainMax(const item, rMaximum: MType): MType; overload;
+begin
+  if (item > rMaximum) then
+    Result := rMaximum
+  else
+    Result := item;
+end;
+
+{==============================================================================]
+  <ConstrainMin>
+  @action: Floors a value at a lower bound rMinimum.
+  @note: Returns rMinimum if item is less than rMinimum, or item otherwise.
+[==============================================================================}
+function ConstrainMin(const item, rMinimum: MType): MType; overload;
+begin
+  if (item < rMinimum) then
+    Result := rMinimum
+  else
+    Result := item;
+end;
+
 {==============================================================================]
   <Clamp>
   @action: Restricts the current instance to the closed interval defined by [minimum, maximum].

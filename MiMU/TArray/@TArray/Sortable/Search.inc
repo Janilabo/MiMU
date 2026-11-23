@@ -5,6 +5,9 @@ function FibonacciSearch(const item: MType; const oAscending: Boolean = True): I
 
 function Disparify(const items: MArray): Integer; overload;
 function Disparity(const items: MArray; const oAscending: Boolean = True): Integer; overload;
+
+function SectionSearch(const item: MType; const sSections: Integer = 2; const oAscending: Boolean = True): Integer; overload;
+function SectionSearchLast(const item: MType; const sSections: Integer = 2; const oAscending: Boolean = True): Integer; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -238,5 +241,104 @@ begin
   if (i < s) then
     Exit(i);
   Result := -1;
+end;
+
+{==============================================================================]
+  <SectionSearch>
+  @action: Searches a sorted array for item by iteratively narrowing across
+           sSections subdivisions and returns its first index, or -1 if not found.
+  @note: Assumes Self is sorted in ascending order when oAscending is True, or
+         descending order when False; returns -1 if empty. Clamps sSections to
+         [2, max(2, High(Self))], narrows [l..h] across sub-ranges of size s,
+         and walks l backward past duplicate matches to return the earliest index.
+[==============================================================================}
+function MArrayHelper.SectionSearch(const item: MType; const sSections: Integer = 2; const oAscending: Boolean = True): Integer; overload;
+var
+  l, h, c, s, i, e: Integer;
+  b: Boolean;
+begin
+  if (Self.Length = 0) then
+    Exit(-1);
+  l := 0;
+  h := High(Self);
+  c := Constrain(sSections, 2, Max(2, (h - l)));
+  while (l < h) do
+  begin
+    s := ((h - l + c) div c);
+    i := l;
+    e := l;
+    while (i <= h) do
+    begin
+      e := (i + s - 1);
+      if (e > h) then
+        e := h;
+      if oAscending then
+        b := (item <= Self[e])
+      else
+        b := (item >= Self[e]);
+      if b then
+        Break;
+      i := (e + 1);
+    end;
+    if (i > h) then
+      Exit(-1);
+    l := i;
+    h := e;
+  end;
+  if (Self[l] <> item) then
+    Exit(-1);
+  while ((l > 0) and (Self[l - 1] = item)) do
+    Dec(l);
+  Result := l;
+end;
+
+{==============================================================================]
+  <SectionSearchLast>
+  @action: Searches a sorted array from the back by narrowing across sSections
+           subdivisions to locate item and returns its index, or -1 if not found.
+  @note: Assumes Self is sorted per oAscending; checks range bounds and trailing
+         match first, clamps sSections to [2, max(2, High(Self))], and steps
+         backward by stride s to narrow [l..h]. Duplicate matches are not
+         strictly guaranteed to return the last index.
+[==============================================================================}
+function MArrayHelper.SectionSearchLast(const item: MType; const sSections: Integer = 2; const oAscending: Boolean = True): Integer; overload;
+var
+  l, h, c, s, i, e: Integer;
+  r: Boolean;
+begin
+  if (Self.Length = 0) then
+    Exit(-1);
+  l := 0;
+  h := High(Self);
+  c := Constrain(sSections, 2, Max(2, (h - l)));
+  if ((oAscending and ((item < Self[l]) or (item > Self[h]))) or ((not oAscending) and ((item > Self[l]) or (item < Self[h])))) then
+    Exit(-1);
+  if (Self[h] = item) then
+    Exit(h);
+  while (l < h) do
+  begin
+    s := ((h - l + c) div c);
+    i := (l + ((h - l) div s) * s);
+    repeat
+      if oAscending then
+        r := (Self[i] <= item)
+      else
+        r := (Self[i] >= item);
+      if r then
+        Break;
+      i := (i - s);
+    until (i < l);
+    e := (i + s - 1);
+    if (e > h) then
+      e := h;
+    if ((oAscending and (item > Self[e])) or ((not oAscending) and (item < Self[e]))) then
+      Exit(-1);
+    l := i;
+    h := e;
+  end;
+  if (Self[l] = item) then
+    Result := l
+  else
+    Result := -1;
 end;
 {$ENDIF}
