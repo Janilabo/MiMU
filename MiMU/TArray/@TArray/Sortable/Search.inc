@@ -8,6 +8,7 @@ function Disparity(const items: MArray; const oAscending: Boolean = True): Integ
 
 function SectionSearch(const item: MType; const sSections: Integer = 2; const oAscending: Boolean = True): Integer; overload;
 function SectionSearchLast(const item: MType; const sSections: Integer = 2; const oAscending: Boolean = True): Integer; overload;
+function SectionSearchBounds(const item: MType; const sSections: Integer = 2; const oAscending: Boolean = True): TRange; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -340,5 +341,98 @@ begin
     Result := l
   else
     Result := -1;
+end;
+
+{==============================================================================]
+  <SectionSearchBounds>
+  @action: Finds the inclusive index bounds (TRange) of all occurrences of
+           `item` in a sorted array by iteratively subdividing candidate
+           ranges into `sSections` chunks.
+  @note: Assumes the array is sorted according to `oAscending`. Returns
+         `start = -1, stop = -1` if `item` is not found or the array is
+         empty; uses a double-buffered queue (`q`/`z`) to narrow overlapping
+         sections breadth-first while locking in fully matched sub-ranges.
+[==============================================================================}
+function MArrayHelper.SectionSearchBounds(const item: MType; const sSections: Integer = 2; const oAscending: Boolean = True): TRange; overload;
+var
+  q, z, t: TRangeArray;
+  g, r: TRange;
+  h, j, n, k, c, s, i, e: Integer;
+  function IR(a, b: Integer): Boolean;
+  begin
+    if oAscending then
+      Result := ((Self[a] <= item) and (item <= Self[b]))
+    else
+      Result := ((Self[a] >= item) and (item >= Self[b]));
+  end;
+  function IA(a, b: Integer): Boolean;
+  begin
+    Result := ((Self[a] = item) and (Self[b] = item));
+  end;
+  procedure RR(a, b: Integer);
+  begin
+    if (a < r.start) then
+      r.start := a;
+    if (b > r.stop) then
+      r.stop := b;
+  end;
+  procedure PR(a, b: Integer);
+  begin
+    if (n >= z.Length) then
+      SetLength(z, ((n + 1) * 2));
+    z[n.Increase] := TRange.Construct(a, b);
+  end;
+begin
+  h := High(Self);
+  Result.start := -1;
+  Result.stop := -1;
+  if (h = -1) then
+    Exit;
+  c := Constrain(sSections, 2, h);
+  if not IR(0, h) then
+    Exit;
+  r.start := High(Integer);
+  r.stop := -1;
+  SetLength(q, 1);
+  q[0].start := 0;
+  q[0].stop := h;
+  j := 1;
+  SetLength(z, 4);
+  while (j > 0) do
+  begin
+    n := 0;
+    for k := 0 to (j - 1) do
+    begin
+      g := q[k];
+      if (g.start = g.stop) then
+      begin
+        if (Self[g.start] = item) then
+          RR(g.start, g.start);
+        Continue;
+      end;
+      s := ((g.stop - g.start + c) div c);
+      if (s < 1) then
+        s := 1;
+      i := g.start;
+      while (i <= g.stop) do
+      begin
+        e := (i + s - 1);
+        if (e > g.stop) then
+          e := g.stop;
+        if IR(i, e) then
+          if IA(i, e) then
+            RR(i, e)
+          else
+            PR(i, e);
+        i := (e + 1);
+      end;
+    end;
+    t := q;
+    q := z;
+    z := t;
+    j := n;
+  end;
+  if (r.stop >= 0) then
+    Result := r;
 end;
 {$ENDIF}
