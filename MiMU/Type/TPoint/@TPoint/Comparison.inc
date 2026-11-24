@@ -1,6 +1,14 @@
 {$IFDEF METHODS}
 function Ahead(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
 function Behind(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+function Higher(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+function Lower(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+function Over(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+function Under(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+
+function After(const target: TPoint): Boolean; overload;
+function Before(const target: TPoint): Boolean; overload;
+
 function Cmp2(const target: TPoint): Integer; overload;
 function Comp(const target: TPoint): Integer; overload;
 function Compared2(const target: TPoint; const oAscending: Boolean = True): Integer; overload;
@@ -9,10 +17,6 @@ function CompareY(const target: TPoint): Integer;
 function Comparison(const target: TPoint): Integer; overload;
 function CompX(const target: TPoint): Integer;
 function CompY(const target: TPoint): Integer;
-function Higher(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-function Lower(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-function Over(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-function Under(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
 function XComp(const target: TPoint): Integer;
 function XCompare(const target: TPoint): Integer;
 function YComp(const target: TPoint): Integer;
@@ -63,6 +67,76 @@ begin
     Result := (Self.X < target.X)
   else
     Result := (Self.X > target.X);
+end;
+
+{==============================================================================]
+  <Higher>
+  @action: Returns True if Self follows target in scanline order.
+  @note: Comparison is Y-major, then X; ordering direction is controlled by oAscending.
+[==============================================================================}
+function TPoint.Higher(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if (Self.Y <> target.Y) then
+    Exit((oAscending and (Self.Y > target.Y)) or ((not oAscending) and (Self.Y < target.Y)));
+  Result := ((oAscending and (Self.X > target.X)) or ((not oAscending) and (Self.X < target.X)));
+end;
+
+{==============================================================================]
+  <Lower>
+  @action: Returns True if Self precedes target in scanline order.
+  @note: Comparison is Y-major, then X; ordering direction is controlled by oAscending.
+[==============================================================================}
+function TPoint.Lower(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if (Self.Y <> target.Y) then
+    Exit((oAscending and (Self.Y < target.Y)) or ((not oAscending) and (Self.Y > target.Y)));
+  Result := ((oAscending and (Self.X < target.X)) or ((not oAscending) and (Self.X > target.X)));
+end;
+
+{==============================================================================]
+  <Over>
+  @action: Returns True if Self follows target in scanline order.
+  @note: Comparison is Y-major then X; ordering direction is controlled by oAscending.
+[==============================================================================}
+function TPoint.Over(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if (Self.Y <> target.Y) then
+    Result := IfThen(oAscending, (Self.Y > target.Y), (Self.Y < target.Y))
+  else
+    Result := IfThen(oAscending, (Self.X > target.X), (Self.X < target.X));
+end;
+
+{==============================================================================]
+  <Under>
+  @action: Returns True if Self precedes target in scanline order.
+  @note: Comparison is Y-major then X; ordering direction is controlled by oAscending.
+[==============================================================================}
+function TPoint.Under(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if (Self.Y <> target.Y) then
+    Result := IfThen(oAscending, (Self.Y < target.Y), (Self.Y > target.Y))
+  else
+    Result := IfThen(oAscending, (Self.X < target.X), (Self.X > target.X));
+end;
+
+{==============================================================================]
+  <After>
+  @action: Returns True if Self comes after target in scanline order.
+  @note: "After" means higher Y (or higher X when Y is equal); False if equal or before.
+[==============================================================================}
+function TPoint.After(const target: TPoint): Boolean; overload;
+begin
+  Result := ((Self.Y > target.Y) or ((Self.Y = target.Y) and (Self.X > target.X)));
+end;
+
+{==============================================================================]
+  <Before>
+  @action: Returns True if Self comes before target in scanline order.
+  @note: "Before" means lower Y (or lower X when Y is equal); False if equal or after.
+[==============================================================================}
+function TPoint.Before(const target: TPoint): Boolean; overload;
+begin
+  Result := ((Self.Y < target.Y) or ((Self.Y = target.Y) and (Self.X < target.X)));
 end;
 
 {==============================================================================]
@@ -166,56 +240,6 @@ end;
 function TPoint.CompY(const target: TPoint): Integer;
 begin
   Result := Sign(Self.Y - target.Y);
-end;
-
-{==============================================================================]
-  <Higher>
-  @action: Returns True if Self follows target in scanline order.
-  @note: Comparison is Y-major, then X; ordering direction is controlled by oAscending.
-[==============================================================================}
-function TPoint.Higher(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-begin
-  if (Self.Y <> target.Y) then
-    Exit((oAscending and (Self.Y > target.Y)) or ((not oAscending) and (Self.Y < target.Y)));
-  Result := ((oAscending and (Self.X > target.X)) or ((not oAscending) and (Self.X < target.X)));
-end;
-
-{==============================================================================]
-  <Lower>
-  @action: Returns True if Self precedes target in scanline order.
-  @note: Comparison is Y-major, then X; ordering direction is controlled by oAscending.
-[==============================================================================}
-function TPoint.Lower(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-begin
-  if (Self.Y <> target.Y) then
-    Exit((oAscending and (Self.Y < target.Y)) or ((not oAscending) and (Self.Y > target.Y)));
-  Result := ((oAscending and (Self.X < target.X)) or ((not oAscending) and (Self.X > target.X)));
-end;
-
-{==============================================================================]
-  <Over>
-  @action: Returns True if Self follows target in scanline order.
-  @note: Comparison is Y-major then X; ordering direction is controlled by oAscending.
-[==============================================================================}
-function TPoint.Over(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-begin
-  if (Self.Y <> target.Y) then
-    Result := IfThen(oAscending, (Self.Y > target.Y), (Self.Y < target.Y))
-  else
-    Result := IfThen(oAscending, (Self.X > target.X), (Self.X < target.X));
-end;
-
-{==============================================================================]
-  <Under>
-  @action: Returns True if Self precedes target in scanline order.
-  @note: Comparison is Y-major then X; ordering direction is controlled by oAscending.
-[==============================================================================}
-function TPoint.Under(const target: TPoint; const oAscending: Boolean = True): Boolean; overload;
-begin
-  if (Self.Y <> target.Y) then
-    Result := IfThen(oAscending, (Self.Y < target.Y), (Self.Y > target.Y))
-  else
-    Result := IfThen(oAscending, (Self.X < target.X), (Self.X > target.X));
 end;
 
 {==============================================================================]

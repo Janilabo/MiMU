@@ -1,9 +1,35 @@
 {$IFDEF HELPERS}
+function BinaryFindAll(const items: TPointArray): TIntegerArray; overload;
 function BinaryScan(const area: TBox): TIntegerArray; overload;
 function BinaryScanned(const area: TBox): TIntegerArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
+{==============================================================================]
+  <BinaryFindAll>
+  @action: Finds the index of each point from items in a scanline-sorted TPoint array, or -1 if absent.
+  @note: Assumes Self is sorted in ascending scanline order (Before). Uses BinaryGallop with
+         the previous match index as a rolling hint (fastest when items is also ordered same way),
+         returning an array of matching indices in Self or -1 for points not found.
+[==============================================================================}
+function TPointArrayHelper.BinaryFindAll(const items: TPointArray): TIntegerArray; overload;
+var
+  i, p, s: Integer;
+begin
+  s := Self.Length;
+  if (s = 0) then
+    Exit([]);
+  p := 0;
+  for i := 0 to Result.Alloc(items.Length) do
+  begin
+    p := Self.BinaryGallop(items[i], p);
+    if ((p < s) and (Self[p].X = items[i].X) and (Self[p].Y = items[i].Y)) then
+      Result[i] := p
+    else
+      Result[i] := -1;
+  end;
+end;
+
 {==============================================================================]
   <BinaryScan>
   @action: Performs a vertical binary scan on a Y-sorted point array to locate

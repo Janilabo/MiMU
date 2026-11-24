@@ -1,6 +1,7 @@
 {$IFDEF HELPERS}
 function BinaryFinder(const item: TPoint): Integer; overload;
 function BinaryFind(const area: TBox): Integer; overload;
+function BinaryGallop(const item: TPoint; const hint: Integer = 0): Integer; overload;
 function BinarySearch(const area: TBox): Integer; overload;
 {$ENDIF}
 
@@ -86,6 +87,61 @@ begin
     Inc(R.start);
   end;
 end;
+
+{==============================================================================]
+  <BinaryGallop>
+  @action: Finds the insertion index for item in a scanline-sorted TPoint array starting near hint.
+  @note: Assumes Self is sorted in ascending scanline order (Before). Uses exponential galloping
+         from clamped hint to bound the range, followed by binary search; returns the first index
+         where Self[i] is not Before item (Self.Length if all elements are Before item).
+[==============================================================================}
+function TPointArrayHelper.BinaryGallop(const item: TPoint; const hint: Integer = 0): Integer; overload;
+var
+  n, l, h, m, s: Integer;
+begin
+  n := Self.Length;
+  if (n = 0) then
+    Exit(-1);
+  l := Constrain(hint, 0, (n - 1));
+  if Self[l].Before(item) then
+  begin
+    s := 1;
+    h := (l + s);
+    while ((h < n) and Self[h].Before(item)) do
+    begin
+      l := h;
+      s := (s shl 1);
+      h := (l + s);
+    end;
+    if (h > n) then
+      h := n;
+    Inc(l);
+  end else
+  begin
+    s := 1;
+    h := l;
+    l := (h - s);
+    while ((l >= 0) and (not Self[l].Before(item))) do
+    begin
+      h := l;
+      s := (s shl 1);
+      l := (h - s);
+    end;
+    if (l < 0) then
+      l := 0
+    else
+      Inc(l);
+  end;
+  while (l < h) do
+  begin
+    m := ((l + h) shr 1);
+    if Self[m].Before(item) then
+      l := (m + 1)
+    else
+      h := m;
+  end;
+  Result := l;
+end; 
 
 {==============================================================================]
   <BinarySearch>
