@@ -26,6 +26,12 @@ function SortedByPosition(const oAscending: Boolean = True): TPointArray; overlo
 function SortedBySpiral(const origin: TPoint; const oAscending: Boolean = True): TPointArray; overload;
 function XthenY(const oAscending: Boolean = True): TPointArray; overload;
 function YthenX(const oAscending: Boolean = True): TPointArray; overload;
+
+function Raster: Integer; overload;
+function Rasterify: Integer; overload;
+function Rasterize: Integer; overload;
+
+function Rasterized: TPointArray; overload;
 {$ENDIF}
 
 {$IFDEF IMPLEMENTATION}
@@ -1089,5 +1095,302 @@ begin
   until False;
   if not oAscending then
     Result.Reverse;
+end;
+
+{==============================================================================]
+  <Raster>
+  @action: Sorts the point array in-place in row-major (scanline) order (ascending Y, then ascending X) and returns the element count.
+  @note: Uses a fast-path check for already-ordered arrays, insertion sort for small arrays (n <= 24),
+         two-pass counting sort for compact bounding boxes ((width + height) <= 4 * n),
+		 and 11-bit base-2048 LSD radix sort over linear Int64 scanline indices for wider spans.
+[==============================================================================}
+function TPointArrayHelper.Raster: Integer; overload;
+var
+  n, i, k, d, s, h, v: Integer;
+  o: Boolean;
+  c: TIntegerArray;
+  t: TPointArray;
+  x, y, z: TInt64Array;
+  m, q: Int64;
+  b: TBox;
+  procedure Insertion;
+  var
+    i: Integer;
+    p: TPoint;
+  begin
+    for i := 1 to (n - 1) do
+    begin
+      p := Self[i];
+      k := (i - 1);
+      while ((k >= 0) and ((Self[k].y > p.y) or ((Self[k].y = p.y) and (Self[k].x > p.x)))) do
+      begin
+        Self[k + 1] := Self[k];
+        Dec(k);
+      end;
+      Self[k + 1] := p;
+    end;
+  end;
+  procedure Counting;
+  var
+    i: Integer;
+  begin
+    SetLength(t, n);
+    SetLength(c, (h + 1));
+    for i := 0 to (n - 1) do
+      Inc(c[(Self[i].x - b.X1) + 1]);
+    for i := 1 to h do
+      c[i] := (c[i] + c[i - 1]);
+    for i := 0 to (n - 1) do
+      t[c[Self[i].x - b.X1].Increase] := Self[i];
+    SetLength(c, 0);
+    SetLength(c, (v + 1));
+    for i := 0 to (n - 1) do
+      Inc(c[(t[i].y - b.Y1) + 1]);
+    for i := 1 to v do
+      c[i] := (c[i] + c[i - 1]);
+    for i := 0 to (n - 1) do
+      Self[c[t[i].y - b.Y1].Increase] := t[i];
+  end;
+  procedure Radix;
+  var
+    i: Integer;
+  begin
+    SetLength(x, n);
+    SetLength(y, n);
+    SetLength(c, 2048);
+    m := ((Int64(v - 1) * h) + (h - 1));
+    for i := 0 to (n - 1) do
+      x[i] := ((Int64(Self[i].y - b.Y1) * h) + (Self[i].x - b.X1));
+    s := 0;
+    while ((m shr s) > 0) do
+    begin
+      for i := 0 to 2047 do
+        c[i] := 0;
+      for i := 0 to (n - 1) do
+        Inc(c[Integer((x[i] shr s) and 2047)]);
+      d := 0;
+      for i := 0 to 2047 do
+      begin
+        k := c[i];
+        c[i] := d;
+        d := (d + k);
+      end;
+      for i := 0 to (n - 1) do
+        y[c[Integer((x[i] shr s) and 2047)].Increase] := x[i];
+      z := x;
+      x := y;
+      y := z;
+      s := (s + 11);
+    end;
+    for i := 0 to (n - 1) do
+    begin
+      q := (x[i] div h);
+      Self[i].y := (Integer(q) + b.Y1);
+      Self[i].x := (Integer(x[i] - (q * h)) + b.X1);
+    end;
+  end;
+begin
+  n := Self.Length;
+  Result := n;
+  if (n < 2) then
+    Exit;
+  b := TBox.Construct(Self[0].X, Self[0].Y, Self[0].X, Self[0].Y);
+  o := True;
+  for i := 1 to (n - 1) do
+  begin
+    if (Self[i].x < b.X1) then
+      b.X1 := Self[i].x
+    else if (Self[i].x > b.X2) then
+      b.X2 := Self[i].x;
+    if (Self[i].y < b.Y1) then
+      b.Y1 := Self[i].y
+    else if (Self[i].y > b.Y2) then
+      b.Y2 := Self[i].y;
+    if (o and ((Self[i].y < Self[i - 1].y) or ((Self[i].y = Self[i - 1].y) and (Self[i].x < Self[i - 1].x)))) then
+      o := False;
+  end;
+  if o then
+    Exit;
+  if (n <= 24) then
+  begin
+    Insertion;
+    Exit;
+  end;
+  h := (b.X2 - b.X1 + 1);
+  v := (b.Y2 - b.Y1 + 1);
+  if ((h + v) <= (n * 4)) then
+    Counting
+  else
+    Radix;
+end;
+
+{==============================================================================]
+  <Rasterify>
+  @action: Sorts the point array in-place according to TPoint.Before ordering and returns the element count.
+  @note: Quicksort-style partitioning with median-of-three pivot selection, recursing into the smaller
+         partition and iterating on the larger one (stack depth O(log n)). Subranges of 17 elements or
+         fewer are finished with insertion sort. Not stable; worst case is O(n^2) on adversarial input.
+[==============================================================================}
+function TPointArrayHelper.Rasterify: Integer; overload;
+  procedure S(lo, hi: Integer);
+  var
+    i, j, m, k: Integer;
+    p: TPoint;
+  begin
+    while ((hi - lo) > 16) do
+    begin
+      m := (lo + ((hi - lo) shr 1));
+      if Self[m].Before(Self[lo]) then
+        Swap(Self[m], Self[lo]);
+      if Self[hi].Before(Self[lo]) then
+        Swap(Self[hi], Self[lo]);
+      if Self[hi].Before(Self[m]) then
+        Swap(Self[hi], Self[m]);
+      p := Self[m];
+      i := lo;
+      j := hi;
+      repeat
+        while Self[i].Before(p) do
+          Inc(i);
+        while p.Before(Self[j]) do
+          Dec(j);
+        if (i <= j) then
+          Swap(Self[i.Increase], Self[j.Decrease]);
+      until (i > j);
+      if ((j - lo) < (hi - i)) then
+      begin
+        S(lo, j);
+        lo := i;
+      end else
+      begin
+        S(i, hi);
+        hi := j;
+      end;
+    end;
+    for i := (lo + 1) to hi do
+    begin
+      p := Self[i];
+      k := (i - 1);
+      while ((k >= lo) and p.Before(Self[k])) do
+      begin
+        Self[k + 1] := Self[k];
+        Dec(k);
+      end;
+      Self[k + 1] := p;
+    end;
+  end;
+begin
+  Result := Self.Length;
+  if (Result > 1) then
+    S(0, (Result - 1));
+end;
+
+{==============================================================================]
+  <Rasterize>
+  @action: Orders the point array in-place into row-major scanline order (ascending Y, then ascending X within each row) and returns the element count.
+  @note: Uses a counting sort pass to bucket points by Y into row ranges (c[r]..c[r+1]),
+         followed by an in-place insertion sort on X within each individual row before copying back to Self.
+[==============================================================================}
+function TPointArrayHelper.Rasterize: Integer; overload;
+var
+  i, k, r, a, b, n: Integer;
+  s: TRange;
+  c, w: TIntegerArray;
+  t: TPointArray;
+  p: TPoint;
+begin
+  Result := Self.Length;
+  if (Result < 2) then
+    Exit;
+  s.start := Self[0].y;
+  s.stop := s.start;
+  for i := 1 to (Result - 1) do
+    if (Self[i].y < s.start) then
+      s.start := Self[i].y
+    else if (Self[i].y > s.stop) then
+      s.stop := Self[i].y;
+  n := ((s.stop - s.start) + 1);
+  SetLength(c, (n + 1));
+  for i := 0 to (Result - 1) do
+    Inc(c[(Self[i].y - s.start) + 1]);
+  for i := 1 to n do
+    c[i] := (c[i] + c[i - 1]);
+  SetLength(w, n);
+  for r := 0 to (n - 1) do
+    w[r] := c[r];
+  for i := 0 to t.Alloc(Result) do
+    t[w[Self[i].y - s.start].Increase] := Self[i];
+  for r := 0 to (n - 1) do
+  begin
+    a := c[r];
+    b := c[r + 1];
+    for i := (a + 1) to (b - 1) do
+    begin
+      p := t[i];
+      k := (i - 1);
+      while ((k >= a) and (t[k].x > p.x)) do
+      begin
+        t[k + 1] := t[k];
+        Dec(k);
+      end;
+      t[k + 1] := p;
+    end;
+  end;
+  for i := 0 to (Result - 1) do
+    Self[i] := t[i];
+end;
+
+{==============================================================================]
+  <Rasterized>
+  @action: Returns a new point array ordered in row-major scanline order (ascending Y, then ascending X) without modifying Self.
+  @note: Buckets point indices into Y-rows via prefix sums, sorts each row's index slice by X using insertion sort, and gathers points into Result in a single pass.
+[==============================================================================}
+function TPointArrayHelper.Rasterized: TPointArray; overload;
+var
+  l, i, r, k, v, c: Integer;
+  s: TRange;
+  o, d: TIntegerArray;
+begin
+  l := Self.Length;
+  if (l = 0) then
+    Exit([]);
+  s.start := Self[0].Y;
+  s.stop := Self[0].Y;
+  for i := 1 to (l - 1) do
+    if (Self[i].Y < s.start) then
+      s.start := Self[i].Y
+    else if (Self[i].Y > s.stop) then
+      s.stop := Self[i].Y;
+  v := ((s.stop - s.start) + 1);
+  if (v > (l * 4)) then
+  begin
+    Result := Self.Cloned;
+    Result.Rasterify;
+    Exit;
+  end;
+  SetLength(o, (v + 1));
+  for i := 0 to (l - 1) do
+    Inc(o[(Self[i].y - s.start) + 1]);
+  for r := 1 to v do
+    o[r] := (o[r] + o[r - 1]);
+  for i := 0 to d.Alloc(l) do
+    d[o[Self[i].y - s.start].Increase] := i;
+  for r := v downto 1 do
+    o[r] := o[r - 1];
+  o[0] := 0;
+  for r := 0 to (v - 1) do
+    for i := (o[r] + 1) to (o[r + 1] - 1) do
+    begin
+      c := d[i];
+      k := (i - 1);
+      while ((k >= o[r]) and (Self[d[k]].X > Self[c].X)) do
+      begin
+        d[k + 1] := d[k];
+        Dec(k);
+      end;
+      d[k + 1] := c;
+    end;
+  for i := 0 to Result.Alloc(l) do
+    Result[i] := Self[d[i]];
 end;
 {$ENDIF}
