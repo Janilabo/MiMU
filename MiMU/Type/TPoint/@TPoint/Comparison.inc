@@ -22,6 +22,8 @@ function YCompare(const target: TPoint): Integer;
 {$IFDEF FUNCTIONS}
 function Compare2(const A, B: TPoint): Integer; overload;
 function Compared(const A, B: TPoint): Integer; overload;
+function CompareXY(const A, B: TPoint; const oAscending: Boolean = True): Integer; overload;
+function CompareYX(const A, B: TPoint; const oAscending: Boolean = True): Integer; overload;
 function Max(const A, B: TPoint): TPoint; overload;
 function Min(const A, B: TPoint): TPoint; overload;
 {$ENDIF}
@@ -300,6 +302,53 @@ begin
   Result := Compare(A.Y, B.Y);
   if (Result = 0) then
     Result := Compare(A.X, B.X);
+end;
+
+{==============================================================================]
+  <CompareXY>
+  @action: Performs a three-way comparison of two TPoint values ordering by X
+           first and breaking ties by Y.
+  @note: Returns -1, 0, or 1 when `oAscending` is True, and negates the
+         result when `oAscending` is False.
+[==============================================================================}
+function CompareXY(const A, B: TPoint; const oAscending: Boolean = True): Integer; overload;
+begin
+  if (A.X < B.X) then
+    Result := -1
+  else if (A.X > B.X) then
+    Result := 1
+  else if (A.Y < B.Y) then
+    Result := -1
+  else if (A.Y > B.Y) then
+    Result := 1
+  else
+    Result := 0;
+  if not oAscending then
+    Result := -Result;
+end;
+
+{==============================================================================]
+  <CompareYX>
+  @action: Performs a three-way comparison of two TPoint values ordering by Y
+           first and breaking ties by X.
+  @note: Returns -1, 0, or 1 when `oAscending` is True, and negates the
+         result when `oAscending` is False. Useful for row-major or scanline
+         ordering.
+[==============================================================================}
+function CompareYX(const A, B: TPoint; const oAscending: Boolean = True): Integer; overload;
+begin
+  if (A.Y < B.Y) then
+    Result := -1
+  else if (A.Y > B.Y) then
+    Result := 1
+  else if (A.X < B.X) then
+    Result := -1
+  else if (A.X > B.X) then
+    Result := 1
+  else
+    Result := 0;
+  if not oAscending then
+    Result := -Result;
 end;
 
 function Max(const A, B: TPoint): TPoint; overload;

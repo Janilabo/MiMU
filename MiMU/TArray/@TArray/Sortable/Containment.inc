@@ -1,6 +1,8 @@
 {$IFDEF HELPERS}
 function Aboard(const sItem: MType): Boolean; overload;
 function Ascont(const sItem: MType): Boolean; overload;
+function Betwixt(const item: MType; const A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+function Outwith(const item: MType; const A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
 function Bracketed(const item: MType; const sIndexes: TRange; const oAscending: Boolean = True): Boolean; overload;
 function Descont(const sItem: MType): Boolean; overload;
 {$ENDIF}
@@ -78,6 +80,38 @@ begin
       h := (m - 1);
   end;
   Result := False;
+end;
+
+{==============================================================================]
+  <Betwixt>
+  @action: Checks whether `item` falls inclusively between the array elements
+           at indices `A` and `B` according to `oAscending`.
+  @note: Assumes `A` and `B` are valid indices in `Self` and that values
+         follow `oAscending` order (`Self[A] <= Self[B]` when True,
+         `Self[A] >= Self[B]` when False).
+[==============================================================================}
+function MArrayHelper.Betwixt(const item: MType; const A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if oAscending then
+    Result := ((Self[A] <= item) and (item <= Self[B]))
+  else
+    Result := ((Self[A] >= item) and (item >= Self[B]));
+end;
+
+{==============================================================================]
+  <Outwith>
+  @action: Checks whether `item` lies outside the span defined by array
+           elements at indices `A` and `B` according to `oAscending`.
+  @note: Returns True when `item` precedes `Self[A]` or exceeds `Self[B]`
+         under `oAscending` (and the reversed inequality when False).
+         Assumes `A` and `B` are valid indices in `Self`.
+[==============================================================================}
+function MArrayHelper.Outwith(const item: MType; const A, B: Integer; const oAscending: Boolean = True): Boolean; overload;
+begin
+  if oAscending then
+    Result := ((Self[A] > item) or (item > Self[B]))
+  else
+    Result := ((Self[A] < item) or (item < Self[B]));
 end;
 
 {==============================================================================]
