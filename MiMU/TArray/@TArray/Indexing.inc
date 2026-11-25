@@ -9,6 +9,7 @@ function IDs(const aAscending: Boolean = True): TIntegerArray; overload;
 function IDs(const ID: TIntegerArray): MArray; overload;
 function IDs(const ID: TIntegerArray; const item: MType): MArray; overload;
 function IDs(const ID: TIntegerArray; const items: MArray): MArray; overload;
+function IDz: TIntegerArray; overload;
 function Indeca: TIntegerArray; overload;
 function Indexa: TIntegerArray; overload;
 function Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
@@ -271,6 +272,39 @@ begin
   l := items.Length;
   for i := 0 to High(ID) do
     Result[ID[i]] := items[i mod l];
+end;
+
+{==============================================================================]
+  <IDz>
+  @action: Generates a new 0-based sequential index array (0..Length(Self)-1)
+           using 10x-unrolled block writes and a tail loop for remainder items.
+  @note: Returns an empty array when Self has length 0. Uses i := -10 with
+         i.Increment(10) in the while condition so full 10-element blocks
+         (i..i+9 within 0..s-1) execute with 10x fewer loop iterations.
+[==============================================================================}
+function MArrayHelper.IDz: TIntegerArray; overload;
+var
+  i, s: Integer;
+begin
+  s := Self.Length;
+  if (Result.SetSize(s) = 0) then
+    Exit;
+  i := -10;
+  while ((i.Increment(10) + 9) < s) do
+  begin
+    Result[i] := i;
+    Result[i + 1] := (i + 1);
+    Result[i + 2] := (i + 2);
+    Result[i + 3] := (i + 3);
+    Result[i + 4] := (i + 4);
+    Result[i + 5] := (i + 5);
+    Result[i + 6] := (i + 6);
+    Result[i + 7] := (i + 7);
+    Result[i + 8] := (i + 8);
+    Result[i + 9] := (i + 9);
+  end;
+  for i := i to (s - 1) do
+    Result[i] := i;
 end;
 
 {==============================================================================]

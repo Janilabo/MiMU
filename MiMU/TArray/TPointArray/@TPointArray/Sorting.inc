@@ -31,6 +31,8 @@ function Raster: Integer; overload;
 function Rasterify: Integer; overload;
 function Rasterize: Integer; overload;
 
+function Rastered: TPointArray; overload;
+function Rasterified: TPointArray; overload;
 function Rasterized: TPointArray; overload;
 {$ENDIF}
 
@@ -1338,6 +1340,107 @@ begin
   end;
   for i := 0 to (Result - 1) do
     Self[i] := t[i];
+end;
+
+{==============================================================================]
+  <Rastered>
+  @action: Returns a new point array ordered in row-major scanline order (ascending Y, then ascending X within each row) without modifying Self.
+  @note: Buckets points by Y into row slices via prefix sums (falling back to Result.Rasterify when Y-span exceeds 4x the point count),
+         then sorts each row's X coordinates in-place using Shell sort with Ciura gaps (starting at gap 1 for rows of 24 or fewer points).
+[==============================================================================}
+function TPointArrayHelper.Rastered: TPointArray; overload;
+var
+  l, i, j, k, r, a, b, s, h: Integer;
+  c, w, g: TIntegerArray;
+  p: TPoint;
+  v: TRange;
+begin
+  l := Self.Length;
+  if (Result.SetSize(l) = 0) then
+    Exit;
+  v.start := Self[0].Y;
+  v.stop := v.start;
+  for i := 1 to (l - 1) do
+    if (Self[i].Y < v.start) then
+      v.start := Self[i].Y
+    else if (Self[i].Y > v.stop) then
+      v.stop := Self[i].Y;
+  h := ((v.stop - v.start) + 1);
+  if (h > (l * 4)) then
+  begin
+    for i := 0 to (l - 1) do
+	  Result[i] := Self[i];
+    Result.Rasterify;
+    Exit;
+  end;
+  SetLength(c, (h + 1));
+  for i := 0 to (l - 1) do
+    Inc(c[(Self[i].y - v.start) + 1]);
+  for r := 1 to h do
+    c[r] := (c[r] + c[r - 1]);
+  for r := 0 to w.Alloc(h) do
+    w[r] := c[r];
+  for i := 0 to Result.Alloc(l) do
+    Result[w[Self[i].y - v.start].Increase] := Self[i];
+  g := [701, 301, 132, 57, 23, 10, 4, 1];
+  for r := 0 to (h - 1) do
+  begin
+    a := c[r];
+    b := c[r + 1];
+    if ((b - a) < 2) then
+      Continue;
+    if ((b - a) <= 24) then
+      s := 7
+    else
+      s := 0;
+    for j := s to 7 do
+      if (g[j] < (b - a)) then
+      for i := (a + g[j]) to (b - 1) do
+      begin
+        p := Result[i];
+        k := i;
+        while (((k - g[j]) >= a) and (Result[k - g[j]].X > p.X)) do
+        begin
+          Result[k] := Result[k - g[j]];
+          k := (k - g[j]);
+        end;
+        Result[k] := p;
+      end;
+  end;
+end;
+
+{==============================================================================]
+  <Rasterified>
+  @action: Returns a new point array ordered in row-major scanline order (ascending Y, then ascending X) without modifying Self.
+  @note: Uses a dense 2D bounding-box occupancy grid (w * h) to emit points in scanline order when the area is within 8x the point count,
+         falling back to copying Self and sorting via Rasterify for sparse or wide bounding boxes.
+[==============================================================================}
+function TPointArrayHelper.Rasterified: TPointArray; overload;
+var
+  l, i, j, k, w, h, x, y, c: Integer;
+  b: TBox;
+  g: TIntegerArray;
+begin
+  l := Self.Length;
+  if (Result.SetSize(l) = 0) then
+    Exit;
+  b := Self.Bounds(w, h);
+  if ((Int64(w) * h) > (Int64(l) * 8)) then
+  begin
+    for i := 0 to (l - 1) do
+      Result[i] := Self[i];
+    Result.Rasterify;
+    Exit;
+  end;
+  SetLength(g, (w * h));
+  for i := 0 to (l - 1) do
+    Inc(g[((Self[i].Y - b.Y1) * w) + (Self[i].X - b.X1)]);
+  SetLength(Result, l);
+  k := 0;
+  for y := 0 to (h - 1) do
+    for x := 0 to (w - 1) do
+      for j := 1 to g[(y * w) + x] do
+        Result[k.Increase] := Point((X + b.X1), (Y + b.Y1));
 end;
 
 {==============================================================================]
