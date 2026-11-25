@@ -12,14 +12,18 @@ function IDs(const ID: TIntegerArray; const items: MArray): MArray; overload;
 function IDz: TIntegerArray; overload;
 function Indeca: TIntegerArray; overload;
 function Indexa: TIntegerArray; overload;
+function Indexal: TIntegerArray; overload;
 function Indexed(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indexes(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indexing(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indexment: TIntegerArray; overload;
+function Indexical: TIntegerArray; overload;
 function Indices(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indiced(const aAscending: Boolean = True): TIntegerArray; overload;
 function Indicia: TIntegerArray; overload;
 function Indicing: TIntegerArray; overload;
+function Indized: TIntegerArray; overload;
+function Iota: TIntegerArray; overload;
 function LoadID(var target: TIntegerArray; const aAscending: Boolean = True): Integer; overload;
 function LoadIDs(var target: TIntegerArray): Integer; overload;
 function LoadIndexes(var target: TIntegerArray): Integer; overload;
@@ -355,6 +359,33 @@ begin
 end;
 
 {==============================================================================]
+  <Indexal>
+  @action: Returns an integer array sized to `Self` populated with sequential index values from both ends inward (`0` up to `High(Self)` for lengths 0, 1, and 3+),
+           except for length 2 (`High(Self) = 1`), which returns `[1, 2]`.
+  @note: Uses a two-pointer inward fill (`l` incrementing from `0`, `r` decrementing from `High(Self)`) after pre-allocating with `SetLength` and seeding the outer bounds (`Result[0] := 0`, `Result[r] := r`).
+[==============================================================================}
+function MArrayHelper.Indexal: TIntegerArray; overload;
+var
+  l, r: Integer;
+begin
+  r := High(Self);
+  case r of
+    -1: Exit([]);
+    0: Exit([0]);
+    1: Exit([1, 2]);
+  end;
+  SetLength(Result, (r + 1));
+  l := 0;
+  Result[r] := r;
+  Result[0] := 0;
+  while (l.Increment <= r.Decrement) do
+  begin
+    Result[l] := (Result[l - 1] + 1);
+    Result[r] := (Result[r + 1] - 1);
+  end;
+end;
+
+{==============================================================================]
   <Indexed>
   @action: Returns IDs of arr as TIntegerArray.
   @note: None.
@@ -387,6 +418,20 @@ begin
   l := Self.Length;
   for i := 0 to Result.Alloc(l) do
     Result[i] := IfThen(aAscending, i, ((l - i) - 1));
+end;
+
+{==============================================================================]
+  <Indexical>
+  @action: Returns an array of sequential 0-based index integers `[0, 1, ..., N - 1]` matching the length of `Self` (or `[]` if `Self` is empty).
+  @note: Appends one element per iteration using dynamic array concatenation (`Result + [Result.Length]`) until `Result.Length` reaches `Self.Length`.
+         Repeated concatenation reallocates on each step—unlike `Iota`, which pre-allocates once and writes in unrolled pairs.
+		 Relies on `Self.Length` and `Result.Length` array helpers.
+[==============================================================================}
+function MArrayHelper.Indexical: TIntegerArray; overload;
+begin
+  Result := [];
+  while (Result.Length < Self.Length) do
+    Result := (Result + [Result.Length]);
 end;
 
 {==============================================================================]
@@ -524,7 +569,51 @@ begin
   end;
   if (l = h) then
     Result[l] := l;
-end; 
+end;
+
+{==============================================================================]
+  <Indized>
+  @action: Returns a dynamic integer array of length N containing sequential 0-based indices [0, 1, ..., N - 1],
+           or an empty array when length is 0.
+  @note: Pre-allocates Result via Result.SetSize(s) and fills it across two split ranges around midpoint
+         m = (s - 1) div 2 (0..m and m+1..s-1) with no loop-carried dependency.
+[==============================================================================}
+function MArrayHelper.Indized: TIntegerArray; overload;
+var
+  s, m, i: Integer;
+begin
+  s := Self.Length;
+  if (Result.SetSize(s) = 0) then
+    Exit;
+  m := ((s - 1) div 2);
+  for i := 0 to m do
+    Result[i] := i;
+  for i := (m + 1) to (s - 1) do
+    Result[i] := i;
+end;
+
+{==============================================================================]
+  <Iota>
+  @action: Generates and returns a dynamic integer array of length N containing sequential integers from 0 to N - 1 (or an empty array if length is 0).
+  @note: Unrolls the fill loop by 2 elements per iteration using `Increment(2)` and handles an odd final index separately.
+[==============================================================================}
+function MArrayHelper.Iota: TIntegerArray; overload;
+var
+  i, l, s: Integer;
+begin
+  s := Self.Length;
+  if (Result.SetSize(s) = 0) then
+    Exit([]);
+  l := (s - 1);
+  i := -2;
+  while (i.Increment(2) < l) do
+  begin
+    Result[i] := i;
+    Result[i + 1] := (i + 1);
+  end;
+  if (i = l) then
+    Result[i] := i;
+end;
 
 {==============================================================================]
   <LoadID>
