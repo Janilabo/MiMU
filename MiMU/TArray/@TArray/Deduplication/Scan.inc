@@ -3,7 +3,8 @@ function Adjentical: TIntegerArray; overload;
 function Adupex: TIntegerArray; overload;
 function Dupes: TIntegerArray; overload;
 function Dupex: TIntegerArray; overload;
-function Dupez: TIntegerArray; overload;
+function Duplica: TIntegerArray; overload;
+function Repex: TIntegerArray; overload;
 function Uniques: TIntegerArray; overload;
 {$ENDIF}
 
@@ -41,31 +42,10 @@ var
   i, c: Integer;
 begin
   c := 0;
-  for i := 1 to Result.Alloc(Max(0, (Self.Length - 1))) do
+  for i := 1 to Result.SetSize(Max(0, (Self.Length - 1))) do
     if (Self[i] = Self[i - 1]) then
       Result[c.Increase] := i;
   SetLength(Result, c);
-end;
-
-{==============================================================================]
-  <Dupes>
-  @action: Returns the indices of consecutive duplicate elements in the array.
-  @note: Counts adjacent equal pairs (`Self[i] = Self[i - 1]`) in a first pass,
-         sizes `Result` to the exact count, and populates matching indices in a
-         second pass without trimming.
-[==============================================================================}
-function MArrayHelper.Dupes: TIntegerArray; overload;
-var
-  i, r: Integer;
-begin
-  r := 0;
-  for i := 1 to High(Self) do
-    if (Self[i] = Self[i - 1]) then
-      Inc(r);
-  if (Result.SetSize(r) > 0) then
-  for i := High(Self) downto 1 do
-    if (Self[i] = Self[i - 1]) then
-      Result[r.Decrement] := i;
 end;
 
 {==============================================================================]
@@ -75,12 +55,12 @@ end;
          earlier element `Self[j]` (`0 <= j < i`), `i` is recorded once and
          the result is trimmed to the exact match count `r`.
 [==============================================================================}
-function MArrayHelper.Dupex: TIntegerArray; overload;
+function MArrayHelper.Dupes: TIntegerArray; overload;
 var
   i, j, r: Integer;
 begin
   r := 0;
-  for i := 1 to Result.Alloc(Max(0, (Self.Length - 1))) do
+  for i := 1 to Result.SetSize(Max(0, (Self.Length - 1))) do
     for j := 0 to (i - 1) do
       if (Self[i] = Self[j]) then
       begin
@@ -91,14 +71,43 @@ begin
 end;
 
 {==============================================================================]
-  <Dupez>
+  <Dupex>
+  @action: Returns the indices of duplicate elements in the array.
+  @note: Uses a `TDictionary<MType, Boolean>` seen-set to track previously
+         encountered elements; when `Self[i]` is already present, index `i` is
+         recorded and `Result` is trimmed to match count `r`.
+[==============================================================================}
+function MArrayHelper.Dupex: TIntegerArray; overload;
+var
+  i, r: Integer;
+  d: specialize TDictionary<MType, Boolean>;
+begin
+  if (Result.SetSize(Max(0, (Self.Length - 1))) = 0) then
+    Exit;
+  r := 0;
+  d := specialize TDictionary<MType, Boolean>.Create(Self.Length);
+  try
+    d.Add(Self[0], True);
+    for i := 1 to High(Self) do
+      if d.ContainsKey(Self[i]) then
+        Result[r.Increase] := i
+      else
+        d.Add(Self[i], True);
+  finally
+    d.Free;
+  end;
+  SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Duplica>
   @action: Returns the indices of consecutive duplicate elements in the array.
   @note: Exits early with an empty array when fewer than two elements exist.
          Tracks the preceding element in `s` (starting at `Self[0]`), records each
          index `i` (from `1` to `High(Self)`) where `Self[i] = s`, updates `s`
          when unequal, and trims the result to match count `r`.
 [==============================================================================}
-function MArrayHelper.Dupez: TIntegerArray; overload;
+function MArrayHelper.Duplica: TIntegerArray; overload;
 var
   i, r: Integer;
   s: MType;
@@ -113,6 +122,27 @@ begin
     else
       s := Self[i];
   SetLength(Result, r);
+end;
+
+{==============================================================================]
+  <Repex>
+  @action: Returns the indices of consecutive duplicate elements in the array.
+  @note: Counts adjacent equal pairs (`Self[i] = Self[i - 1]`) in a first pass,
+         sizes `Result` to the exact count, and populates matching indices in a
+         second pass without trimming.
+[==============================================================================}
+function MArrayHelper.Repex: TIntegerArray; overload;
+var
+  i, r: Integer;
+begin
+  r := 0;
+  for i := 1 to High(Self) do
+    if (Self[i] = Self[i - 1]) then
+      Inc(r);
+  if (Result.SetSize(r) > 0) then
+  for i := High(Self) downto 1 do
+    if (Self[i] = Self[i - 1]) then
+      Result[r.Decrement] := i;
 end;
 
 {==============================================================================]
